@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathsolve</title>
+    <meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"><!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]--><script src="js/jquery.min.js"></script>
+	<script src="js/skel.min.js"></script>
+	<script src="js/skel-layers.min.js"></script>
+	<script src="js/init.js"></script><noscript>
+	<link rel="stylesheet" href="css/skel.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/style-xlarge.css"></noscript>
+	<link rel="stylesheet" href="css/style.css"><!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>    
+    <style>
+        body.dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+        .calculator {
+            width: 100%;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        .screen {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .button {
+            padding: 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+        .button.delete {
+            background-color: #f44336;
+            color: white;
+        }
+        .button.clear {
+            background-color: #ff9800;
+            color: white;
+        }
+        .button.equal {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .menu-icon, .toggle-icon {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+        }
+        .history-sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(10px);
+            color: white;
+            transition: left 0.3s;
+            padding: 20px;
+            z-index: 1000;
+        }
+        .history-sidebar.show {
+            left: 0;
+        }
+        .history-sidebar .close-btn {
+            cursor: pointer;
+            font-size: 1.5em;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .rotate {
+            animation: rotate 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <h1><a href="index.html">Mathsolve</a></h1>
+        <nav id="nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="bmath.html">Basic math</a></li>
+                <li><a href="help.html">Help</a></li>
+            </ul>
+        </nav>
+        </header>
+    <!--a href="index.html" class="btn btn-light rounded-circle p-2 m-2">
+        <svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="black"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
+    </a-->
+    <div class="container">
+        <!--div class="d-flex justify-content-between align-items-center mb-3">
+            <svg class="menu-icon" onclick="toggleHistory()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            <svg class="toggle-icon" onclick="toggleDarkMode()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        </div-->
+        <div class="calculator">
+            <input type="text" class="screen form-control" id="screen" disabled>
+            <div class="buttons">
+                <button class="button btn btn-primary text-light rounded">7</button>
+                <button class="button btn btn-primary text-light rounded">8</button>
+                <button class="button btn btn-primary text-light rounded">9</button>
+                <button class="button delete btn btn-danger" onclick="deleteEntry()">DEL</button>
+                <button class="button btn btn-primary text-light rounded">4</button>
+                <button class="button btn btn-primary text-light rounded">5</button>
+                <button class="button btn btn-primary text-light rounded">6</button>
+                <button class="button btn btn-secondary">+</button>
+                <button class="button btn btn-primary text-light rounded">1</button>
+                <button class="button btn btn-primary text-light rounded">2</button>
+                <button class="button btn btn-primary text-light rounded">3</button>
+                <button class="button btn btn-secondary">-</button>
+                <button class="button btn btn-primary text-light rounded">0</button>
+                <button class="button btn btn-primary text-light rounded">.</button>
+                <button class="button btn btn-secondary">/</button>
+                <button class="button btn btn-secondary">*</button>
+                <button class="button equal btn btn-success" onclick="calculate()">=</button>
+                <button class="button clear btn btn-warning" onclick="clearScreen()">C</button>
+            </div>
+        </div>
+        <!--div class="history-sidebar" id="historySidebar">
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="close-btn" onclick="toggleHistory()">×</span>
+                <h3>History</h3>
+            </div>
+            <ul id="historyList" style="list-style: none;"></ul>
+        </div>
+    </div>
+    <script>
+        let screen = document.getElementById('screen');
+        let historySidebar = document.getElementById('historySidebar');
+        let historyList = document.getElementById('historyList');
+        let history = [];
+
+        document.querySelectorAll('.button').forEach(button => {
+            button.addEventListener('click', () => {
+                if (button.classList.contains('delete') || button.classList.contains('equal') || button.classList.contains('clear')) return;
+                screen.value += button.innerText;
+            });
+        });
+
+        function deleteEntry() {
+            screen.value = screen.value.slice(0, -1);
+        }
+
+        function clearScreen() {
+            screen.value = '';
+        }
+
+        function calculate() {
+            try {
+                let result = eval(screen.value);
+                history.push(`${screen.value} = ${result}`);
+                updateHistory();
+                screen.value = result;
+            } catch {
+                screen.value = 'Error';
+            }
+        }
+
+        function updateHistory() {
+            historyList.innerHTML = '';
+            history.forEach(entry => {
+                let listItem = document.createElement('li');
+                listItem.innerText = entry;
+                historyList.appendChild(listItem);
+            });
+        }
+
+        function toggleHistory() {
+            historySidebar.classList.toggle('show');
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            document.querySelector('.toggle-icon').classList.toggle('rotate');
+        }
+    </script-->
+    <ul style="list-style: none;">
+        <li><a href="qecalculator.html" class="button big p-5 mb-2" style="text-decoration: none;">Quadratic Equation Calculator</a></li>
+        <li><a href="le.html" class="button big p-5 mb-2" style="text-decoration: none;">Linear Equation Calculator</a></li>
+        <li><a href="uc.html" class="button big p-5 mb-2" style="text-decoration: none;">Unit converter</a></li>
+        <li><a href="weight.html" class="button big p-5 mb-2" style="text-decoration: none;">Weight Converter</a></li>
+    </ul>
+</body>
+</html>

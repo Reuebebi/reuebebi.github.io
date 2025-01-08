@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathsolve</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"><!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
+		<script src="js/jquery.min.js"></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-layers.min.js"></script>
+		<script src="js/init.js"></script><noscript>
+		<link rel="stylesheet" href="css/skel.css">
+		<link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="css/style-xlarge.css"></noscript>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background-image: url(mathbuild.jpeg);
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        #quiz-container {
+            background-color: transparent;
+            padding: 20px;
+            border-radius: 10px;
+            color: black;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            height: 50vh;
+        }
+        .hidden {
+            display: none;
+        }
+        #feedback {
+            margin-top: 10px;
+            font-size: 1.2em;
+            color: white;
+        }
+        #timer {
+            margin-top: 10px;
+            font-size: 1.2em;
+            color: white;
+        }
+        button
+        {
+            background-color: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(10px);
+            min-width: 80vw;
+        }
+        .exit-icon {
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+    }
+
+    .arrow-back {
+      fill: none;
+      stroke: #000;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .arrow-back:hover {
+      transform: translateX(-5px);
+    }
+    .exit-icon {
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+    }
+
+    .arrow-back {
+      fill: none;
+      stroke: #000;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .arrow-back:hover {
+      transform: translateX(-5px);
+    }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <h1><a href="index.html">Mathsolve</a></h1>
+        <nav id="nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="bmath.html">Basic math</a></li>
+                <li><a href="help.html">Help</a></li>
+            </ul>
+        </nav>
+        </header>
+    <section id="banner">
+    <a href="index.html" class="btn btn-light rounded-circle p-2 m-2">
+        <svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="black"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
+    </a>
+    <div id="quiz-container" class="mt-5">
+        <h1 style="color: white;">Multiplication Quiz</h1>
+        <div id="difficulty" class="text-dark">
+            <label for="difficulty" style="color: white;">Choose Difficulty: </label>
+            <select id="difficulty-level" style="max-width: 75vw;">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+            <button onclick="startQuiz()" class="mt-5 button big">Start Quiz</button>
+        </div>
+        <div id="quiz" class="hidden">
+            <div id="question-container" class="container-fluid text-dark text-center"></div>
+                <div id="question"></div>
+                <input type="number" id="answer" placeholder="Enter your answer">
+                <button onclick="submitAnswer()" class="p-2 m-2 rounded-pill btn btn-success">Submit</button>
+            </div>
+            <div id="feedback"></div>
+            <div id="timer">10</div>
+        </div>
+    </div>
+    <script>
+        
+const easyQuestions = [
+    { q: "2 * 2", a: 4 },
+    { q: "5 * 3", a: 15 },
+    { q: "6 * 1", a: 6 },
+    { q: "5 * 4", a: 20 },
+    { q: "4 * 2", a: 8 },
+];
+
+const mediumQuestions = [
+    { q: "15 * 2", a: 30 },
+    { q: "14 * 2", a: 28 },
+    { q: "10 * 2", a: 20 },
+    { q: "15 * 3", a: 45 },
+    { q: "22 * 2", a: 44 },
+];
+
+const hardQuestions = [
+    { q: "45 * 2", a: 90 },
+    { q: "50 * 10", a: 500 },
+    { q: "33 * 3", a: 99 },
+    { q: "350 * 2", a: 700 },
+    { q: "450 * 2", a: 900 },
+];
+
+let currentQuestionIndex = 0;
+let score = 0;
+let timer;
+let totalTime = 0;
+
+function startQuiz() {
+    const difficulty = document.getElementById('difficulty-level').value;
+    let questions;
+
+    if (difficulty === 'easy') {
+        questions = easyQuestions;
+    } else if (difficulty === 'medium') {
+        questions = mediumQuestions;
+    } else if (difficulty === 'hard') {
+        questions = hardQuestions;
+    }
+
+    document.getElementById('difficulty').classList.add('hidden');
+    document.getElementById('quiz').classList.remove('hidden');
+
+    displayQuestion(questions);
+}
+
+function displayQuestion(questions) {
+    if (currentQuestionIndex < questions.length) {
+        const question = questions[currentQuestionIndex].q;
+        document.getElementById('question').innerText = question;
+        document.getElementById('answer').value = '';
+        document.getElementById('feedback').innerText = '';
+        startTimer(questions);
+    } else {
+        clearInterval(timer);
+        document.getElementById('question-container').innerHTML = `<h2>Quiz Completed! Your score is ${score}/${questions.length}</h2>`;
+        document.getElementById('question-container').innerHTML += `<h2>Time Taken: ${totalTime} seconds</h2>`;
+    }
+}
+
+function submitAnswer() {
+    const userAnswer = parseInt(document.getElementById('answer').value);
+    const difficulty = document.getElementById('difficulty-level').value;
+    let questions;
+
+    if (difficulty === 'easy') {
+        questions = easyQuestions;
+    } else if (difficulty === 'medium') {
+        questions = mediumQuestions;
+    } else if (difficulty === 'hard') {
+        questions = hardQuestions;
+    }
+
+    if (userAnswer === questions[currentQuestionIndex].a) {
+        score++;
+        document.getElementById('feedback').innerText = 'Correct!';
+        document.getElementById('feedback').style.color = 'green';
+    } else {
+        document.getElementById('feedback').innerText = 'Incorrect';
+        document.getElementById('feedback').style.color = 'red';
+    }
+
+    currentQuestionIndex++;
+    clearTimeout(timer);
+    setTimeout(() => displayQuestion(questions), 1000);
+}
+
+function startTimer(questions) {
+    let timeLeft = 10;
+    document.getElementById('timer').innerText = timeLeft;
+
+    timer = setInterval(() => {
+        timeLeft--;
+        totalTime++;
+        document.getElementById('timer').innerText = timeLeft;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            document.getElementById('feedback').innerText = 'Time Up!';
+            document.getElementById('feedback').style.color = 'red';
+            currentQuestionIndex++;
+            setTimeout(() => displayQuestion(questions), 1000);
+        }
+    }, 1000);
+}
+    </script>
+    </section>
+</body>
+</html>
