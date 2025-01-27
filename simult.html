@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simultaneous Equation Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .input-group input {
+            width: 100px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simultaneous Equation Calculator</h1>
+        <div class="input-group">
+            <label for="a1">Equation 1: a1x + b1y = c1</label>
+            <input type="number" id="a1" placeholder="a1">
+            <input type="number" id="b1" placeholder="b1">
+            <input type="number" id="c1" placeholder="c1">
+        </div>
+        <div class="input-group">
+            <label for="a2">Equation 2: a2x + b2y = c2</label>
+            <input type="number" id="a2" placeholder="a2">
+            <input type="number" id="b2" placeholder="b2">
+            <input type="number" id="c2" placeholder="c2">
+        </div>
+        <button class="button" onclick="solveEquations()">Solve</button>
+        <div class="result" id="result"></div>
+    </div>
+    <script>
+        function solveEquations() {
+            // Get input values
+            const a1 = parseFloat(document.getElementById('a1').value);
+            const b1 = parseFloat(document.getElementById('b1').value);
+            const c1 = parseFloat(document.getElementById('c1').value);
+            const a2 = parseFloat(document.getElementById('a2').value);
+            const b2 = parseFloat(document.getElementById('b2').value);
+            const c2 = parseFloat(document.getElementById('c2').value);
+            
+            // Calculate determinant
+            const determinant = a1 * b2 - a2 * b1;
+
+            if (determinant === 0) {
+                document.getElementById('result').innerText = 'The system has no unique solution.';
+            } else {
+              
+                // Calculate solutions
+                const x = (c1 * b2 - c2 * b1) / determinant;
+                const y = (a1 * c2 - a2 * c1) / determinant;
+
+                // Display results
+                document.getElementById('result').innerText = `x = ${x.toFixed(2)}, y = ${y.toFixed(2)}`;
+            }
+        }
+    </script>
+</body>
+</html>
