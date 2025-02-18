@@ -1,111 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Whizmath</title>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6960896541212988"
-     crossorigin="anonymous"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-    }
-    .chat-container {
-      background-color: #fff;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      max-width: 500px;
-      margin: 0 auto;
-    }
-    .message {
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
-    }
-    .user-message {
-      background-color: #007bff;
-      color: white;
-      text-align: right;
-    }
-    .bot-message {
-      background-color: #f4f4f4;
-      color: #333;
-      text-align: left;
-    }
-    .input-container {
-      margin-top: 20px;
-    }
-    .input-container input {
-      width: 80%;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-    .input-container button {
-      padding: 10px;
-      font-size: 16px;
-      border: none;
-      background-color: #007bff;
-      color: white;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    .input-container button:hover {
-      background-color: #0056b3;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .chat-container {
+            width: 80%;
+            max-width: 600px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .chat-container h1 {
+            text-align: center;
+        }
+        .chat-box {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+        .chat-box input, .chat-box button {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .chat-box button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        .chat-box button:hover {
+            background-color: #0056b3;
+        }
+        .chat-output {
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        async function sendMessage() {
+            const userMessage = document.getElementById('userMessage').value;
+            const response = await fetch('http://localhost:3000/chatbot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMessage })
+            });
+
+            const data = await response.json();
+            document.getElementById('chatOutput').innerText = 'AI Chatbot: ' + data.message;
+        }
+    </script>
 </head>
 <body>
-  <div class="chat-container">
-    <h1></h1>
-    <div id="chatbox"></div>
-    <div class="input-container">
-      <input type="text" id="userInput" placeholder="Ask me a math question...">
-      <button onclick="sendMessage()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="white"><path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"/></svg></button>
+    <div class="chat-container">
+        <h1>AI Chatbot</h1>
+        <div class="chat-box">
+            <input type="text" id="userMessage" placeholder="Type your message here...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+        <div id="chatOutput" class="chat-output"></div>
     </div>
-  </div>
-
-  <script>
-    const chatbox = document.getElementById('chatbox');
-    const userInput = document.getElementById('userInput');
-
-    function sendMessage() {
-      const message = userInput.value;
-      if (message.trim() === '') return;
-      addMessage(message, 'user-message');
-      userInput.value = '';
-      processMessage(message);
-    }
-
-    function addMessage(message, className) {
-      const messageElement = document.createElement('div');
-      messageElement.className = `message ${className}`;
-      messageElement.textContent = message;
-      chatbox.appendChild(messageElement);
-      chatbox.scrollTop = chatbox.scrollHeight;
-    }
-
-    function processMessage(message) {
-      let response;
-      try {
-        const result = eval(message);
-        if (typeof result === 'number') {
-          response = `The result is: ${result}`;
-        } else {
-          response = "I couldn't understand the question.";
-        }
-      } catch (e) {
-        response = "I couldn't understand the question.";
-      }
-      addMessage(response, 'bot-message');
-    }
-  </script>
 </body>
 </html>
