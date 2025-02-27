@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="WhizMath Geometry Calculator - Calculate area, perimeter, and volume of various geometric shapes.">
+    <meta name="keywords" content="geometry calculator, area calculator, perimeter calculator, volume calculator, math tools">
+    <meta name="author" content="WhizMath">
+    <title>Geometry Calculator - WhizMath</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .calculator-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Geometry Calculator",
+        "description": "An interactive geometry calculator for calculating area, perimeter, and volume of shapes.",
+        "url": "https://whizmath.com/geometry-calculator",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "All"
+    }
+    </script>
+</head>
+<body>
+    <div class="container calculator-container text-center">
+        <h1 class="mb-4">Geometry Calculator</h1>
+        <label for="shape" class="form-label">Select a Shape:</label>
+        <select id="shape" class="form-select mb-3" onchange="updateFields()">
+            <option value="circle">Circle</option>
+            <option value="rectangle">Rectangle</option>
+            <option value="triangle">Triangle</option>
+        </select>
+        <div id="inputs"></div>
+        <button class="btn btn-light mt-3" onclick="calculate()">Calculate</button>
+        <h3 class="mt-4" id="result"></h3>
+    </div>
+    
+    <script>
+        function updateFields() {
+            const shape = document.getElementById("shape").value;
+            const inputsDiv = document.getElementById("inputs");
+            inputsDiv.innerHTML = "";
+
+            if (shape === "circle") {
+                inputsDiv.innerHTML = '<label>Radius:</label> <input type="number" id="radius" class="form-control mb-2">';
+            } else if (shape === "rectangle") {
+                inputsDiv.innerHTML = '<label>Width:</label> <input type="number" id="width" class="form-control mb-2">' +
+                                      '<label>Height:</label> <input type="number" id="height" class="form-control mb-2">';
+            } else if (shape === "triangle") {
+                inputsDiv.innerHTML = '<label>Base:</label> <input type="number" id="base" class="form-control mb-2">' +
+                                      '<label>Height:</label> <input type="number" id="triHeight" class="form-control mb-2">';
+            }
+        }
+        
+        function calculate() {
+            const shape = document.getElementById("shape").value;
+            let result = "";
+            
+            if (shape === "circle") {
+                const r = parseFloat(document.getElementById("radius").value);
+                if (!isNaN(r)) {
+                    result = `Area: ${(Math.PI * r * r).toFixed(2)}`;
+                }
+            } else if (shape === "rectangle") {
+                const w = parseFloat(document.getElementById("width").value);
+                const h = parseFloat(document.getElementById("height").value);
+                if (!isNaN(w) && !isNaN(h)) {
+                    result = `Area: ${(w * h).toFixed(2)}`;
+                }
+            } else if (shape === "triangle") {
+                const b = parseFloat(document.getElementById("base").value);
+                const h = parseFloat(document.getElementById("triHeight").value);
+                if (!isNaN(b) && !isNaN(h)) {
+                    result = `Area: ${(0.5 * b * h).toFixed(2)}`;
+                }
+            }
+            
+            document.getElementById("result").innerText = result || "Please enter valid values";
+        }
+        
+        document.addEventListener("DOMContentLoaded", updateFields);
+    </script>
+</body>
+</html>
