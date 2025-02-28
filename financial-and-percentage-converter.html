@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Convert financial values and percentages easily with this free online tool - Interest, Discounts, Markups, and more.">
+    <meta name="keywords" content="Financial Converter, Percentage Converter, Interest Calculator, Discount Calculator, Markup Calculator">
+    <meta name="author" content="WhizMath">
+    <title>Financial & Percentage Converter | WhizMath</title>
+    
+    <!-- Schema Markup -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Financial & Percentage Converter",
+        "description": "Convert financial values and percentages including interest, discounts, and markups.",
+        "applicationCategory": "Educational",
+        "url": "https://whizmath.com/financial-percentage-converter"
+    }
+    </script>
+    
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: white;
+            color: black;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .converter-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid d-flex justify-content-center align-items-center vh-100">
+        <div class="converter-box">
+            <h2>Financial & Percentage Converter</h2>
+            <label for="convertType" class="form-label">Select Conversion Type:</label>
+            <select id="convertType" class="form-select" onchange="toggleFields()">
+                <option value="interest">Simple Interest</option>
+                <option value="discount">Discount</option>
+                <option value="markup">Markup</option>
+            </select>
+            
+            <label for="inputValue" class="form-label mt-3">Enter Value:</label>
+            <input type="number" id="inputValue" class="form-control" placeholder="Enter value">
+            
+            <label for="rate" class="form-label mt-3">Rate (%):</label>
+            <input type="number" id="rate" class="form-control" placeholder="Enter rate">
+            
+            <button class="btn btn-primary mt-3 w-100" onclick="convertFinancial()">Convert</button>
+            <h4 class="mt-3">Result: <span id="outputResult">---</span></h4>
+        </div>
+    </div>
+    
+    <!-- JavaScript for Conversion Logic -->
+    <script>
+        function convertFinancial() {
+            let value = parseFloat(document.getElementById("inputValue").value);
+            let rate = parseFloat(document.getElementById("rate").value);
+            let type = document.getElementById("convertType").value;
+            let result;
+            
+            if (isNaN(value) || isNaN(rate)) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+            
+            switch (type) {
+                case "interest":
+                    result = value * (rate / 100);
+                    break;
+                case "discount":
+                    result = value - (value * (rate / 100));
+                    break;
+                case "markup":
+                    result = value + (value * (rate / 100));
+                    break;
+                default:
+                    alert("Conversion not supported yet.");
+                    return;
+            }
+            
+            document.getElementById("outputResult").textContent = `Converted Value: ${result.toFixed(2)}`;
+        }
+    </script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
