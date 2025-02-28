@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Convert measurement units easily with this free online tool - Length, Weight, Temperature, and more.">
+    <meta name="keywords" content="Measurement Converter, Unit Converter, Length Converter, Weight Converter, Temperature Converter">
+    <meta name="author" content="WhizMath">
+    <title>Measurement Unit Converter | WhizMath</title>
+    
+    <!-- Schema Markup -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Measurement Unit Converter",
+        "description": "Convert values between different measurement units including length, weight, and temperature.",
+        "applicationCategory": "Educational",
+        "url": "https://whizmath.com/measurement-unit-converter"
+    }
+    </script>
+    
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: white;
+            color: black;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .converter-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid d-flex justify-content-center align-items-center vh-100">
+        <div class="converter-box">
+            <h2>Measurement Unit Converter</h2>
+            <label for="convertType" class="form-label">Select Conversion Type:</label>
+            <select id="convertType" class="form-select" onchange="toggleFields()">
+                <option value="length">Length</option>
+                <option value="weight">Weight</option>
+                <option value="temperature">Temperature</option>
+            </select>
+            
+            <label for="inputValue" class="form-label mt-3">Enter Value:</label>
+            <input type="number" id="inputValue" class="form-control" placeholder="Enter value">
+            
+            <label for="fromUnit" class="form-label mt-3">From:</label>
+            <select id="fromUnit" class="form-select"></select>
+            
+            <label for="toUnit" class="form-label mt-3">To:</label>
+            <select id="toUnit" class="form-select"></select>
+            
+            <button class="btn btn-primary mt-3 w-100" onclick="convertUnit()">Convert</button>
+            <h4 class="mt-3">Result: <span id="outputResult">---</span></h4>
+        </div>
+    </div>
+    
+    <!-- JavaScript for Conversion Logic -->
+    <script>
+        const unitOptions = {
+            length: ["Meters", "Kilometers", "Feet", "Miles"],
+            weight: ["Grams", "Kilograms", "Pounds", "Ounces"],
+            temperature: ["Celsius", "Fahrenheit", "Kelvin"]
+        };
+
+        function toggleFields() {
+            let convertType = document.getElementById("convertType").value;
+            let fromUnit = document.getElementById("fromUnit");
+            let toUnit = document.getElementById("toUnit");
+            
+            fromUnit.innerHTML = "";
+            toUnit.innerHTML = "";
+            unitOptions[convertType].forEach(unit => {
+                fromUnit.innerHTML += `<option value="${unit}">${unit}</option>`;
+                toUnit.innerHTML += `<option value="${unit}">${unit}</option>`;
+            });
+        }
+
+        function convertUnit() {
+            let value = parseFloat(document.getElementById("inputValue").value);
+            let from = document.getElementById("fromUnit").value;
+            let to = document.getElementById("toUnit").value;
+            let result;
+            
+            if (isNaN(value)) {
+                alert("Please enter a valid number.");
+                return;
+            }
+
+            if (from === to) {
+                result = value;
+            } else if (from === "Celsius" && to === "Fahrenheit") {
+                result = (value * 9/5) + 32;
+            } else if (from === "Fahrenheit" && to === "Celsius") {
+                result = (value - 32) * 5/9;
+            } else if (from === "Celsius" && to === "Kelvin") {
+                result = value + 273.15;
+            } else if (from === "Kelvin" && to === "Celsius") {
+                result = value - 273.15;
+            } else {
+                alert("Conversion not supported yet.");
+                return;
+            }
+            
+            document.getElementById("outputResult").textContent = `Converted Value: ${result.toFixed(2)}`;
+        }
+
+        document.addEventListener("DOMContentLoaded", toggleFields);
+    </script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
