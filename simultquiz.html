@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Challenge yourself with this hard math simultaneous equations quiz. Solve 10 tough simultaneous equations and test your skills!">
+    <meta name="keywords" content="math quiz, simultaneous equations, hard math problems, interactive quiz">
+    <meta name="author" content="WhizMath">
+    <title>Hard Math Simultaneous Equations Quiz | WhizMath</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <style>
+        body { background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; position: relative; }
+        .quiz-container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 90%; max-width: 600px; }
+        .progress { height: 8px; }
+        .timer { font-size: 20px; font-weight: bold; }
+        .hidden { display: none; }
+        .exit-btn { position: absolute; top: 20px; left: 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <svg class="exit-btn" onclick="window.location.href='index.html'" width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 18L9 12L15 6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="quiz-container text-center" id="quiz-container">
+        <h2>Hard Math Simultaneous Equations Quiz</h2>
+        <div class="progress mb-3">
+            <div id="progress-bar" class="progress-bar bg-success" style="width: 0%"></div>
+        </div>
+        <p id="timer" class="timer">Time Left: 60s</p>
+        <p id="question" class="fw-bold"></p>
+        <div id="options" class="d-grid gap-2"></div>
+        <button class="btn btn-primary mt-3" onclick="nextQuestion()" id="next-btn" disabled>Next</button>
+        <p class="mt-3">Score: <span id="score">0</span>/10</p>
+    </div>
+    
+    <div class="quiz-container text-center hidden" id="result-container">
+        <h2>Quiz Finished!</h2>
+        <p>Your Score: <span id="final-score">0</span>/10</p>
+        <button class="btn btn-success" onclick="location.reload()">Restart Quiz</button>
+    </div>
+    
+    <script>
+        let questions = [
+            { q: "2x + 3y = 16, x - y = 2", options: ["x=4, y=2", "x=6, y=4", "x=3, y=5", "x=2, y=3"], correct: "x=4, y=2" },
+            { q: "5x - 3y = 10, 2x + y = 9", options: ["x=2, y=5", "x=3, y=4", "x=4, y=3", "x=5, y=1"], correct: "x=2, y=5" },
+            { q: "3x + 2y = 18, x - y = 1", options: ["x=3, y=2", "x=4, y=3", "x=5, y=1", "x=6, y=2"], correct: "x=6, y=2" },
+            { q: "x + y = 7, 2x - y = 6", options: ["x=5, y=2", "x=3, y=4", "x=2, y=5", "x=1, y=6"], correct: "x=5, y=2" },
+            { q: "4x + y = 15, 3x - y = 8", options: ["x=4, y=3", "x=3, y=4", "x=2, y=5", "x=5, y=0"], correct: "x=3, y=4" },
+            { q: "6x - 5y = 7, 2x + 3y = 13", options: ["x=4, y=2", "x=3, y=4", "x=5, y=1", "x=2, y=3"], correct: "x=5, y=1" },
+            { q: "x + y = 10, 2x + 3y = 21", options: ["x=3, y=7", "x=5, y=5", "x=7, y=3", "x=8, y=2"], correct: "x=3, y=7" },
+            { q: "7x + 4y = 31, x - y = 1", options: ["x=4, y=3", "x=3, y=4", "x=2, y=5", "x=1, y=6"], correct: "x=4, y=3" },
+            { q: "9x - 5y = 19, 3x + y = 10", options: ["x=2, y=4", "x=3, y=2", "x=4, y=1", "x=5, y=0"], correct: "x=3, y=2" },
+            { q: "5x + 2y = 23, 4x - y = 7", options: ["x=3, y=4", "x=2, y=5", "x=4, y=2", "x=5, y=1"], correct: "x=4, y=2" }
+        ];
+        
+        questions = questions.sort(() => Math.random() - 0.5);
+        
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = 60;
+
+        function startTimer() {
+            clearInterval(timer);
+            timeLeft = 60;
+            document.getElementById("timer").innerText = `Time Left: ${timeLeft}s`;
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById("timer").innerText = `Time Left: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    nextQuestion();
+                }
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                endQuiz();
+                return;
+            }
+            
+            startTimer();
+            document.getElementById("progress-bar").style.width = `${(currentQuestionIndex + 1) * 10}%`;
+            const questionData = questions[currentQuestionIndex];
+            document.getElementById("question").innerText = questionData.q;
+            const optionsContainer = document.getElementById("options");
+            optionsContainer.innerHTML = "";
+            questionData.options.forEach(option => {
+                const btn = document.createElement("button");
+                btn.className = "btn btn-outline-primary";
+                btn.innerText = option;
+                btn.onclick = () => selectAnswer(option);
+                optionsContainer.appendChild(btn);
+            });
+            document.getElementById("next-btn").disabled = true;
+        }
+
+        function selectAnswer(selected) {
+            clearInterval(timer);
+            if (currentQuestionIndex < questions.length) {
+                const questionData = questions[currentQuestionIndex];
+                if (selected === questionData.correct) {
+                    score++;
+                    document.getElementById("score").innerText = score;
+                }
+            }
+            document.getElementById("next-btn").disabled = false;
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function endQuiz() {
+            clearInterval(timer);
+            document.getElementById("quiz-container").classList.add("hidden");
+            document.getElementById("result-container").classList.remove("hidden");
+            document.getElementById("final-score").innerText = score;
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
