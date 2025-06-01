@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhizMath - Statistics Fundamentals Lesson</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Light mode styles */
+        .light .bg-gray-100 { background-color: #f3f4f6; }
+        .light .text-gray-900 { color: #1f2937; }
+        .light .bg-white { background-color: #ffffff; }
+        .light .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .light .text-gray-800 { color: #1f2937; }
+        .light .text-blue-700 { color: #1d4ed8; }
+        .light .bg-blue-600 { background-color: #2563eb; }
+        .light .bg-blue-700 { background-color: #1d4ed8; }
+        .light .bg-blue-500 { background-color: #3b82f6; }
+        .light .from-blue-500 { --tw-gradient-from: #3b82f6; }
+        .light .to-indigo-600 { --tw-gradient-to: #4f46e5; }
+        .light .bg-gray-50 { background-color: #f9fafb; } /* Card background */
+        .light .text-gray-600 { color: #4b5563; } /* Card description text */
+        .light .text-gray-700 { color: #374151; } /* Section description text */
+        .light .bg-blue-100 { background-color: #dbeafe; } /* Autocomplete hover */
+        .light .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .light .social-icon-bg { background-color: #3b82f6; } /* Social icon background */
+        .light .social-icon-bg:hover { background-color: #2563eb; } /* Social icon hover background */
+        .light #scroll-to-top-btn { background-color: #2563eb; } /* Scroll to top button */
+        .light #scroll-to-top-btn:hover { background-color: #1d4ed8; } /* Scroll to top button hover */
+
+
+        /* Dark mode styles */
+        .dark .bg-gray-100 { background-color: #1a202c; }
+        .dark .text-gray-900 { color: #e2e8f0; }
+        .dark .bg-white { background-color: #2d3748; } /* Main content section background */
+        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15); }
+        .dark .text-gray-800 { color: #cbd5e0; }
+        .dark .text-blue-700 { color: #90cdf4; } /* Section title */
+        .dark .bg-blue-600 { background-color: #1a365d; }
+        .dark .bg-blue-700 { background-color: #2a4365; }
+        .dark .bg-blue-500 { background-color: #3182ce; }
+        .dark .from-blue-500 { --tw-gradient-from: #3182ce; }
+        .dark .to-indigo-600 { --tw-gradient-to: #5a67d8; }
+        .dark .bg-gray-800 { background-color: #1a202c; }
+        .dark .text-white { color: #e2e8f0; }
+        .dark .bg-gray-50 { background-color: #1f2937; } /* Card background for dark mode */
+        .dark .text-gray-600 { color: #a0aec0; } /* Card description text for dark mode */
+        .dark .text-gray-700 { color: #cbd5e0; } /* Section description text for dark mode */
+        .dark .bg-blue-100 { background-color: #1e3a8a; } /* Autocomplete hover for dark mode */
+        .dark .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .dark .social-icon-bg { background-color: #3182ce; } /* Social icon background */
+        .dark .social-icon-bg:hover { background-color: #2b6cb0; } /* Social icon hover background */
+        .dark #scroll-to-top-btn { background-color: #3182ce; } /* Scroll to top button */
+        .dark #scroll-to-top-btn:hover { background-color: #2b6cb0; } /* Scroll to top button hover */
+
+
+        /* Ensure smooth transitions for all elements */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Global Three.js Canvas for background animation */
+        #global-background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        /* Mobile sidebar styling */
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 256px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 50;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* Overlay for when sidebar is open */
+        #mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        #mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Custom Nav Link Hover Effect */
+        .nav-link-effect {
+            position: relative;
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .nav-link-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease-out;
+            border-radius: 6px;
+            z-index: -1;
+        }
+
+        .nav-link-effect::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease-out, left 0.3s ease-out;
+        }
+
+        .nav-link-effect:hover::before {
+            transform: scaleX(1);
+        }
+
+        .nav-link-effect:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Dark mode specific hover effect adjustments */
+        .dark .nav-link-effect::before {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .dark .nav-link-effect::after {
+            background-color: #90cdf4;
+        }
+
+        /* Adjust mobile menu links for the new effect */
+        #mobile-menu .nav-link-effect {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+        }
+
+        /* Scroll to Top Button */
+        #scroll-to-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 9999px; /* Fully rounded */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 100;
+        }
+
+        #scroll-to-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Lesson content specific styles */
+        .lesson-section {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .lesson-section h3 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 1rem;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .lesson-section h3 {
+            color: #90cdf4; /* dark:text-blue-400 */
+        }
+        .lesson-section p {
+            line-height: 1.75; /* leading-relaxed */
+            margin-bottom: 1rem;
+            color: #374151; /* text-gray-700 */
+        }
+        .dark .lesson-section p {
+            color: #cbd5e0; /* dark:text-gray-300 */
+        }
+        .lesson-section ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .lesson-section ul {
+            color: #cbd5e0;
+        }
+        .lesson-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        .example-box {
+            background-color: #e0f2fe; /* bg-blue-50 */
+            border-left: 4px solid #3b82f6; /* border-blue-500 */
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .example-box {
+            background-color: #1e3a8a; /* dark:bg-blue-900 */
+            border-color: #60a5fa; /* dark:border-blue-400 */
+            color: #90cdf4; /* dark:text-blue-300 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+    <canvas id="global-background-canvas"></canvas>
+
+    <div id="mobile-menu-overlay" class="md:hidden"></div>
+
+    <header class="bg-blue-600 text-white p-4 shadow-md relative z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold rounded-md px-2 py-1">WhizMath</h1>
+            <nav class="flex items-center space-x-6 relative">
+                <ul class="hidden md:flex space-x-2">
+                    <li><a href="index.html" class="nav-link-effect">Home</a></li>
+                    <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+                    <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+                    <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+                    <li><a href="games.html" class="nav-link-effect">Games</a></li>
+                    <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+                </ul>
+
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+
+                <button id="theme-toggle" class="p-2 rounded-full bg-blue-700 hover:bg-blue-800 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ml-4">
+                    <svg id="moon-icon" class="w-6 h-6 text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <svg id="sun-icon" class="w-6 h-6 text-yellow-300 transition-all duration-300 ease-in-out hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.354 3.354l-.707.707M5.646 5.646l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="bg-blue-600 text-white p-6 md:hidden">
+        <ul class="flex flex-col space-y-4 pt-8">
+            <li><a href="index.html" class="nav-link-effect">Home</a></li>
+            <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+            <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+            <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+            <li><a href="games.html" class="nav-link-effect">Games</a></li>
+            <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+        </ul>
+    </div>
+
+    <main class="flex-grow container mx-auto p-4 py-8 relative z-10">
+
+        <section class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg mb-12 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-blue-700 dark:text-blue-400">Statistics Fundamentals: Making Sense of Data</h2>
+            <p class="text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+                Statistics is the science of collecting, organizing, analyzing, interpreting, and presenting data. In an increasingly data-driven world, understanding statistics is crucial for making informed decisions, evaluating information critically, and drawing meaningful conclusions from observations. This comprehensive lesson will introduce you to the fundamental concepts and tools of statistics.
+            </p>
+        </section>
+
+        <div class="lesson-content">
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>1. Introduction to Statistics: Why It Matters</h3>
+                <p>
+                    Statistics is not just about numbers; it's about understanding variability and uncertainty. Every day, we encounter statistical information: poll results, economic indicators, medical study findings, weather forecasts, and sports analytics. Statistics provides the framework to:
+                </p>
+                <ul>
+                    <li><strong>Describe:</strong> Summarize and visualize data to reveal patterns and insights.</li>
+                    <li><strong>Infer:</strong> Make predictions or draw conclusions about a larger group (population) based on a smaller subset (sample).</li>
+                    <li><strong>Predict:</strong> Develop models to forecast future outcomes.</li>
+                    <li><strong>Make Decisions:</strong> Use data-driven evidence to choose the best course of action.</li>
+                </ul>
+                <p>
+                    The field of statistics is broadly divided into two main areas:
+                </p>
+                <ul>
+                    <li>
+                        <strong>Descriptive Statistics:</strong> Involves methods of organizing, summarizing, and presenting data in an informative way. This includes calculating measures like mean, median, mode, range, and standard deviation, as well as creating graphs and tables.
+                        <div class="example-box">
+                            <strong>Think:</strong> "The average height of students in this class is 165 cm."
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Inferential Statistics:</strong> Involves methods that use data from a sample to make generalizations or predictions about a larger population. This includes hypothesis testing, confidence intervals, and regression analysis.
+                        <div class="example-box">
+                            <strong>Think:</strong> "Based on a survey of 1000 voters, we predict that Candidate A will win the election."
+                        </div>
+                    </li>
+                </ul>
+                <p>
+                    Understanding statistics empowers you to critically evaluate claims, make better personal and professional decisions, and contribute to a data-literate society.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>2. Key Statistical Terms: Building Blocks of Analysis</h3>
+                <p>
+                    Before diving into calculations, it's essential to understand the core terminology used in statistics.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Population:</strong> The entire group of individuals or objects that you want to study or about which you want to draw conclusions. It is the complete set of all possible observations.
+                        <div class="example-box">
+                            <strong>Examples:</strong> All registered voters in a country; all trees in a forest; all cars manufactured by a company in a year.
+                        </div>
+                        <p>A population can be finite (e.g., all students currently enrolled in a specific university) or infinite (e.g., all possible outcomes of rolling a fair die an infinite number of times).</p>
+                    </li>
+                    <li>
+                        <strong>Sample:</strong> A subset or a smaller, manageable group selected from the population. Because it's often impractical or impossible to study an entire population, we collect data from a sample and use it to make inferences about the population.
+                        <div class="example-box">
+                            <strong>Examples:</strong> 1000 randomly selected registered voters; 50 trees from a specific section of the forest; 20 cars from a batch manufactured last month.
+                        </div>
+                        <p>The quality of a statistical study heavily depends on how representative the sample is of the population.</p>
+                    </li>
+                    <li>
+                        <strong>Parameter:</strong> A numerical characteristic that describes a <strong>population</strong>. Parameters are usually unknown and are estimated using statistics from samples.
+                        <div class="example-box">
+                            <strong>Examples:</strong> The true average height of *all* adult males in a country; the true proportion of defective products in *all* items produced by a factory.
+                        </div>
+                        <p>Parameters are fixed values, even if we don't know them.</p>
+                    </li>
+                    <li>
+                        <strong>Statistic:</strong> A numerical characteristic that describes a <strong>sample</strong>. Statistics are calculated from sample data and are used to estimate population parameters.
+                        <div class="example-box">
+                            <strong>Examples:</strong> The average height of 100 randomly selected adult males; the proportion of defective products found in a sample of 50 items.
+                        </div>
+                        <p>Statistics vary from sample to sample. For example, if you take multiple samples from the same population, the sample mean will likely be slightly different for each sample.</p>
+                    </li>
+                    <li>
+                        <strong>Data:</strong> The actual values or observations collected from a sample or population. Data can be numbers, words, or symbols.
+                        <div class="example-box">
+                            <strong>Examples:</strong> The list of heights (in cm) of 30 students; the colors of cars passing an intersection; the survey responses (e.g., "agree," "disagree").
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>3. Types of Data: Categorizing Information</h3>
+                <p>
+                    Data can be broadly classified into two main types, which dictate the appropriate statistical methods for analysis and visualization.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Quantitative Data (Numerical Data):</strong> Data that consists of numerical values that can be measured or counted. These values have a meaningful order and can be used in mathematical calculations.
+                        <p>Quantitative data can be further divided:</p>
+                        <ul>
+                            <li>
+                                <strong>Discrete Data:</strong> Can only take on specific, distinct values, often obtained by counting. There are gaps between possible values.
+                                <div class="example-box">
+                                    <strong>Examples:</strong> Number of students in a class (you can't have 25.5 students); number of cars in a parking lot; number of heads when flipping a coin 10 times.
+                                </div>
+                            </li>
+                            <li>
+                                <strong>Continuous Data:</strong> Can take on any value within a given range, often obtained by measuring. There are no gaps between possible values.
+                                <div class="example-box">
+                                    <strong>Examples:</strong> Height of a person (e.g., 170 cm, 170.5 cm, 170.53 cm); temperature; weight; time.
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Qualitative Data (Categorical Data):</strong> Data that describes qualities or characteristics and cannot be measured numerically. These values are typically categories or labels.
+                        <p>Qualitative data can be further divided:</p>
+                        <ul>
+                            <li>
+                                <strong>Nominal Data:</strong> Categories without any natural order or ranking.
+                                <div class="example-box">
+                                    <strong>Examples:</strong> Eye color (blue, brown, green); gender (male, female, non-binary); types of fruit (apple, banana, orange).
+                                </div>
+                            </li>
+                            <li>
+                                <strong>Ordinal Data:</strong> Categories that have a natural order or ranking, but the differences between categories may not be uniform or meaningful.
+                                <div class="example-box">
+                                    <strong>Examples:</strong> Education level (high school, bachelor's, master's, PhD); survey responses (strongly disagree, disagree, neutral, agree, strongly agree); movie ratings (1-star, 2-star, etc.).
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <p>
+                    Knowing the type of data you are working with is crucial because it determines which statistical analyses and visualizations are appropriate and meaningful.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>4. Measures of Central Tendency: Locating the "Center" of Data</h3>
+                <p>
+                    Measures of central tendency are single values that attempt to describe a set of data by identifying the central position within that set of data. They are often called "averages." The three most common measures are the mean, median, and mode.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Mean ($\bar{x}$ or $\mu$):</strong> The arithmetic average of a dataset. It is calculated by summing all the values in the dataset and dividing by the number of values.
+                        <p class="font-semibold text-gray-800 dark:text-gray-200">Formula:</p>
+                        <div class="example-box">
+                            For a sample: $\bar{x} = \frac{\sum x}{n}$ (where $\sum x$ is the sum of all values and $n$ is the number of values in the sample).<br>
+                            For a population: $\mu = \frac{\sum x}{N}$ (where $N$ is the number of values in the population).
+                        </div>
+                        <div class="example-box">
+                            <strong>Example:</strong> Dataset: $2, 4, 6, 8, 10$<br>
+                            Mean = $\frac{2 + 4 + 6 + 8 + 10}{5} = \frac{30}{5} = 6$.
+                        </div>
+                        <p><strong>When to use:</strong> Best for symmetrically distributed data without extreme outliers. It uses all data points in its calculation.</p>
+                    </li>
+                    <li>
+                        <strong>Median:</strong> The middle value in a dataset when the data is arranged in ascending or descending order. If there is an even number of values, the median is the average of the two middle values.
+                        <div class="example-box">
+                            <strong>Example 1 (Odd number of values):</strong> Dataset: $2, 4, 6, 8, 10$<br>
+                            Ordered: $2, 4, \underline{6}, 8, 10$<br>
+                            Median = $6$.
+                        </div>
+                        <div class="example-box">
+                            <strong>Example 2 (Even number of values):</strong> Dataset: $1, 2, 4, 6, 8, 9$<br>
+                            Ordered: $1, 2, \underline{4, 6}, 8, 9$<br>
+                            Median = $\frac{4 + 6}{2} = 5$.
+                        </div>
+                        <p><strong>When to use:</strong> Best for skewed data or data with outliers, as it is not affected by extreme values. It represents the 50th percentile.</p>
+                    </li>
+                    <li>
+                        <strong>Mode:</strong> The value that appears most frequently in a dataset. A dataset can have one mode (unimodal), multiple modes (multimodal), or no mode (if all values appear with the same frequency).
+                        <div class="example-box">
+                            <strong>Example 1:</strong> Dataset: $1, 2, 2, 3, 4, 4, 4, 5$<br>
+                            Mode = $4$ (appears 3 times).
+                        </div>
+                        <div class="example-box">
+                            <strong>Example 2:</strong> Dataset: $1, 2, 2, 3, 4, 4, 5$<br>
+                            Modes = $2$ and $4$ (bimodal).
+                        </div>
+                        <div class="example-box">
+                            <strong>Example 3:</strong> Dataset: $1, 2, 3, 4, 5$<br>
+                            No mode.
+                        </div>
+                        <p><strong>When to use:</strong> Best for categorical (nominal) data or when you want to identify the most common item or category. It's the only measure of central tendency applicable to nominal data.</p>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>5. Measures of Dispersion (Spread): Understanding Data Variability</h3>
+                <p>
+                    While measures of central tendency tell us about the center of the data, measures of dispersion (or spread) tell us how much the data points vary from each other and from the center.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Range:</strong> The simplest measure of spread. It is the difference between the highest and lowest values in a dataset.
+                        <div class="example-box">
+                            <strong>Formula:</strong> Range = Maximum Value - Minimum Value<br>
+                            <strong>Example:</strong> Dataset: $2, 4, 6, 8, 10$<br>
+                            Range = $10 - 2 = 8$.
+                        </div>
+                        <p><strong>Limitations:</strong> Highly sensitive to outliers and only considers two data points.</p>
+                    </li>
+                    <li>
+                        <strong>Variance ($\sigma^2$ or $s^2$):</strong> Measures the average of the squared differences from the mean. It gives a general idea of how spread out the data is. A higher variance indicates data points are more spread out from the mean.
+                        <p class="font-semibold text-gray-800 dark:text-gray-200">Formulas:</p>
+                        <div class="example-box">
+                            For a population: $\sigma^2 = \frac{\sum (x - \mu)^2}{N}$<br>
+                            For a sample: $s^2 = \frac{\sum (x - \bar{x})^2}{n - 1}$ (We use $n-1$ for sample variance to provide an unbiased estimate of the population variance.)
+                        </div>
+                        <p><strong>Calculation Steps (for sample):</strong></p>
+                        <ol>
+                            <li>Calculate the mean ($\bar{x}$) of the dataset.</li>
+                            <li>Subtract the mean from each data point ($x - \bar{x}$).</li>
+                            <li>Square each of these differences ($(x - \bar{x})^2$).</li>
+                            <li>Sum all the squared differences ($\sum (x - \bar{x})^2$).</li>
+                            <li>Divide the sum by $(n - 1)$.</li>
+                        </ol>
+                        <div class="example-box">
+                            <strong>Example:</strong> Dataset: $2, 4, 6, 8, 10$ (Mean $\bar{x} = 6$)<br>
+                            $(2-6)^2 = (-4)^2 = 16$<br>
+                            $(4-6)^2 = (-2)^2 = 4$<br>
+                            $(6-6)^2 = (0)^2 = 0$<br>
+                            $(8-6)^2 = (2)^2 = 4$<br>
+                            $(10-6)^2 = (4)^2 = 16$<br>
+                            Sum of squared differences = $16 + 4 + 0 + 4 + 16 = 40$<br>
+                            $n = 5$, so $n - 1 = 4$<br>
+                            Variance ($s^2$) = $\frac{40}{4} = 10$.
+                        </div>
+                        <p><strong>Note:</strong> Variance is in squared units, which can be difficult to interpret in the context of the original data.</p>
+                    </li>
+                    <li>
+                        <strong>Standard Deviation ($\sigma$ or $s$):</strong> The most commonly used measure of spread. It is the square root of the variance. It indicates the typical distance between data points and the mean, and it is expressed in the same units as the original data.
+                        <p class="font-semibold text-gray-800 dark:text-gray-200">Formulas:</p>
+                        <div class="example-box">
+                            For a population: $\sigma = \sqrt{\frac{\sum (x - \mu)^2}{N}}$<br>
+                            For a sample: $s = \sqrt{\frac{\sum (x - \bar{x})^2}{n - 1}}$
+                        </div>
+                        <div class="example-box">
+                            <strong>Example:</strong> Using the previous dataset $2, 4, 6, 8, 10$ (Variance $s^2 = 10$)<br>
+                            Standard Deviation ($s$) = $\sqrt{10} \approx 3.16$.
+                        </div>
+                        <p><strong>Interpretation:</strong> A small standard deviation indicates that data points are clustered closely around the mean, while a large standard deviation indicates they are more spread out.</p>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>6. Data Visualization: Communicating Insights Visually</h3>
+                <p>
+                    Visualizing data is a critical step in statistical analysis. Graphs and charts make complex datasets understandable, reveal patterns, trends, and outliers, and help communicate findings effectively.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Histograms:</strong> Used for quantitative (continuous) data. They show the distribution of numerical data by dividing it into "bins" (intervals) and displaying the frequency of data points falling into each bin as bars.
+                        <div class="example-box">
+                            <strong>Purpose:</strong> To show the shape, center, and spread of a distribution (e.g., heights of students, test scores).
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Bar Charts:</strong> Used for qualitative (categorical) data. They display the frequency or proportion of different categories using rectangular bars whose lengths are proportional to the values they represent. Bars are typically separated.
+                        <div class="example-box">
+                            <strong>Purpose:</strong> To compare frequencies across different categories (e.g., favorite colors, types of cars sold).
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Pie Charts:</strong> Used for qualitative (categorical) data. They represent parts of a whole, where each slice of the pie represents a category and its size is proportional to its percentage of the total.
+                        <div class="example-box">
+                            <strong>Purpose:</strong> To show the composition of a whole (e.g., market share of companies, breakdown of a budget). Best used for a small number of categories.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Box Plots (Box-and-Whisker Plots):</strong> Used for quantitative data. They display the distribution of a dataset based on five key numbers: minimum, first quartile (Q1), median (Q2), third quartile (Q3), and maximum. They are excellent for comparing distributions across different groups.
+                        <div class="example-box">
+                            <strong>Purpose:</strong> To show the spread, skewness, and presence of outliers in a distribution.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Scatter Plots:</strong> Used to visualize the relationship between two quantitative variables. Each point on the plot represents a pair of values for the two variables.
+                        <div class="example-box">
+                            <strong>Purpose:</strong> To identify correlations or patterns between variables (e.g., hours studied vs. exam scores).
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>7. Probability Basics: Quantifying Uncertainty</h3>
+                <p>
+                    Probability is the measure of the likelihood that an event will occur. It is a fundamental concept in statistics, especially in inferential statistics, where we use probability to make decisions and draw conclusions about populations based on samples.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Experiment:</strong> A process that leads to well-defined outcomes.
+                        <div class="example-box">
+                            <strong>Examples:</strong> Flipping a coin, rolling a die, drawing a card from a deck.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Outcome:</strong> A single possible result of an experiment.
+                        <div class="example-box">
+                            <strong>Examples:</strong> Getting a "Heads" when flipping a coin; rolling a "3" on a die.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Event:</strong> A collection of one or more outcomes.
+                        <div class="example-box">
+                            <strong>Examples:</strong> Getting an "even number" when rolling a die (outcomes: 2, 4, 6); drawing a "face card" from a deck.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Sample Space ($S$):</strong> The set of all possible outcomes of an experiment.
+                        <div class="example-box">
+                            <strong>Example:</strong> For rolling a die, $S = \{1, 2, 3, 4, 5, 6\}$.
+                        </div>
+                    </li>
+                </ul>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Basic Probability Formula (for equally likely outcomes):</p>
+                <div class="example-box">
+                    $P(\text{Event}) = \frac{\text{Number of favorable outcomes}}{\text{Total number of possible outcomes}}$
+                </div>
+                <p>
+                    Probabilities are always between 0 and 1, inclusive.
+                    <ul>
+                        <li>$P(\text{Event}) = 0$: The event is impossible.</li>
+                        <li>$P(\text{Event}) = 1$: The event is certain to occur.</li>
+                    </ul>
+                </p>
+                <div class="example-box">
+                    <strong>Example:</strong> What is the probability of rolling an even number on a fair six-sided die?<br>
+                    Favorable outcomes = $\{2, 4, 6\}$ (3 outcomes)<br>
+                    Total possible outcomes = $\{1, 2, 3, 4, 5, 6\}$ (6 outcomes)<br>
+                    $P(\text{Even Number}) = \frac{3}{6} = \frac{1}{2} = 0.5$.
+                </div>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>8. The Normal Distribution: The "Bell Curve"</h3>
+                <p>
+                    The <strong>normal distribution</strong>, often called the "bell curve" or Gaussian distribution, is one of the most important probability distributions in statistics. Many natural phenomena (e.g., human height, blood pressure, measurement errors) tend to follow a normal distribution.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Key Characteristics of the Normal Distribution:</p>
+                <ul>
+                    <li><strong>Symmetric:</strong> The curve is symmetrical around its mean.</li>
+                    <li><strong>Bell-shaped:</strong> It has a characteristic bell shape.</li>
+                    <li><strong>Mean, Median, Mode are Equal:</strong> For a perfect normal distribution, all three measures of central tendency are located at the center of the curve.</li>
+                    <li><strong>Asymptotic:</strong> The tails of the curve approach the x-axis but never quite touch it.</li>
+                    <li><strong>Defined by Mean ($\mu$) and Standard Deviation ($\sigma$):</strong> These two parameters completely define a specific normal distribution. The mean determines the center, and the standard deviation determines the spread (how wide or narrow the bell is).</li>
+                </ul>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">The Empirical Rule (68-95-99.7 Rule):</p>
+                <p>
+                    For a normal distribution, approximately:
+                </p>
+                <ul>
+                    <li>$68\%$ of the data falls within 1 standard deviation of the mean ($\mu \pm 1\sigma$).</li>
+                    <li>$95\%$ of the data falls within 2 standard deviations of the mean ($\mu \pm 2\sigma$).</li>
+                    <li>$99.7\%$ of the data falls within 3 standard deviations of the mean ($\mu \pm 3\sigma$).</li>
+                </ul>
+                <div class="example-box">
+                    <strong>Example:</strong> If test scores are normally distributed with a mean of 70 and a standard deviation of 5:<br>
+                    - $68\%$ of scores are between $65$ and $75$.<br>
+                    - $95\%$ of scores are between $60$ and $80$.<br>
+                    - $99.7\%$ of scores are between $55$ and $85$.
+                </div>
+                <p>
+                    The normal distribution is crucial for inferential statistics, especially in hypothesis testing and constructing confidence intervals, as it allows us to make predictions about population parameters.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>9. Sampling Methods: How to Select a Representative Sample</h3>
+                <p>
+                    The way a sample is selected from a population is critical for the validity of statistical inferences. A good sample should be representative of the population to avoid bias.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Common Sampling Methods:</p>
+                <ul>
+                    <li>
+                        <strong>Simple Random Sampling:</strong> Every individual or item in the population has an equal chance of being selected for the sample. This is the gold standard for representativeness.
+                        <div class="example-box">
+                            <strong>Method:</strong> Drawing names from a hat, using a random number generator.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Stratified Sampling:</strong> The population is divided into distinct subgroups (strata) based on shared characteristics (e.g., age groups, gender, income levels). Then, a simple random sample is drawn from each stratum. This ensures representation from all important subgroups.
+                        <div class="example-box">
+                            <strong>Method:</strong> Surveying 10% of students from each grade level (freshman, sophomore, junior, senior).
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Systematic Sampling:</strong> Individuals are selected from a list at a regular interval. For example, select every $k^{th}$ individual after a random starting point.
+                        <div class="example-box">
+                            <strong>Method:</strong> From a list of 1000 people, choose a random starting point between 1 and 10, then select every 10th person.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Cluster Sampling:</strong> The population is divided into clusters (e.g., geographic areas, schools). A random sample of clusters is selected, and then *all* individuals within the selected clusters are included in the sample.
+                        <div class="example-box">
+                            <strong>Method:</strong> Randomly selecting 5 schools in a district and surveying all students in those 5 schools.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Convenience Sampling:</strong> Individuals are selected based on their easy accessibility or availability to the researcher. This method is prone to bias and generally not recommended for rigorous statistical studies.
+                        <div class="example-box">
+                            <strong>Method:</strong> Surveying the first 50 people you encounter at a shopping mall.
+                        </div>
+                        <p><strong>Warning:</strong> Convenience samples are often unrepresentative and lead to unreliable conclusions.</p>
+                    </li>
+                </ul>
+                <p>
+                    Choosing the right sampling method is crucial for ensuring that your sample accurately reflects the population and that your statistical inferences are valid.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>Practice Problems: Apply Your Statistical Knowledge</h3>
+                <p>Test your understanding of fundamental statistics concepts with these practice problems.</p>
+                <ol class="list-decimal list-inside space-y-3">
+                    <li><strong>Terminology:</strong> A researcher wants to study the average sleep duration of all university students in a city. They survey 200 students from a local university.
+                        <ul>
+                            <li>What is the population in this study?</li>
+                            <li>What is the sample?</li>
+                            <li>Is the average sleep duration of the 200 surveyed students a parameter or a statistic?</li>
+                        </ul>
+                    </li>
+                    <li><strong>Data Types:</strong> Classify the following data as quantitative discrete, quantitative continuous, qualitative nominal, or qualitative ordinal:
+                        <ul>
+                            <li>Number of siblings a person has.</li>
+                            <li>Temperature in Celsius.</li>
+                            <li>Favorite type of music.</li>
+                            <li>Customer satisfaction rating (e.g., "Very Unsatisfied", "Unsatisfied", "Neutral", "Satisfied", "Very Satisfied").</li>
+                        </ul>
+                    </li>
+                    <li><strong>Measures of Central Tendency:</strong> Given the dataset: $15, 12, 18, 10, 15, 13, 16$. Calculate the mean, median, and mode.</li>
+                    <li><strong>Measures of Dispersion:</strong> For the dataset: $5, 7, 3, 8, 2$. Calculate the range, variance (sample), and standard deviation (sample).</li>
+                    <li><strong>Probability:</strong> A bag contains 5 red marbles, 3 blue marbles, and 2 green marbles. If you pick one marble at random, what is the probability of picking a blue marble?</li>
+                    <li><strong>Normal Distribution:</strong> A certain type of battery has a lifespan that is normally distributed with a mean of 500 hours and a standard deviation of 20 hours. What percentage of batteries are expected to last between 480 hours and 520 hours?</li>
+                    <li><strong>Data Visualization:</strong> Which type of chart would be most appropriate to display the proportion of different types of pets owned by students in a class?</li>
+                    <li><strong>Sampling Methods:</strong> A company wants to survey its employees about job satisfaction. They decide to survey every 5th employee from an alphabetical list. What type of sampling method is this?</li>
+                    <li><strong>Conceptual Question:</strong> Explain why the median is often preferred over the mean when a dataset contains extreme outliers.</li>
+                    <li><strong>Critical Thinking:</strong> A news report states that "4 out of 5 dentists recommend Brand X toothpaste." What questions would you ask to evaluate the validity of this claim from a statistical perspective?</li>
+                </ol>
+                <p class="mt-4 text-gray-700 dark:text-gray-300"><em>(Solutions are not provided here, encouraging self-assessment, peer discussion, or seeking further assistance.)</em></p>
+            </section>
+
+        </div>
+
+    </main>
+
+    <footer class="bg-gray-800 dark:bg-gray-900 text-white p-8 mt-12 relative z-10">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
+            <div>
+                <h3 class="text-xl font-bold mb-4">WhizMath</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    Your ultimate destination for mastering mathematics. We provide free tools, comprehensive lessons, and engaging quizzes to help you succeed.
+                </p>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="index.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Home</a></li>
+                    <li><a href="tools.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Tools</a></li>
+                    <li><a href="lessons.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Learn</a></li>
+                    <li><a href="quizzes.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Quizzes</a></li>
+                    <li><a href="games.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Games</a></li>
+                    <li><a href="contact.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Popular Tools</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Scientific Calculator</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Graphing Calculator</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Unit Converter</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Equation Solver</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Popular Lessons</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Algebra Essentials</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Geometry Basics</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Calculus Introduction</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Statistics Fundamentals</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="flex justify-center md:justify-start space-x-4 mt-6">
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="Facebook">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.776-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
+                </svg>
+            </a>
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="X (Twitter)">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.21-6.89L4.93 21.75H1.625l7.73-8.835L1.25 2.25h3.308l5.97 7.68L18.244 2.25zm.426 17.565L16.63 4.393 4.126 2.25H2.808l13.785 18.125h1.275z" />
+                </svg>
+            </a>
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="Instagram">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.792.006 3.24.016a8.97 8.97 0 011.8.093c.895.119 1.57.34 2.1.598.98.483 1.62.94 2.22 1.638.6.698 1.04 1.347 1.43 2.278.39.93.593 1.776.66 2.825.02.324.037.79.037 1.393 0 2.43-.006 2.792-.016 3.24a8.97 8.97 0 01-.093 1.8c-.119.895-.34 1.57-.598 2.1-.483.98-.94 1.62-1.638 2.22-.698.6-1.347 1.04-2.278 1.43-.93.39-1.776.593-2.825.66-.324.02-.79.037-1.393.037-2.43 0-2.792-.006-3.24-.016a8.97 8.97 0 01-1.8-.093c-.895-.119-1.57-.34-2.1-.598-.98-.483-1.62-.94-2.22-1.638-.6-.698-1.347-1.04-2.278-1.43-.93-.39-1.776-.593-2.825-.66-.324-.02-.037-.79-.037-1.393 0-2.43.006-2.792.016-3.24.093-1.8.314.598-4.035.483-.98.94-1.62 1.638-2.22.698-.6 1.347-1.04 2.278-1.43.93-.39 1.776-.593 2.825-.66.324-.02.79-.037 1.393-.037zm0 2.164c-2.093 0-3.193.013-3.793.023a6.83 6.83 0 00-1.46.074c-.66.088-1.09.283-1.48.473-.59.28-1.04.57-1.44.97-.4.4-.69.85-.97 1.44-.19.39-.385.82-.473 1.48-.06.4-.073.74-.083 1.34-.01.6-.013 1.093-.013 3.793s.003 3.193.013 3.793c.01.4.023.74.083 1.34.088.66.283 1.09.473 1.48.28.59.57 1.04.97 1.44.4.4.85.69 1.44.97.39.19.82.385 1.48.473.4.06.74.073 1.34.083.6.01 1.093.013 3.793.013s3.193-.003 3.793-.013c.4-.01.74-.023 1.34-.083.66-.088 1.09-.283 1.48-.473.59-.28 1.04-.57 1.44-.97.4-.4.69-.85.97-1.44.19-.39.82-.385-1.48-.473-.4-.06-.74-.073-1.34-.083-.6-.01-1.093-.013-3.793-.013zm0 3.52c-2.467 0-4.475 2.008-4.475 4.475s2.008 4.475 4.475 4.475 4.475-2.008 4.475-4.475-2.008-4.475-4.475-4.475zM12.315 18a5.685 5.685 0 110-11.37 5.685 5.685 0 010 11.37zm7.25-10.975a1.18 1.18 0 100 2.36 1.18 1.18 0 000-2.36z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="YouTube">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M19.812 5.405c.781-.144 1.406-.395 1.834-.693.376-.258.629-.533.868-.904.2-.315.353-.69.451-1.042C23.63 2.656 24 2.14 24 1.516a.754.754 0 00-.001-.194c-.035-.3-.153-.591-.355-.845-.224-.287-.516-.566-.867-.862-.375-.316-.763-.618-1.284-.903-.795-.445-1.745-.853-2.925-1.127C17.062 0 12 0 12 0s-5.062 0-7.063.093c-1.18.274-2.13.682-2.925 1.127-.521.285-.91.566-1.285.862-.202.254-.32.545-.355.845A.754.754 0 000 1.516c0 .624.37 1.14.734 1.55.098.352.251.727.452 1.042.239.37.492.645.868.904.428.298 1.053.549 1.834.693C4.938 6 12 6 12 6s7.063 0 7.812-.595zM12 8.75c-3.12 0-5.625 2.505-5.625 5.625S8.88 20 12 20s5.625-2.505 5.625-5.625S15.12 8.75 12 8.75z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        <div class="border-t border-gray-700 dark:border-gray-800 pt-6 mt-8 text-center text-sm text-gray-400">
+            <p>&copy; 2025 WhizMath. All rights reserved.</p>
+            <p class="mt-2">Designed with <span class="text-red-500">&hearts;</span> by Your AI Assistant</p>
+        </div>
+    </footer>
+
+    <button id="scroll-to-top-btn">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v14"></path>
+        </svg>
+    </button>
+
+    <script>
+        // --- Theme Toggle Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        // Check for saved theme on load
+        const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+        setTheme(savedTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // --- Mobile Sidebar Menu Logic ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            mobileMenuOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling body when menu is open
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('open');
+            document.body.style.overflow = ''; // Restore body scrolling
+        }
+
+        mobileMenuButton.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('open')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu); // Close when clicking overlay
+
+        // Close mobile menu if a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                // Only close if it's a small screen
+                if (window.innerWidth < 768) {
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Handle resize: ensure menu is correct on desktop/mobile switch
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint
+                closeMobileMenu(); // Ensure sidebar is closed on desktop
+            }
+        });
+
+        // --- Three.js Global Background Animation Logic ---
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('global-background-canvas');
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles
+            const particleCount = 12500;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            const color1 = new THREE.Color(0xADD8E6); // Light blue
+            const color2 = new THREE.Color(0x87CEEB); // Sky blue
+            const color3 = new THREE.Color(0x6495ED); // Cornflower blue
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
+                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
+                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
+
+                const rand = Math.random();
+                let color;
+                if (rand < 0.33) {
+                    color = color1;
+                } else if (rand < 0.66) {
+                    color = color2;
+                } else {
+                    color = color3;
+                }
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+            });
+
+            particles = new THREE.Points(geometry, particleMaterial);
+            scene.add(particles);
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+        };
+
+        // --- Scroll to Top Button Logic ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling 300px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll animation
+            });
+        });
+    </script>
+</body>
+</html>

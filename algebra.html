@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhizMath - Algebra Essentials Lesson</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Light mode styles */
+        .light .bg-gray-100 { background-color: #f3f4f6; }
+        .light .text-gray-900 { color: #1f2937; }
+        .light .bg-white { background-color: #ffffff; }
+        .light .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .light .text-gray-800 { color: #1f2937; }
+        .light .text-blue-700 { color: #1d4ed8; }
+        .light .bg-blue-600 { background-color: #2563eb; }
+        .light .bg-blue-700 { background-color: #1d4ed8; }
+        .light .bg-blue-500 { background-color: #3b82f6; }
+        .light .from-blue-500 { --tw-gradient-from: #3b82f6; }
+        .light .to-indigo-600 { --tw-gradient-to: #4f46e5; }
+        .light .bg-gray-50 { background-color: #f9fafb; } /* Card background */
+        .light .text-gray-600 { color: #4b5563; } /* Card description text */
+        .light .text-gray-700 { color: #374151; } /* Section description text */
+        .light .bg-blue-100 { background-color: #dbeafe; } /* Autocomplete hover */
+        .light .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .light .social-icon-bg { background-color: #3b82f6; } /* Social icon background */
+        .light .social-icon-bg:hover { background-color: #2563eb; } /* Social icon hover background */
+        .light #scroll-to-top-btn { background-color: #2563eb; } /* Scroll to top button */
+        .light #scroll-to-top-btn:hover { background-color: #1d4ed8; } /* Scroll to top button hover */
+
+
+        /* Dark mode styles */
+        .dark .bg-gray-100 { background-color: #1a202c; }
+        .dark .text-gray-900 { color: #e2e8f0; }
+        .dark .bg-white { background-color: #2d3748; } /* Main content section background */
+        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15); }
+        .dark .text-gray-800 { color: #cbd5e0; }
+        .dark .text-blue-700 { color: #90cdf4; } /* Section title */
+        .dark .bg-blue-600 { background-color: #1a365d; }
+        .dark .bg-blue-700 { background-color: #2a4365; }
+        .dark .bg-blue-500 { background-color: #3182ce; }
+        .dark .from-blue-500 { --tw-gradient-from: #3182ce; }
+        .dark .to-indigo-600 { --tw-gradient-to: #5a67d8; }
+        .dark .bg-gray-800 { background-color: #1a202c; }
+        .dark .text-white { color: #e2e8f0; }
+        .dark .bg-gray-50 { background-color: #1f2937; } /* Card background for dark mode */
+        .dark .text-gray-600 { color: #a0aec0; } /* Card description text for dark mode */
+        .dark .text-gray-700 { color: #cbd5e0; } /* Section description text for dark mode */
+        .dark .bg-blue-100 { background-color: #1e3a8a; } /* Autocomplete hover for dark mode */
+        .dark .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .dark .social-icon-bg { background-color: #3182ce; } /* Social icon background */
+        .dark .social-icon-bg:hover { background-color: #2b6cb0; } /* Social icon hover background */
+        .dark #scroll-to-top-btn { background-color: #3182ce; } /* Scroll to top button */
+        .dark #scroll-to-top-btn:hover { background-color: #2b6cb0; } /* Scroll to top button hover */
+
+
+        /* Ensure smooth transitions for all elements */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Global Three.js Canvas for background animation */
+        #global-background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        /* Mobile sidebar styling */
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 256px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 50;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* Overlay for when sidebar is open */
+        #mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        #mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Custom Nav Link Hover Effect */
+        .nav-link-effect {
+            position: relative;
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .nav-link-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease-out;
+            border-radius: 6px;
+            z-index: -1;
+        }
+
+        .nav-link-effect::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease-out, left 0.3s ease-out;
+        }
+
+        .nav-link-effect:hover::before {
+            transform: scaleX(1);
+        }
+
+        .nav-link-effect:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Dark mode specific hover effect adjustments */
+        .dark .nav-link-effect::before {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .dark .nav-link-effect::after {
+            background-color: #90cdf4;
+        }
+
+        /* Adjust mobile menu links for the new effect */
+        #mobile-menu .nav-link-effect {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+        }
+
+        /* Scroll to Top Button */
+        #scroll-to-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 9999px; /* Fully rounded */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 100;
+        }
+
+        #scroll-to-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Lesson content specific styles */
+        .lesson-section {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .lesson-section h3 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 1rem;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .lesson-section h3 {
+            color: #90cdf4; /* dark:text-blue-400 */
+        }
+        .lesson-section p {
+            line-height: 1.75; /* leading-relaxed */
+            margin-bottom: 1rem;
+            color: #374151; /* text-gray-700 */
+        }
+        .dark .lesson-section p {
+            color: #cbd5e0; /* dark:text-gray-300 */
+        }
+        .lesson-section ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .lesson-section ul {
+            color: #cbd5e0;
+        }
+        .lesson-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        .example-box {
+            background-color: #e0f2fe; /* bg-blue-50 */
+            border-left: 4px solid #3b82f6; /* border-blue-500 */
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .example-box {
+            background-color: #1e3a8a; /* dark:bg-blue-900 */
+            border-color: #60a5fa; /* dark:border-blue-400 */
+            color: #90cdf4; /* dark:text-blue-300 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+    <canvas id="global-background-canvas"></canvas>
+
+    <div id="mobile-menu-overlay" class="md:hidden"></div>
+
+    <header class="bg-blue-600 text-white p-4 shadow-md relative z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold rounded-md px-2 py-1">WhizMath</h1>
+            <nav class="flex items-center space-x-6 relative">
+                <ul class="hidden md:flex space-x-2">
+                    <li><a href="index.html" class="nav-link-effect">Home</a></li>
+                    <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+                    <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+                    <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+                    <li><a href="games.html" class="nav-link-effect">Games</a></li>
+                    <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+                </ul>
+
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+
+                <button id="theme-toggle" class="p-2 rounded-full bg-blue-700 hover:bg-blue-800 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ml-4">
+                    <svg id="moon-icon" class="w-6 h-6 text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <svg id="sun-icon" class="w-6 h-6 text-yellow-300 transition-all duration-300 ease-in-out hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.354 3.354l-.707.707M5.646 5.646l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="bg-blue-600 text-white p-6 md:hidden">
+        <ul class="flex flex-col space-y-4 pt-8">
+            <li><a href="index.html" class="nav-link-effect">Home</a></li>
+            <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+            <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+            <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+            <li><a href="games.html" class="nav-link-effect">Games</a></li>
+            <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+        </ul>
+    </div>
+
+    <main class="flex-grow container mx-auto p-4 py-8 relative z-10">
+
+        <section class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg mb-12 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-blue-700 dark:text-blue-400">Algebra Essentials: The Building Blocks of Math</h2>
+            <p class="text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+                Algebra is a fundamental branch of mathematics that uses letters and symbols to represent numbers and quantities in formulas and equations. It provides a powerful way to solve problems by representing relationships between unknown values. Mastering these essentials is crucial for success in higher-level mathematics and various scientific fields. This comprehensive lesson will guide you through the core concepts, ensuring a solid foundation.
+            </p>
+        </section>
+
+        <div class="lesson-content">
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>1. What is Algebra? A Deeper Dive</h3>
+                <p>
+                    Algebra is often described as generalized arithmetic, but it's much more than that. While arithmetic deals with specific numerical values and operations on them (e.g., $2 + 3 = 5$, $10 \times 4 = 40$), algebra introduces the revolutionary concept of using abstract symbols, primarily letters known as <strong>variables</strong>, to represent unknown quantities or values that can change. This abstraction allows us to express relationships and solve problems in a much broader and more powerful way.
+                </p>
+                <p>
+                    Imagine you're trying to figure out how many cookies you started with if you ate 3 and now have 7. In arithmetic, you might mentally calculate $7 + 3 = 10$. In algebra, you would represent the unknown starting number of cookies with a variable, say $c$. The problem then translates into the equation: $c - 3 = 7$. By solving for $c$, you find the unknown. This process of converting real-world scenarios into mathematical statements is known as <strong>mathematical modeling</strong>.
+                </p>
+                <p>
+                    The power of algebra extends beyond simple puzzles. It forms the bedrock for advanced mathematics, including calculus, geometry, and statistics. It is indispensable in fields such as:
+                </p>
+                <ul>
+                    <li><strong>Engineering:</strong> Designing structures, circuits, and systems.</li>
+                    <li><strong>Physics:</strong> Describing motion, forces, and energy.</li>
+                    <li><strong>Computer Science:</strong> Developing algorithms, programming, and data analysis.</li>
+                    <li><strong>Economics and Finance:</strong> Modeling markets, investments, and economic growth.</li>
+                    <li><strong>Chemistry and Biology:</strong> Understanding reaction rates, population dynamics, and molecular structures.</li>
+                </ul>
+                <p>
+                    By understanding algebra, you gain a universal language for problem-solving and logical reasoning that transcends specific numbers.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>2. Variables and Constants: The Core Components of Algebraic Expressions</h3>
+                <p>
+                    Every algebraic expression and equation is built from two fundamental types of quantities: variables and constants. Understanding their roles is paramount.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Variables:</strong> These are symbols, typically letters from the Latin alphabet (e.g., $x, y, z, a, b, c, m, n$), that represent quantities whose values can vary or are currently unknown. The value a variable holds can be determined by solving an equation, or it can represent a set of possible values within an inequality or a function.
+                        <div class="example-box">
+                            <strong>Example:</strong> In the formula for the circumference of a circle, $C = 2\pi r$:<br>
+                            - $C$ (circumference) is a variable because its value changes depending on the radius.<br>
+                            - $r$ (radius) is a variable because it can take on any positive real number value.
+                        </div>
+                        <p>
+                            Variables allow us to write general rules and relationships that apply to many different situations, rather than just one specific instance.
+                        </p>
+                    </li>
+                    <li>
+                        <strong>Constants:</strong> These are fixed numerical values that do not change. They are simply numbers. Constants provide the specific quantities or fixed relationships within an algebraic statement.
+                        <div class="example-box">
+                            <strong>Example:</strong> In the expression $7x - 15$:<br>
+                            - $7$ is a constant (the coefficient of $x$).<br>
+                            - $15$ is a constant (a standalone numerical term).<br>
+                            The value of $7x - 15$ will fluctuate with $x$, but $7$ and $15$ themselves remain immutable.
+                        </div>
+                        <p>
+                            It's important to note that some symbols, while letters, represent specific, unchanging numerical values. For instance, $\pi$ (pi $\approx 3.14159$) in the circle circumference formula is a constant, as is $e$ (Euler's number $\approx 2.71828$) often seen in exponential functions. These are known as mathematical constants.
+                        </p>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>3. Algebraic Expressions: The Language of Math Without Equality</h3>
+                <p>
+                    An algebraic expression is a combination of variables, constants, and mathematical operation symbols ($+, -, \times, \div$). Crucially, an expression does NOT contain an equals sign ($=$). It represents a value, but it doesn't make a statement about that value being equal to anything else. Think of it as a phrase in a sentence, not a complete sentence itself.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Key Components and Terminology:</p>
+                <ul>
+                    <li>
+                        <strong>Terms:</strong> These are the individual parts of an expression that are separated by addition ($+$) or subtraction ($-$) signs. Each term can be a single number, a single variable, or a product of numbers and variables.
+                        <div class="example-box">
+                            <strong>Example:</strong> In the expression $5x^2 + 2y - 11$, the terms are $5x^2$, $2y$, and $-11$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Coefficients:</strong> The numerical factor that multiplies a variable in a term. If a variable appears without a number in front of it, its coefficient is implicitly $1$.
+                        <div class="example-box">
+                            <strong>Example:</strong> In $5x^2 + 2y - 11$:<br>
+                            - $5$ is the coefficient of $x^2$.<br>
+                            - $2$ is the coefficient of $y$.<br>
+                            - In a term like $z$, the coefficient is $1$. In $-w$, the coefficient is $-1$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Constant Term:</strong> A term in an expression that does not contain any variables. It's just a number.
+                        <div class="example-box">
+                            <strong>Example:</strong> In $5x^2 + 2y - 11$, $-11$ is the constant term.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Operators:</strong> The mathematical symbols that indicate operations to be performed. These include addition ($+$), subtraction ($-$), multiplication ($\times$ or $\cdot$ or juxtaposition, e.g., $3x$), and division ($\div$ or $/ $ or a fraction bar).
+                    </li>
+                </ul>
+                <div class="example-box">
+                    <strong>More Illustrative Examples of Algebraic Expressions:</strong><br>
+                    - $p + q$ (the sum of $p$ and $q$)<br>
+                    - $7m - 4$ (seven times $m$ decreased by four)<br>
+                    - $\frac{k}{3}$ (k divided by three)<br>
+                    - $2(r + s)$ (two times the sum of $r$ and $s$ - this expression can be simplified using the distributive property to $2r + 2s$)
+                </div>
+                <p>
+                    Expressions cannot be "solved" for a variable's value because there's no equality to satisfy. However, they can be <strong>simplified</strong> by combining like terms or by applying properties like the distributive property. They can also be <strong>evaluated</strong> by substituting specific numerical values for the variables.
+                </p>
+                <div class="example-box">
+                    <strong>Example: Evaluate $3x + 7$ when $x = 4$</strong><br>
+                    Substitute $4$ for $x$: $3(4) + 7 = 12 + 7 = 19$.
+                </div>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>4. Algebraic Equations: Statements of Balanced Equality</h3>
+                <p>
+                    An algebraic equation is a mathematical statement that asserts that two expressions are equal. It is always characterized by the presence of an equals sign ($=$) separating two expressions. The fundamental purpose of an equation is to establish a relationship where the value of the expression on the left side is exactly the same as the value of the expression on the right side.
+                </p>
+                <p>
+                    The primary objective when working with equations is to find the value(s) of the unknown variable(s) that make the equation true. These specific values are known as the <strong>solutions</strong> or <strong>roots</strong> of the equation. If an equation has multiple variables, a solution might be a set of values (e.g., an ordered pair for $x$ and $y$).
+                </p>
+                <p>
+                    Think of an equation as a perfectly balanced scale. Whatever operation you perform on one side of the scale, you must perform the exact same operation on the other side to maintain its equilibrium. This principle is crucial for solving equations.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Types of Equations (based on the highest power of the variable):</p>
+                <ul>
+                    <li>
+                        <strong>Linear Equations:</strong> The highest power of any variable is $1$. These equations typically have one unique solution (or no solution, or infinitely many solutions in special cases).
+                        <div class="example-box">
+                            <strong>Examples:</strong><br>
+                            - $x + 8 = 15$<br>
+                            - $4y - 3 = 9$<br>
+                            - $2a + 5 = a - 1$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Quadratic Equations:</strong> The highest power of a variable is $2$. These equations typically have two solutions.
+                        <div class="example-box">
+                            <strong>Example:</strong> $x^2 - 4 = 0$ (solutions are $x=2$ and $x=-2$)
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Polynomial Equations:</strong> Equations where variables can have powers greater than $2$.
+                        <div class="example-box">
+                            <strong>Example:</strong> $x^3 + 2x^2 - x + 5 = 0$
+                        </div>
+                    </li>
+                </ul>
+                <p>
+                    This lesson will primarily focus on understanding and solving linear equations, which are the foundation for all other types of algebraic equations.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>5. Properties of Equality: The Rules of Balance</h3>
+                <p>
+                    To manipulate and solve equations, we apply fundamental rules known as the Properties of Equality. These properties ensure that the balance (the equality) of the equation is preserved after each operation.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Addition Property of Equality:</strong> If you have an equation $a = b$, and you add the same number $c$ to both sides, the equality remains true: $a + c = b + c$.
+                        <p>This property is used to "undo" subtraction in an equation.</p>
+                        <div class="example-box">
+                            <strong>Example:</strong> Solve $x - 7 = 12$<br>
+                            To isolate $x$, we need to get rid of the $-7$. We do this by adding $7$ to both sides:<br>
+                            $x - 7 + 7 = 12 + 7$<br>
+                            $x = 19$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Subtraction Property of Equality:</strong> If you have an equation $a = b$, and you subtract the same number $c$ from both sides, the equality remains true: $a - c = b - c$.
+                        <p>This property is used to "undo" addition in an equation.</p>
+                        <div class="example-box">
+                            <strong>Example:</strong> Solve $y + 5 = 18$<br>
+                            To isolate $y$, we need to get rid of the $+5$. We do this by subtracting $5$ from both sides:<br>
+                            $y + 5 - 5 = 18 - 5$<br>
+                            $y = 13$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Multiplication Property of Equality:</strong> If you have an equation $a = b$, and you multiply both sides by the same non-zero number $c$, the equality remains true: $a \times c = b \times c$ (or $ac = bc$).
+                        <p>This property is used to "undo" division in an equation.</p>
+                        <div class="example-box">
+                            <strong>Example:</strong> Solve $\frac{z}{4} = 6$<br>
+                            To isolate $z$, we need to get rid of the division by $4$. We do this by multiplying both sides by $4$:<br>
+                            $4 \times \frac{z}{4} = 6 \times 4$<br>
+                            $z = 24$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Division Property of Equality:</strong> If you have an equation $a = b$, and you divide both sides by the same non-zero number $c$, the equality remains true: $\frac{a}{c} = \frac{b}{c}$.
+                        <p>This property is used to "undo" multiplication in an equation.</p>
+                        <div class="example-box">
+                            <strong>Example:</strong> Solve $6w = 42$<br>
+                            To isolate $w$, we need to get rid of the multiplication by $6$. We do this by dividing both sides by $6$:<br>
+                            $\frac{6w}{6} = \frac{42}{6}$<br>
+                            $w = 7$
+                        </div>
+                    </li>
+                </ul>
+                <p>
+                    These four properties are the fundamental tools for isolating variables and solving equations. Always remember the "golden rule": whatever you do to one side of the equation, you must do to the other side.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>6. Combining Like Terms: Simplifying Expressions and Equations for Clarity</h3>
+                <p>
+                    Before or during the process of solving equations, it is often necessary to simplify algebraic expressions. One of the most common simplification techniques is "combining like terms."
+                </p>
+                <p>
+                    <strong>What are Like Terms?</strong>
+                    Like terms are terms that have the exact same variable parts, meaning the same variables raised to the same powers. The numerical coefficients can be different, but the variable structure must be identical. The order of variables within a term does not affect whether they are like terms (e.g., $xy$ is a like term with $yx$).
+                </p>
+                <p>
+                    <strong>How to Combine Like Terms:</strong>
+                    You combine like terms by adding or subtracting their numerical coefficients, while keeping the common variable part unchanged.
+                </p>
+                <ul>
+                    <li><strong>Examples of Like Terms (and why):</strong>
+                        <ul>
+                            <li>$3x$ and $7x$: Both have the variable $x$ raised to the power of 1.</li>
+                            <li>$-2y$ and $5y$: Both have the variable $y$ raised to the power of 1.</li>
+                            <li>$4ab$ and $-9ab$: Both have the variable part $ab$.</li>
+                            <li>$c^2$ and $6c^2$: Both have the variable part $c^2$.</li>
+                            <li>$5$ and $-12$: Both are constants (they have no variable part, or you can think of them as having a variable part of $x^0 = 1$).</li>
+                        </ul>
+                    </li>
+                    <li><strong>Examples of Unlike Terms (and why):</strong>
+                        <ul>
+                            <li>$3x$ and $3y$: Different variables ($x$ vs. $y$).</li>
+                            <li>$4x$ and $4x^2$: Different powers of the variable ($x^1$ vs. $x^2$).</li>
+                            <li>$2ab$ and $2a$: Different variable parts ($ab$ vs. $a$).</li>
+                            <li>$5x$ and $5$: One has a variable, the other is a constant.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="example-box">
+                    <strong>Example 1: Simplify $5x + 3y - 2x + y$</strong><br>
+                    1. Identify like terms: $(5x \text{ and } -2x)$, and $(3y \text{ and } y)$.<br>
+                    2. Group like terms together (optional, but helpful for organization):<br>
+                       $(5x - 2x) + (3y + y)$<br>
+                    3. Combine the coefficients of each set of like terms:<br>
+                       $(5-2)x + (3+1)y$<br>
+                       Result: $3x + 4y$
+                </div>
+                <div class="example-box">
+                    <strong>Example 2: Simplify $8a - 5 - 2a + 10 - 3b$</strong><br>
+                    1. Identify like terms: $(8a \text{ and } -2a)$, $(-5 \text{ and } 10)$, and $(-3b)$.<br>
+                    2. Group like terms:<br>
+                       $(8a - 2a) + (-5 + 10) - 3b$<br>
+                    3. Combine coefficients:<br>
+                       $(8-2)a + (5) - 3b$<br>
+                       Result: $6a + 5 - 3b$ (or $6a - 3b + 5$)
+                </div>
+                <p>
+                    Combining like terms simplifies expressions, making them easier to read and work with, especially when solving equations.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>7. The Distributive Property: Expanding and Simplifying</h3>
+                <p>
+                    The distributive property is a fundamental algebraic property that connects multiplication with addition and subtraction. It provides a way to expand expressions that involve a factor multiplied by a sum or difference inside parentheses.
+                </p>
+                <p>
+                    Mathematically, the distributive property states:
+                    <ul>
+                        <li>$a(b + c) = ab + ac$</li>
+                        <li>$a(b - c) = ab - ac$</li>
+                    </ul>
+                    In essence, the term outside the parentheses is "distributed" (multiplied) to each term inside the parentheses.
+                </p>
+                <div class="example-box">
+                    <strong>Example 1: Simplify $3(x + 4)$</strong><br>
+                    Here, $3$ is distributed to both $x$ and $4$:<br>
+                    $3 \times x + 3 \times 4$<br>
+                    Result: $3x + 12$
+                </div>
+                <div class="example-box">
+                    <strong>Example 2: Simplify $-2(y - 5)$</strong><br>
+                    The term $-2$ is distributed to both $y$ and $-5$. Be careful with the signs!<br>
+                    $-2 \times y + (-2) \times (-5)$<br>
+                    Result: $-2y + 10$
+                </div>
+                <div class="example-box">
+                    <strong>Example 3: Simplify $-(2a + 7)$</strong><br>
+                    When there's only a negative sign outside parentheses, it's equivalent to multiplying by $-1$. Distribute $-1$ to each term:<br>
+                    $-1 \times (2a) + (-1) \times (7)$<br>
+                    Result: $-2a - 7$
+                </div>
+                <div class="example-box">
+                    <strong>Example 4: Simplify $4(2x - 3y + 1)$</strong><br>
+                    Distribute $4$ to each term inside the parentheses:<br>
+                    $4 \times (2x) + 4 \times (-3y) + 4 \times (1)$<br>
+                    Result: $8x - 12y + 4$
+                </div>
+                <p>
+                    The distributive property is frequently the first step in solving multi-step equations or simplifying complex algebraic expressions.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>8. Solving Multi-Step Linear Equations: A Systematic Approach</h3>
+                <p>
+                    Solving linear equations involves isolating the variable on one side of the equation. When equations become more complex, they require multiple steps. The key is to systematically "undo" the operations performed on the variable, following the reverse order of operations (often thought of as PEMDAS/BODMAS in reverse: undo addition/subtraction first, then multiplication/division, then exponents, then parentheses).
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">General Steps to Solve Multi-Step Equations:</p>
+                <ol>
+                    <li>
+                        <strong>Simplify Each Side:</strong>
+                        <ul>
+                            <li>Use the distributive property to remove any parentheses.</li>
+                            <li>Combine any like terms that are on the same side of the equation.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Collect Variable Terms on One Side:</strong>
+                        <ul>
+                            <li>If variables appear on both sides of the equation, use the addition or subtraction property of equality to move all terms containing the variable to one side (e.g., the left side).</li>
+                            <li>It's often easier to move the smaller variable term to avoid negative coefficients, but it's not strictly necessary.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Collect Constant Terms on the Other Side:</strong>
+                        <ul>
+                            <li>Use the addition or subtraction property of equality to move all constant terms (numbers without variables) to the opposite side of the equation from the variable terms.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Isolate the Variable:</strong>
+                        <ul>
+                            <li>Use the multiplication or division property of equality to get the variable completely by itself. This usually involves dividing by the variable's coefficient.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Check Your Solution:</strong>
+                        <ul>
+                            <li>Substitute your calculated value for the variable back into the <strong>original equation</strong>.</li>
+                            <li>Perform the operations on both sides. If the left side equals the right side, your solution is correct. This step is crucial for verifying your work.</li>
+                        </ul>
+                    </li>
+                </ol>
+                <div class="example-box">
+                    <strong>Example 1: Solve $3x - 5 = 13$</strong><br>
+                    1. <em>Simplify:</em> Both sides are already simplified.<br>
+                    2. <em>Collect variable terms:</em> $3x$ is already on one side.<br>
+                    3. <em>Collect constant terms:</em> Add 5 to both sides to move $-5$ to the right:<br>
+                       $3x - 5 + 5 = 13 + 5$<br>
+                       $3x = 18$<br>
+                    4. <em>Isolate the variable:</em> Divide both sides by 3:<br>
+                       $\frac{3x}{3} = \frac{18}{3}$<br>
+                       $x = 6$<br>
+                    5. <em>Check:</em> Substitute $x=6$ into $3x - 5 = 13$:<br>
+                       $3(6) - 5 = 18 - 5 = 13$. Since $13 = 13$, the solution is correct.
+                </div>
+                <div class="example-box">
+                    <strong>Example 2: Solve $2(y + 3) = 14$</strong><br>
+                    1. <em>Simplify:</em> Distribute the 2 on the left side:<br>
+                       $2y + 6 = 14$<br>
+                    2. <em>Collect variable terms:</em> $2y$ is already on one side.<br>
+                    3. <em>Collect constant terms:</em> Subtract 6 from both sides:<br>
+                       $2y + 6 - 6 = 14 - 6$<br>
+                       $2y = 8$<br>
+                    4. <em>Isolate the variable:</em> Divide both sides by 2:<br>
+                       $\frac{2y}{2} = \frac{8}{2}$<br>
+                       $y = 4$<br>
+                    5. <em>Check:</em> Substitute $y=4$ into $2(y + 3) = 14$:<br>
+                       $2(4 + 3) = 2(7) = 14$. Since $14 = 14$, the solution is correct.
+                </div>
+                <div class="example-box">
+                    <strong>Example 3: Solve $5m + 2 = 2m + 11$</strong><br>
+                    1. <em>Simplify:</em> Both sides are already simplified.<br>
+                    2. <em>Collect variable terms:</em> Subtract $2m$ from both sides to move it to the left:<br>
+                       $5m - 2m + 2 = 2m - 2m + 11$<br>
+                       $3m + 2 = 11$<br>
+                    3. <em>Collect constant terms:</em> Subtract 2 from both sides to move it to the right:<br>
+                       $3m + 2 - 2 = 11 - 2$<br>
+                       $3m = 9$<br>
+                    4. <em>Isolate the variable:</em> Divide both sides by 3:<br>
+                       $\frac{3m}{3} = \frac{9}{3}$<br>
+                       $m = 3$<br>
+                    5. <em>Check:</em> Substitute $m=3$ into $5m + 2 = 2m + 11$:<br>
+                       Left side: $5(3) + 2 = 15 + 2 = 17$<br>
+                       Right side: $2(3) + 11 = 6 + 11 = 17$. Since $17 = 17$, the solution is correct.
+                </div>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>9. Introduction to Inequalities: Comparing Quantities</h3>
+                <p>
+                    While equations express that two quantities are exactly equal, inequalities express a relationship where two quantities are not necessarily equal. Instead, they indicate that one quantity is greater than, less than, greater than or equal to, or less than or equal to another.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Inequality Symbols:</p>
+                <ul>
+                    <li>$<$ : "less than" (e.g., $x < 5$ means $x$ can be any number smaller than 5, but not 5 itself)</li>
+                    <li>$>$ : "greater than" (e.g., $y > 10$ means $y$ can be any number larger than 10, but not 10 itself)</li>
+                    <li>$\le$ : "less than or equal to" (e.g., $a \le 7$ means $a$ can be 7 or any number smaller than 7)</li>
+                    <li>$\ge$ : "greater than or equal to" (e.g., $b \ge -2$ means $b$ can be -2 or any number larger than -2)</li>
+                    <li>$\neq$ : "not equal to" (e.g., $x \neq 0$ means $x$ can be any number except 0)</li>
+                </ul>
+                <p>
+                    <strong>Solving Linear Inequalities:</strong>
+                    The process of solving linear inequalities is strikingly similar to solving linear equations. You use the same properties of equality (addition, subtraction, multiplication, division) to isolate the variable. However, there is one critical rule to remember:
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">The Golden Rule for Inequalities:</p>
+                <p>
+                    When you **multiply or divide both sides of an inequality by a negative number**, you **MUST reverse the direction of the inequality sign**. If you don't, the solution will be incorrect.
+                </p>
+                <div class="example-box">
+                    <strong>Example 1: Solve $x + 3 > 8$</strong><br>
+                    Subtract 3 from both sides (no sign change needed):<br>
+                    $x + 3 - 3 > 8 - 3$<br>
+                    $x > 5$<br>
+                    This means any number greater than 5 is a solution.
+                </div>
+                <div class="example-box">
+                    <strong>Example 2: Solve $-2x \le 10$</strong><br>
+                    Divide both sides by -2. Since we are dividing by a negative number, **reverse the inequality sign**:<br>
+                    $\frac{-2x}{-2} \ge \frac{10}{-2}$<br>
+                    $x \ge -5$<br>
+                    This means any number greater than or equal to -5 is a solution.
+                </div>
+                <div class="example-box">
+                    <strong>Example 3: Solve $5 - y < 12$</strong><br>
+                    1. Subtract 5 from both sides:<br>
+                       $5 - y - 5 < 12 - 5$<br>
+                       $-y < 7$<br>
+                    2. Multiply both sides by -1. **Reverse the inequality sign**:<br>
+                       $-1 \times (-y) > -1 \times (7)$<br>
+                       $y > -7$<br>
+                    This means any number greater than -7 is a solution.
+                </div>
+                <p>
+                    Solutions to inequalities are often represented on a number line or using interval notation.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>10. Translating Words to Algebra: Bridging Language and Math</h3>
+                <p>
+                    One of the most essential skills in algebra is the ability to translate real-world problems, described in words, into mathematical expressions and equations. This process is often the first and most challenging step in solving word problems. It requires careful reading and understanding of keywords that indicate specific mathematical operations.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Common Keywords and Their Algebraic Equivalents:</p>
+                <ul>
+                    <li><strong>Addition ($+$):</strong>
+                        <ul>
+                            <li>"sum of" (e.g., "sum of $x$ and $y$" $\rightarrow x + y$)</li>
+                            <li>"total" (e.g., "total of $a$ and $b$" $\rightarrow a + b$)</li>
+                            <li>"increased by" (e.g., "$n$ increased by 7" $\rightarrow n + 7$)</li>
+                            <li>"more than" (e.g., "5 more than a number $x$" $\rightarrow x + 5$)</li>
+                            <li>"added to" (e.g., "3 added to $p$" $\rightarrow p + 3$)</li>
+                            <li>"plus" (e.g., "$k$ plus 8" $\rightarrow k + 8$)</li>
+                            <li>"altogether"</li>
+                        </ul>
+                    </li>
+                    <li><strong>Subtraction ($-$):</strong>
+                        <ul>
+                            <li>"difference between" (e.g., "difference between $x$ and $y$" $\rightarrow x - y$)</li>
+                            <li>"decreased by" (e.g., "$m$ decreased by 4" $\rightarrow m - 4$)</li>
+                            <li>"less than" (e.g., "10 less than a number $n$" $\rightarrow n - 10$) - *Note the order reversal!*</li>
+                            <li>"minus" (e.g., "$a$ minus $b$" $\rightarrow a - b$)</li>
+                            <li>"subtracted from" (e.g., "6 subtracted from $p$" $\rightarrow p - 6$) - *Note the order reversal!*</li>
+                            <li>"take away"</li>
+                        </ul>
+                    </li>
+                    <li><strong>Multiplication ($\times$ or $\cdot$ or juxtaposition):</strong>
+                        <ul>
+                            <li>"product of" (e.g., "product of 5 and $x$" $\rightarrow 5x$)</li>
+                            <li>"times" (e.g., "3 times $y$" $\rightarrow 3y$)</li>
+                            <li>"multiplied by" (e.g., "$a$ multiplied by $b$" $\rightarrow ab$)</li>
+                            <li>"of" (often used with fractions or percentages, e.g., "half of $x$" $\rightarrow \frac{1}{2}x$)</li>
+                            <li>"twice" (e.g., "twice a number $n$" $\rightarrow 2n$)</li>
+                            <li>"double", "triple", etc.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Division ($\div$ or $/ $ or fraction bar):</strong>
+                        <ul>
+                            <li>"quotient of" (e.g., "quotient of $x$ and 4" $\rightarrow \frac{x}{4}$)</li>
+                            <li>"divided by" (e.g., "$y$ divided by 2" $\rightarrow \frac{y}{2}$)</li>
+                            <li>"per" (e.g., "miles per hour" $\rightarrow \frac{\text{miles}}{\text{hours}}$)</li>
+                            <li>"ratio of"</li>
+                            <li>"half", "third", etc. (e.g., "a third of $z$" $\rightarrow \frac{z}{3}$)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Equals ($=$):</strong>
+                        <ul>
+                            <li>"is"</li>
+                            <li>"are"</li>
+                            <li>"was"</li>
+                            <li>"will be"</li>
+                            <li>"results in"</li>
+                            <li>"gives"</li>
+                            <li>"is equal to"</li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="example-box">
+                    <strong>Example 1:</strong> "The sum of a number and eight is fifteen."<br>
+                    Let the number be $n$.<br>
+                    Translation: $n + 8 = 15$
+                </div>
+                <div class="example-box">
+                    <strong>Example 2:</strong> "Four less than twice a number is six."<br>
+                    Let the number be $x$.<br>
+                    Translation: $2x - 4 = 6$
+                </div>
+                <div class="example-box">
+                    <strong>Example 3:</strong> "The product of a number and 5, increased by 10, is 25."<br>
+                    Let the number be $y$.<br>
+                    Translation: $5y + 10 = 25$
+                </div>
+                <div class="example-box">
+                    <strong>Example 4:</strong> "Half of a number is greater than or equal to 7."<br>
+                    Let the number be $k$.<br>
+                    Translation: $\frac{1}{2}k \ge 7$ or $\frac{k}{2} \ge 7$
+                </div>
+                <p>
+                    Practice is key to mastering translation. Always define your variables clearly before writing the algebraic statement.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>Practice Problems: Apply Your Knowledge</h3>
+                <p>Now, put your understanding of Algebra Essentials to the test with these practice problems. Work through each one carefully, applying the concepts and steps you've learned.</p>
+                <ol class="list-decimal list-inside space-y-3">
+                    <li><strong>Identify Variables and Constants:</strong> In the expression $12p - 3q + 8$, identify the variables and constants.</li>
+                    <li><strong>Evaluate an Expression:</strong> Evaluate the expression $4a^2 - 2b + 5$ when $a = 3$ and $b = -1$.</li>
+                    <li><strong>Simplify by Combining Like Terms:</strong> Simplify the expression: $10x + 7y - 4x - 2y + 1$</li>
+                    <li><strong>Apply the Distributive Property:</strong> Expand and simplify: $-5(2m - 3) + 4m$</li>
+                    <li><strong>Solve a Two-Step Linear Equation:</strong> Solve for $x$: $7x + 15 = 50$</li>
+                    <li><strong>Solve a Multi-Step Linear Equation (Variables on Both Sides):</strong> Solve for $n$: $6n - 10 = 2n + 14$</li>
+                    <li><strong>Solve a Multi-Step Linear Equation (with Distribution):</strong> Solve for $w$: $3(w - 4) + 2w = 18$</li>
+                    <li><strong>Solve a Linear Inequality:</strong> Solve for $k$: $9 - 4k \ge 21$</li>
+                    <li><strong>Translate to Algebraic Expression:</strong> Write an algebraic expression for "the quotient of a number and six, increased by two."</li>
+                    <li><strong>Translate to Algebraic Equation:</strong> Write an algebraic equation for "The sum of three times a number and five is equal to twenty." Then solve the equation.</li>
+                </ol>
+                <p class="mt-4 text-gray-700 dark:text-gray-300"><em>(Solutions are not provided here, encouraging self-assessment, peer discussion, or seeking further assistance.)</em></p>
+            </section>
+
+        </div>
+
+    </main>
+
+    <footer class="bg-gray-800 dark:bg-gray-900 text-white p-8 mt-12 relative z-10">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
+            <div>
+                <h3 class="text-xl font-bold mb-4">WhizMath</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    Your ultimate destination for mastering mathematics. We provide free tools, comprehensive lessons, and engaging quizzes to help you succeed.
+                </p>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="index.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Home</a></li>
+                    <li><a href="tools.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Tools</a></li>
+                    <li><a href="lessons.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Learn</a></li>
+                    <li><a href="quizzes.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Quizzes</a></li>
+                    <li><a href="games.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Games</a></li>
+                    <li><a href="contact.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Popular Tools</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Scientific Calculator</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Graphing Calculator</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Unit Converter</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Equation Solver</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Popular Lessons</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Algebra Essentials</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Geometry Basics</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Calculus Introduction</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Statistics Fundamentals</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="flex justify-center md:justify-start space-x-4 mt-6">
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="Facebook">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.776-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
+                </svg>
+            </a>
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="X (Twitter)">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.21-6.89L4.93 21.75H1.625l7.73-8.835L1.25 2.25h3.308l5.97 7.68L18.244 2.25zm.426 17.565L16.63 4.393 4.126 2.25H2.808l13.785 18.125h1.275z" />
+                </svg>
+            </a>
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="Instagram">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.792.006 3.24.016a8.97 8.97 0 011.8.093c.895.119 1.57.34 2.1.598.98.483 1.62.94 2.22 1.638.6.698 1.04 1.347 1.43 2.278.39.93.593 1.776.66 2.825.02.324.037.79.037 1.393 0 2.43-.006 2.792-.016 3.24a8.97 8.97 0 01-.093 1.8c-.119.895-.34 1.57-.598 2.1-.483.98-.94 1.62-1.638 2.22-.698.6-1.347 1.04-2.278 1.43-.93.39-1.776.593-2.825.66-.324.02-.79.037-1.393.037-2.43 0-2.792-.006-3.24-.016a8.97 8.97 0 01-1.8-.093c-.895-.119-1.57-.34-2.1-.598-.98-.483-1.62-.94-2.22-1.638-.6-.698-1.347-1.04-2.278-1.43-.93-.39-1.776-.593-2.825-.66-.324-.02-.037-.79-.037-1.393 0-2.43.006-2.792.016-3.24.093-1.8.314.598-4.035.483-.98.94-1.62 1.638-2.22.698-.6 1.347-1.04 2.278-1.43.93-.39 1.776-.593 2.825-.66.324-.02.79-.037 1.393-.037zm0 2.164c-2.093 0-3.193.013-3.793.023a6.83 6.83 0 00-1.46.074c-.66.088-1.09.283-1.48.473-.59.28-1.04.57-1.44.97-.4.4-.69.85-.97 1.44-.19.39-.385.82-.473 1.48-.06.4-.073.74-.083 1.34-.01.6-.013 1.093-.013 3.793s.003 3.193.013 3.793c.01.4.023.74.083 1.34.088.66.283 1.09.473 1.48.28.59.57 1.04.97 1.44.4.4.85.69 1.44.97.39.19.82.385 1.48.473.4.06.74.073 1.34.083.6.01 1.093.013 3.793.013s3.193-.003 3.793-.013c.4-.01.74-.023 1.34-.083.66-.088 1.09-.283 1.48-.473.59-.28 1.04-.57 1.44-.97.4-.4.69-.85.97-1.44.19-.39.385-.82.473-1.48.06-.4.073-.74.083-1.34.01-.6.013-1.093.013-3.793s-.003-3.193-.013-3.793c-.01-.4-.023-.74-.083-1.34-.088-.66-.283-1.09-.473-1.48-.28-.59-.57-1.04-.97-1.44-.4-.4-.85-.69-1.44-.97-.39-.19-.82-.385-1.48-.473-.4-.06-.74-.073-1.34-.083-.6-.01-1.093-.013-3.793-.013zm0 3.52c-2.467 0-4.475 2.008-4.475 4.475s2.008 4.475 4.475 4.475 4.475-2.008 4.475-4.475-2.008-4.475-4.475-4.475zM12.315 18a5.685 5.685 0 110-11.37 5.685 5.685 0 010 11.37zm7.25-10.975a1.18 1.18 0 100 2.36 1.18 1.18 0 000-2.36z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="YouTube">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M19.812 5.405c.781-.144 1.406-.395 1.834-.693.376-.258.629-.533.868-.904.2-.315.353-.69.451-1.042C23.63 2.656 24 2.14 24 1.516a.754.754 0 00-.001-.194c-.035-.3-.153-.591-.355-.845-.224-.287-.516-.566-.867-.862-.375-.316-.763-.618-1.284-.903-.795-.445-1.745-.853-2.925-1.127C17.062 0 12 0 12 0s-5.062 0-7.063.093c-1.18.274-2.13.682-2.925 1.127-.521.285-.91.566-1.285.862-.202.254-.32.545-.355.845A.754.754 0 000 1.516c0 .624.37 1.14.734 1.55.098.352.251.727.452 1.042.239.37.492.645.868.904.428.298 1.053.549 1.834.693C4.938 6 12 6 12 6s7.063 0 7.812-.595zM12 8.75c-3.12 0-5.625 2.505-5.625 5.625S8.88 20 12 20s5.625-2.505 5.625-5.625S15.12 8.75 12 8.75z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        <div class="border-t border-gray-700 dark:border-gray-800 pt-6 mt-8 text-center text-sm text-gray-400">
+            <p>&copy; 2025 WhizMath. All rights reserved.</p>
+            <p class="mt-2">Designed with <span class="text-red-500">&hearts;</span> by Your AI Assistant</p>
+        </div>
+    </footer>
+
+    <button id="scroll-to-top-btn">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v14"></path>
+        </svg>
+    </button>
+
+    <script>
+        // --- Theme Toggle Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        // Check for saved theme on load
+        const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+        setTheme(savedTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // --- Mobile Sidebar Menu Logic ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            mobileMenuOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling body when menu is open
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('open');
+            document.body.style.overflow = ''; // Restore body scrolling
+        }
+
+        mobileMenuButton.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('open')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu); // Close when clicking overlay
+
+        // Close mobile menu if a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                // Only close if it's a small screen
+                if (window.innerWidth < 768) {
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Handle resize: ensure menu is correct on desktop/mobile switch
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint
+                closeMobileMenu(); // Ensure sidebar is closed on desktop
+            }
+        });
+
+        // --- Three.js Global Background Animation Logic ---
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('global-background-canvas');
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles
+            const particleCount = 12500;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            const color1 = new THREE.Color(0xADD8E6); // Light blue
+            const color2 = new THREE.Color(0x87CEEB); // Sky blue
+            const color3 = new THREE.Color(0x6495ED); // Cornflower blue
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
+                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
+                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
+
+                const rand = Math.random();
+                let color;
+                if (rand < 0.33) {
+                    color = color1;
+                } else if (rand < 0.66) {
+                    color = color2;
+                } else {
+                    color = color3;
+                }
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+            });
+
+            particles = new THREE.Points(geometry, particleMaterial);
+            scene.add(particles);
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+        };
+
+        // --- Scroll to Top Button Logic ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling 300px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll animation
+            });
+        });
+    </script>
+</body>
+</html>

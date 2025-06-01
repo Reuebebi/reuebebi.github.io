@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizmath: Integrals - The Mathematics of Accumulation</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Light mode styles */
+        .light .bg-gray-100 { background-color: #f3f4f6; }
+        .light .text-gray-900 { color: #1f2937; }
+        .light .bg-white { background-color: #ffffff; }
+        .light .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .light .text-gray-800 { color: #1f2937; }
+        .light .text-blue-700 { color: #1d4ed8; }
+        .light .bg-blue-600 { background-color: #2563eb; }
+        .light .bg-blue-700 { background-color: #1d4ed8; }
+        .light .bg-blue-500 { background-color: #3b82f6; }
+        .light .from-blue-500 { --tw-gradient-from: #3b82f6; }
+        .light .to-indigo-600 { --tw-gradient-to: #4f46e5; }
+        .light .bg-gray-50 { background-color: #f9fafb; } /* Card background */
+        .light .text-gray-600 { color: #4b5563; } /* Card description text */
+        .light .text-gray-700 { color: #374151; } /* Section description text */
+        .light .bg-blue-100 { background-color: #dbeafe; } /* Autocomplete hover */
+        .light .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .light .social-icon-bg { background-color: #3b82f6; } /* Social icon background */
+        .light .social-icon-bg:hover { background-color: #2563eb; } /* Social icon hover background */
+        .light #scroll-to-top-btn { background-color: #2563eb; } /* Scroll to top button */
+        .light #scroll-to-top-btn:hover { background-color: #1d4ed8; } /* Scroll to top button hover */
+
+
+        /* Dark mode styles */
+        .dark .bg-gray-100 { background-color: #1a202c; }
+        .dark .text-gray-900 { color: #e2e8f0; }
+        .dark .bg-white { background-color: #2d3748; } /* Main content section background */
+        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15); }
+        .dark .text-gray-800 { color: #cbd5e0; }
+        .dark .text-blue-700 { color: #90cdf4; } /* Section title */
+        .dark .bg-blue-600 { background-color: #1a365d; }
+        .dark .bg-blue-700 { background-color: #2a4365; }
+        .dark .bg-blue-500 { background-color: #3182ce; }
+        .dark .from-blue-500 { --tw-gradient-from: #3182ce; }
+        .dark .to-indigo-600 { --tw-gradient-to: #5a67d8; }
+        .dark .bg-gray-800 { background-color: #1a202c; }
+        .dark .text-white { color: #e2e8f0; }
+        .dark .bg-gray-50 { background-color: #1f2937; } /* Card background for dark mode */
+        .dark .text-gray-600 { color: #a0aec0; } /* Card description text for dark mode */
+        .dark .text-gray-700 { color: #cbd5e0; } /* Section description text for dark mode */
+        .dark .bg-blue-100 { background-color: #1e3a8a; } /* Autocomplete hover for dark mode */
+        .dark .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .dark .social-icon-bg { background-color: #3182ce; } /* Social icon background */
+        .dark .social-icon-bg:hover { background-color: #2b6cb0; } /* Social icon hover background */
+        .dark #scroll-to-top-btn { background-color: #3182ce; } /* Scroll to top button */
+        .dark #scroll-to-top-btn:hover { background-color: #2b6cb0; } /* Scroll to top button hover */
+
+
+        /* Ensure smooth transitions for all elements */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Global Three.js Canvas for background animation */
+        #global-background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none; /* Allows clicks to pass through to content */
+            opacity: 0.7; /* Slightly transparent */
+        }
+
+        /* Mobile sidebar styling */
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 256px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 50;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* Overlay for when sidebar is open */
+        #mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        #mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Custom Nav Link Hover Effect */
+        .nav-link-effect {
+            position: relative;
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .nav-link-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease-out;
+            border-radius: 6px;
+            z-index: -1;
+        }
+
+        .nav-link-effect::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease-out, left 0.3s ease-out;
+        }
+
+        .nav-link-effect:hover::before {
+            transform: scaleX(1);
+        }
+
+        .nav-link-effect:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Dark mode specific hover effect adjustments */
+        .dark .nav-link-effect::before {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .dark .nav-link-effect::after {
+            background-color: #90cdf4; /* Blue-300 for dark mode */
+        }
+
+        /* Adjust mobile menu links for the new effect */
+        #mobile-menu .nav-link-effect {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+        }
+
+        /* Scroll to Top Button */
+        #scroll-to-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 9999px; /* Fully rounded */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 100;
+        }
+
+        #scroll-to-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Lesson content specific styles */
+        .lesson-section {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .light .lesson-section {
+            background-color: #ffffff; /* bg-white */
+        }
+        .dark .lesson-section {
+            background-color: #2d3748; /* dark:bg-gray-700 */
+        }
+        .lesson-section h3 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 1rem;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .lesson-section h3 {
+            color: #90cdf4; /* dark:text-blue-400 */
+        }
+        .lesson-section p {
+            line-height: 1.75; /* leading-relaxed */
+            margin-bottom: 1rem;
+            color: #374151; /* text-gray-700 */
+        }
+        .dark .lesson-section p {
+            color: #cbd5e0; /* dark:text-gray-300 */
+        }
+        .lesson-section ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .lesson-section ul {
+            color: #cbd5e0;
+        }
+        .lesson-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        .example-box {
+            background-color: #e0f2fe; /* bg-blue-50 */
+            border-left: 4px solid #3b82f6; /* border-blue-500 */
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .example-box {
+            background-color: #1e3a8a; /* dark:bg-blue-900 */
+            border-color: #60a5fa; /* dark:border-blue-400 */
+            color: #90cdf4; /* dark:text-blue-300 */
+        }
+        /* Markdown specific styling for equations - keeping from previous version for consistency */
+        .lesson-content p code {
+            background-color: #e5e7eb; /* Gray-200 */
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-family: 'Fira Code', monospace; /* Or any monospaced font */
+        }
+        html.dark .lesson-content p code {
+            background-color: #374151; /* Gray-700 */
+        }
+        .lesson-content h1, .lesson-content h2, .lesson-content h3, .lesson-content h4 {
+            color: #3b82f6; /* Blue-500 */
+        }
+        html.dark .lesson-content h1, html.dark .lesson-content h2, html.dark .lesson-content h3, html.dark .lesson-content h4 {
+            color: #60a5fa; /* Blue-400 */
+        }
+        .lesson-content strong {
+            color: #3b82f6; /* Blue-500 */
+        }
+        html.dark .lesson-content strong {
+            color: #60a5fa; /* Blue-400 */
+        }
+
+        /* Basic styling for math formulas */
+        .lesson-content .math {
+            display: block;
+            overflow-x: auto; /* For wide equations */
+            padding: 0.5em 0;
+            text-align: center;
+            font-size: 1.1em;
+            color: #1f2937; /* Gray-900 */
+        }
+        html.dark .lesson-content .math {
+            color: #e5e7eb; /* Gray-200 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+    <canvas id="global-background-canvas"></canvas>
+
+    <div id="mobile-menu-overlay" class="md:hidden"></div>
+
+    <header class="bg-blue-600 text-white p-4 shadow-md relative z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold rounded-md px-2 py-1">WhizMath</h1>
+            <nav class="flex items-center space-x-6 relative">
+                <ul class="hidden md:flex space-x-2">
+                    <li><a href="index.html" class="nav-link-effect">Home</a></li>
+                    <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+                    <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+                    <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+                    <li><a href="games.html" class="nav-link-effect">Games</a></li>
+                    <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+                </ul>
+
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+
+                <button id="theme-toggle" class="p-2 rounded-full bg-blue-700 hover:bg-blue-800 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ml-4">
+                    <svg id="moon-icon" class="w-6 h-6 text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <svg id="sun-icon" class="w-6 h-6 text-yellow-300 transition-all duration-300 ease-in-out hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.354 3.354l-.707.707M5.646 5.646l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="bg-blue-600 text-white p-6 md:hidden">
+        <ul class="flex flex-col space-y-4 pt-8">
+            <li><a href="index.html" class="nav-link-effect">Home</a></li>
+            <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+            <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+            <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+            <li><a href="games.html" class="nav-link-effect">Games</a></li>
+            <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+        </ul>
+    </div>
+
+    <main class="container mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg relative z-10">
+        <h2 class="text-4xl font-bold mb-6 text-center text-blue-700 dark:text-blue-400">Integrals: The Mathematics of Accumulation</h2>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Introduction: Reversing the Flow of Change</h3>
+            <p class="mb-4">Welcome to Whizmath, where we continue our journey through the powerful realm of calculus! After exploring derivatives, which measure instantaneous rates of change, we now turn our attention to <strong>Integrals</strong>. Integrals are essentially the inverse operation of derivatives, allowing us to reverse the process of differentiation and, more profoundly, to calculate accumulation, areas, and volumes.</p>
+            <p class="mb-4">While derivatives tell us how fast something is changing at a moment, integrals tell us the total amount of change that has occurred over an interval. This makes them indispensable in fields ranging from physics (calculating work done, displacement from velocity), to engineering (stress and strain analysis), economics (total cost, revenue), and statistics (probability distributions).</p>
+            <p class="mb-4">In this comprehensive lesson, we will define antiderivatives, distinguish between indefinite and definite integrals, introduce the fundamental theorem that links differentiation and integration, explore various integration techniques, and apply integrals to solve real-world problems. Prepare to unlock the power of accumulation and gain a deeper understanding of quantities built up over time!</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 1: The Concept of an Integral (Antiderivatives)</h3>
+            <p class="mb-4">Integration begins with the idea of finding a function whose derivative is a given function.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">1.1 Antiderivatives</h4>
+            <p class="mb-4">An <strong>antiderivative</strong> of a function $f(x)$ is a function $F(x)$ whose derivative is $f(x)$. That is, $F'(x) = f(x)$.</p>
+            <p class="font-semibold mt-4">Example 1.1.1:</p>
+            <p>If $f(x) = 2x$, then $F(x) = x^2$ is an antiderivative because $\frac{d}{dx}(x^2) = 2x$.</p>
+            <p class="mb-4">However, $F(x) = x^2 + 5$ is also an antiderivative, as is $F(x) = x^2 - 100$. This leads to the concept of the constant of integration.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">1.2 Indefinite Integrals</h4>
+            <p class="mb-4">The set of all antiderivatives of $f(x)$ is called the <strong>indefinite integral</strong> of $f(x)$, denoted by $\int f(x) dx$.</p>
+            <p class="math">$\int f(x) dx = F(x) + C$</p>
+            <p class="mb-4">Where:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2">$\int$ is the integral sign.</li>
+                <li class="mb-2">$f(x)$ is the integrand.</li>
+                <li class="mb-2">$dx$ indicates that we are integrating with respect to $x$.</li>
+                <li class="mb-2">$F(x)$ is any particular antiderivative of $f(x)$.</li>
+                <li class="mb-2">$C$ is the <strong>constant of integration</strong>. This constant accounts for the fact that the derivative of any constant is zero.</li>
+            </ul>
+            <p class="font-semibold mt-4">Example 1.2.1:</p>
+            <p>$\int 2x dx = x^2 + C$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">1.3 Definite Integrals (Area Under a Curve)</h4>
+            <p class="mb-4">A <strong>definite integral</strong> computes the net signed area between the graph of a function $f(x)$ and the x-axis over a specified interval $[a, b]$.</p>
+            <p class="math">$\int_a^b f(x) dx$</p>
+            <p class="mb-4">Where:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2">$a$ is the lower limit of integration.</li>
+                <li class="mb-2">$b$ is the upper limit of integration.</li>
+            </ul>
+            <p class="mb-4">Unlike indefinite integrals, definite integrals evaluate to a numerical value, not a function.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">1.4 The Fundamental Theorem of Calculus (FTC)</h4>
+            <p class="mb-4">The FTC is a cornerstone of calculus, linking differentiation and integration. It has two parts, but the most commonly applied part for evaluating definite integrals is:</p>
+            <p class="font-semibold mt-4">If $F(x)$ is an antiderivative of $f(x)$, then:</p>
+            <p class="math">$\int_a^b f(x) dx = F(b) - F(a)$</p>
+            <p class="font-semibold mt-4">Example 1.4.1:</p>
+            <p>Evaluate $\int_1^3 2x dx$</p>
+            <div class="example-box">
+                <p>Antiderivative of $2x$ is $x^2$. So $F(x) = x^2$.</p>
+                <p>$\int_1^3 2x dx = F(3) - F(1) = (3)^2 - (1)^2 = 9 - 1 = 8$</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 2: Basic Integration Rules</h3>
+            <p class="mb-4">Just like with derivatives, there are rules to simplify the process of finding antiderivatives.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.1 Power Rule for Integration</h4>
+            <p class="mb-4">If $n \neq -1$, then:</p>
+            <p class="math">$\int x^n dx = \frac{x^{n+1}}{n+1} + C$</p>
+            <p class="example-box">Example: $\int x^4 dx = \frac{x^{4+1}}{4+1} + C = \frac{x^5}{5} + C$</p>
+            <p class="example-box">Example: $\int \sqrt{x} dx = \int x^{1/2} dx = \frac{x^{1/2+1}}{1/2+1} + C = \frac{x^{3/2}}{3/2} + C = \frac{2}{3}x^{3/2} + C$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.2 Special Case: Integral of $\frac{1}{x}$</h4>
+            <p class="mb-4">The power rule does not apply when $n=-1$. The integral of $\frac{1}{x}$ is the natural logarithm.</p>
+            <p class="math">$\int \frac{1}{x} dx = \ln|x| + C$</p>
+            <p class="example-box">Example: $\int \frac{5}{x} dx = 5 \int \frac{1}{x} dx = 5 \ln|x| + C$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.3 Constant Multiple Rule</h4>
+            <p class="mb-4">You can pull a constant factor out of the integral sign.</p>
+            <p class="math">$\int cf(x) dx = c \int f(x) dx$</p>
+            <p class="example-box">Example: $\int 3x^2 dx = 3 \int x^2 dx = 3 \left(\frac{x^3}{3}\right) + C = x^3 + C$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.4 Sum and Difference Rules</h4>
+            <p class="mb-4">The integral of a sum or difference of functions is the sum or difference of their integrals.</p>
+            <p class="math">$\int (f(x) \pm g(x)) dx = \int f(x) dx \pm \int g(x) dx$</p>
+            <p class="example-box">Example: $\int (4x^3 - 2x + 5) dx = \int 4x^3 dx - \int 2x dx + \int 5 dx$</p>
+            <p class="example-box">$ = x^4 - x^2 + 5x + C$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.5 Integrals of Common Functions</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Exponential Functions:</strong>
+                    <p class="math">$\int e^x dx = e^x + C$</p>
+                    <p class="math">$\int a^x dx = \frac{a^x}{\ln a} + C$</p>
+                </li>
+                <li class="mb-2"><strong>Trigonometric Functions:</strong>
+                    <p class="math">$\int \cos x dx = \sin x + C$</p>
+                    <p class="math">$\int \sin x dx = -\cos x + C$</p>
+                    <p class="math">$\int \sec^2 x dx = \tan x + C$</p>
+                    <p class="math">$\int \csc^2 x dx = -\cot x + C$</p>
+                    <p class="math">$\int \sec x \tan x dx = \sec x + C$</p>
+                    <p class="math">$\int \csc x \cot x dx = -\csc x + C$</p>
+                </li>
+            </ul>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 3: Techniques of Integration</h3>
+            <p class="mb-4">For more complex functions, we need specific techniques to find their integrals.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">3.1 Substitution (U-Substitution)</h4>
+            <p class="mb-4">This is the inverse of the Chain Rule. It helps integrate composite functions by simplifying the integrand.</p>
+            <p class="font-semibold mt-4">Steps:</p>
+            <ol class="list-decimal list-inside ml-4 mb-4">
+                <li>Choose a substitution $u = g(x)$, typically the "inside" function.</li>
+                <li>Calculate $du = g'(x) dx$.</li>
+                <li>Rewrite the integral entirely in terms of $u$ and $du$.</li>
+                <li>Integrate with respect to $u$.</li>
+                <li>Substitute back $g(x)$ for $u$ to express the answer in terms of $x$.</li>
+            </ol>
+            <p class="font-semibold mt-4">Example 3.1.1:</p>
+            <div class="example-box">
+                <p>Evaluate $\int (2x+1)^3 dx$</p>
+                <p>Let $u = 2x+1$. Then $du = 2 dx \Rightarrow dx = \frac{1}{2} du$.</p>
+                <p>Substitute:</p>
+                <p>$\int u^3 \left(\frac{1}{2} du\right) = \frac{1}{2} \int u^3 du$</p>
+                <p>Integrate with respect to $u$:</p>
+                <p>$ = \frac{1}{2} \left(\frac{u^4}{4}\right) + C = \frac{u^4}{8} + C$</p>
+                <p>Substitute back $u = 2x+1$:</p>
+                <p>$ = \frac{(2x+1)^4}{8} + C$</p>
+            </div>
+
+            <h4 class="text-2xl font-semibold mb-3">3.2 Integration by Parts (Brief Introduction)</h4>
+            <p class="mb-4">This technique is the inverse of the Product Rule. It's used for integrals of products of functions that don't simplify well with substitution.</p>
+            <p class="math">$\int u dv = uv - \int v du$</p>
+            <p class="mb-4">Choosing $u$ and $dv$ correctly is key to this method.</p>
+            <p class="example-box">Example: $\int x e^x dx$ (This would be solved using integration by parts, which is a more advanced topic).</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 4: Applications of Integrals</h3>
+            <p class="mb-4">Integrals are crucial for solving problems involving accumulation, total change, and geometric measurements.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">4.1 Area Under a Curve</h4>
+            <p class="mb-4">The definite integral $\int_a^b f(x) dx$ represents the net signed area between the curve $y=f(x)$ and the x-axis from $x=a$ to $x=b$. Area above the x-axis is positive, below is negative.</p>
+            <p class="font-semibold mt-4">Example 4.1.1:</p>
+            <p>Find the area under $f(x) = x^2$ from $x=0$ to $x=2$.</p>
+            <div class="example-box">
+                <p>Area $= \int_0^2 x^2 dx = \left[\frac{x^3}{3}\right]_0^2$</p>
+                <p>$ = \frac{(2)^3}{3} - \frac{(0)^3}{3} = \frac{8}{3} - 0 = \frac{8}{3}$ square units.</p>
+            </div>
+
+            <h4 class="text-2xl font-semibold mb-3">4.2 Displacement and Total Distance from Velocity</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2">If $v(t)$ is the velocity function of an object:
+                    <ul class="list-disc list-inside ml-6 mt-1">
+                        <li><strong>Displacement:</strong> $\int_{t_1}^{t_2} v(t) dt$ (Net change in position).</li>
+                        <li><strong>Total Distance Traveled:</strong> $\int_{t_1}^{t_2} |v(t)| dt$ (Sum of all path lengths, regardless of direction).</li>
+                    </ul>
+                </li>
+            </ul>
+            <p class="font-semibold mt-4">Example 4.2.1:</p>
+            <p>A particle's velocity is $v(t) = 2t - 4$ m/s. Find its displacement from $t=0$ to $t=3$ seconds.</p>
+            <div class="example-box">
+                <p>Displacement $= \int_0^3 (2t - 4) dt = \left[t^2 - 4t\right]_0^3$</p>
+                <p>$ = ((3)^2 - 4(3)) - ((0)^2 - 4(0))$</p>
+                <p>$ = (9 - 12) - (0 - 0) = -3$ meters.</p>
+                <p>The particle's net displacement is -3 meters (it ended up 3 meters to the left/down from its starting point).</p>
+            </div>
+
+            <h4 class="text-2xl font-semibold mb-3">4.3 Average Value of a Function</h4>
+            <p class="mb-4">The average value of a function $f(x)$ over an interval $[a, b]$ is given by:</p>
+            <p class="math">$\text{Average Value} = \frac{1}{b-a} \int_a^b f(x) dx$</p>
+            <p class="font-semibold mt-4">Example 4.3.1:</p>
+            <p>Find the average value of $f(x) = x^2$ on the interval $[0, 3]$.</p>
+            <div class="example-box">
+                <p>Average Value $= \frac{1}{3-0} \int_0^3 x^2 dx$</p>
+                <p>$ = \frac{1}{3} \left[\frac{x^3}{3}\right]_0^3$</p>
+                <p>$ = \frac{1}{3} \left(\frac{(3)^3}{3} - \frac{(0)^3}{3}\right)$</p>
+                <p>$ = \frac{1}{3} \left(\frac{27}{3} - 0\right) = \frac{1}{3}(9) = 3$</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 5: Common Pitfalls and Tips for Success</h3>
+            <p class="mb-4">Integration can be more challenging than differentiation. Be mindful of these common errors:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Forgetting the "+ C":</strong> For indefinite integrals, always remember to add the constant of integration.</li>
+                <li class="mb-2"><strong>Algebra Errors:</strong> Simplifying the integrand before integrating is crucial. Don't integrate term by term if there's a product or quotient unless it's a simple sum/difference.</li>
+                <li class="mb-2"><strong>Misapplying Power Rule:</strong> Remember the special case for $\int x^{-1} dx$ ($\ln|x|$).</li>
+                <li class="mb-2"><strong>U-Substitution Mistakes:</strong> Incorrectly choosing $u$, forgetting to find $du$, or not converting all terms (including limits for definite integrals) to $u$.</li>
+                <li class="mb-2"><strong>Sign Errors:</strong> Especially with trigonometric integrals (e.g., $\int \sin x dx = -\cos x + C$).</li>
+                <li class="mb-2"><strong>Absolute Value in Logarithms:</strong> Remember $\ln|x|$ for $\int \frac{1}{x} dx$.</li>
+            </ul>
+            <p class="font-semibold mt-4">Tips for Success:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Check by Differentiating:</strong> The best way to check an indefinite integral is to differentiate your answer. If you get the original integrand, you're correct.</li>
+                <li class="mb-2"><strong>Practice Basic Rules:</strong> Master the power rule and integrals of common functions before moving to techniques.</li>
+                <li class="mb-2"><strong>Recognize Patterns:</strong> With practice, you'll start to recognize when u-substitution or other techniques are appropriate.</li>
+                <li class="mb-2"><strong>Simplify the Integrand:</strong> Expand products, divide terms, or use trigonometric identities before integrating.</li>
+                <li class="mb-2"><strong>Understand the Geometry:</strong> For definite integrals, visualize the area you are calculating.</li>
+            </ul>
+        </section>
+
+        <section class="lesson-section text-center">
+            <h3 class="text-3xl font-semibold mb-4">Conclusion: Accumulating Knowledge with Integrals</h3>
+            <p class="mb-4">You have now explored the fascinating world of integrals, the powerful inverse operation to differentiation. From finding antiderivatives to calculating areas and total accumulation, you've seen how integrals provide profound insights into continuous processes and quantities built up over intervals.</p>
+            <p class="mb-4">The ability to perform integration and apply it to real-world scenarios is a hallmark of advanced mathematical understanding. Whether you're calculating work, displacement, or the average value of a changing quantity, the principles of integration are indispensable. Continue to refine your skills, embrace the challenges, and you will find calculus to be an endlessly rewarding field.</p>
+            <p class="text-xl font-bold text-blue-700 dark:text-blue-400">Keep accumulating knowledge, keep calculating totals, and keep mastering calculus with Whizmath!</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Practice Problems (with Solutions)</h3>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 1: Indefinite Integral (Power Rule)</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Evaluate: $\int (3x^2 - 4x + 2) dx$</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 1:</p>
+                        <p class="mb-2">$\int (3x^2 - 4x + 2) dx = 3\int x^2 dx - 4\int x dx + \int 2 dx$</p>
+                        <p class="mb-2">$ = 3\left(\frac{x^3}{3}\right) - 4\left(\frac{x^2}{2}\right) + 2x + C$</p>
+                        <p>$ = x^3 - 2x^2 + 2x + C$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 2: Definite Integral (FTC)</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Evaluate: $\int_0^2 (x^3 + 1) dx$</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 2:</p>
+                        <p class="mb-2">First, find the antiderivative: $F(x) = \frac{x^4}{4} + x$</p>
+                        <p class="mb-2">Apply FTC: $\int_0^2 (x^3 + 1) dx = F(2) - F(0)$</p>
+                        <p class="mb-2">$ = \left(\frac{(2)^4}{4} + 2\right) - \left(\frac{(0)^4}{4} + 0\right)$</p>
+                        <p class="mb-2">$ = \left(\frac{16}{4} + 2\right) - (0)$</p>
+                        <p>$ = (4 + 2) = 6$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 3: U-Substitution</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Evaluate: $\int x \cos(x^2) dx$</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 3:</p>
+                        <p class="mb-2">Let $u = x^2$. Then $du = 2x dx \Rightarrow x dx = \frac{1}{2} du$.</p>
+                        <p class="mb-2">Substitute:</p>
+                        <p class="mb-2">$\int \cos(u) \left(\frac{1}{2} du\right) = \frac{1}{2} \int \cos(u) du$</p>
+                        <p class="mb-2">$ = \frac{1}{2} \sin(u) + C$</p>
+                        <p>$ = \frac{1}{2} \sin(x^2) + C$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 4: Integral of Exponential Function</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Evaluate: $\int 5e^{5x} dx$</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 4:</p>
+                        <p class="mb-2">Let $u = 5x$. Then $du = 5 dx$.</p>
+                        <p class="mb-2">Substitute:</p>
+                        <p class="mb-2">$\int e^u du = e^u + C$</p>
+                        <p>$ = e^{5x} + C$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 5: Area Application</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Find the area under the curve $f(x) = 4x^3$ from $x=1$ to $x=2$.</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 5:</p>
+                        <p class="mb-2">Area $= \int_1^2 4x^3 dx = \left[4\frac{x^4}{4}\right]_1^2 = \left[x^4\right]_1^2$</p>
+                        <p class="mb-2">$ = (2)^4 - (1)^4$</p>
+                        <p>$ = 16 - 1 = 15$ square units.</p>
+                    </div>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-blue-600 text-white py-8 mt-auto relative z-10">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2023 WhizMath. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Privacy Policy</a>
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Terms of Service</a>
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Contact Us</a>
+            </div>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.237 2.636 7.855 6.356 9.314.464.086.66-.2.66-.447 0-.22-.008-.809-.013-1.581-2.56.56-3.1-1.23-3.1-1.23-.418-1.06-.99-1.343-.07-.993.92.062 1.403.957 1.403.957.82 1.403 2.152.997 2.67.765.083-.597.323-.997.593-1.226-2.04-.23-4.183-1.02-4.183-4.523 0-1.002.358-1.823.94-2.462-.095-.23-.41-.1.085-1.29 0 0 .768-.246 2.522.94.72-.2 1.48-.3 2.24-.304.76.004 1.52.104 2.24.304 1.754-1.186 2.522-.94 2.522-.94.495 1.19.18 1.06.085 1.29.582.639.94 1.46.94 2.462 0 3.51-2.146 4.29-4.194 4.516.33.284.626.846.626 1.705 0 1.23-.012 2.219-.012 2.512 0 .249.195.533.663.446C19.364 19.855 22 16.237 22 12c0-5.523-4.477-10-10-10z"></path></svg>
+                </a>
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.8.35-1.64.59-2.5.66.9-.54 1.5-1.4 1.8-2.4-.84.5-1.78.87-2.78 1.07C18.35 4.5 17.2 4 16 4c-2.48 0-4.5 2.02-4.5 4.5 0 .35.04.68.12 1-.37-.02-.74-.08-1.1-.18-3.08-.15-5.8-1.63-7.68-4.07-.32.55-.5 1.18-.5 1.87 0 1.2.6 2.25 1.58 2.87-.7-.02-1.3-.2-1.8-.5v.05c0 2.18 1.55 4 3.6 4.4-.37.1-.76.15-1.16.15-.28 0-.55-.03-.8-.08.57 1.8 2.2 3.1 4.13 3.4-1.55 1.2-3.5 1.9-5.6 1.9-.36 0-.7-.02-1.04-.06C2.9 20.3 5.3 21 8 21c7.2 0 11.15-5.95 11.15-11.15 0-.17-.0-.33-.01-.5.77-.55 1.45-1.24 1.98-2.02z"></path></svg>
+                </a>
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.148 3.252-1.691 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.07-1.645-.07-4.85s.012-3.584.07-4.85c.148-3.252 1.691-4.771 4.919-4.919 1.266-.058 1.644-.07 4.85-.07zm0 2.163c-3.204 0-3.584.012-4.85.07-2.77.126-3.958 1.46-4.084 4.084-.058 1.265-.07 1.645-.07 4.85s.012 3.584.07 4.85c.126 2.77 1.46 3.958 4.084 4.084 1.265.058 1.645.07 4.85.07s3.584-.012 4.85-.07c2.77-.126 3.958-1.46 4.084-4.084.058-1.265.07-1.645.07-4.85s-.012-3.584-.07-4.85c-.126-2.77-1.46-3.958-4.084-4.084-1.265-.058-1.645-.07-4.85-.07zm0 3.627c-2.481 0-4.5 2.019-4.5 4.5s2.019 4.5 4.5 4.5 4.5-2.019 4.5-4.5-2.019-4.5-4.5-4.5zm0 2.163c1.282 0 2.337 1.055 2.337 2.337s-1.055 2.337-2.337 2.337-2.337-1.055-2.337-2.337 1.055-2.337 2.337-2.337zm6.406-5.463c-.47-.47-.94-.705-1.41-.705s-.94.235-1.41.705c-.47.47-.705.94-.705 1.41s.235.94.705 1.41c.47.47.94.705 1.41.705s.94-.235 1.41-.705c-.47-.47-.705-.94-.705-1.41s-.235-.94-.705-1.41z"></path></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <button id="scroll-to-top-btn" class="bg-blue-600">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <script>
+        // --- Theme Toggle Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+            localStorage.setItem('theme', theme);
+            // Removed updateParticleColors call from here. It will be called in window.onload
+        }
+
+        // Check for saved theme on load
+        const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+        setTheme(savedTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+            // Call updateParticleColors here for immediate visual feedback on theme change
+            if (typeof particles !== 'undefined' && particles) {
+                updateParticleColors(newTheme === 'dark');
+            }
+        });
+
+        // --- Mobile Sidebar Menu Logic ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            mobileMenuOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling body when menu is open
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('open');
+            document.body.style.overflow = ''; // Restore body scrolling
+        }
+
+        mobileMenuButton.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('open')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu); // Close when clicking overlay
+
+        // Close mobile menu if a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                // Only close if it's a small screen
+                if (window.innerWidth < 768) {
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Handle resize: ensure menu is correct on desktop/mobile switch
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint
+                closeMobileMenu(); // Ensure sidebar is closed on desktop
+            }
+        });
+
+        // --- Three.js Global Background Animation Logic ---
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('global-background-canvas');
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles
+            const particleCount = 12500;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            // Define colors for light and dark mode for particles
+            const lightModeColors = [
+                new THREE.Color(0xADD8E6), // Light blue
+                new THREE.Color(0x87CEEB), // Sky blue
+                new THREE.Color(0x6495ED)  // Cornflower blue
+            ];
+            const darkModeColors = [
+                new THREE.Color(0x3182ce), // Blue-600 dark
+                new THREE.Color(0x4299e1), // Blue-500 dark
+                new THREE.Color(0x63b3ed)  // Blue-400 dark
+            ];
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
+                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
+                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
+
+                // Assign initial color based on current theme
+                const currentColors = htmlElement.classList.contains('dark') ? darkModeColors : lightModeColors;
+                const colorIndex = Math.floor(Math.random() * currentColors.length);
+                const color = currentColors[colorIndex];
+
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+            });
+
+            particles = new THREE.Points(geometry, particleMaterial);
+            scene.add(particles);
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Function to update particle colors based on theme
+        function updateParticleColors(isDarkMode) {
+            // Check if particles object is initialized before trying to access its properties
+            if (!particles || !particles.geometry || !particles.geometry.attributes.color) {
+                console.warn("Three.js particles not yet initialized for color update.");
+                return;
+            }
+
+            const colors = particles.geometry.attributes.color.array;
+            const targetColors = isDarkMode ? [
+                new THREE.Color(0x3182ce), // Blue-600 dark
+                new THREE.Color(0x4299e1), // Blue-500 dark
+                new THREE.Color(0x63b3ed)  // Blue-400 dark
+            ] : [
+                new THREE.Color(0xADD8E6), // Light blue
+                new THREE.Color(0x87CEEB), // Sky blue
+                new THREE.Color(0x6495ED)  // Cornflower blue
+            ];
+
+            for (let i = 0; i < colors.length; i += 3) {
+                const colorIndex = Math.floor(Math.random() * targetColors.length); // Re-randomize color from target palette
+                const targetColor = targetColors[colorIndex];
+                colors[i] = targetColor.r;
+                colors[i + 1] = targetColor.g;
+                colors[i + 2] = targetColor.b;
+            }
+            particles.geometry.attributes.color.needsUpdate = true;
+        }
+
+
+        // --- Scroll to Top Button Logic ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling 300px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll animation
+            });
+        });
+
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+            // Now safely call updateParticleColors after Three.js particles are initialized
+            updateParticleColors(htmlElement.classList.contains('dark'));
+        };
+    </script>
+</body>
+</html>

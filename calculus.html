@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhizMath - Calculus Introduction Lesson</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Light mode styles */
+        .light .bg-gray-100 { background-color: #f3f4f6; }
+        .light .text-gray-900 { color: #1f2937; }
+        .light .bg-white { background-color: #ffffff; }
+        .light .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .light .text-gray-800 { color: #1f2937; }
+        .light .text-blue-700 { color: #1d4ed8; }
+        .light .bg-blue-600 { background-color: #2563eb; }
+        .light .bg-blue-700 { background-color: #1d4ed8; }
+        .light .bg-blue-500 { background-color: #3b82f6; }
+        .light .from-blue-500 { --tw-gradient-from: #3b82f6; }
+        .light .to-indigo-600 { --tw-gradient-to: #4f46e5; }
+        .light .bg-gray-50 { background-color: #f9fafb; } /* Card background */
+        .light .text-gray-600 { color: #4b5563; } /* Card description text */
+        .light .text-gray-700 { color: #374151; } /* Section description text */
+        .light .bg-blue-100 { background-color: #dbeafe; } /* Autocomplete hover */
+        .light .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .light .social-icon-bg { background-color: #3b82f6; } /* Social icon background */
+        .light .social-icon-bg:hover { background-color: #2563eb; } /* Social icon hover background */
+        .light #scroll-to-top-btn { background-color: #2563eb; } /* Scroll to top button */
+        .light #scroll-to-top-btn:hover { background-color: #1d4ed8; } /* Scroll to top button hover */
+
+
+        /* Dark mode styles */
+        .dark .bg-gray-100 { background-color: #1a202c; }
+        .dark .text-gray-900 { color: #e2e8f0; }
+        .dark .bg-white { background-color: #2d3748; } /* Main content section background */
+        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15); }
+        .dark .text-gray-800 { color: #cbd5e0; }
+        .dark .text-blue-700 { color: #90cdf4; } /* Section title */
+        .dark .bg-blue-600 { background-color: #1a365d; }
+        .dark .bg-blue-700 { background-color: #2a4365; }
+        .dark .bg-blue-500 { background-color: #3182ce; }
+        .dark .from-blue-500 { --tw-gradient-from: #3182ce; }
+        .dark .to-indigo-600 { --tw-gradient-to: #5a67d8; }
+        .dark .bg-gray-800 { background-color: #1a202c; }
+        .dark .text-white { color: #e2e8f0; }
+        .dark .bg-gray-50 { background-color: #1f2937; } /* Card background for dark mode */
+        .dark .text-gray-600 { color: #a0aec0; } /* Card description text for dark mode */
+        .dark .text-gray-700 { color: #cbd5e0; } /* Section description text for dark mode */
+        .dark .bg-blue-100 { background-color: #1e3a8a; } /* Autocomplete hover for dark mode */
+        .dark .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .dark .social-icon-bg { background-color: #3182ce; } /* Social icon background */
+        .dark .social-icon-bg:hover { background-color: #2b6cb0; } /* Social icon hover background */
+        .dark #scroll-to-top-btn { background-color: #3182ce; } /* Scroll to top button */
+        .dark #scroll-to-top-btn:hover { background-color: #2b6cb0; } /* Scroll to top button hover */
+
+
+        /* Ensure smooth transitions for all elements */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Global Three.js Canvas for background animation */
+        #global-background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        /* Mobile sidebar styling */
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 256px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 50;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* Overlay for when sidebar is open */
+        #mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        #mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Custom Nav Link Hover Effect */
+        .nav-link-effect {
+            position: relative;
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .nav-link-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease-out;
+            border-radius: 6px;
+            z-index: -1;
+        }
+
+        .nav-link-effect::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease-out, left 0.3s ease-out;
+        }
+
+        .nav-link-effect:hover::before {
+            transform: scaleX(1);
+        }
+
+        .nav-link-effect:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Dark mode specific hover effect adjustments */
+        .dark .nav-link-effect::before {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .dark .nav-link-effect::after {
+            background-color: #90cdf4;
+        }
+
+        /* Adjust mobile menu links for the new effect */
+        #mobile-menu .nav-link-effect {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+        }
+
+        /* Scroll to Top Button */
+        #scroll-to-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 9999px; /* Fully rounded */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 100;
+        }
+
+        #scroll-to-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Lesson content specific styles */
+        .lesson-section {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .lesson-section h3 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 1rem;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .lesson-section h3 {
+            color: #90cdf4; /* dark:text-blue-400 */
+        }
+        .lesson-section p {
+            line-height: 1.75; /* leading-relaxed */
+            margin-bottom: 1rem;
+            color: #374151; /* text-gray-700 */
+        }
+        .dark .lesson-section p {
+            color: #cbd5e0; /* dark:text-gray-300 */
+        }
+        .lesson-section ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .lesson-section ul {
+            color: #cbd5e0;
+        }
+        .lesson-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        .example-box {
+            background-color: #e0f2fe; /* bg-blue-50 */
+            border-left: 4px solid #3b82f6; /* border-blue-500 */
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .example-box {
+            background-color: #1e3a8a; /* dark:bg-blue-900 */
+            border-color: #60a5fa; /* dark:border-blue-400 */
+            color: #90cdf4; /* dark:text-blue-300 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+    <canvas id="global-background-canvas"></canvas>
+
+    <div id="mobile-menu-overlay" class="md:hidden"></div>
+
+    <header class="bg-blue-600 text-white p-4 shadow-md relative z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold rounded-md px-2 py-1">WhizMath</h1>
+            <nav class="flex items-center space-x-6 relative">
+                <ul class="hidden md:flex space-x-2">
+                    <li><a href="index.html" class="nav-link-effect">Home</a></li>
+                    <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+                    <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+                    <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+                    <li><a href="games.html" class="nav-link-effect">Games</a></li>
+                    <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+                </ul>
+
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+
+                <button id="theme-toggle" class="p-2 rounded-full bg-blue-700 hover:bg-blue-800 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ml-4">
+                    <svg id="moon-icon" class="w-6 h-6 text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <svg id="sun-icon" class="w-6 h-6 text-yellow-300 transition-all duration-300 ease-in-out hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.354 3.354l-.707.707M5.646 5.646l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="bg-blue-600 text-white p-6 md:hidden">
+        <ul class="flex flex-col space-y-4 pt-8">
+            <li><a href="index.html" class="nav-link-effect">Home</a></li>
+            <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+            <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+            <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+            <li><a href="games.html" class="nav-link-effect">Games</a></li>
+            <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+        </ul>
+    </div>
+
+    <main class="flex-grow container mx-auto p-4 py-8 relative z-10">
+
+        <section class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg mb-12 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-blue-700 dark:text-blue-400">Calculus Introduction: The Mathematics of Change</h2>
+            <p class="text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+                Calculus is a powerful branch of mathematics developed to study change. While algebra deals with static quantities and arithmetic with specific numbers, calculus provides tools to understand how quantities change over time or in relation to other quantities. It is fundamental to understanding motion, growth, optimization, and many other dynamic processes in science, engineering, economics, and beyond.
+            </p>
+        </section>
+
+        <div class="lesson-content">
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>1. What is Calculus? An Overview</h3>
+                <p>
+                    Calculus is broadly divided into two interconnected branches:
+                </p>
+                <ul>
+                    <li>
+                        <strong>Differential Calculus:</strong> Deals with rates of change and slopes of curves. It helps us understand how quickly something is changing at a particular instant. Key concepts include derivatives.
+                        <div class="example-box">
+                            <strong>Think:</strong> How fast is a car going *right now*? What is the steepest point on a hill?
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Integral Calculus:</strong> Deals with accumulation of quantities and areas under curves. It helps us find the total amount of something when its rate of change is known. Key concepts include integrals.
+                        <div class="example-box">
+                            <strong>Think:</strong> How far has a car traveled given its speed over time? What is the total volume of an irregularly shaped object?
+                        </div>
+                    </li>
+                </ul>
+                <p>
+                    These two branches are linked by the <strong>Fundamental Theorem of Calculus</strong>, which shows that differentiation and integration are inverse operations.
+                </p>
+                <p>
+                    Calculus was independently developed by Isaac Newton and Gottfried Wilhelm Leibniz in the 17th century, revolutionizing mathematics and its applications to the physical world.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>2. Limits: The Foundation of Calculus</h3>
+                <p>
+                    The concept of a <strong>limit</strong> is the cornerstone upon which all of calculus is built. A limit describes the value that a function "approaches" as the input (variable) gets closer and closer to a certain value. It's about what happens *near* a point, not necessarily *at* the point itself.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Formal Notation:</p>
+                <div class="example-box">
+                    $\lim_{x \to a} f(x) = L$
+                    <p>This is read as "the limit of $f(x)$ as $x$ approaches $a$ is $L$."</p>
+                </div>
+                <p>
+                    For a limit to exist, the function must approach the same value from both the left side (values less than $a$) and the right side (values greater than $a$).
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Evaluating Simple Limits (Direct Substitution):</p>
+                <p>
+                    For many continuous functions (functions without breaks or jumps), you can find the limit by simply substituting the value $x$ is approaching into the function.
+                </p>
+                <div class="example-box">
+                    <strong>Example 1:</strong> Find $\lim_{x \to 2} (3x + 1)$<br>
+                    Substitute $x=2$: $3(2) + 1 = 6 + 1 = 7$<br>
+                    So, $\lim_{x \to 2} (3x + 1) = 7$.
+                </div>
+                <div class="example-box">
+                    <strong>Example 2:</strong> Find $\lim_{x \to 0} (x^2 - 4x + 5)$<br>
+                    Substitute $x=0$: $(0)^2 - 4(0) + 5 = 0 - 0 + 5 = 5$<br>
+                    So, $\lim_{x \to 0} (x^2 - 4x + 5) = 5$.
+                </div>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Limits with Indeterminate Forms (Briefly):</p>
+                <p>
+                    Sometimes, direct substitution leads to indeterminate forms like $\frac{0}{0}$. In such cases, algebraic manipulation (like factoring or rationalizing) is often required before substitution.
+                </p>
+                <div class="example-box">
+                    <strong>Example:</strong> Find $\lim_{x \to 3} \frac{x^2 - 9}{x - 3}$<br>
+                    Direct substitution gives $\frac{0}{0}$. Factor the numerator:<br>
+                    $\lim_{x \to 3} \frac{(x - 3)(x + 3)}{x - 3}$<br>
+                    Cancel $(x - 3)$ (since $x \neq 3$ as $x$ *approaches* 3):<br>
+                    $\lim_{x \to 3} (x + 3)$<br>
+                    Now substitute $x=3$: $3 + 3 = 6$<br>
+                    So, $\lim_{x \to 3} \frac{x^2 - 9}{x - 3} = 6$.
+                </div>
+                <p>
+                    Limits are essential for defining continuity, derivatives, and integrals.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>3. Differential Calculus: Rates of Change and Slopes</h3>
+                <p>
+                    Differential calculus is concerned with the concept of the <strong>derivative</strong>, which measures the instantaneous rate of change of a function. Geometrically, the derivative of a function at a point is the slope of the tangent line to the function's graph at that point.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">The Derivative as a Slope:</p>
+                <p>
+                    For a linear function $y = mx + b$, the slope $m$ is constant. For a non-linear function, the slope changes at every point. The derivative gives us this instantaneous slope.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Definition of the Derivative (Limit Definition):</p>
+                <p>
+                    The derivative of a function $f(x)$, denoted as $f'(x)$ or $\frac{dy}{dx}$, is defined using a limit:
+                </p>
+                <div class="example-box">
+                    $f'(x) = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}$
+                    <p>This represents the slope of the secant line between $x$ and $x+h$ as $h$ approaches zero, effectively becoming the slope of the tangent line.</p>
+                </div>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Basic Differentiation Rules:</p>
+                <p>
+                    While the limit definition is fundamental, we use rules to find derivatives more efficiently.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Constant Rule:</strong> The derivative of a constant function is zero.
+                        <div class="example-box">
+                            If $f(x) = c$ (where $c$ is a constant), then $f'(x) = 0$.<br>
+                            <strong>Example:</strong> If $f(x) = 7$, then $f'(x) = 0$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Power Rule:</strong> To differentiate $x$ raised to a power, bring the power down as a coefficient and subtract 1 from the power.
+                        <div class="example-box">
+                            If $f(x) = x^n$, then $f'(x) = nx^{n-1}$.<br>
+                            <strong>Example 1:</strong> If $f(x) = x^3$, then $f'(x) = 3x^{3-1} = 3x^2$.<br>
+                            <strong>Example 2:</strong> If $f(x) = x$, then $f'(x) = 1x^{1-1} = 1x^0 = 1$.<br>
+                            <strong>Example 3:</strong> If $f(x) = \frac{1}{x} = x^{-1}$, then $f'(x) = -1x^{-1-1} = -x^{-2} = -\frac{1}{x^2}$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Constant Multiple Rule:</strong> If a function is multiplied by a constant, the constant remains as a multiplier of the derivative.
+                        <div class="example-box">
+                            If $f(x) = c \cdot g(x)$, then $f'(x) = c \cdot g'(x)$.<br>
+                            <strong>Example:</strong> If $f(x) = 5x^2$, then $f'(x) = 5 \cdot (2x^{2-1}) = 5 \cdot 2x = 10x$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Sum/Difference Rule:</strong> The derivative of a sum or difference of functions is the sum or difference of their derivatives.
+                        <div class="example-box">
+                            If $f(x) = g(x) \pm h(x)$, then $f'(x) = g'(x) \pm h'(x)$.<br>
+                            <strong>Example:</strong> If $f(x) = 4x^3 - 2x + 1$, then $f'(x) = 4(3x^2) - 2(1) + 0 = 12x^2 - 2$.
+                        </div>
+                    </li>
+                </ul>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Applications of Derivatives:</p>
+                <ul>
+                    <li><strong>Rates of Change:</strong> Velocity is the derivative of position with respect to time; acceleration is the derivative of velocity.</li>
+                    <li><strong>Optimization:</strong> Finding maximum or minimum values of functions (e.g., maximizing profit, minimizing cost).</li>
+                    <li><strong>Curve Sketching:</strong> Determining where a function is increasing or decreasing, and finding local maxima/minima.</li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>4. Integral Calculus: Accumulation and Area</h3>
+                <p>
+                    Integral calculus deals with the concept of the <strong>integral</strong>, which is essentially the reverse process of differentiation (finding the antiderivative) and also a method for calculating the accumulation of quantities, such as the area under a curve.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Antiderivatives:</p>
+                <p>
+                    If $F'(x) = f(x)$, then $F(x)$ is an antiderivative of $f(x)$. Since the derivative of a constant is zero, the antiderivative of a function is not unique; it includes an arbitrary constant of integration, denoted by $C$.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Indefinite Integral (Antiderivative):</p>
+                <div class="example-box">
+                    $\int f(x) \, dx = F(x) + C$
+                    <p>This is read as "the indefinite integral of $f(x)$ with respect to $x$ is $F(x)$ plus a constant $C$."</p>
+                </div>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Basic Integration Rule (Power Rule for Integration):</p>
+                <p>
+                    To integrate $x$ raised to a power, increase the power by 1 and divide by the new power.
+                </p>
+                <div class="example-box">
+                    If $f(x) = x^n$ (where $n \neq -1$), then $\int x^n \, dx = \frac{x^{n+1}}{n+1} + C$.<br>
+                    <strong>Example 1:</strong> Find $\int x^2 \, dx$<br>
+                    $\int x^2 \, dx = \frac{x^{2+1}}{2+1} + C = \frac{x^3}{3} + C$.<br>
+                    (Check: Derivative of $\frac{x^3}{3} + C$ is $x^2$.)
+                </div>
+                <div class="example-box">
+                    <strong>Example 2:</strong> Find $\int (4x^3 - 2x + 5) \, dx$<br>
+                    $\int (4x^3 - 2x + 5) \, dx = 4\frac{x^4}{4} - 2\frac{x^2}{2} + 5x + C = x^4 - x^2 + 5x + C$.
+                </div>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Definite Integral (Area Under a Curve):</p>
+                <p>
+                    A definite integral calculates the net signed area between a function's graph and the x-axis over a specific interval $[a, b]$.
+                </p>
+                <div class="example-box">
+                    $\int_{a}^{b} f(x) \, dx$
+                    <p>Here, $a$ is the lower limit of integration and $b$ is the upper limit.</p>
+                </div>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Applications of Integrals:</p>
+                <ul>
+                    <li><strong>Area:</strong> Calculating the area of complex shapes or regions under curves.</li>
+                    <li><strong>Volume:</strong> Finding the volume of solids.</li>
+                    <li><strong>Total Change:</strong> If you know the rate at which a quantity is changing, integration can tell you the total change in that quantity over a period. (e.g., total distance traveled from velocity).</li>
+                    <li><strong>Average Value:</strong> Calculating the average value of a function over an interval.</li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>5. The Fundamental Theorem of Calculus: The Bridge Between Branches</h3>
+                <p>
+                    The Fundamental Theorem of Calculus (FTC) is a monumental result that connects differential calculus and integral calculus. It establishes that differentiation and integration are inverse operations, much like addition and subtraction, or multiplication and division.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Part 1 of the FTC:</p>
+                <p>
+                    If $f$ is continuous on $[a, b]$, then the function $F(x)$ defined as:
+                </p>
+                <div class="example-box">
+                    $F(x) = \int_{a}^{x} f(t) \, dt$
+                    <p>is continuous on $[a, b]$ and differentiable on $(a, b)$, and its derivative is $f(x)$:</p>
+                    $F'(x) = f(x)$
+                </div>
+                <p>
+                    This part states that the derivative of an integral is the original function.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Part 2 of the FTC (Evaluation Theorem):</p>
+                <p>
+                    If $f$ is continuous on $[a, b]$ and $F$ is any antiderivative of $f$ on $[a, b]$, then:
+                </p>
+                <div class="example-box">
+                    $\int_{a}^{b} f(x) \, dx = F(b) - F(a)$
+                </div>
+                <p>
+                    This part provides a powerful method for evaluating definite integrals by simply finding an antiderivative and evaluating it at the upper and lower limits. This avoids the tedious process of using Riemann sums (summing infinitely many small rectangles to find area).
+                </p>
+                <div class="example-box">
+                    <strong>Example:</strong> Evaluate $\int_{1}^{3} x^2 \, dx$<br>
+                    1. Find the antiderivative of $f(x) = x^2$: $F(x) = \frac{x^3}{3}$.<br>
+                    2. Apply FTC Part 2:<br>
+                       $F(3) - F(1) = \frac{3^3}{3} - \frac{1^3}{3} = \frac{27}{3} - \frac{1}{3} = 9 - \frac{1}{3} = \frac{26}{3}$.<br>
+                    So, the area under the curve $y=x^2$ from $x=1$ to $x=3$ is $\frac{26}{3}$ square units.
+                </div>
+                <p>
+                    The FTC is the cornerstone of calculus, enabling the vast array of applications seen in science and engineering.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>Practice Problems: Test Your Calculus Knowledge</h3>
+                <p>Apply the concepts you've learned in this introductory lesson to solve the following practice problems.</p>
+                <ol class="list-decimal list-inside space-y-3">
+                    <li><strong>Limits (Direct Substitution):</strong> Find $\lim_{x \to 4} (2x^2 - 5x + 3)$.</li>
+                    <li><strong>Limits (Factoring):</strong> Find $\lim_{x \to -1} \frac{x^2 - 1}{x + 1}$.</li>
+                    <li><strong>Derivative (Power Rule):</strong> Find the derivative of $f(x) = x^5$.</li>
+                    <li><strong>Derivative (Constant Multiple & Sum Rule):</strong> Find the derivative of $g(x) = 3x^4 - 7x^2 + 6x - 9$.</li>
+                    <li><strong>Antiderivative (Indefinite Integral):</strong> Find $\int (x^3 + 2x - 1) \, dx$.</li>
+                    <li><strong>Definite Integral (FTC Part 2):</strong> Evaluate $\int_{0}^{2} (3x^2) \, dx$.</li>
+                    <li><strong>Conceptual Question:</strong> What does the derivative of a position function represent?</li>
+                    <li><strong>Conceptual Question:</strong> What does the definite integral of a velocity function represent?</li>
+                    <li><strong>True or False:</strong> The limit of a function at a point always exists if the function is defined at that point.</li>
+                    <li><strong>Challenge (Derivative Definition):</strong> Use the limit definition of the derivative to find $f'(x)$ for $f(x) = x^2$.</li>
+                </ol>
+                <p class="mt-4 text-gray-700 dark:text-gray-300"><em>(Solutions are not provided here, encouraging self-assessment, peer discussion, or seeking further assistance.)</em></p>
+            </section>
+
+        </div>
+
+    </main>
+
+    <footer class="bg-gray-800 dark:bg-gray-900 text-white p-8 mt-12 relative z-10">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
+            <div>
+                <h3 class="text-xl font-bold mb-4">WhizMath</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    Your ultimate destination for mastering mathematics. We provide free tools, comprehensive lessons, and engaging quizzes to help you succeed.
+                </p>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="index.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Home</a></li>
+                    <li><a href="tools.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Tools</a></li>
+                    <li><a href="lessons.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Learn</a></li>
+                    <li><a href="quizzes.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Quizzes</a></li>
+                    <li><a href="games.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Games</a></li>
+                    <li><a href="contact.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Popular Tools</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Scientific Calculator</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Graphing Calculator</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Unit Converter</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Equation Solver</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Popular Lessons</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Algebra Essentials</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Geometry Basics</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Calculus Introduction</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Statistics Fundamentals</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="flex justify-center md:justify-start space-x-4 mt-6">
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="Facebook">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.776-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
+                </svg>
+            </a>
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="X (Twitter)">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.21-6.89L4.93 21.75H1.625l7.73-8.835L1.25 2.25h3.308l5.97 7.68L18.244 2.25zm.426 17.565L16.63 4.393 4.126 2.25H2.808l13.785 18.125h1.275z" />
+                </svg>
+            </a>
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="Instagram">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.792.006 3.24.016a8.97 8.97 0 011.8.093c.895.119 1.57.34 2.1.598.98.483 1.62.94 2.22 1.638.6.698 1.04 1.347 1.43 2.278.39.93.593 1.776.66 2.825.02.324.037.79.037 1.393 0 2.43-.006 2.792-.016 3.24a8.97 8.97 0 01-.093 1.8c-.119.895-.34 1.57-.598 2.1-.483.98-.94 1.62-1.638 2.22-.698.6-1.347 1.04-2.278 1.43-.93.39-1.776.593-2.825.66-.324.02-.79.037-1.393.037-2.43 0-2.792-.006-3.24-.016a8.97 8.97 0 01-1.8-.093c-.895-.119-1.57-.34-2.1-.598-.98-.483-1.62-.94-2.22-1.638-.6-.698-1.347-1.04-2.278-1.43-.93-.39-1.776-.593-2.825-.66-.324-.02-.037-.79-.037-1.393 0-2.43.006-2.792.016-3.24.093-1.8.314.598-4.035.483-.98.94-1.62 1.638-2.22.698-.6 1.347-1.04 2.278-1.43.93-.39 1.776-.593 2.825-.66.324-.02.79-.037 1.393-.037zm0 2.164c-2.093 0-3.193.013-3.793.023a6.83 6.83 0 00-1.46.074c-.66.088-1.09.283-1.48.473-.59.28-1.04.57-1.44.97-.4.4-.69.85-.97 1.44-.19.39-.385.82-.473 1.48-.06.4-.073.74-.083 1.34-.01.6-.013 1.093-.013 3.793s.003 3.193.013 3.793c.01.4.023.74.083 1.34.088.66.283 1.09.473 1.48.28.59.57 1.04.97 1.44.4.4.85.69 1.44.97.39.19.82.385 1.48.473.4.06.74.073 1.34.083.6.01 1.093.013 3.793.013s3.193-.003 3.793-.013c.4-.01.74-.023 1.34-.083.66-.088 1.09-.283 1.48-.473.59-.28 1.04-.57 1.44-.97.4-.4.69-.85.97-1.44.19-.39.82-.385-1.48-.473-.4-.06-.74-.073-1.34-.083-.6-.01-1.093-.013-3.793-.013zm0 3.52c-2.467 0-4.475 2.008-4.475 4.475s2.008 4.475 4.475 4.475 4.475-2.008 4.475-4.475-2.008-4.475-4.475-4.475zM12.315 18a5.685 5.685 0 110-11.37 5.685 5.685 0 010 11.37zm7.25-10.975a1.18 1.18 0 100 2.36 1.18 1.18 0 000-2.36z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="YouTube">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M19.812 5.405c.781-.144 1.406-.395 1.834-.693.376-.258.629-.533.868-.904.2-.315.353-.69.451-1.042C23.63 2.656 24 2.14 24 1.516a.754.754 0 00-.001-.194c-.035-.3-.153-.591-.355-.845-.224-.287-.516-.566-.867-.862-.375-.316-.763-.618-1.284-.903-.795-.445-1.745-.853-2.925-1.127C17.062 0 12 0 12 0s-5.062 0-7.063.093c-1.18.274-2.13.682-2.925 1.127-.521.285-.91.566-1.285.862-.202.254-.32.545-.355.845A.754.754 0 000 1.516c0 .624.37 1.14.734 1.55.098.352.251.727.452 1.042.239.37.492.645.868.904.428.298 1.053.549 1.834.693C4.938 6 12 6 12 6s7.063 0 7.812-.595zM12 8.75c-3.12 0-5.625 2.505-5.625 5.625S8.88 20 12 20s5.625-2.505 5.625-5.625S15.12 8.75 12 8.75z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        <div class="border-t border-gray-700 dark:border-gray-800 pt-6 mt-8 text-center text-sm text-gray-400">
+            <p>&copy; 2025 WhizMath. All rights reserved.</p>
+            <p class="mt-2">Designed with <span class="text-red-500">&hearts;</span> by Your AI Assistant</p>
+        </div>
+    </footer>
+
+    <button id="scroll-to-top-btn">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v14"></path>
+        </svg>
+    </button>
+
+    <script>
+        // --- Theme Toggle Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        // Check for saved theme on load
+        const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+        setTheme(savedTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // --- Mobile Sidebar Menu Logic ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            mobileMenuOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling body when menu is open
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('open');
+            document.body.style.overflow = ''; // Restore body scrolling
+        }
+
+        mobileMenuButton.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('open')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu); // Close when clicking overlay
+
+        // Close mobile menu if a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                // Only close if it's a small screen
+                if (window.innerWidth < 768) {
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Handle resize: ensure menu is correct on desktop/mobile switch
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint
+                closeMobileMenu(); // Ensure sidebar is closed on desktop
+            }
+        });
+
+        // --- Three.js Global Background Animation Logic ---
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('global-background-canvas');
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles
+            const particleCount = 12500;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            const color1 = new THREE.Color(0xADD8E6); // Light blue
+            const color2 = new THREE.Color(0x87CEEB); // Sky blue
+            const color3 = new THREE.Color(0x6495ED); // Cornflower blue
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
+                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
+                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
+
+                const rand = Math.random();
+                let color;
+                if (rand < 0.33) {
+                    color = color1;
+                } else if (rand < 0.66) {
+                    color = color2;
+                } else {
+                    color = color3;
+                }
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+            });
+
+            particles = new THREE.Points(geometry, particleMaterial);
+            scene.add(particles);
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+        };
+
+        // --- Scroll to Top Button Logic ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling 300px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll animation
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizmath: Derivatives - The Mathematics of Change</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Light mode styles */
+        .light .bg-gray-100 { background-color: #f3f4f6; }
+        .light .text-gray-900 { color: #1f2937; }
+        .light .bg-white { background-color: #ffffff; }
+        .light .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .light .text-gray-800 { color: #1f2937; }
+        .light .text-blue-700 { color: #1d4ed8; }
+        .light .bg-blue-600 { background-color: #2563eb; }
+        .light .bg-blue-700 { background-color: #1d4ed8; }
+        .light .bg-blue-500 { background-color: #3b82f6; }
+        .light .from-blue-500 { --tw-gradient-from: #3b82f6; }
+        .light .to-indigo-600 { --tw-gradient-to: #4f46e5; }
+        .light .bg-gray-50 { background-color: #f9fafb; } /* Card background */
+        .light .text-gray-600 { color: #4b5563; } /* Card description text */
+        .light .text-gray-700 { color: #374151; } /* Section description text */
+        .light .bg-blue-100 { background-color: #dbeafe; } /* Autocomplete hover */
+        .light .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .light .social-icon-bg { background-color: #3b82f6; } /* Social icon background */
+        .light .social-icon-bg:hover { background-color: #2563eb; } /* Social icon hover background */
+        .light #scroll-to-top-btn { background-color: #2563eb; } /* Scroll to top button */
+        .light #scroll-to-top-btn:hover { background-color: #1d4ed8; } /* Scroll to top button hover */
+
+
+        /* Dark mode styles */
+        .dark .bg-gray-100 { background-color: #1a202c; }
+        .dark .text-gray-900 { color: #e2e8f0; }
+        .dark .bg-white { background-color: #2d3748; } /* Main content section background */
+        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15); }
+        .dark .text-gray-800 { color: #cbd5e0; }
+        .dark .text-blue-700 { color: #90cdf4; } /* Section title */
+        .dark .bg-blue-600 { background-color: #1a365d; }
+        .dark .bg-blue-700 { background-color: #2a4365; }
+        .dark .bg-blue-500 { background-color: #3182ce; }
+        .dark .from-blue-500 { --tw-gradient-from: #3182ce; }
+        .dark .to-indigo-600 { --tw-gradient-to: #5a67d8; }
+        .dark .bg-gray-800 { background-color: #1a202c; }
+        .dark .text-white { color: #e2e8f0; }
+        .dark .bg-gray-50 { background-color: #1f2937; } /* Card background for dark mode */
+        .dark .text-gray-600 { color: #a0aec0; } /* Card description text for dark mode */
+        .dark .text-gray-700 { color: #cbd5e0; } /* Section description text for dark mode */
+        .dark .bg-blue-100 { background-color: #1e3a8a; } /* Autocomplete hover for dark mode */
+        .dark .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .dark .social-icon-bg { background-color: #3182ce; } /* Social icon background */
+        .dark .social-icon-bg:hover { background-color: #2b6cb0; } /* Social icon hover background */
+        .dark #scroll-to-top-btn { background-color: #3182ce; } /* Scroll to top button */
+        .dark #scroll-to-top-btn:hover { background-color: #2b6cb0; } /* Scroll to top button hover */
+
+
+        /* Ensure smooth transitions for all elements */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Global Three.js Canvas for background animation */
+        #global-background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none; /* Allows clicks to pass through to content */
+            opacity: 0.7; /* Slightly transparent */
+        }
+
+        /* Mobile sidebar styling */
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 256px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 50;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* Overlay for when sidebar is open */
+        #mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        #mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Custom Nav Link Hover Effect */
+        .nav-link-effect {
+            position: relative;
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .nav-link-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease-out;
+            border-radius: 6px;
+            z-index: -1;
+        }
+
+        .nav-link-effect::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease-out, left 0.3s ease-out;
+        }
+
+        .nav-link-effect:hover::before {
+            transform: scaleX(1);
+        }
+
+        .nav-link-effect:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Dark mode specific hover effect adjustments */
+        .dark .nav-link-effect::before {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .dark .nav-link-effect::after {
+            background-color: #90cdf4; /* Blue-300 for dark mode */
+        }
+
+        /* Adjust mobile menu links for the new effect */
+        #mobile-menu .nav-link-effect {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+        }
+
+        /* Scroll to Top Button */
+        #scroll-to-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 9999px; /* Fully rounded */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 100;
+        }
+
+        #scroll-to-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Lesson content specific styles */
+        .lesson-section {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .light .lesson-section {
+            background-color: #ffffff; /* bg-white */
+        }
+        .dark .lesson-section {
+            background-color: #2d3748; /* dark:bg-gray-700 */
+        }
+        .lesson-section h3 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 1rem;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .lesson-section h3 {
+            color: #90cdf4; /* dark:text-blue-400 */
+        }
+        .lesson-section p {
+            line-height: 1.75; /* leading-relaxed */
+            margin-bottom: 1rem;
+            color: #374151; /* text-gray-700 */
+        }
+        .dark .lesson-section p {
+            color: #cbd5e0; /* dark:text-gray-300 */
+        }
+        .lesson-section ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .lesson-section ul {
+            color: #cbd5e0;
+        }
+        .lesson-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        .example-box {
+            background-color: #e0f2fe; /* bg-blue-50 */
+            border-left: 4px solid #3b82f6; /* border-blue-500 */
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .example-box {
+            background-color: #1e3a8a; /* dark:bg-blue-900 */
+            border-color: #60a5fa; /* dark:border-blue-400 */
+            color: #90cdf4; /* dark:text-blue-300 */
+        }
+        /* Markdown specific styling for equations - keeping from previous version for consistency */
+        .lesson-content p code {
+            background-color: #e5e7eb; /* Gray-200 */
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-family: 'Fira Code', monospace; /* Or any monospaced font */
+        }
+        html.dark .lesson-content p code {
+            background-color: #374151; /* Gray-700 */
+        }
+        .lesson-content h1, .lesson-content h2, .lesson-content h3, .lesson-content h4 {
+            color: #3b82f6; /* Blue-500 */
+        }
+        html.dark .lesson-content h1, html.dark .lesson-content h2, html.dark .lesson-content h3, html.dark .lesson-content h4 {
+            color: #60a5fa; /* Blue-400 */
+        }
+        .lesson-content strong {
+            color: #3b82f6; /* Blue-500 */
+        }
+        html.dark .lesson-content strong {
+            color: #60a5fa; /* Blue-400 */
+        }
+
+        /* Basic styling for math formulas */
+        .lesson-content .math {
+            display: block;
+            overflow-x: auto; /* For wide equations */
+            padding: 0.5em 0;
+            text-align: center;
+            font-size: 1.1em;
+            color: #1f2937; /* Gray-900 */
+        }
+        html.dark .lesson-content .math {
+            color: #e5e7eb; /* Gray-200 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+    <canvas id="global-background-canvas"></canvas>
+
+    <div id="mobile-menu-overlay" class="md:hidden"></div>
+
+    <header class="bg-blue-600 text-white p-4 shadow-md relative z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold rounded-md px-2 py-1">WhizMath</h1>
+            <nav class="flex items-center space-x-6 relative">
+                <ul class="hidden md:flex space-x-2">
+                    <li><a href="index.html" class="nav-link-effect">Home</a></li>
+                    <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+                    <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+                    <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+                    <li><a href="games.html" class="nav-link-effect">Games</a></li>
+                    <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+                </ul>
+
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+
+                <button id="theme-toggle" class="p-2 rounded-full bg-blue-700 hover:bg-blue-800 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ml-4">
+                    <svg id="moon-icon" class="w-6 h-6 text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <svg id="sun-icon" class="w-6 h-6 text-yellow-300 transition-all duration-300 ease-in-out hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.354 3.354l-.707.707M5.646 5.646l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="bg-blue-600 text-white p-6 md:hidden">
+        <ul class="flex flex-col space-y-4 pt-8">
+            <li><a href="index.html" class="nav-link-effect">Home</a></li>
+            <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+            <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+            <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+            <li><a href="games.html" class="nav-link-effect">Games</a></li>
+            <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+        </ul>
+    </div>
+
+    <main class="container mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg relative z-10">
+        <h2 class="text-4xl font-bold mb-6 text-center text-blue-700 dark:text-blue-400">Derivatives: The Mathematics of Change</h2>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Introduction: Understanding Rates of Change</h3>
+            <p class="mb-4">Welcome to Whizmath, where we delve into the dynamic world of calculus! Today's lesson introduces one of the most fundamental concepts in mathematics: <strong>Derivatives</strong>. At its core, a derivative measures how a function changes as its input changes. It's the mathematical tool for understanding rates of change, slopes of curves, and instantaneous velocities.</p>
+            <p class="mb-4">From predicting the trajectory of a rocket and optimizing production costs in business, to analyzing the speed of chemical reactions and understanding the flow of electricity, derivatives are indispensable across physics, engineering, economics, and countless scientific disciplines. They allow us to move beyond average rates of change to pinpoint the exact rate of change at any given moment.</p>
+            <p class="mb-4">In this comprehensive lesson, we will define derivatives using limits, explore various rules for differentiation, interpret derivatives graphically, and apply them to real-world problems. Prepare to unlock the power of instantaneous change and gain a deeper insight into how quantities evolve!</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 1: The Concept of a Derivative</h3>
+            <p class="mb-4">To truly understand derivatives, we must first grasp the idea of a limit and how it relates to the slope of a tangent line.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">1.1 Average Rate of Change vs. Instantaneous Rate of Change</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Average Rate of Change:</strong> The change in a function's output over a specific interval. For a function $f(x)$ between $x_1$ and $x_2$, it's given by the slope of the secant line:
+                    <p class="math">$\frac{\Delta y}{\Delta x} = \frac{f(x_2) - f(x_1)}{x_2 - x_1}$</p>
+                </li>
+                <li class="mb-2"><strong>Instantaneous Rate of Change:</strong> The rate of change at a single, specific point. This is where the derivative comes in. It's the slope of the tangent line to the curve at that point.</li>
+            </ul>
+
+            <h4 class="text-2xl font-semibold mb-3">1.2 Definition of the Derivative (Limit Definition)</h4>
+            <p class="mb-4">The derivative of a function $f(x)$ with respect to $x$, denoted as $f'(x)$ (read "f prime of x") or $\frac{dy}{dx}$, is defined as:</p>
+            <p class="math">$f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$</p>
+            <p class="mb-4">This limit represents the slope of the tangent line to the graph of $f(x)$ at any point $x$.</p>
+            <p class="font-semibold mt-4">Example 1.2.1: Using the Limit Definition</p>
+            <div class="example-box">
+                <p>Find the derivative of $f(x) = x^2$ using the limit definition.</p>
+                <p>$f(x+h) = (x+h)^2 = x^2 + 2xh + h^2$</p>
+                <p>$f'(x) = \lim_{h \to 0} \frac{(x^2 + 2xh + h^2) - x^2}{h}$</p>
+                <p>$f'(x) = \lim_{h \to 0} \frac{2xh + h^2}{h}$</p>
+                <p>$f'(x) = \lim_{h \to 0} \frac{h(2x + h)}{h}$</p>
+                <p>$f'(x) = \lim_{h \to 0} (2x + h)$</p>
+                <p>$f'(x) = 2x + 0 = 2x$</p>
+                <p>So, the derivative of $x^2$ is $2x$.</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 2: Basic Differentiation Rules</h3>
+            <p class="mb-4">While the limit definition is fundamental, using it for every function is tedious. Fortunately, we have powerful rules to simplify differentiation.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.1 Constant Rule</h4>
+            <p class="mb-4">The derivative of a constant function is zero.</p>
+            <p class="math">$\frac{d}{dx}(c) = 0$</p>
+            <p class="example-box">Example: $\frac{d}{dx}(5) = 0$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.2 Power Rule</h4>
+            <p class="mb-4">If $n$ is any real number, the derivative of $x^n$ is $nx^{n-1}$.</p>
+            <p class="math">$\frac{d}{dx}(x^n) = nx^{n-1}$</p>
+            <p class="example-box">Example: $\frac{d}{dx}(x^3) = 3x^{3-1} = 3x^2$</p>
+            <p class="example-box">Example: $\frac{d}{dx}(\sqrt{x}) = \frac{d}{dx}(x^{1/2}) = \frac{1}{2}x^{1/2 - 1} = \frac{1}{2}x^{-1/2} = \frac{1}{2\sqrt{x}}$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.3 Constant Multiple Rule</h4>
+            <p class="mb-4">The derivative of a constant times a function is the constant times the derivative of the function.</p>
+            <p class="math">$\frac{d}{dx}(cf(x)) = c \frac{d}{dx}(f(x))$</p>
+            <p class="example-box">Example: $\frac{d}{dx}(5x^4) = 5 \frac{d}{dx}(x^4) = 5(4x^3) = 20x^3$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.4 Sum and Difference Rules</h4>
+            <p class="mb-4">The derivative of a sum or difference of functions is the sum or difference of their derivatives.</p>
+            <p class="math">$\frac{d}{dx}(f(x) \pm g(x)) = \frac{d}{dx}(f(x)) \pm \frac{d}{dx}(g(x))$</p>
+            <p class="example-box">Example: $\frac{d}{dx}(3x^2 + 2x - 7) = \frac{d}{dx}(3x^2) + \frac{d}{dx}(2x) - \frac{d}{dx}(7) = 6x + 2 - 0 = 6x + 2$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.5 Product Rule</h4>
+            <p class="mb-4">If $f(x)$ and $g(x)$ are differentiable functions, then the derivative of their product is:</p>
+            <p class="math">$\frac{d}{dx}(f(x)g(x)) = f'(x)g(x) + f(x)g'(x)$</p>
+            <p class="example-box">Example: Find $\frac{d}{dx}((x^2+1)(x^3-2))$</p>
+            <p class="example-box">Let $f(x) = x^2+1 \Rightarrow f'(x) = 2x$</p>
+            <p class="example-box">Let $g(x) = x^3-2 \Rightarrow g'(x) = 3x^2$</p>
+            <p class="example-box">$\frac{d}{dx}((x^2+1)(x^3-2)) = (2x)(x^3-2) + (x^2+1)(3x^2)$</p>
+            <p class="example-box">$ = 2x^4 - 4x + 3x^4 + 3x^2$</p>
+            <p class="example-box">$ = 5x^4 + 3x^2 - 4x$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.6 Quotient Rule</h4>
+            <p class="mb-4">If $f(x)$ and $g(x)$ are differentiable functions and $g(x) \neq 0$, then the derivative of their quotient is:</p>
+            <p class="math">$\frac{d}{dx}\left(\frac{f(x)}{g(x)}\right) = \frac{f'(x)g(x) - f(x)g'(x)}{(g(x))^2}$</p>
+            <p class="example-box">Example: Find $\frac{d}{dx}\left(\frac{x^2}{x+1}\right)$</p>
+            <p class="example-box">Let $f(x) = x^2 \Rightarrow f'(x) = 2x$</p>
+            <p class="example-box">Let $g(x) = x+1 \Rightarrow g'(x) = 1$</p>
+            <p class="example-box">$\frac{d}{dx}\left(\frac{x^2}{x+1}\right) = \frac{(2x)(x+1) - (x^2)(1)}{(x+1)^2}$</p>
+            <p class="example-box">$ = \frac{2x^2 + 2x - x^2}{(x+1)^2}$</p>
+            <p class="example-box">$ = \frac{x^2 + 2x}{(x+1)^2}$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.7 Chain Rule</h4>
+            <p class="mb-4">Used for differentiating composite functions (a function within a function). If $y = f(g(x))$, then:</p>
+            <p class="math">$\frac{dy}{dx} = f'(g(x)) \cdot g'(x)$</p>
+            <p class="example-box">Example: Find $\frac{d}{dx}((2x+3)^5)$</p>
+            <p class="example-box">Let $f(u) = u^5$ and $u = g(x) = 2x+3$.</p>
+            <p class="example-box">$f'(u) = 5u^4$ and $g'(x) = 2$</p>
+            <p class="example-box">$\frac{d}{dx}((2x+3)^5) = 5(2x+3)^4 \cdot 2 = 10(2x+3)^4$</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 3: Derivatives of Common Functions</h3>
+            <p class="mb-4">Beyond polynomial functions, derivatives of trigonometric, exponential, and logarithmic functions are essential.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">3.1 Trigonometric Functions</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2">$\frac{d}{dx}(\sin x) = \cos x$</li>
+                <li class="mb-2">$\frac{d}{dx}(\cos x) = -\sin x$</li>
+                <li class="mb-2">$\frac{d}{dx}(\tan x) = \sec^2 x$</li>
+                <li class="mb-2">$\frac{d}{dx}(\csc x) = -\csc x \cot x$</li>
+                <li class="mb-2">$\frac{d}{dx}(\sec x) = \sec x \tan x$</li>
+                <li class="mb-2">$\frac{d}{dx}(\cot x) = -\csc^2 x$</li>
+            </ul>
+            <p class="example-box">Example: $\frac{d}{dx}(\sin(3x)) = \cos(3x) \cdot \frac{d}{dx}(3x) = 3\cos(3x)$ (using Chain Rule)</p>
+
+            <h4 class="text-2xl font-semibold mb-3">3.2 Exponential and Logarithmic Functions</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2">$\frac{d}{dx}(e^x) = e^x$</li>
+                <li class="mb-2">$\frac{d}{dx}(a^x) = a^x \ln a$</li>
+                <li class="mb-2">$\frac{d}{dx}(\ln x) = \frac{1}{x}$</li>
+                <li class="mb-2">$\frac{d}{dx}(\log_b x) = \frac{1}{x \ln b}$</li>
+            </ul>
+            <p class="example-box">Example: $\frac{d}{dx}(e^{x^2}) = e^{x^2} \cdot \frac{d}{dx}(x^2) = 2xe^{x^2}$ (using Chain Rule)</p>
+            <p class="example-box">Example: $\frac{d}{dx}(\ln(5x)) = \frac{1}{5x} \cdot \frac{d}{dx}(5x) = \frac{1}{5x} \cdot 5 = \frac{1}{x}$</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 4: Applications of Derivatives</h3>
+            <p class="mb-4">Derivatives are powerful tools for solving a wide range of problems involving change and optimization.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">4.1 Slope of a Tangent Line</h4>
+            <p class="mb-4">The derivative $f'(x)$ gives the slope of the line tangent to the curve $y=f(x)$ at any point $x$.</p>
+            <p class="font-semibold mt-4">Example 4.1.1:</p>
+            <p>Find the slope of the tangent line to $f(x) = x^3 - 2x$ at $x=2$.</p>
+            <div class="example-box">
+                <p>First, find the derivative: $f'(x) = 3x^2 - 2$</p>
+                <p>Then, evaluate $f'(2)$: $f'(2) = 3(2)^2 - 2 = 3(4) - 2 = 12 - 2 = 10$</p>
+                <p>The slope of the tangent line at $x=2$ is 10.</p>
+            </div>
+
+            <h4 class="text-2xl font-semibold mb-3">4.2 Rates of Change (Physics/Kinematics)</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2">If $s(t)$ is the position function of an object, then:
+                    <ul class="list-disc list-inside ml-6 mt-1">
+                        <li><strong>Velocity:</strong> $v(t) = s'(t) = \frac{ds}{dt}$</li>
+                        <li><strong>Acceleration:</strong> $a(t) = v'(t) = s''(t) = \frac{d^2s}{dt^2}$</li>
+                    </ul>
+                </li>
+            </ul>
+            <p class="font-semibold mt-4">Example 4.2.1:</p>
+            <p>A ball's height (in meters) is given by $s(t) = -5t^2 + 20t + 1$. Find its velocity at $t=1$ second.</p>
+            <div class="example-box">
+                <p>Find the velocity function: $v(t) = s'(t) = \frac{d}{dt}(-5t^2 + 20t + 1) = -10t + 20$</p>
+                <p>Evaluate $v(1)$: $v(1) = -10(1) + 20 = 10$ m/s</p>
+            </div>
+
+            <h4 class="text-2xl font-semibold mb-3">4.3 Optimization (Finding Maxima and Minima)</h4>
+            <p class="mb-4">Derivatives are used to find local maximum and minimum values of a function. These occur at <strong>critical points</strong>, where $f'(x) = 0$ or $f'(x)$ is undefined.</p>
+            <p class="font-semibold mt-4">Steps for Optimization:</p>
+            <ol class="list-decimal list-inside ml-4 mb-4">
+                <li>Find the first derivative $f'(x)$.</li>
+                <li>Set $f'(x) = 0$ and solve for $x$ to find critical points.</li>
+                <li>Use the First Derivative Test (sign changes of $f'(x)$) or Second Derivative Test ($f''(x)$) to classify critical points as local maxima, minima, or neither.</li>
+            </ol>
+            <p class="font-semibold mt-4">Example 4.3.1:</p>
+            <p>Find the local extrema of $f(x) = x^3 - 3x^2 + 2$.</p>
+            <div class="example-box">
+                <p>1. Find $f'(x)$: $f'(x) = 3x^2 - 6x$</p>
+                <p>2. Set $f'(x) = 0$: $3x^2 - 6x = 0 \Rightarrow 3x(x - 2) = 0$</p>
+                <p>&nbsp;&nbsp;&nbsp;Critical points at $x=0$ and $x=2$.</p>
+                <p>3. Use First Derivative Test:</p>
+                <p>&nbsp;&nbsp;&nbsp;For $x < 0$ (e.g., $x=-1$): $f'(-1) = 3(-1)^2 - 6(-1) = 3 + 6 = 9 > 0$ (increasing)</p>
+                <p>&nbsp;&nbsp;&nbsp;For $0 < x < 2$ (e.g., $x=1$): $f'(1) = 3(1)^2 - 6(1) = 3 - 6 = -3 < 0$ (decreasing)</p>
+                <p>&nbsp;&nbsp;&nbsp;For $x > 2$ (e.g., $x=3$): $f'(3) = 3(3)^2 - 6(3) = 27 - 18 = 9 > 0$ (increasing)</p>
+                <p>Local maximum at $x=0$: $f(0) = (0)^3 - 3(0)^2 + 2 = 2$. Point: $(0, 2)$.</p>
+                <p>Local minimum at $x=2$: $f(2) = (2)^3 - 3(2)^2 + 2 = 8 - 12 + 2 = -2$. Point: $(2, -2)$.</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 5: Higher-Order Derivatives and Implicit Differentiation</h3>
+            <p class="mb-4">Derivatives can be taken multiple times, and we can differentiate equations where $y$ is not explicitly defined as a function of $x$.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">5.1 Higher-Order Derivatives</h4>
+            <p class="mb-4">The second derivative, third derivative, and so on are called higher-order derivatives.</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Second Derivative:</strong> The derivative of the first derivative, denoted $f''(x)$ or $\frac{d^2y}{dx^2}$. It measures the rate of change of the slope (concavity).</li>
+                <li class="mb-2"><strong>Third Derivative:</strong> The derivative of the second derivative, $f'''(x)$ or $\frac{d^3y}{dx^3}$.</li>
+            </ul>
+            <p class="example-box">Example: If $f(x) = x^4 - 3x^2 + 5x$, find $f''(x)$.</p>
+            <p class="example-box">$f'(x) = 4x^3 - 6x + 5$</p>
+            <p class="example-box">$f''(x) = \frac{d}{dx}(4x^3 - 6x + 5) = 12x^2 - 6$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">5.2 Implicit Differentiation</h4>
+            <p class="mb-4">Used when an equation defines $y$ implicitly as a function of $x$ (e.g., $x^2 + y^2 = 25$). Differentiate both sides of the equation with respect to $x$, remembering to apply the chain rule when differentiating terms involving $y$ (since $y$ is a function of $x$, $\frac{d}{dx}(y^n) = ny^{n-1} \frac{dy}{dx}$).</p>
+            <p class="font-semibold mt-4">Example 5.2.1:</p>
+            <p>Find $\frac{dy}{dx}$ for $x^2 + y^2 = 25$.</p>
+            <div class="example-box">
+                <p>Differentiate both sides with respect to $x$:</p>
+                <p>$\frac{d}{dx}(x^2) + \frac{d}{dx}(y^2) = \frac{d}{dx}(25)$</p>
+                <p>$2x + 2y \frac{dy}{dx} = 0$</p>
+                <p>Isolate $\frac{dy}{dx}$:</p>
+                <p>$2y \frac{dy}{dx} = -2x$</p>
+                <p>$\frac{dy}{dx} = \frac{-2x}{2y} = -\frac{x}{y}$</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 6: Common Pitfalls and Tips for Success</h3>
+            <p class="mb-4">Derivatives can be challenging, but being aware of common mistakes can significantly improve your accuracy:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Algebra Errors:</strong> Many "calculus" errors are actually algebra mistakes (e.g., simplifying expressions, distributing negatives).</li>
+                <li class="mb-2"><strong>Forgetting the Chain Rule:</strong> This is perhaps the most common mistake. Always apply the chain rule when differentiating a composite function.</li>
+                <li class="mb-2"><strong>Misapplying Product/Quotient Rules:</strong> Ensure you correctly identify $f(x), g(x), f'(x), g'(x)$ and follow the formula precisely.</li>
+                <li class="mb-2"><strong>Negative Exponents/Radicals:</strong> Convert radicals to fractional exponents and handle negative exponents correctly before applying the power rule.</li>
+                <li class="mb-2"><strong>Implicit Differentiation:</strong> Remember to multiply by $\frac{dy}{dx}$ (or $\frac{d(\text{variable})}{d(\text{independent variable})}$) whenever differentiating a term involving the dependent variable.</li>
+            </ul>
+            <p class="font-semibold mt-4">Tips for Success:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Master the Basic Rules:</strong> Power, Constant Multiple, Sum/Difference rules are foundational.</li>
+                <li class="mb-2"><strong>Practice the Chain Rule Extensively:</strong> It's the most versatile and frequently used rule.</li>
+                <li class="mb-2"><strong>Simplify First:</strong> Sometimes, algebraic simplification of the original function can make differentiation easier.</li>
+                <li class="mb-2"><strong>Show Your Work:</strong> Write out each step, especially when using product, quotient, or chain rules. This helps in debugging.</li>
+                <li class="mb-2"><strong>Understand the Concepts:</strong> Don't just memorize formulas. Understand what a derivative represents (slope, rate of change).</li>
+            </ul>
+        </section>
+
+        <section class="lesson-section text-center">
+            <h3 class="text-3xl font-semibold mb-4">Conclusion: Embracing the Dynamics of Calculus</h3>
+            <p class="mb-4">You have now embarked on the exciting journey into differential calculus, gaining a solid understanding of derivatives as the fundamental tool for measuring instantaneous rates of change. From the rigorous limit definition to the efficient application of differentiation rules, you've seen how derivatives allow us to analyze the behavior of functions with unprecedented precision.</p>
+            <p class="mb-4">The power of derivatives extends far beyond abstract mathematical problems, providing crucial insights into motion, optimization, and the very dynamics of the physical and economic world. As you continue to explore calculus, remember that derivatives are not just about finding slopes; they are about understanding how everything changes.</p>
+            <p class="text-xl font-bold text-blue-700 dark:text-blue-400">Keep exploring change, keep calculating rates, and keep mastering calculus with Whizmath!</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Practice Problems (with Solutions)</h3>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 1: Power Rule</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Find the derivative of $f(x) = 5x^3 - 2x^2 + 7x - 10$.</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 1:</p>
+                        <p class="mb-2">$f'(x) = \frac{d}{dx}(5x^3) - \frac{d}{dx}(2x^2) + \frac{d}{dx}(7x) - \frac{d}{dx}(10)$</p>
+                        <p class="mb-2">$f'(x) = 5(3x^2) - 2(2x) + 7(1) - 0$</p>
+                        <p>$f'(x) = 15x^2 - 4x + 7$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 2: Product Rule</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Find the derivative of $y = (x^2 + 3)(e^x)$.</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 2:</p>
+                        <p class="mb-2">Let $f(x) = x^2 + 3 \Rightarrow f'(x) = 2x$</p>
+                        <p class="mb-2">Let $g(x) = e^x \Rightarrow g'(x) = e^x$</p>
+                        <p class="mb-2">Using Product Rule: $y' = f'(x)g(x) + f(x)g'(x)$</p>
+                        <p class="mb-2">$y' = (2x)(e^x) + (x^2 + 3)(e^x)$</p>
+                        <p>$y' = e^x(2x + x^2 + 3)$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 3: Chain Rule</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Find the derivative of $f(x) = \sin(4x - \pi)$.</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 3:</p>
+                        <p class="mb-2">Let outer function be $\sin(u)$ and inner function $u = 4x - \pi$.</p>
+                        <p class="mb-2">Derivative of outer: $\cos(u)$</p>
+                        <p class="mb-2">Derivative of inner: $4$</p>
+                        <p class="mb-2">Using Chain Rule: $f'(x) = \cos(4x - \pi) \cdot 4$</p>
+                        <p>$f'(x) = 4\cos(4x - \pi)$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 4: Implicit Differentiation</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Find $\frac{dy}{dx}$ for $x^3 + y^3 = 6xy$.</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 4:</p>
+                        <p class="mb-2">Differentiate both sides with respect to $x$:</p>
+                        <p class="mb-2">$\frac{d}{dx}(x^3) + \frac{d}{dx}(y^3) = \frac{d}{dx}(6xy)$</p>
+                        <p class="mb-2">$3x^2 + 3y^2 \frac{dy}{dx} = 6(1 \cdot y + x \cdot \frac{dy}{dx})$ (using Product Rule on $6xy$)</p>
+                        <p class="mb-2">$3x^2 + 3y^2 \frac{dy}{dx} = 6y + 6x \frac{dy}{dx}$</p>
+                        <p class="mb-2">Group terms with $\frac{dy}{dx}$:</p>
+                        <p class="mb-2">$3y^2 \frac{dy}{dx} - 6x \frac{dy}{dx} = 6y - 3x^2$</p>
+                        <p class="mb-2">Factor out $\frac{dy}{dx}$:</p>
+                        <p class="mb-2">$\frac{dy}{dx}(3y^2 - 6x) = 6y - 3x^2$</p>
+                        <p>$\frac{dy}{dx} = \frac{6y - 3x^2}{3y^2 - 6x} = \frac{3(2y - x^2)}{3(y^2 - 2x)} = \frac{2y - x^2}{y^2 - 2x}$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 5: Optimization</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Find the critical points of $f(x) = x^3 - 12x + 1$.</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 5:</p>
+                        <p class="mb-2">Find the first derivative: $f'(x) = 3x^2 - 12$</p>
+                        <p class="mb-2">Set $f'(x) = 0$:</p>
+                        <p class="mb-2">$3x^2 - 12 = 0$</p>
+                        <p class="mb-2">$3(x^2 - 4) = 0$</p>
+                        <p class="mb-2">$3(x - 2)(x + 2) = 0$</p>
+                        <p>Critical points: $x = 2, x = -2$</p>
+                    </div>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-blue-600 text-white py-8 mt-auto relative z-10">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2023 WhizMath. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Privacy Policy</a>
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Terms of Service</a>
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Contact Us</a>
+            </div>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.237 2.636 7.855 6.356 9.314.464.086.66-.2.66-.447 0-.22-.008-.809-.013-1.581-2.56.56-3.1-1.23-3.1-1.23-.418-1.06-.99-1.343-.07-.993.92.062 1.403.957 1.403.957.82 1.403 2.152.997 2.67.765.083-.597.323-.997.593-1.226-2.04-.23-4.183-1.02-4.183-4.523 0-1.002.358-1.823.94-2.462-.095-.23-.41-.1.085-1.29 0 0 .768-.246 2.522.94.72-.2 1.48-.3 2.24-.304.76.004 1.52.104 2.24.304 1.754-1.186 2.522-.94 2.522-.94.495 1.19.18 1.06.085 1.29.582.639.94 1.46.94 2.462 0 3.51-2.146 4.29-4.194 4.516.33.284.626.846.626 1.705 0 1.23-.012 2.219-.012 2.512 0 .249.195.533.663.446C19.364 19.855 22 16.237 22 12c0-5.523-4.477-10-10-10z"></path></svg>
+                </a>
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.8.35-1.64.59-2.5.66.9-.54 1.5-1.4 1.8-2.4-.84.5-1.78.87-2.78 1.07C18.35 4.5 17.2 4 16 4c-2.48 0-4.5 2.02-4.5 4.5 0 .35.04.68.12 1-.37-.02-.74-.08-1.1-.18-3.08-.15-5.8-1.63-7.68-4.07-.32.55-.5 1.18-.5 1.87 0 1.2.6 2.25 1.58 2.87-.7-.02-1.3-.2-1.8-.5v.05c0 2.18 1.55 4 3.6 4.4-.37.1-.76.15-1.16.15-.28 0-.55-.03-.8-.08.57 1.8 2.2 3.1 4.13 3.4-1.55 1.2-3.5 1.9-5.6 1.9-.36 0-.7-.02-1.04-.06C2.9 20.3 5.3 21 8 21c7.2 0 11.15-5.95 11.15-11.15 0-.17-.0-.33-.01-.5.77-.55 1.45-1.24 1.98-2.02z"></path></svg>
+                </a>
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.148 3.252-1.691 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.07-1.645-.07-4.85s.012-3.584.07-4.85c.148-3.252 1.691-4.771 4.919-4.919 1.266-.058 1.644-.07 4.85-.07zm0 2.163c-3.204 0-3.584.012-4.85.07-2.77.126-3.958 1.46-4.084 4.084-.058 1.265-.07 1.645-.07 4.85s.012 3.584.07 4.85c.126 2.77 1.46 3.958 4.084 4.084 1.265.058 1.645.07 4.85.07s3.584-.012 4.85-.07c2.77-.126 3.958-1.46 4.084-4.084.058-1.265.07-1.645.07-4.85s-.012-3.584-.07-4.85c-.126-2.77-1.46-3.958-4.084-4.084-1.265-.058-1.645-.07-4.85-.07zm0 3.627c-2.481 0-4.5 2.019-4.5 4.5s2.019 4.5 4.5 4.5 4.5-2.019 4.5-4.5-2.019-4.5-4.5-4.5zm0 2.163c1.282 0 2.337 1.055 2.337 2.337s-1.055 2.337-2.337 2.337-2.337-1.055-2.337-2.337 1.055-2.337 2.337-2.337zm6.406-5.463c-.47-.47-.94-.705-1.41-.705s-.94.235-1.41.705c-.47.47-.705.94-.705 1.41s.235.94.705 1.41c.47.47.94.705 1.41.705s.94-.235 1.41-.705c-.47-.47-.705-.94-.705-1.41s-.235-.94-.705-1.41z"></path></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <button id="scroll-to-top-btn" class="bg-blue-600">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <script>
+        // --- Theme Toggle Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+            localStorage.setItem('theme', theme);
+            // Removed updateParticleColors call from here. It will be called in window.onload
+        }
+
+        // Check for saved theme on load
+        const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+        setTheme(savedTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+            // Call updateParticleColors here for immediate visual feedback on theme change
+            if (typeof particles !== 'undefined' && particles) {
+                updateParticleColors(newTheme === 'dark');
+            }
+        });
+
+        // --- Mobile Sidebar Menu Logic ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            mobileMenuOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling body when menu is open
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('open');
+            document.body.style.overflow = ''; // Restore body scrolling
+        }
+
+        mobileMenuButton.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('open')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu); // Close when clicking overlay
+
+        // Close mobile menu if a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                // Only close if it's a small screen
+                if (window.innerWidth < 768) {
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Handle resize: ensure menu is correct on desktop/mobile switch
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint
+                closeMobileMenu(); // Ensure sidebar is closed on desktop
+            }
+        });
+
+        // --- Three.js Global Background Animation Logic ---
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('global-background-canvas');
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles
+            const particleCount = 12500;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            // Define colors for light and dark mode for particles
+            const lightModeColors = [
+                new THREE.Color(0xADD8E6), // Light blue
+                new THREE.Color(0x87CEEB), // Sky blue
+                new THREE.Color(0x6495ED)  // Cornflower blue
+            ];
+            const darkModeColors = [
+                new THREE.Color(0x3182ce), // Blue-600 dark
+                new THREE.Color(0x4299e1), // Blue-500 dark
+                new THREE.Color(0x63b3ed)  // Blue-400 dark
+            ];
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
+                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
+                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
+
+                // Assign initial color based on current theme
+                const currentColors = htmlElement.classList.contains('dark') ? darkModeColors : lightModeColors;
+                const colorIndex = Math.floor(Math.random() * currentColors.length);
+                const color = currentColors[colorIndex];
+
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+            });
+
+            particles = new THREE.Points(geometry, particleMaterial);
+            scene.add(particles);
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Function to update particle colors based on theme
+        function updateParticleColors(isDarkMode) {
+            // Check if particles object is initialized before trying to access its properties
+            if (!particles || !particles.geometry || !particles.geometry.attributes.color) {
+                console.warn("Three.js particles not yet initialized for color update.");
+                return;
+            }
+
+            const colors = particles.geometry.attributes.color.array;
+            const targetColors = isDarkMode ? [
+                new THREE.Color(0x3182ce), // Blue-600 dark
+                new THREE.Color(0x4299e1), // Blue-500 dark
+                new THREE.Color(0x63b3ed)  // Blue-400 dark
+            ] : [
+                new THREE.Color(0xADD8E6), // Light blue
+                new THREE.Color(0x87CEEB), // Sky blue
+                new THREE.Color(0x6495ED)  // Cornflower blue
+            ];
+
+            for (let i = 0; i < colors.length; i += 3) {
+                const colorIndex = Math.floor(Math.random() * targetColors.length); // Re-randomize color from target palette
+                const targetColor = targetColors[colorIndex];
+                colors[i] = targetColor.r;
+                colors[i + 1] = targetColor.g;
+                colors[i + 2] = targetColor.b;
+            }
+            particles.geometry.attributes.color.needsUpdate = true;
+        }
+
+
+        // --- Scroll to Top Button Logic ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling 300px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll animation
+            });
+        });
+
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+            // Now safely call updateParticleColors after Three.js particles are initialized
+            updateParticleColors(htmlElement.classList.contains('dark'));
+        };
+    </script>
+</body>
+</html>

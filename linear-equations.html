@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizmath: Mastering Linear Equations</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Light mode styles */
+        .light .bg-gray-100 { background-color: #f3f4f6; }
+        .light .text-gray-900 { color: #1f2937; }
+        .light .bg-white { background-color: #ffffff; }
+        .light .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .light .text-gray-800 { color: #1f2937; }
+        .light .text-blue-700 { color: #1d4ed8; }
+        .light .bg-blue-600 { background-color: #2563eb; }
+        .light .bg-blue-700 { background-color: #1d4ed8; }
+        .light .bg-blue-500 { background-color: #3b82f6; }
+        .light .from-blue-500 { --tw-gradient-from: #3b82f6; }
+        .light .to-indigo-600 { --tw-gradient-to: #4f46e5; }
+        .light .bg-gray-50 { background-color: #f9fafb; } /* Card background */
+        .light .text-gray-600 { color: #4b5563; } /* Card description text */
+        .light .text-gray-700 { color: #374151; } /* Section description text */
+        .light .bg-blue-100 { background-color: #dbeafe; } /* Autocomplete hover */
+        .light .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .light .social-icon-bg { background-color: #3b82f6; } /* Social icon background */
+        .light .social-icon-bg:hover { background-color: #2563eb; } /* Social icon hover background */
+        .light #scroll-to-top-btn { background-color: #2563eb; } /* Scroll to top button */
+        .light #scroll-to-top-btn:hover { background-color: #1d4ed8; } /* Scroll to top button hover */
+
+
+        /* Dark mode styles */
+        .dark .bg-gray-100 { background-color: #1a202c; }
+        .dark .text-gray-900 { color: #e2e8f0; }
+        .dark .bg-white { background-color: #2d3748; } /* Main content section background */
+        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15); }
+        .dark .text-gray-800 { color: #cbd5e0; }
+        .dark .text-blue-700 { color: #90cdf4; } /* Section title */
+        .dark .bg-blue-600 { background-color: #1a365d; }
+        .dark .bg-blue-700 { background-color: #2a4365; }
+        .dark .bg-blue-500 { background-color: #3182ce; }
+        .dark .from-blue-500 { --tw-gradient-from: #3182ce; }
+        .dark .to-indigo-600 { --tw-gradient-to: #5a67d8; }
+        .dark .bg-gray-800 { background-color: #1a202c; }
+        .dark .text-white { color: #e2e8f0; }
+        .dark .bg-gray-50 { background-color: #1f2937; } /* Card background for dark mode */
+        .dark .text-gray-600 { color: #a0aec0; } /* Card description text for dark mode */
+        .dark .text-gray-700 { color: #cbd5e0; } /* Section description text for dark mode */
+        .dark .bg-blue-100 { background-color: #1e3a8a; } /* Autocomplete hover for dark mode */
+        .dark .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .dark .social-icon-bg { background-color: #3182ce; } /* Social icon background */
+        .dark .social-icon-bg:hover { background-color: #2b6cb0; } /* Social icon hover background */
+        .dark #scroll-to-top-btn { background-color: #3182ce; } /* Scroll to top button */
+        .dark #scroll-to-top-btn:hover { background-color: #2b6cb0; } /* Scroll to top button hover */
+
+
+        /* Ensure smooth transitions for all elements */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Global Three.js Canvas for background animation */
+        #global-background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none; /* Allows clicks to pass through to content */
+            opacity: 0.7; /* Slightly transparent */
+        }
+
+        /* Mobile sidebar styling */
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 256px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 50;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* Overlay for when sidebar is open */
+        #mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        #mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Custom Nav Link Hover Effect */
+        .nav-link-effect {
+            position: relative;
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .nav-link-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease-out;
+            border-radius: 6px;
+            z-index: -1;
+        }
+
+        .nav-link-effect::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease-out, left 0.3s ease-out;
+        }
+
+        .nav-link-effect:hover::before {
+            transform: scaleX(1);
+        }
+
+        .nav-link-effect:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Dark mode specific hover effect adjustments */
+        .dark .nav-link-effect::before {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .dark .nav-link-effect::after {
+            background-color: #90cdf4; /* Blue-300 for dark mode */
+        }
+
+        /* Adjust mobile menu links for the new effect */
+        #mobile-menu .nav-link-effect {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+        }
+
+        /* Scroll to Top Button */
+        #scroll-to-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 9999px; /* Fully rounded */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 100;
+        }
+
+        #scroll-to-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Lesson content specific styles */
+        .lesson-section {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .light .lesson-section {
+            background-color: #ffffff; /* bg-white */
+        }
+        .dark .lesson-section {
+            background-color: #2d3748; /* dark:bg-gray-700 */
+        }
+        .lesson-section h3 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 1rem;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .lesson-section h3 {
+            color: #90cdf4; /* dark:text-blue-400 */
+        }
+        .lesson-section p {
+            line-height: 1.75; /* leading-relaxed */
+            margin-bottom: 1rem;
+            color: #374151; /* text-gray-700 */
+        }
+        .dark .lesson-section p {
+            color: #cbd5e0; /* dark:text-gray-300 */
+        }
+        .lesson-section ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .lesson-section ul {
+            color: #cbd5e0;
+        }
+        .lesson-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        .example-box {
+            background-color: #e0f2fe; /* bg-blue-50 */
+            border-left: 4px solid #3b82f6; /* border-blue-500 */
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .example-box {
+            background-color: #1e3a8a; /* dark:bg-blue-900 */
+            border-color: #60a5fa; /* dark:border-blue-400 */
+            color: #90cdf4; /* dark:text-blue-300 */
+        }
+        /* Markdown specific styling for equations - keeping from previous version for consistency */
+        .lesson-content p code {
+            background-color: #e5e7eb; /* Gray-200 */
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-family: 'Fira Code', monospace; /* Or any monospaced font */
+        }
+        html.dark .lesson-content p code {
+            background-color: #374151; /* Gray-700 */
+        }
+        .lesson-content h1, .lesson-content h2, .lesson-content h3, .lesson-content h4 {
+            color: #3b82f6; /* Blue-500 */
+        }
+        html.dark .lesson-content h1, html.dark .lesson-content h2, html.dark .lesson-content h3, html.dark .lesson-content h4 {
+            color: #60a5fa; /* Blue-400 */
+        }
+        .lesson-content strong {
+            color: #3b82f6; /* Blue-500 */
+        }
+        html.dark .lesson-content strong {
+            color: #60a5fa; /* Blue-400 */
+        }
+
+        /* Basic styling for math formulas */
+        .lesson-content .math {
+            display: block;
+            overflow-x: auto; /* For wide equations */
+            padding: 0.5em 0;
+            text-align: center;
+            font-size: 1.1em;
+            color: #1f2937; /* Gray-900 */
+        }
+        html.dark .lesson-content .math {
+            color: #e5e7eb; /* Gray-200 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+    <canvas id="global-background-canvas"></canvas>
+
+    <div id="mobile-menu-overlay" class="md:hidden"></div>
+
+    <header class="bg-blue-600 text-white p-4 shadow-md relative z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold rounded-md px-2 py-1">WhizMath</h1>
+            <nav class="flex items-center space-x-6 relative">
+                <ul class="hidden md:flex space-x-2">
+                    <li><a href="index.html" class="nav-link-effect">Home</a></li>
+                    <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+                    <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+                    <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+                    <li><a href="games.html" class="nav-link-effect">Games</a></li>
+                    <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+                </ul>
+
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+
+                <button id="theme-toggle" class="p-2 rounded-full bg-blue-700 hover:bg-blue-800 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ml-4">
+                    <svg id="moon-icon" class="w-6 h-6 text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <svg id="sun-icon" class="w-6 h-6 text-yellow-300 transition-all duration-300 ease-in-out hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.354 3.354l-.707.707M5.646 5.646l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="bg-blue-600 text-white p-6 md:hidden">
+        <ul class="flex flex-col space-y-4 pt-8">
+            <li><a href="index.html" class="nav-link-effect">Home</a></li>
+            <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+            <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+            <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+            <li><a href="games.html" class="nav-link-effect">Games</a></li>
+            <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+        </ul>
+    </div>
+
+    <main class="container mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg relative z-10">
+        <h2 class="text-4xl font-bold mb-6 text-center text-blue-700 dark:text-blue-400">Mastering Linear Equations: The Foundation of Algebra</h2>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Introduction: Unlocking the Power of Variables</h3>
+            <p class="mb-4">Welcome to Whizmath, your guide to demystifying mathematics! Today, we embark on a fundamental journey into the world of "Linear Equations." These are the bedrock of algebra and serve as essential tools for problem-solving across countless disciplines, from science and engineering to economics and everyday decision-making.</p>
+            <p class="mb-4">Linear equations are straightforward yet incredibly powerful. They represent relationships where quantities change at a constant rate, allowing us to model and predict outcomes in a predictable way. In this comprehensive lesson, we will cover everything from the basic definitions and properties of linear equations to various methods for solving them, both graphically and algebraically. Prepare to gain a deep understanding that will empower you to tackle more complex mathematical challenges with confidence!</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 1: Fundamentals of Linear Equations</h3>
+            <p class="mb-4">Before diving into solving, let's establish the core components of linear equations.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">1.1 Definition and Components</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Equation:</strong> A mathematical statement that asserts the equality of two expressions. It always contains an equals sign ($=$).</li>
+                <li class="mb-2"><strong>Variable:</strong> A symbol (usually a letter like $x, y, z$) that represents an unknown value.</li>
+                <li class="mb-2"><strong>Constant:</strong> A fixed numerical value that does not change.</li>
+                <li class="mb-2"><strong>Coefficient:</strong> A numerical factor multiplied by a variable (e.g., in $3x$, $3$ is the coefficient).</li>
+                <li class="mb-2"><strong>Linear Equation:</strong> An equation where the highest power of any variable is 1. When graphed, a linear equation forms a straight line.</li>
+            </ul>
+            <p class="font-semibold mt-4">Example 1.1.1: Identifying Components</p>
+            <p>Consider the equation: $5x + 7 = 22$</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$x$: Variable</li>
+                <li>$5$: Coefficient of $x$</li>
+                <li>$7, 22$: Constants</li>
+                <li>This is a linear equation because the power of $x$ is $1$ (i.e., $x^1$).</li>
+            </ul>
+
+            <h4 class="text-2xl font-semibold mb-3">1.2 Standard Forms</h4>
+            <p class="font-semibold mt-4">1.2.1 Linear Equation in One Variable:</p>
+            <p class="mb-4">The standard form is:</p>
+            <p class="math">$ax + b = 0$</p>
+            <p class="mb-4">Where $a$ and $b$ are real numbers, and $a \neq 0$.</p>
+            <p class="font-semibold mt-4">Example:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$3x - 6 = 0$</li>
+                <li>$\frac{1}{2}y + 4 = 0$</li>
+            </ul>
+
+            <p class="font-semibold mt-4">1.2.2 Linear Equation in Two Variables:</p>
+            <p class="mb-4">The standard form is:</p>
+            <p class="math">$Ax + By = C$</p>
+            <p class="mb-4">Where $A, B, C$ are real numbers, and $A$ and $B$ are not both zero.</p>
+            <p class="font-semibold mt-4">Example:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$2x + 3y = 6$</li>
+                <li>$y = -4x + 1$ (can be rewritten as $4x + y = 1$)</li>
+            </ul>
+
+            <h4 class="text-2xl font-semibold mb-3">1.3 What Does It Mean to "Solve" an Equation?</h4>
+            <p class="mb-4">Solving a linear equation means finding the value(s) of the variable(s) that make the equation true. These values are called the <strong>solution(s)</strong> of the equation.</p>
+            <p class="font-semibold mt-4">Example:</p>
+            <p>For $x + 3 = 7$, the solution is $x=4$, because $4 + 3 = 7$ is a true statement.</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 2: Solving Linear Equations in One Variable</h3>
+            <p class="mb-4">The goal is to isolate the variable on one side of the equation. We do this by applying inverse operations, always ensuring that whatever operation is performed on one side of the equation is also performed on the other side to maintain equality.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.1 Properties of Equality</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Addition Property:</strong> If $a=b$, then $a+c = b+c$.</li>
+                <li class="mb-2"><strong>Subtraction Property:</strong> If $a=b$, then $a-c = b-c$.</li>
+                <li class="mb-2"><strong>Multiplication Property:</strong> If $a=b$, then $ac = bc$.</li>
+                <li class="mb-2"><strong>Division Property:</strong> If $a=b$ and $c \neq 0$, then $\frac{a}{c} = \frac{b}{c}$.</li>
+            </ul>
+
+            <h4 class="text-2xl font-semibold mb-3">2.2 Step-by-Step Examples</h4>
+
+            <p class="font-semibold mt-4">Example 2.2.1: Simple Equation</p>
+            <div class="example-box">
+                <p>Solve for $x$: $x - 5 = 12$</p>
+                <p>Add 5 to both sides:</p>
+                <p>$x - 5 + 5 = 12 + 5$</p>
+                <p>$x = 17$</p>
+                <p>Check: $17 - 5 = 12$ (True)</p>
+            </div>
+
+            <p class="font-semibold mt-4">Example 2.2.2: Equation with Coefficient</p>
+            <div class="example-box">
+                <p>Solve for $y$: $4y = 28$</p>
+                <p>Divide both sides by 4:</p>
+                <p>$\frac{4y}{4} = \frac{28}{4}$</p>
+                <p>$y = 7$</p>
+                <p>Check: $4(7) = 28$ (True)</p>
+            </div>
+
+            <p class="font-semibold mt-4">Example 2.2.3: Multi-Step Equation</p>
+            <div class="example-box">
+                <p>Solve for $z$: $3z + 10 = 1$</p>
+                <p>Subtract 10 from both sides:</p>
+                <p>$3z + 10 - 10 = 1 - 10$</p>
+                <p>$3z = -9$</p>
+                <p>Divide both sides by 3:</p>
+                <p>$\frac{3z}{3} = \frac{-9}{3}$</p>
+                <p>$z = -3$</p>
+                <p>Check: $3(-3) + 10 = -9 + 10 = 1$ (True)</p>
+            </div>
+
+            <p class="font-semibold mt-4">Example 2.2.4: Variables on Both Sides</p>
+            <div class="example-box">
+                <p>Solve for $x$: $5x - 8 = 2x + 7$</p>
+                <p>Subtract $2x$ from both sides:</p>
+                <p>$5x - 2x - 8 = 2x - 2x + 7$</p>
+                <p>$3x - 8 = 7$</p>
+                <p>Add 8 to both sides:</p>
+                <p>$3x - 8 + 8 = 7 + 8$</p>
+                <p>$3x = 15$</p>
+                <p>Divide both sides by 3:</p>
+                <p>$\frac{3x}{3} = \frac{15}{3}$</p>
+                <p>$x = 5$</p>
+                <p>Check: $5(5) - 8 = 25 - 8 = 17$. And $2(5) + 7 = 10 + 7 = 17$. (True)</p>
+            </div>
+
+            <p class="font-semibold mt-4">Example 2.2.5: Equation with Parentheses</p>
+            <div class="example-box">
+                <p>Solve for $m$: $2(m + 3) = 14$</p>
+                <p>Distribute the 2:</p>
+                <p>$2m + 6 = 14$</p>
+                <p>Subtract 6 from both sides:</p>
+                <p>$2m + 6 - 6 = 14 - 6$</p>
+                <p>$2m = 8$</p>
+                <p>Divide both sides by 2:</p>
+                <p>$\frac{2m}{2} = \frac{8}{2}$</p>
+                <p>$m = 4$</p>
+                <p>Check: $2(4 + 3) = 2(7) = 14$ (True)</p>
+            </div>
+
+            <h4 class="text-2xl font-semibold mb-3">2.3 Special Cases</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>No Solution:</strong> If, after simplifying, you arrive at a false statement (e.g., $0 = 5$), then there is no solution. The lines are parallel.</li>
+                <li class="mb-2"><strong>Infinite Solutions (Identity):</strong> If, after simplifying, you arrive at a true statement (e.g., $0 = 0$ or $x = x$), then there are infinitely many solutions. The lines are coincident (the same line).</li>
+            </ul>
+            <p class="font-semibold mt-4">Example: No Solution</p>
+            <div class="example-box">
+                <p>Solve for $x$: $2x + 3 = 2x + 7$</p>
+                <p>Subtract $2x$ from both sides:</p>
+                <p>$3 = 7$</p>
+                <p>This is a false statement, so there is <strong>no solution</strong>.</p>
+            </div>
+            <p class="font-semibold mt-4">Example: Infinite Solutions</p>
+            <div class="example-box">
+                <p>Solve for $x$: $3(x + 2) = 3x + 6$</p>
+                <p>Distribute the 3:</p>
+                <p>$3x + 6 = 3x + 6$</p>
+                <p>Subtract $3x$ from both sides:</p>
+                <p>$6 = 6$</p>
+                <p>This is a true statement, so there are <strong>infinite solutions</strong>.</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 3: Graphing Linear Equations in Two Variables</h3>
+            <p class="mb-4">Linear equations with two variables ($x$ and $y$) represent straight lines on a coordinate plane. Graphing helps us visualize their solutions.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">3.1 The Coordinate Plane</h4>
+            <p class="mb-4">The <strong>Cartesian coordinate plane</strong> consists of two perpendicular number lines:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>x-axis:</strong> Horizontal number line.</li>
+                <li class="mb-2"><strong>y-axis:</strong> Vertical number line.</li>
+                <li class="mb-2"><strong>Origin:</strong> The point where the axes intersect $(0,0)$.</li>
+            </ul>
+            <p class="mb-4">Points are represented as ordered pairs $(x, y)$.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">3.2 Graphing Methods</h4>
+
+            <p class="font-semibold mt-4">3.2.1 Plotting Points:</p>
+            <p class="mb-4">Choose several values for $x$, substitute them into the equation to find corresponding $y$ values, create ordered pairs, and plot them. Connect the points to form a line.</p>
+            <p class="font-semibold mt-4">Example: Graph $y = 2x - 1$</p>
+            <div class="example-box">
+                <p>If $x=0, y = 2(0) - 1 = -1 \Rightarrow (0, -1)$</p>
+                <p>If $x=1, y = 2(1) - 1 = 1 \Rightarrow (1, 1)$</p>
+                <p>If $x=2, y = 2(2) - 1 = 3 \Rightarrow (2, 3)$</p>
+                <p>Plot these points and draw a line through them.</p>
+            </div>
+
+            <p class="font-semibold mt-4">3.2.2 Using Intercepts:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>x-intercept:</strong> The point where the line crosses the x-axis ($y=0$). Set $y=0$ and solve for $x$.</li>
+                <li class="mb-2"><strong>y-intercept:</strong> The point where the line crosses the y-axis ($x=0$). Set $x=0$ and solve for $y$.</li>
+            </ul>
+            <p class="font-semibold mt-4">Example: Graph $3x + 4y = 12$ using intercepts</p>
+            <div class="example-box">
+                <p>For x-intercept (set $y=0$): $3x + 4(0) = 12 \Rightarrow 3x = 12 \Rightarrow x = 4$. Point: $(4, 0)$.</p>
+                <p>For y-intercept (set $x=0$): $3(0) + 4y = 12 \Rightarrow 4y = 12 \Rightarrow y = 3$. Point: $(0, 3)$.</p>
+                <p>Plot $(4,0)$ and $(0,3)$ and draw a line through them.</p>
+            </div>
+
+            <p class="font-semibold mt-4">3.2.3 Using Slope-Intercept Form ($y = mx + b$):</p>
+            <p class="mb-4">This is one of the most common and useful forms for graphing linear equations.</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2">$m$: The <strong>slope</strong> of the line (rise over run).</li>
+                <li class="mb-2">$b$: The <strong>y-intercept</strong> (the point $(0, b)$).</li>
+            </ul>
+            <p class="font-semibold mt-4">How to Graph using $y = mx + b$:</p>
+            <ol class="list-decimal list-inside ml-4 mb-4">
+                <li>Plot the y-intercept $(0, b)$.</li>
+                <li>From the y-intercept, use the slope ($m = \frac{\text{rise}}{\text{run}}$) to find a second point. "Rise" is the vertical change, "run" is the horizontal change.</li>
+                <li>Draw a line through the two points.</li>
+            </ol>
+            <p class="font-semibold mt-4">Example: Graph $y = \frac{2}{3}x - 2$</p>
+            <div class="example-box">
+                <p>Y-intercept: $b = -2$, so plot $(0, -2)$.</p>
+                <p>Slope: $m = \frac{2}{3}$. From $(0, -2)$, go up 2 units (rise) and right 3 units (run) to find the next point, $(3, 0)$.</p>
+                <p>Draw a line through $(0, -2)$ and $(3, 0)$.</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 4: Systems of Linear Equations</h3>
+            <p class="mb-4">A <strong>system of linear equations</strong> consists of two or more linear equations with the same variables. The solution to a system is the set of values for the variables that satisfy ALL equations in the system simultaneously.</p>
+            <p class="mb-4">Graphically, the solution to a system of two linear equations in two variables is the point(s) where their graphs intersect.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">4.1 Types of Solutions for Systems of Two Linear Equations</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>One Solution:</strong> The lines intersect at exactly one point. (Consistent and Independent system)</li>
+                <li class="mb-2"><strong>No Solution:</strong> The lines are parallel and never intersect. (Inconsistent system)</li>
+                <li class="mb-2"><strong>Infinite Solutions:</strong> The lines are identical (coincident), meaning every point on the line is a solution. (Consistent and Dependent system)</li>
+            </ul>
+
+            <h4 class="text-2xl font-semibold mb-3">4.2 Methods for Solving Systems</h4>
+
+            <p class="font-semibold mt-4">4.2.1 Graphing Method:</p>
+            <p class="mb-4">Graph both equations on the same coordinate plane. The point of intersection (if any) is the solution.</p>
+            <p class="font-semibold mt-4">Example: Solve by Graphing</p>
+            <div class="example-box">
+                <p>$y = x + 1$</p>
+                <p>$y = -2x + 4$</p>
+                <p>Graphing these lines, you'll find they intersect at $(1, 2)$. So, $x=1, y=2$ is the solution.</p>
+            </div>
+
+            <p class="font-semibold mt-4">4.2.2 Substitution Method:</p>
+            <p class="mb-4">Solve one equation for one variable, then substitute that expression into the other equation. This reduces the system to a single linear equation in one variable.</p>
+            <p class="font-semibold mt-4">Example: Solve by Substitution</p>
+            <div class="example-box">
+                <p>1) $y = x + 1$</p>
+                <p>2) $2x + y = 7$</p>
+                <p>Substitute $(x+1)$ for $y$ in equation (2):</p>
+                <p>$2x + (x + 1) = 7$</p>
+                <p>$3x + 1 = 7$</p>
+                <p>$3x = 6$</p>
+                <p>$x = 2$</p>
+                <p>Substitute $x=2$ back into equation (1):</p>
+                <p>$y = 2 + 1$</p>
+                <p>$y = 3$</p>
+                <p>Solution: $(2, 3)$</p>
+            </div>
+
+            <p class="font-semibold mt-4">4.2.3 Elimination Method (Addition Method):</p>
+            <p class="mb-4">Multiply one or both equations by a constant so that the coefficients of one variable are opposites. Add the equations together to eliminate that variable, then solve for the remaining variable.</p>
+            <p class="font-semibold mt-4">Example: Solve by Elimination</p>
+            <div class="example-box">
+                <p>1) $3x + 2y = 10$</p>
+                <p>2) $x - 2y = -2$</p>
+                <p>Notice that the $y$ coefficients are opposites ($2y$ and $-2y$). Add the two equations:</p>
+                <p>$(3x + 2y) + (x - 2y) = 10 + (-2)$</p>
+                <p>$4x = 8$</p>
+                <p>$x = 2$</p>
+                <p>Substitute $x=2$ back into equation (2):</p>
+                <p>$2 - 2y = -2$</p>
+                <p>$-2y = -4$</p>
+                <p>$y = 2$</p>
+                <p>Solution: $(2, 2)$</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 5: Real-World Applications of Linear Equations</h3>
+            <p class="mb-4">Linear equations are incredibly versatile and appear in many practical scenarios:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Cost Analysis:</strong> Calculating total cost based on a fixed cost and a variable cost per unit (e.g., $C = mx + b$).</li>
+                <li><strong>Distance, Rate, Time:</strong> Problems involving constant speed (e.g., $D = RT$).</li>
+                <li><strong>Mixture Problems:</strong> Combining different quantities with varying properties (e.g., concentrations, prices).</li>
+                <li><strong>Financial Planning:</strong> Simple interest calculations, budgeting, and predicting savings growth.</li>
+                <li><strong>Physics:</strong> Describing motion with constant velocity, Hooke's Law (force on a spring).</li>
+                <li><strong>Economics:</strong> Supply and demand curves are often modeled as linear equations.</li>
+                <li><strong>Everyday Scenarios:</strong> Calculating phone bill costs, taxi fares, or converting units (e.g., Celsius to Fahrenheit).</li>
+            </ul>
+            <p class="font-semibold mt-4">Example: Taxi Fare</p>
+            <p>A taxi charges a flat fee of \$3 plus \$2 per mile. If your total fare was \$15, how many miles did you travel?</p>
+            <div class="example-box">
+                <p>Let $C$ be the total cost and $m$ be the number of miles.</p>
+                <p>Equation: $C = 2m + 3$</p>
+                <p>Given $C = 15$:</p>
+                <p>$15 = 2m + 3$</p>
+                <p>$12 = 2m$</p>
+                <p>$m = 6$ miles</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 6: Common Pitfalls and Tips for Success</h3>
+            <p class="mb-4">Even though linear equations are foundational, certain mistakes are common. Being aware of them can help you avoid errors:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Sign Errors:</strong> A common mistake is mismanaging negative signs, especially when distributing or moving terms across the equals sign.</li>
+                <li class="mb-2"><strong>Distributive Property Mistakes:</strong> Forgetting to distribute a number to *all* terms inside parentheses (e.g., $2(x+3)$ is $2x+6$, not $2x+3$).</li>
+                <li class="mb-2"><strong>Incorrect Inverse Operations:</strong> Using addition instead of subtraction, or multiplication instead of division.</li>
+                <li class="mb-2"><strong>Dividing by Zero:</strong> Remember, division by zero is undefined. If you arrive at a situation where the coefficient of the variable becomes zero, check for special cases (no solution or infinite solutions).</li>
+                <li class="mb-2"><strong>Not Checking Your Solution:</strong> Always substitute your answer back into the original equation to verify it makes the equation true.</li>
+            </ul>
+            <p class="font-semibold mt-4">Tips for Success:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Simplify First:</strong> Combine like terms on each side of the equation before moving terms across the equals sign.</li>
+                <li class="mb-2"><strong>Clear Fractions/Decimals:</strong> Multiply the entire equation by the least common denominator (LCD) to eliminate fractions, or by a power of 10 to clear decimals.</li>
+                <li class="mb-2"><strong>Be Organized:</strong> Write down each step clearly. This helps in tracking your work and identifying errors.</li>
+                <li class="mb-2"><strong>Practice Regularly:</strong> Consistency is key to mastering linear equations.</li>
+            </ul>
+        </section>
+
+        <section class="lesson-section text-center">
+            <h3 class="text-3xl font-semibold mb-4">Conclusion: Your Algebraic Foundation</h3>
+            <p class="mb-4">You've now navigated the essential concepts of linear equations, from understanding their basic structure to mastering various algebraic and graphical solution methods. This knowledge forms a critical foundation for all higher-level mathematics.</p>
+            <p class="mb-4">The ability to solve linear equations and interpret their graphs is not just a mathematical skill; it's a powerful problem-solving tool applicable in diverse real-world contexts. As you continue your mathematical journey, remember that clarity, precision, and consistent practice are your greatest allies.</p>
+            <p class="text-xl font-bold text-blue-700 dark:text-blue-400">Keep solving, keep graphing, and keep building your algebraic prowess with Whizmath!</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Practice Problems (with Solutions)</h3>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 1: Solving One-Variable Equation</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Solve for $x$: $4x - 7 = 13$</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 1:</p>
+                        <p class="mb-2">$4x - 7 = 13$</p>
+                        <p class="mb-2">$4x = 13 + 7$</p>
+                        <p class="mb-2">$4x = 20$</p>
+                        <p class="mb-2">$x = \frac{20}{4}$</p>
+                        <p>$x = 5$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 2: Solving Equation with Variables on Both Sides</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Solve for $y$: $6y + 5 = 2y - 11$</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 2:</p>
+                        <p class="mb-2">$6y + 5 = 2y - 11$</p>
+                        <p class="mb-2">$6y - 2y = -11 - 5$</p>
+                        <p class="mb-2">$4y = -16$</p>
+                        <p class="mb-2">$y = \frac{-16}{4}$</p>
+                        <p>$y = -4$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 3: Solving Equation with Parentheses</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Solve for $z$: $3(z - 2) + 4 = 10$</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 3:</p>
+                        <p class="mb-2">$3(z - 2) + 4 = 10$</p>
+                        <p class="mb-2">$3z - 6 + 4 = 10$</p>
+                        <p class="mb-2">$3z - 2 = 10$</p>
+                        <p class="mb-2">$3z = 10 + 2$</p>
+                        <p class="mb-2">$3z = 12$</p>
+                        <p>$z = 4$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 4: Graphing a Linear Equation</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Identify the slope and y-intercept of the equation $y = -\frac{1}{2}x + 3$.</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 4:</p>
+                        <p class="mb-2">The equation is in slope-intercept form $y = mx + b$.</p>
+                        <p class="mb-2">Slope ($m$) = $-\frac{1}{2}$</p>
+                        <p class="mb-2">Y-intercept ($b$) = $3$, so the point is $(0, 3)$.</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 5: Solving a System by Substitution</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Solve the following system of equations using substitution:</p>
+                <p class="mb-2 text-gray-700 dark:text-gray-300">1) $y = 2x - 3$</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">2) $4x - y = 9$</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 5:</p>
+                        <p class="mb-2">Substitute $(2x - 3)$ for $y$ in equation (2):</p>
+                        <p class="mb-2">$4x - (2x - 3) = 9$</p>
+                        <p class="mb-2">$4x - 2x + 3 = 9$</p>
+                        <p class="mb-2">$2x + 3 = 9$</p>
+                        <p class="mb-2">$2x = 6$</p>
+                        <p class="mb-2">$x = 3$</p>
+                        <p class="mb-2">Substitute $x=3$ back into equation (1):</p>
+                        <p class="mb-2">$y = 2(3) - 3$</p>
+                        <p class="mb-2">$y = 6 - 3$</p>
+                        <p>$y = 3$</p>
+                        <p>Solution: $(3, 3)$</p>
+                    </div>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-blue-600 text-white py-8 mt-auto relative z-10">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2023 WhizMath. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Privacy Policy</a>
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Terms of Service</a>
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Contact Us</a>
+            </div>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.237 2.636 7.855 6.356 9.314.464.086.66-.2.66-.447 0-.22-.008-.809-.013-1.581-2.56.56-3.1-1.23-3.1-1.23-.418-1.06-.99-1.343-.07-.993.92.062 1.403.957 1.403.957.82 1.403 2.152.997 2.67.765.083-.597.323-.997.593-1.226-2.04-.23-4.183-1.02-4.183-4.523 0-1.002.358-1.823.94-2.462-.095-.23-.41-.1.085-1.29 0 0 .768-.246 2.522.94.72-.2 1.48-.3 2.24-.304.76.004 1.52.104 2.24.304 1.754-1.186 2.522-.94 2.522-.94.495 1.19.18 1.06.085 1.29.582.639.94 1.46.94 2.462 0 3.51-2.146 4.29-4.194 4.516.33.284.626.846.626 1.705 0 1.23-.012 2.219-.012 2.512 0 .249.195.533.663.446C19.364 19.855 22 16.237 22 12c0-5.523-4.477-10-10-10z"></path></svg>
+                </a>
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.8.35-1.64.59-2.5.66.9-.54 1.5-1.4 1.8-2.4-.84.5-1.78.87-2.78 1.07C18.35 4.5 17.2 4 16 4c-2.48 0-4.5 2.02-4.5 4.5 0 .35.04.68.12 1-.37-.02-.74-.08-1.1-.18-3.08-.15-5.8-1.63-7.68-4.07-.32.55-.5 1.18-.5 1.87 0 1.2.6 2.25 1.58 2.87-.7-.02-1.3-.2-1.8-.5v.05c0 2.18 1.55 4 3.6 4.4-.37.1-.76.15-1.16.15-.28 0-.55-.03-.8-.08.57 1.8 2.2 3.1 4.13 3.4-1.55 1.2-3.5 1.9-5.6 1.9-.36 0-.7-.02-1.04-.06C2.9 20.3 5.3 21 8 21c7.2 0 11.15-5.95 11.15-11.15 0-.17-.0-.33-.01-.5.77-.55 1.45-1.24 1.98-2.02z"></path></svg>
+                </a>
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.148 3.252-1.691 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.07-1.645-.07-4.85s.012-3.584.07-4.85c.148-3.252 1.691-4.771 4.919-4.919 1.266-.058 1.644-.07 4.85-.07zm0 2.163c-3.204 0-3.584.012-4.85.07-2.77.126-3.958 1.46-4.084 4.084-.058 1.265-.07 1.645-.07 4.85s.012 3.584.07 4.85c.126 2.77 1.46 3.958 4.084 4.084 1.265.058 1.645.07 4.85.07s3.584-.012 4.85-.07c2.77-.126 3.958-1.46 4.084-4.084.058-1.265.07-1.645.07-4.85s-.012-3.584-.07-4.85c-.126-2.77-1.46-3.958-4.084-4.084-1.265-.058-1.645-.07-4.85-.07zm0 3.627c-2.481 0-4.5 2.019-4.5 4.5s2.019 4.5 4.5 4.5 4.5-2.019 4.5-4.5-2.019-4.5-4.5-4.5zm0 2.163c1.282 0 2.337 1.055 2.337 2.337s-1.055 2.337-2.337 2.337-2.337-1.055-2.337-2.337 1.055-2.337 2.337-2.337zm6.406-5.463c-.47-.47-.94-.705-1.41-.705s-.94.235-1.41.705c-.47.47-.705.94-.705 1.41s.235.94.705 1.41c.47.47.94.705 1.41.705s.94-.235 1.41-.705c-.47-.47-.705-.94-.705-1.41s-.235-.94-.705-1.41z"></path></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <button id="scroll-to-top-btn" class="bg-blue-600">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <script>
+        // --- Theme Toggle Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+            localStorage.setItem('theme', theme);
+            // Removed updateParticleColors call from here. It will be called in window.onload
+        }
+
+        // Check for saved theme on load
+        const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+        setTheme(savedTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+            // Call updateParticleColors here for immediate visual feedback on theme change
+            if (typeof particles !== 'undefined' && particles) {
+                updateParticleColors(newTheme === 'dark');
+            }
+        });
+
+        // --- Mobile Sidebar Menu Logic ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            mobileMenuOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling body when menu is open
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('open');
+            document.body.style.overflow = ''; // Restore body scrolling
+        }
+
+        mobileMenuButton.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('open')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu); // Close when clicking overlay
+
+        // Close mobile menu if a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                // Only close if it's a small screen
+                if (window.innerWidth < 768) {
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Handle resize: ensure menu is correct on desktop/mobile switch
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint
+                closeMobileMenu(); // Ensure sidebar is closed on desktop
+            }
+        });
+
+        // --- Three.js Global Background Animation Logic ---
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('global-background-canvas');
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles
+            const particleCount = 12500;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            // Define colors for light and dark mode for particles
+            const lightModeColors = [
+                new THREE.Color(0xADD8E6), // Light blue
+                new THREE.Color(0x87CEEB), // Sky blue
+                new THREE.Color(0x6495ED)  // Cornflower blue
+            ];
+            const darkModeColors = [
+                new THREE.Color(0x3182ce), // Blue-600 dark
+                new THREE.Color(0x4299e1), // Blue-500 dark
+                new THREE.Color(0x63b3ed)  // Blue-400 dark
+            ];
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
+                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
+                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
+
+                // Assign initial color based on current theme
+                const currentColors = htmlElement.classList.contains('dark') ? darkModeColors : lightModeColors;
+                const colorIndex = Math.floor(Math.random() * currentColors.length);
+                const color = currentColors[colorIndex];
+
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+            });
+
+            particles = new THREE.Points(geometry, particleMaterial);
+            scene.add(particles);
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Function to update particle colors based on theme
+        function updateParticleColors(isDarkMode) {
+            // Check if particles object is initialized before trying to access its properties
+            if (!particles || !particles.geometry || !particles.geometry.attributes.color) {
+                console.warn("Three.js particles not yet initialized for color update.");
+                return;
+            }
+
+            const colors = particles.geometry.attributes.color.array;
+            const targetColors = isDarkMode ? [
+                new THREE.Color(0x3182ce), // Blue-600 dark
+                new THREE.Color(0x4299e1), // Blue-500 dark
+                new THREE.Color(0x63b3ed)  // Blue-400 dark
+            ] : [
+                new THREE.Color(0xADD8E6), // Light blue
+                new THREE.Color(0x87CEEB), // Sky blue
+                new THREE.Color(0x6495ED)  // Cornflower blue
+            ];
+
+            for (let i = 0; i < colors.length; i += 3) {
+                const colorIndex = Math.floor(Math.random() * targetColors.length); // Re-randomize color from target palette
+                const targetColor = targetColors[colorIndex];
+                colors[i] = targetColor.r;
+                colors[i + 1] = targetColor.g;
+                colors[i + 2] = targetColor.b;
+            }
+            particles.geometry.attributes.color.needsUpdate = true;
+        }
+
+
+        // --- Scroll to Top Button Logic ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling 300px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll animation
+            });
+        });
+
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+            // Now safely call updateParticleColors after Three.js particles are initialized
+            updateParticleColors(htmlElement.classList.contains('dark'));
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhizMath - Finance Math Fundamentals Lesson</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Light mode styles */
+        .light .bg-gray-100 { background-color: #f3f4f6; }
+        .light .text-gray-900 { color: #1f2937; }
+        .light .bg-white { background-color: #ffffff; }
+        .light .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .light .text-gray-800 { color: #1f2937; }
+        .light .text-blue-700 { color: #1d4ed8; }
+        .light .bg-blue-600 { background-color: #2563eb; }
+        .light .bg-blue-700 { background-color: #1d4ed8; }
+        .light .bg-blue-500 { background-color: #3b82f6; }
+        .light .from-blue-500 { --tw-gradient-from: #3b82f6; }
+        .light .to-indigo-600 { --tw-gradient-to: #4f46e5; }
+        .light .bg-gray-50 { background-color: #f9fafb; } /* Card background */
+        .light .text-gray-600 { color: #4b5563; } /* Card description text */
+        .light .text-gray-700 { color: #374151; } /* Section description text */
+        .light .bg-blue-100 { background-color: #dbeafe; } /* Autocomplete hover */
+        .light .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .light .social-icon-bg { background-color: #3b82f6; } /* Social icon background */
+        .light .social-icon-bg:hover { background-color: #2563eb; } /* Social icon hover background */
+        .light #scroll-to-top-btn { background-color: #2563eb; } /* Scroll to top button */
+        .light #scroll-to-top-btn:hover { background-color: #1d4ed8; } /* Scroll to top button hover */
+
+
+        /* Dark mode styles */
+        .dark .bg-gray-100 { background-color: #1a202c; }
+        .dark .text-gray-900 { color: #e2e8f0; }
+        .dark .bg-white { background-color: #2d3748; } /* Main content section background */
+        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15); }
+        .dark .text-gray-800 { color: #cbd5e0; }
+        .dark .text-blue-700 { color: #90cdf4; } /* Section title */
+        .dark .bg-blue-600 { background-color: #1a365d; }
+        .dark .bg-blue-700 { background-color: #2a4365; }
+        .dark .bg-blue-500 { background-color: #3182ce; }
+        .dark .from-blue-500 { --tw-gradient-from: #3182ce; }
+        .dark .to-indigo-600 { --tw-gradient-to: #5a67d8; }
+        .dark .bg-gray-800 { background-color: #1a202c; }
+        .dark .text-white { color: #e2e8f0; }
+        .dark .bg-gray-50 { background-color: #1f2937; } /* Card background for dark mode */
+        .dark .text-gray-600 { color: #a0aec0; } /* Card description text for dark mode */
+        .dark .text-gray-700 { color: #cbd5e0; } /* Section description text for dark mode */
+        .dark .bg-blue-100 { background-color: #1e3a8a; } /* Autocomplete hover for dark mode */
+        .dark .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .dark .social-icon-bg { background-color: #3182ce; } /* Social icon background */
+        .dark .social-icon-bg:hover { background-color: #2b6cb0; } /* Social icon hover background */
+        .dark #scroll-to-top-btn { background-color: #3182ce; } /* Scroll to top button */
+        .dark #scroll-to-top-btn:hover { background-color: #2b6cb0; } /* Scroll to top button hover */
+
+
+        /* Ensure smooth transitions for all elements */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Global Three.js Canvas for background animation */
+        #global-background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        /* Mobile sidebar styling */
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 256px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 50;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* Overlay for when sidebar is open */
+        #mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        #mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Custom Nav Link Hover Effect */
+        .nav-link-effect {
+            position: relative;
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .nav-link-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease-out;
+            border-radius: 6px;
+            z-index: -1;
+        }
+
+        .nav-link-effect::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease-out, left 0.3s ease-out;
+        }
+
+        .nav-link-effect:hover::before {
+            transform: scaleX(1);
+        }
+
+        .nav-link-effect:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Dark mode specific hover effect adjustments */
+        .dark .nav-link-effect::before {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .dark .nav-link-effect::after {
+            background-color: #90cdf4;
+        }
+
+        /* Adjust mobile menu links for the new effect */
+        #mobile-menu .nav-link-effect {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+        }
+
+        /* Scroll to Top Button */
+        #scroll-to-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 9999px; /* Fully rounded */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 6px (0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 100;
+        }
+
+        #scroll-to-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Lesson content specific styles */
+        .lesson-section {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .lesson-section h3 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 1rem;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .lesson-section h3 {
+            color: #90cdf4; /* dark:text-blue-400 */
+        }
+        .lesson-section p {
+            line-height: 1.75; /* leading-relaxed */
+            margin-bottom: 1rem;
+            color: #374151; /* text-gray-700 */
+        }
+        .dark .lesson-section p {
+            color: #cbd5e0; /* dark:text-gray-300 */
+        }
+        .lesson-section ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .lesson-section ul {
+            color: #cbd5e0;
+        }
+        .lesson-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        .example-box {
+            background-color: #e0f2fe; /* bg-blue-50 */
+            border-left: 4px solid #3b82f6; /* border-blue-500 */
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .example-box {
+            background-color: #1e3a8a; /* dark:bg-blue-900 */
+            border-color: #60a5fa; /* dark:border-blue-400 */
+            color: #90cdf4; /* dark:text-blue-300 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+    <canvas id="global-background-canvas"></canvas>
+
+    <div id="mobile-menu-overlay" class="md:hidden"></div>
+
+    <header class="bg-blue-600 text-white p-4 shadow-md relative z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold rounded-md px-2 py-1">WhizMath</h1>
+            <nav class="flex items-center space-x-6 relative">
+                <ul class="hidden md:flex space-x-2">
+                    <li><a href="index.html" class="nav-link-effect">Home</a></li>
+                    <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+                    <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+                    <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+                    <li><a href="games.html" class="nav-link-effect">Games</a></li>
+                    <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+                </ul>
+
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+
+                <button id="theme-toggle" class="p-2 rounded-full bg-blue-700 hover:bg-blue-800 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ml-4">
+                    <svg id="moon-icon" class="w-6 h-6 text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <svg id="sun-icon" class="w-6 h-6 text-yellow-300 transition-all duration-300 ease-in-out hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.354 3.354l-.707.707M5.646 5.646l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="bg-blue-600 text-white p-6 md:hidden">
+        <ul class="flex flex-col space-y-4 pt-8">
+            <li><a href="index.html" class="nav-link-effect">Home</a></li>
+            <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+            <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+            <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+            <li><a href="games.html" class="nav-link-effect">Games</a></li>
+            <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+        </ul>
+    </div>
+
+    <main class="flex-grow container mx-auto p-4 py-8 relative z-10">
+
+        <section class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg mb-12 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-blue-700 dark:text-blue-400">Finance Math Fundamentals: The Value of Money Over Time</h2>
+            <p class="text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+                Finance math is the application of mathematical concepts to financial problems. It's fundamentally about understanding the "time value of money" – the idea that a sum of money today is worth more than the same sum of money in the future due to its potential earning capacity. Mastering these concepts is essential for personal financial planning, business investment decisions, and economic analysis.
+            </p>
+        </section>
+
+        <div class="lesson-content">
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>1. Introduction to Finance Math: Time Value of Money</h3>
+                <p>
+                    Finance math provides the tools to quantify and compare financial values across different points in time. The core principle is the <strong>time value of money (TVM)</strong>. This principle states that money available at the present time is worth more than the identical sum in the future due to its potential earning capacity. This core principle is true because:
+                </p>
+                <ul>
+                    <li><strong>Earning Potential:</strong> Money can be invested and earn interest, growing over time.</li>
+                    <li><strong>Inflation:</strong> The purchasing power of money tends to decrease over time due to rising prices.</li>
+                    <li><strong>Risk/Uncertainty:</strong> There's always a risk that future money might not be received.</li>
+                </ul>
+                <p>
+                    Understanding TVM allows individuals and businesses to make rational financial decisions, such as:
+                </p>
+                <ul>
+                    <li>Evaluating investment opportunities.</li>
+                    <li>Calculating loan payments and interest.</li>
+                    <li>Planning for retirement or large purchases.</li>
+                    <li>Valuing assets and businesses.</li>
+                </ul>
+                <p>
+                    This lesson will cover the foundational calculations that underpin all of finance.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>2. Simple Interest: The Basic Calculation</h3>
+                <p>
+                    Simple interest is the most basic form of interest calculation. It is calculated only on the initial principal amount (the original amount borrowed or invested). The interest earned does not compound (i.e., it does not earn interest on previously accumulated interest).
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Formula for Simple Interest:</p>
+                <div class="example-box">
+                    $I = P \times R \times T$
+                    <p>Where:</p>
+                    <ul>
+                        <li>$I$ = Simple Interest earned</li>
+                        <li>$P$ = Principal amount (initial investment or loan amount)</li>
+                        <li>$R$ = Annual interest rate (as a decimal, e.g., 5% = 0.05)</li>
+                        <li>$T$ = Time period (in years)</li>
+                    </ul>
+                </div>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Total Amount After Simple Interest:</p>
+                <div class="example-box">
+                    $A = P + I$ or $A = P(1 + RT)$
+                    <p>Where $A$ is the total amount (principal + interest).</p>
+                </div>
+                <div class="example-box">
+                    <strong>Example:</strong> You invest $1,000 at a simple interest rate of 5% per year for 3 years.<br>
+                    $P = \$1,000$<br>
+                    $R = 0.05$<br>
+                    $T = 3$<br>
+                    $I = \$1,000 \times 0.05 \times 3 = \$150$<br>
+                    $A = \$1,000 + \$150 = \$1,150$.
+                </div>
+                <p>
+                    Simple interest is commonly used for short-term loans or bonds where interest is paid out regularly and the principal remains constant.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>3. Compound Interest: The Power of Compounding</h3>
+                <p>
+                    Compound interest is interest calculated on the initial principal and also on the accumulated interest from previous periods. This "interest on interest" effect leads to exponential growth and is a powerful concept in finance.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Formula for Compound Interest (Compounded Annually):</p>
+                <div class="example-box">
+                    $A = P(1 + R)^T$
+                    <p>Where:</p>
+                    <ul>
+                        <li>$A$ = Amount after $T$ years (Future Value)</li>
+                        <li>$P$ = Principal amount (initial investment)</li>
+                        <li>$R$ = Annual interest rate (as a decimal)</li>
+                        <li>$T$ = Number of years the money is invested or borrowed for</li>
+                    </ul>
+                </div>
+                <div class="example-box">
+                    <strong>Example:</strong> You invest $1,000 at an annual compound interest rate of 5% for 3 years.<br>
+                    $P = \$1,000$<br>
+                    $R = 0.05$<br>
+                    $T = 3$<br>
+                    $A = \$1,000(1 + 0.05)^3 = \$1,000(1.05)^3 = \$1,000 \times 1.157625 = \$1,157.63$.<br>
+                    (Compare to simple interest: $1,150.00. The difference is the compounding effect.)
+                </div>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Compounding Frequency (More Frequent Compounding):</p>
+                <p>
+                    Interest can be compounded more frequently than annually (e.g., semi-annually, quarterly, monthly, daily). When this happens, the formula is adjusted:
+                </p>
+                <div class="example-box">
+                    $A = P(1 + \frac{R}{n})^{nT}$
+                    <p>Where:</p>
+                    <ul>
+                        <li>$n$ = Number of times interest is compounded per year</li>
+                        <li>Other variables are as defined above.</li>
+                    </ul>
+                    <p>Common values for $n$:</p>
+                    <ul>
+                        <li>Annually: $n=1$</li>
+                        <li>Semi-annually: $n=2$</li>
+                        <li>Quarterly: $n=4$</li>
+                        <li>Monthly: $n=12$</li>
+                        <li>Daily: $n=365$ (or 360 for some financial calculations)</li>
+                    </ul>
+                </div>
+                <div class="example-box">
+                    <strong>Example:</strong> You invest $1,000 at an annual rate of 5% compounded monthly for 3 years.<br>
+                    $P = \$1,000$<br>
+                    $R = 0.05$<br>
+                    $T = 3$<br>
+                    $n = 12$<br>
+                    $A = \$1,000(1 + \frac{0.05}{12})^{12 \times 3} = \$1,000(1 + 0.00416667)^{36} = \$1,000(1.00416667)^{36} \approx \$1,161.47$.<br>
+                    (Notice the higher amount compared to annual compounding.)
+                </div>
+                <p>
+                    The more frequently interest is compounded, the faster the investment grows.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>4. Future Value (FV): What Your Money Will Be Worth</h3>
+                <p>
+                    Future Value (FV) is the value of a current asset at a specified date in the future, based on an assumed rate of growth. It is a key concept for understanding the potential growth of investments.
+                </p>
+                <p>
+                    The formulas for Future Value are essentially the same as the compound interest formulas, where $A$ represents the Future Value.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">FV of a Single Sum (Lump Sum):</p>
+                <div class="example-box">
+                    $FV = PV(1 + \frac{R}{n})^{nT}$
+                    <p>Where:</p>
+                    <ul>
+                        <li>$FV$ = Future Value</li>
+                        <li>$PV$ = Present Value (the initial principal amount)</li>
+                        <li>$R$ = Annual interest rate (as a decimal)</li>
+                        <li>$n$ = Number of times interest is compounded per year</li>
+                        <li>$T$ = Number of years</li>
+                    </ul>
+                </div>
+                <div class="example-box">
+                    <strong>Example:</strong> You deposit $5,000 into a savings account that pays 4% interest compounded quarterly. What will be the value of your deposit in 5 years?<br>
+                    $PV = \$5,000$<br>
+                    $R = 0.04$<br>
+                    $n = 4$ (quarterly)<br>
+                    $T = 5$<br>
+                    $FV = \$5,000(1 + \frac{0.04}{4})^{4 \times 5} = \$5,000(1 + 0.01)^{20} = \$5,000(1.01)^{20} \approx \$5,000 \times 1.22019 \approx \$6,100.95$.
+                </div>
+                <p>
+                    Future Value calculations help in setting financial goals, such as saving for retirement, a down payment on a house, or a child's education.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>5. Present Value (PV): The Current Worth of Future Money</h3>
+                <p>
+                    Present Value (PV) is the current value of a future sum of money or stream of cash flows, given a specified rate of return. It answers the question: "How much money do I need to invest today to have a certain amount in the future?" or "What is this future payment worth to me right now?"
+                </p>
+                <p>
+                    PV is essentially the reverse of Future Value. We "discount" future money back to the present using an appropriate discount rate (which is the interest rate).
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Formula for PV of a Single Sum (Lump Sum):</p>
+                <div class="example-box">
+                    $PV = FV / (1 + \frac{R}{n})^{nT}$ or $PV = FV(1 + \frac{R}{n})^{-nT}$
+                    <p>Where all variables are as defined for Future Value.</p>
+                </div>
+                <div class="example-box">
+                    <strong>Example:</strong> You want to have $10,000 in 7 years for a down payment on a car. If you can earn 6% interest compounded semi-annually, how much do you need to invest today?<br>
+                    $FV = \$10,000$<br>
+                    $R = 0.06$<br>
+                    $n = 2$ (semi-annually)<br>
+                    $T = 7$<br>
+                    $PV = \$10,000 / (1 + \frac{0.06}{2})^{2 \times 7} = \$10,000 / (1.03)^{14} \approx \$10,000 / 1.51259 \approx \$6,611.23$.<br>
+                    You need to invest approximately $6,611.23 today.
+                </div>
+                <p>
+                    Present Value is crucial for capital budgeting decisions, valuing bonds, and understanding the true cost of future liabilities.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>6. Annuities: A Series of Equal Payments</h3>
+                <p>
+                    An annuity is a series of equal payments or receipts made at regular intervals over a specified period. Annuities are common in financial products like loan payments, retirement payouts, and regular investment contributions.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Types of Annuities:</p>
+                <ul>
+                    <li>
+                        <strong>Ordinary Annuity:</strong> Payments are made at the <strong>end</strong> of each period. This is the most common type.
+                    </li>
+                    <li>
+                        <strong>Annuity Due:</strong> Payments are made at the <strong>beginning</strong> of each period. Annuities due generally accumulate more value because each payment earns interest for one additional period.
+                    </li>
+                </ul>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Future Value of an Ordinary Annuity (FVOA):</p>
+                <p>
+                    Calculates the total accumulated value of a series of equal payments at the end of the investment period.
+                </p>
+                <div class="example-box">
+                    $FVOA = PMT \times \frac{(1 + \frac{R}{n})^{nT} - 1}{\frac{R}{n}}$
+                    <p>Where:</p>
+                    <ul>
+                        <li>$PMT$ = Payment amount per period</li>
+                        <li>Other variables are as defined previously.</li>
+                    </ul>
+                </div>
+                <div class="example-box">
+                    <strong>Example:</strong> You save $100 at the end of each month for 5 years in an account that earns 6% annual interest compounded monthly. How much will you have?<br>
+                    $PMT = \$100$<br>
+                    $R = 0.06$<br>
+                    $n = 12$<br>
+                    $T = 5$<br>
+                    $FVOA = \$100 \times \frac{(1 + \frac{0.06}{12})^{12 \times 5} - 1}{\frac{0.06}{12}} = \$100 \times \frac{(1.005)^{60} - 1}{0.005} \approx \$100 \times \frac{1.34885 - 1}{0.005} \approx \$100 \times \frac{0.34885}{0.005} \approx \$100 \times 69.77 \approx \$6,977.00$.
+                </div>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Present Value of an Ordinary Annuity (PVOA):</p>
+                <p>
+                    Calculates the current value of a series of future equal payments.
+                </p>
+                <div class="example-box">
+                    $PVOA = PMT \times \frac{1 - (1 + \frac{R}{n})^{-nT}}{\frac{R}{n}}$
+                </div>
+                <div class="example-box">
+                    <strong>Example:</strong> You win a lottery that pays you $5,000 at the end of each year for 20 years. If the discount rate is 8% annually, what is the present value of your winnings?<br>
+                    $PMT = \$5,000$<br>
+                    $R = 0.08$<br>
+                    $n = 1$ (annually)<br>
+                    $T = 20$<br>
+                    $PVOA = \$5,000 \times \frac{1 - (1 + 0.08)^{-1 \times 20}}{0.08} = \$5,000 \times \frac{1 - (1.08)^{-20}}{0.08} \approx \$5,000 \times \frac{1 - 0.21455}{0.08} \approx \$5,000 \times \frac{0.78545}{0.08} \approx \$5,000 \times 9.8181 \approx \$49,090.50$.
+                </div>
+                <p>
+                    Annuity calculations are fundamental for valuing pensions, structured settlements, and mortgages.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>7. Loan Amortization: Understanding Your Payments</h3>
+                <p>
+                    Loan amortization is the process of paying off a debt over time through regular, equal payments. Each payment consists of both principal and interest. In the early stages of a loan, a larger portion of the payment goes towards interest, while later payments allocate more towards the principal.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Calculating Loan Payment (PMT):</p>
+                <p>
+                    The loan payment formula is derived from the Present Value of an Ordinary Annuity formula, where the loan amount is the Present Value ($PV$) and the payment is what we solve for ($PMT$).
+                </p>
+                <div class="example-box">
+                    $PMT = \frac{PV \times \frac{R}{n}}{1 - (1 + \frac{R}{n})^{-nT}}$
+                    <p>Where:</p>
+                    <ul>
+                        <li>$PMT$ = Payment amount per period</li>
+                        <li>$PV$ = Loan amount (Present Value)</li>
+                        <li>$R$ = Annual interest rate (as a decimal)</li>
+                        <li>$n$ = Number of times interest is compounded/payments made per year</li>
+                        <li>$T$ = Loan term (in years)</li>
+                    </ul>
+                </div>
+                <div class="example-box">
+                    <strong>Example:</strong> You take out a $200,000 mortgage at an annual interest rate of 4% compounded monthly, with a 30-year term. What is your monthly payment?<br>
+                    $PV = \$200,000$<br>
+                    $R = 0.04$<br>
+                    $n = 12$<br>
+                    $T = 30$<br>
+                    $\frac{R}{n} = \frac{0.04}{12} \approx 0.00333333$<br>
+                    $nT = 12 \times 30 = 360$<br>
+                    $PMT = \frac{\$200,000 \times 0.00333333}{1 - (1 + 0.00333333)^{-360}} \approx \frac{\$666.67}{1 - (1.00333333)^{-360}} \approx \frac{\$666.67}{1 - 0.30107} \approx \frac{\$666.67}{0.69893} \approx \$953.99$.<br>
+                    Your monthly payment would be approximately $953.99.
+                </div>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Amortization Schedule:</p>
+                <p>
+                    An amortization schedule is a table detailing each periodic payment on an amortizing loan (typically a mortgage or car loan), showing the amount of principal and interest contained in each payment until the loan is paid off.
+                </p>
+                <p>
+                    It illustrates the declining interest portion and increasing principal portion of each payment over the loan's life.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>8. Inflation: The Erosion of Purchasing Power</h3>
+                <p>
+                    Inflation is the rate at which the general level of prices for goods and services is rising, and consequently, the purchasing power of currency is falling. It's a critical factor in finance math because it affects the real value of money over time.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Impact on Future Value:</strong> High inflation means that a future sum of money, even if it has grown due to interest, might buy less than it would today.
+                    </li>
+                    <li>
+                        <strong>Impact on Present Value:</strong> When calculating present value, a higher expected inflation rate (which translates to a higher discount rate) will result in a lower present value for a future sum, reflecting its diminished purchasing power.
+                    </li>
+                </ul>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Real vs. Nominal Interest Rates:</p>
+                <ul>
+                    <li>
+                        <strong>Nominal Interest Rate ($R_{nominal}$):</strong> The stated interest rate on a loan or investment, without adjustment for inflation. This is the rate you typically see advertised.
+                    </li>
+                    <li>
+                        <strong>Real Interest Rate ($R_{real}$):</strong> The nominal interest rate adjusted for inflation. It reflects the true rate of return on an investment or the true cost of borrowing after accounting for changes in purchasing power.
+                        <p class="font-semibold text-gray-800 dark:text-gray-200">Fisher Equation (Approximation):</p>
+                        <div class="example-box">
+                            $R_{real} \approx R_{nominal} - \text{Inflation Rate}$
+                        </div>
+                        <p class="font-semibold text-gray-800 dark:text-gray-200">Exact Fisher Equation:</p>
+                        <div class="example-box">
+                            $1 + R_{nominal} = (1 + R_{real})(1 + \text{Inflation Rate})$
+                        </div>
+                    </li>
+                </ul>
+                <div class="example-box">
+                    <strong>Example:</strong> If your savings account offers a nominal interest rate of 5% per year, and the inflation rate is 3% per year, what is your real rate of return?<br>
+                    Using the approximation: $R_{real} \approx 0.05 - 0.03 = 0.02$ or 2%.<br>
+                    Using the exact formula: $1 + 0.05 = (1 + R_{real})(1 + 0.03)$<br>
+                    $1.05 = (1 + R_{real})(1.03)$<br>
+                    $1 + R_{real} = \frac{1.05}{1.03} \approx 1.0194$<br>
+                    $R_{real} \approx 0.0194$ or $1.94\%$.
+                </div>
+                <p>
+                    Understanding inflation is crucial for long-term financial planning, as it helps in setting realistic goals for retirement savings and investment returns.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>9. Risk and Return: The Fundamental Trade-off</h3>
+                <p>
+                    While not strictly a mathematical calculation, the concepts of risk and return are central to finance math and investment decisions. They represent a fundamental trade-off: generally, to achieve higher potential returns, one must be willing to accept higher levels of risk.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Return:</strong> The gain or loss on an investment over a specified period, expressed as a percentage of the initial investment.
+                        <div class="example-box">
+                            <strong>Formula:</strong> $\text{Return} = \frac{(\text{Current Value} - \text{Initial Value})}{\text{Initial Value}}$
+                        </div>
+                        <div class="example-box">
+                            <strong>Example:</strong> You buy a stock for $50 and sell it for $55. Your return is $\frac{(\$55 - \$50)}{\$50} = \frac{\$5}{\$50} = 0.10$ or $10\%$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Risk:</strong> The uncertainty associated with the future returns of an investment. It's the possibility that the actual return will differ from the expected return.
+                        <p>Common types of risk include market risk, interest rate risk, inflation risk, and business-specific risk.</p>
+                        <p>In quantitative finance, risk is often measured by the <strong>standard deviation</strong> of an investment's returns. A higher standard deviation implies greater volatility and thus higher risk.</p>
+                    </li>
+                </ul>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Risk-Return Trade-off:</p>
+                <p>
+                    Investors typically demand a higher expected return for taking on higher risk. For instance, a government bond (low risk) will offer a lower return than a highly volatile stock (high risk). Understanding your personal risk tolerance is crucial for making appropriate investment choices.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>Practice Problems: Apply Your Finance Math Knowledge</h3>
+                <p>Test your understanding of fundamental finance math concepts with these practice problems.</p>
+                <ol class="list-decimal list-inside space-y-3">
+                    <li><strong>Simple Interest:</strong> Calculate the simple interest earned on a principal of $5,000 invested at an annual rate of 3.5% for 4 years. What is the total amount at the end of 4 years?</li>
+                    <li><strong>Compound Interest (Annually):</strong> If you invest $2,500 at an annual interest rate of 6% compounded annually, what will be the value of your investment after 10 years?</li>
+                    <li><strong>Compound Interest (Monthly):</strong> You deposit $8,000 into an account that pays 5% annual interest compounded monthly. How much will be in the account after 7 years?</li>
+                    <li><strong>Future Value (Single Sum):</strong> What is the future value of $15,000 invested for 12 years at an annual rate of 7% compounded semi-annually?</li>
+                    <li><strong>Present Value (Single Sum):</strong> How much money do you need to invest today at an annual rate of 4% compounded quarterly to have $20,000 in 8 years?</li>
+                    <li><strong>Future Value of Ordinary Annuity:</strong> You contribute $200 at the end of each month to a retirement account that earns 8% annual interest compounded monthly. How much will you have after 25 years?</li>
+                    <li><strong>Present Value of Ordinary Annuity:</strong> A structured settlement offers you $1,500 at the end of each year for 15 years. If the appropriate discount rate is 6% annually, what is the present value of this settlement?</li>
+                    <li><strong>Loan Payment:</strong> Calculate the monthly payment for a $15,000 car loan at an annual interest rate of 3% over a 5-year term, compounded monthly.</li>
+                    <li><strong>Inflation (Real Rate):</strong> If the nominal interest rate is 7% and the inflation rate is 4%, what is the approximate real interest rate?</li>
+                    <li><strong>Conceptual:</strong> Explain why compound interest leads to significantly higher returns over long periods compared to simple interest.</li>
+                </ol>
+                <p class="mt-4 text-gray-700 dark:text-gray-300"><em>(Solutions are not provided here, encouraging self-assessment, peer discussion, or seeking further assistance.)</em></p>
+            </section>
+
+        </div>
+
+    </main>
+
+    <footer class="bg-gray-800 dark:bg-gray-900 text-white p-8 mt-12 relative z-10">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
+            <div>
+                <h3 class="text-xl font-bold mb-4">WhizMath</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    Your ultimate destination for mastering mathematics. We provide free tools, comprehensive lessons, and engaging quizzes to help you succeed.
+                </p>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="index.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Home</a></li>
+                    <li><a href="tools.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Tools</a></li>
+                    <li><a href="lessons.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Learn</a></li>
+                    <li><a href="quizzes.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Quizzes</a></li>
+                    <li><a href="games.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Games</a></li>
+                    <li><a href="contact.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Popular Tools</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Scientific Calculator</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Graphing Calculator</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Unit Converter</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Equation Solver</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Popular Lessons</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Algebra Essentials</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Geometry Basics</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Calculus Introduction</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Statistics Fundamentals</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Trigonometry Fundamentals</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Finance Math Fundamentals</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="flex justify-center md:justify-start space-x-4 mt-6">
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="Facebook">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.776-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
+                </svg>
+            </a>
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="X (Twitter)">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.21-6.89L4.93 21.75H1.625l7.73-8.835L1.25 2.25h3.308l5.97 7.68L18.244 2.25zm.426 17.565L16.63 4.393 4.126 2.25H2.808l13.785 18.125h1.275z" />
+                </svg>
+            </a>
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="Instagram">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.792.006 3.24.016a8.97 8.97 0 011.8.093c.895.119 1.57.34 2.1.598.98.483 1.62.94 2.22 1.638.6.698 1.04 1.347 1.43 2.278.39.93.593 1.776.66 2.825.02.324.037.79.037 1.393 0 2.43-.006 2.792-.016 3.24a8.97 8.97 0 01-.093 1.8c-.119.895-.34 1.57-.598 2.1-.483.98-.94 1.62-1.638 2.22-.698.6-1.347 1.04-2.278 1.43-.93.39-1.776.593-2.825.66-.324.02-.79.037-1.393.037-2.43 0-2.792-.006-3.24-.016a8.97 8.97 0 01-1.8-.093c-.895-.119-1.57-.34-2.1-.598-.98-.483-1.62-.94-2.22-1.638-.6-.698-1.347-1.04-2.278-1.43-.93-.39-1.776-.593-2.825-.66-.324-.02-.037-.79-.037-1.393 0-2.43.006-2.792.016-3.24.093-1.8.314.598-4.035.483-.98.94-1.62 1.638-2.22.698-.6 1.347-1.04 2.278-1.43.93-.39 1.776-.593 2.825-.66-.324-.02.79-.037 1.393-.037zm0 2.164c-2.093 0-3.193.013-3.793.023a6.83 6.83 0 00-1.46.074c-.66.088-1.09.283-1.48.473-.59.28-1.04.57-1.44.97-.4.4-.69.85-.97 1.44-.19.39-.385.82-.473 1.48-.06.4-.073.74-.083 1.34-.01.6-.013 1.093-.013 3.793s.003 3.193.013 3.793c.01.4.023.74.083 1.34.088.66.283 1.09.473 1.48.28.59.57 1.04.97 1.44.4.4.85.69 1.44.97.39.19.82.385 1.48.473.4.06.74.073 1.34.083.6.01 1.093.013 3.793.013s3.193-.003 3.793-.013c.4-.01.74-.023 1.34-.083.66-.088 1.09-.283 1.48-.473.59-.28 1.04-.57 1.44-.97.4-.4.69-.85.97-1.44.19-.39.82-.385-1.48-.473-.4-.06-.74-.073-1.34-.083-.6-.01-1.093-.013-3.793-.013zm0 3.52c-2.467 0-4.475 2.008-4.475 4.475s2.008 4.475 4.475 4.475 4.475-2.008 4.475-4.475-2.008-4.475-4.475-4.475zM12.315 18a5.685 5.685 0 110-11.37 5.685 5.685 0 010 11.37zm7.25-10.975a1.18 1.18 0 100 2.36 1.18 1.18 0 000-2.36z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="YouTube">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M19.812 5.405c.781-.144 1.406-.395 1.834-.693.376-.258.629-.533.868-.904.2-.315.353-.69.451-1.042C23.63 2.656 24 2.14 24 1.516a.754.754 0 00-.001-.194c-.035-.3-.153-.591-.355-.845-.224-.287-.516-.566-.867-.862-.375-.316-.763-.618-1.284-.903-.795-.445-1.745-.853-2.925-1.127C17.062 0 12 0 12 0s-5.062 0-7.063.093c-1.18.274-2.13.682-2.925 1.127-.521.285-.91.566-1.285.862-.202.254-.32.545-.355.845A.754.754 0 000 1.516c0 .624.37 1.14.734 1.55.098.352.251.727.452 1.042.239.37.492.645.868.904.428.298 1.053.549 1.834.693C4.938 6 12 6 12 6s7.063 0 7.812-.595zM12 8.75c-3.12 0-5.625 2.505-5.625 5.625S8.88 20 12 20s5.625-2.505 5.625-5.625S15.12 8.75 12 8.75z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        <div class="border-t border-gray-700 dark:border-gray-800 pt-6 mt-8 text-center text-sm text-gray-400">
+            <p>&copy; 2025 WhizMath. All rights reserved.</p>
+            <p class="mt-2">Designed with <span class="text-red-500">&hearts;</span> by Your AI Assistant</p>
+        </div>
+    </footer>
+
+    <button id="scroll-to-top-btn">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v14"></path>
+        </svg>
+    </button>
+
+    <script>
+        // --- Theme Toggle Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        // Check for saved theme on load
+        const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+        setTheme(savedTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // --- Mobile Sidebar Menu Logic ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            mobileMenuOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling body when menu is open
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('open');
+            document.body.style.overflow = ''; // Restore body scrolling
+        }
+
+        mobileMenuButton.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('open')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu); // Close when clicking overlay
+
+        // Close mobile menu if a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                // Only close if it's a small screen
+                if (window.innerWidth < 768) {
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Handle resize: ensure menu is correct on desktop/mobile switch
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint
+                closeMobileMenu(); // Ensure sidebar is closed on desktop
+            }
+        });
+
+        // --- Three.js Global Background Animation Logic ---
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('global-background-canvas');
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles
+            const particleCount = 12500;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            const color1 = new THREE.Color(0xADD8E6); // Light blue
+            const color2 = new THREE.Color(0x87CEEB); // Sky blue
+            const color3 = new THREE.Color(0x6495ED); // Cornflower blue
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
+                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
+                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
+
+                const rand = Math.random();
+                let color;
+                if (rand < 0.33) {
+                    color = color1;
+                } else if (rand < 0.66) {
+                    color = color2;
+                } else {
+                    color = color3;
+                }
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+            });
+
+            particles = new THREE.Points(geometry, particleMaterial);
+            scene.add(particles);
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+        };
+
+        // --- Scroll to Top Button Logic ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling 300px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll animation
+            });
+        });
+    </script>
+</body>
+</html>

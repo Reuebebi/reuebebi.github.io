@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizmath: Unraveling Uncertainty - Probability & Odds</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Light mode styles */
+        .light .bg-gray-100 { background-color: #f3f4f6; }
+        .light .text-gray-900 { color: #1f2937; }
+        .light .bg-white { background-color: #ffffff; }
+        .light .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .light .text-gray-800 { color: #1f2937; }
+        .light .text-blue-700 { color: #1d4ed8; }
+        .light .bg-blue-600 { background-color: #2563eb; }
+        .light .bg-blue-700 { background-color: #1d4ed8; }
+        .light .bg-blue-500 { background-color: #3b82f6; }
+        .light .from-blue-500 { --tw-gradient-from: #3b82f6; }
+        .light .to-indigo-600 { --tw-gradient-to: #4f46e5; }
+        .light .bg-gray-50 { background-color: #f9fafb; } /* Card background */
+        .light .text-gray-600 { color: #4b5563; } /* Card description text */
+        .light .text-gray-700 { color: #374151; } /* Section description text */
+        .light .bg-blue-100 { background-color: #dbeafe; } /* Autocomplete hover */
+        .light .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .light .social-icon-bg { background-color: #3b82f6; } /* Social icon background */
+        .light .social-icon-bg:hover { background-color: #2563eb; } /* Social icon hover background */
+        .light #scroll-to-top-btn { background-color: #2563eb; } /* Scroll to top button */
+        .light #scroll-to-top-btn:hover { background-color: #1d4ed8; } /* Scroll to top button hover */
+
+
+        /* Dark mode styles */
+        .dark .bg-gray-100 { background-color: #1a202c; }
+        .dark .text-gray-900 { color: #e2e8f0; }
+        .dark .bg-white { background-color: #2d3748; } /* Main content section background */
+        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15); }
+        .dark .text-gray-800 { color: #cbd5e0; }
+        .dark .text-blue-700 { color: #90cdf4; } /* Section title */
+        .dark .bg-blue-600 { background-color: #1a365d; }
+        .dark .bg-blue-700 { background-color: #2a4365; }
+        .dark .bg-blue-500 { background-color: #3182ce; }
+        .dark .from-blue-500 { --tw-gradient-from: #3182ce; }
+        .dark .to-indigo-600 { --tw-gradient-to: #5a67d8; }
+        .dark .bg-gray-800 { background-color: #1a202c; }
+        .dark .text-white { color: #e2e8f0; }
+        .dark .bg-gray-50 { background-color: #1f2937; } /* Card background for dark mode */
+        .dark .text-gray-600 { color: #a0aec0; } /* Card description text for dark mode */
+        .dark .text-gray-700 { color: #cbd5e0; } /* Section description text for dark mode */
+        .dark .bg-blue-100 { background-color: #1e3a8a; } /* Autocomplete hover for dark mode */
+        .dark .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .dark .social-icon-bg { background-color: #3182ce; } /* Social icon background */
+        .dark .social-icon-bg:hover { background-color: #2b6cb0; } /* Social icon hover background */
+        .dark #scroll-to-top-btn { background-color: #3182ce; } /* Scroll to top button */
+        .dark #scroll-to-top-btn:hover { background-color: #2b6cb0; } /* Scroll to top button hover */
+
+
+        /* Ensure smooth transitions for all elements */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Global Three.js Canvas for background animation */
+        #global-background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none; /* Allows clicks to pass through to content */
+            opacity: 0.7; /* Slightly transparent */
+        }
+
+        /* Mobile sidebar styling */
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 256px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 50;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* Overlay for when sidebar is open */
+        #mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        #mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Custom Nav Link Hover Effect */
+        .nav-link-effect {
+            position: relative;
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .nav-link-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease-out;
+            border-radius: 6px;
+            z-index: -1;
+        }
+
+        .nav-link-effect::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease-out, left 0.3s ease-out;
+        }
+
+        .nav-link-effect:hover::before {
+            transform: scaleX(1);
+        }
+
+        .nav-link-effect:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Dark mode specific hover effect adjustments */
+        .dark .nav-link-effect::before {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .dark .nav-link-effect::after {
+            background-color: #90cdf4; /* Blue-300 for dark mode */
+        }
+
+        /* Adjust mobile menu links for the new effect */
+        #mobile-menu .nav-link-effect {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+        }
+
+        /* Scroll to Top Button */
+        #scroll-to-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 9999px; /* Fully rounded */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 100;
+        }
+
+        #scroll-to-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Lesson content specific styles */
+        .lesson-section {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .light .lesson-section {
+            background-color: #ffffff; /* bg-white */
+        }
+        .dark .lesson-section {
+            background-color: #2d3748; /* dark:bg-gray-700 */
+        }
+        .lesson-section h3 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 1rem;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .lesson-section h3 {
+            color: #90cdf4; /* dark:text-blue-400 */
+        }
+        .lesson-section p {
+            line-height: 1.75; /* leading-relaxed */
+            margin-bottom: 1rem;
+            color: #374151; /* text-gray-700 */
+        }
+        .dark .lesson-section p {
+            color: #cbd5e0; /* dark:text-gray-300 */
+        }
+        .lesson-section ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .lesson-section ul {
+            color: #cbd5e0;
+        }
+        .lesson-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        .example-box {
+            background-color: #e0f2fe; /* bg-blue-50 */
+            border-left: 4px solid #3b82f6; /* border-blue-500 */
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .example-box {
+            background-color: #1e3a8a; /* dark:bg-blue-900 */
+            border-color: #60a5fa; /* dark:border-blue-400 */
+            color: #90cdf4; /* dark:text-blue-300 */
+        }
+        /* Markdown specific styling for equations - keeping from previous version for consistency */
+        .lesson-content p code {
+            background-color: #e5e7eb; /* Gray-200 */
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-family: 'Fira Code', monospace; /* Or any monospaced font */
+        }
+        html.dark .lesson-content p code {
+            background-color: #374151; /* Gray-700 */
+        }
+        .lesson-content h1, .lesson-content h2, .lesson-content h3, .lesson-content h4 {
+            color: #3b82f6; /* Blue-500 */
+        }
+        html.dark .lesson-content h1, html.dark .lesson-content h2, html.dark .lesson-content h3, html.dark .lesson-content h4 {
+            color: #60a5fa; /* Blue-400 */
+        }
+        .lesson-content strong {
+            color: #3b82f6; /* Blue-500 */
+        }
+        html.dark .lesson-content strong {
+            color: #60a5fa; /* Blue-400 */
+        }
+
+        /* Basic styling for math formulas */
+        .lesson-content .math {
+            display: block;
+            overflow-x: auto; /* For wide equations */
+            padding: 0.5em 0;
+            text-align: center;
+            font-size: 1.1em;
+            color: #1f2937; /* Gray-900 */
+        }
+        html.dark .lesson-content .math {
+            color: #e5e7eb; /* Gray-200 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+    <canvas id="global-background-canvas"></canvas>
+
+    <div id="mobile-menu-overlay" class="md:hidden"></div>
+
+    <header class="bg-blue-600 text-white p-4 shadow-md relative z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold rounded-md px-2 py-1">WhizMath</h1>
+            <nav class="flex items-center space-x-6 relative">
+                <ul class="hidden md:flex space-x-2">
+                    <li><a href="index.html" class="nav-link-effect">Home</a></li>
+                    <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+                    <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+                    <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+                    <li><a href="games.html" class="nav-link-effect">Games</a></li>
+                    <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+                </ul>
+
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+
+                <button id="theme-toggle" class="p-2 rounded-full bg-blue-700 hover:bg-blue-800 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ml-4">
+                    <svg id="moon-icon" class="w-6 h-6 text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <svg id="sun-icon" class="w-6 h-6 text-yellow-300 transition-all duration-300 ease-in-out hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.354 3.354l-.707.707M5.646 5.646l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="bg-blue-600 text-white p-6 md:hidden">
+        <ul class="flex flex-col space-y-4 pt-8">
+            <li><a href="index.html" class="nav-link-effect">Home</a></li>
+            <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+            <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+            <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+            <li><a href="games.html" class="nav-link-effect">Games</a></li>
+            <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+        </ul>
+    </div>
+
+    <main class="container mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg relative z-10">
+        <h2 class="text-4xl font-bold mb-6 text-center text-blue-700 dark:text-blue-400">Unraveling Uncertainty: A Deep Dive into Probability & Odds</h2>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Introduction: The Language of Likelihood</h3>
+            <p class="mb-4">Welcome to Whizmath, where we transform complex mathematical concepts into engaging and understandable insights! Today, we embark on a fascinating journey into the world of "Probability & Odds"—two fundamental concepts that are not just confined to textbooks but are deeply embedded in our daily lives. From predicting weather patterns and understanding financial markets to strategizing in games of chance and making informed medical decisions, probability and odds provide us with a powerful framework for quantifying and navigating uncertainty.</p>
+            <p class="mb-4">In this extensive lesson, we will meticulously dissect the principles of probability and odds, explore their interconnections, and equip you with the tools to apply them effectively. Prepare to unlock the secrets of likelihood, predict future events with greater accuracy, and make smarter decisions in a world brimming with variables.</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 1: Foundations of Probability – Quantifying Chance</h3>
+            <p class="mb-4">Probability is the branch of mathematics that deals with the likelihood of an event occurring. It is a numerical measure between 0 and 1 (or 0% and 100%), where 0 indicates an impossible event and 1 indicates a certain event.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">1.1 Key Terminology: Building Our Lexicon</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Experiment:</strong> A process that yields an outcome (e.g., flipping a coin, rolling a die, drawing a card from a deck).</li>
+                <li class="mb-2"><strong>Outcome:</strong> A single possible result of an experiment (e.g., getting a "Heads" when flipping a coin, rolling a "3" on a die).</li>
+                <li class="mb-2"><strong>Sample Space ($S$):</strong> The set of all possible outcomes of an experiment. It is typically denoted by $S$ or $\Omega$.
+                    <ul class="list-disc list-inside ml-6 mt-1">
+                        <li><em>Example:</em> For a single coin flip, $S = \{Heads, Tails\}$.</li>
+                        <li><em>Example:</em> For rolling a standard six-sided die, $S = \{1, 2, 3, 4, 5, 6\}$.</li>
+                    </ul>
+                </li>
+                <li class="mb-2"><strong>Event ($E$):</strong> A subset of the sample space; a collection of one or more outcomes.
+                    <ul class="list-disc list-inside ml-6 mt-1">
+                        <li><em>Example:</em> Getting an "even number" when rolling a die is an event, $E = \{2, 4, 6\}$.</li>
+                        <li><em>Example:</em> Getting "at least one Head" when flipping two coins, $S = \{HH, HT, TH, TT\}$, $E = \{HH, HT, TH\}$.</li>
+                    </ul>
+                </li>
+                <li class="mb-2"><strong>Simple Event:</strong> An event consisting of only one outcome.</li>
+                <li class="mb-2"><strong>Compound Event:</strong> An event consisting of more than one outcome.</li>
+                <li class="mb-2"><strong>Mutually Exclusive Events (Disjoint Events):</strong> Events that cannot occur at the same time. If event A occurs, event B cannot occur, and vice versa. Their intersection is empty ($A \cap B = \emptyset$).
+                    <ul class="list-disc list-inside ml-6 mt-1">
+                        <li><em>Example:</em> When rolling a die, the event "getting an odd number" ($O = \{1, 3, 5\}$) and the event "getting an even number" ($E = \{2, 4, 6\}$) are mutually exclusive.</li>
+                    </ul>
+                </li>
+                <li class="mb-2"><strong>Independent Events:</strong> Events where the occurrence of one does not affect the probability of the other occurring.
+                    <ul class="list-disc list-inside ml-6 mt-1">
+                        <li><em>Example:</em> Flipping a coin twice. The outcome of the first flip does not influence the outcome of the second flip.</li>
+                    </ul>
+                </li>
+                <li class="mb-2"><strong>Dependent Events:</strong> Events where the occurrence of one affects the probability of the other occurring.
+                    <ul class="list-disc list-inside ml-6 mt-1">
+                        <li><em>Example:</em> Drawing two cards from a deck <em>without replacement</em>. The probability of drawing the second card depends on what the first card drawn was.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4 class="text-2xl font-semibold mb-3">1.2 Classical (Theoretical) Probability: The Ideal Scenario</h4>
+            <p class="mb-4">Classical probability, also known as theoretical probability, is used when all outcomes in the sample space are equally likely. It is calculated using the formula:</p>
+            <p class="math">$P(E) = \frac{\text{Number of favorable outcomes}}{\text{Total number of possible outcomes in the sample space}} = \frac{|E|}{|S|}$</p>
+            <p class="mb-4">Where:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$P(E)$ is the probability of event $E$ occurring.</li>
+                <li>$|E|$ is the number of outcomes in event $E$.</li>
+                <li>$|S|$ is the total number of outcomes in the sample space $S$.</li>
+            </ul>
+            <p class="font-semibold mt-4">Example 1.2.1: Rolling a Die</p>
+            <p>What is the probability of rolling a "4" on a standard six-sided die?</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Sample space $S = \{1, 2, 3, 4, 5, 6\}$, so $|S| = 6$.</li>
+                <li>Event $E = \text{rolling a 4} = \{4\}$, so $|E| = 1$.</li>
+                <li>$P(\text{rolling a 4}) = \frac{1}{6}$</li>
+            </ul>
+            <p class="font-semibold mt-4">Example 1.2.2: Drawing a Card</p>
+            <p>What is the probability of drawing a "King" from a standard 52-card deck?</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Total possible outcomes $|S| = 52$.</li>
+                <li>Number of Kings in a deck $|E| = 4$.</li>
+                <li>$P(\text{drawing a King}) = \frac{4}{52} = \frac{1}{13}$</li>
+            </ul>
+
+            <h4 class="text-2xl font-semibold mb-3">1.3 Empirical (Experimental) Probability: Learning from Experience</h4>
+            <p class="mb-4">Empirical probability, also known as experimental probability, is based on observations from experiments or real-world data. It is calculated by performing an experiment multiple times and observing the frequency of the event.</p>
+            <p class="math">$P(E) = \frac{\text{Number of times event E occurred}}{\text{Total number of trials}}$</p>
+            <p class="font-semibold mt-4">Example 1.3.1: Coin Flip Experiment</p>
+            <p>If you flip a coin 100 times and get "Heads" 53 times, the empirical probability of getting "Heads" is:</p>
+            <p class="math">$P(\text{Heads}) = \frac{53}{100} = 0.53$</p>
+            <p class="mb-4"><strong>Important Note:</strong> As the number of trials in an empirical probability experiment increases, the empirical probability tends to approach the classical (theoretical) probability. This concept is formalized by the <strong>Law of Large Numbers</strong>.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">1.4 Subjective Probability: The Role of Belief</h4>
+            <p class="mb-4">Subjective probability is based on personal judgment, experience, or intuition rather than formal calculation or empirical data. It's often used when there's insufficient objective data.</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><em>Example:</em> A doctor estimating the probability of a patient recovering from a rare disease.</li>
+                <li><em>Example:</em> A sports analyst predicting the probability of a team winning a championship based on their expertise.</li>
+            </ul>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 2: Rules of Probability – Navigating Complex Scenarios</h3>
+
+            <h4 class="text-2xl font-semibold mb-3">2.1 The Addition Rule: "OR" Events</h4>
+            <p class="mb-4">The Addition Rule is used when we want to find the probability of one event OR another event occurring.</p>
+
+            <p class="font-semibold mt-4">2.1.1 For Mutually Exclusive Events:</p>
+            <p class="mb-4">If two events $A$ and $B$ are mutually exclusive, the probability of $A$ or $B$ occurring is the sum of their individual probabilities:</p>
+            <p class="math">$P(A \text{ or } B) = P(A \cup B) = P(A) + P(B)$</p>
+            <p class="font-semibold mt-4">Example 2.1.1:</p>
+            <p>What is the probability of rolling a "1" or a "6" on a single six-sided die?</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$P(\text{rolling a 1}) = \frac{1}{6}$</li>
+                <li>$P(\text{rolling a 6}) = \frac{1}{6}$</li>
+                <li>Since rolling a 1 and rolling a 6 are mutually exclusive:</li>
+                <li>$P(\text{1 or 6}) = P(1) + P(6) = \frac{1}{6} + \frac{1}{6} = \frac{2}{6} = \frac{1}{3}$</li>
+            </ul>
+
+            <p class="font-semibold mt-4">2.1.2 For Non-Mutually Exclusive Events:</p>
+            <p class="mb-4">If two events $A$ and $B$ are <em>not</em> mutually exclusive (meaning they can occur at the same time, their intersection is not empty), we must subtract the probability of their intersection to avoid double-counting:</p>
+            <p class="math">$P(A \text{ or } B) = P(A \cup B) = P(A) + P(B) - P(A \cap B)$</p>
+            <p class="mb-4">Where $P(A \cap B)$ is the probability of both $A$ and $B$ occurring.</p>
+            <p class="font-semibold mt-4">Example 2.1.2:</p>
+            <p>What is the probability of drawing a "King" or a "Heart" from a standard 52-card deck?</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$P(\text{King}) = \frac{4}{52}$</li>
+                <li>$P(\text{Heart}) = \frac{13}{52}$</li>
+                <li>The "King of Hearts" is common to both events, so they are not mutually exclusive.</li>
+                <li>$P(\text{King and Heart}) = P(\text{King of Hearts}) = \frac{1}{52}$</li>
+                <li>$P(\text{King or Heart}) = P(\text{King}) + P(\text{Heart}) - P(\text{King and Heart})$</li>
+                <li>$= \frac{4}{52} + \frac{13}{52} - \frac{1}{52} = \frac{17}{52} - \frac{1}{52} = \frac{16}{52} = \frac{4}{13}$</li>
+            </ul>
+
+            <h4 class="text-2xl font-semibold mb-3">2.2 The Multiplication Rule: "AND" Events</h4>
+            <p class="mb-4">The Multiplication Rule is used when we want to find the probability of two or more events occurring in sequence.</p>
+
+            <p class="font-semibold mt-4">2.2.1 For Independent Events:</p>
+            <p class="mb-4">If two events $A$ and $B$ are independent, the probability of both $A$ and $B$ occurring is the product of their individual probabilities:</p>
+            <p class="math">$P(A \text{ and } B) = P(A \cap B) = P(A) \times P(B)$</p>
+            <p class="font-semibold mt-4">Example 2.2.1:</p>
+            <p>What is the probability of flipping a "Head" on the first coin and a "Tail" on the second coin?</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$P(\text{Head}) = \frac{1}{2}$</li>
+                <li>$P(\text{Tail}) = \frac{1}{2}$</li>
+                <li>Since the flips are independent:</li>
+                <li>$P(\text{Head and Tail}) = P(\text{Head}) \times P(\text{Tail}) = \frac{1}{2} \times \frac{1}{2} = \frac{1}{4}$</li>
+            </ul>
+
+            <p class="font-semibold mt-4">2.2.2 For Dependent Events (Conditional Probability):</p>
+            <p class="mb-4">If two events $A$ and $B$ are dependent, the probability of both $A$ and $B$ occurring is the probability of $A$ multiplied by the conditional probability of $B$ given that $A$ has already occurred.</p>
+            <p class="math">$P(A \text{ and } B) = P(A \cap B) = P(A) \times P(B|A)$</p>
+            <p class="mb-4">Where $P(B|A)$ is the conditional probability of event $B$ occurring given that event $A$ has already occurred.</p>
+            <p class="font-semibold mt-4">Example 2.2.2: Drawing Cards Without Replacement</p>
+            <p>What is the probability of drawing two "Aces" in a row from a standard 52-card deck <em>without replacement</em>?</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Event A: Drawing an Ace first. $P(A) = \frac{4}{52}$</li>
+                <li>Event B: Drawing another Ace second, given the first was an Ace and not replaced.
+                    Now there are 3 Aces left and 51 total cards.
+                    $P(B|A) = \frac{3}{51}$</li>
+                <li>$P(\text{Ace and Ace}) = P(A) \times P(B|A) = \frac{4}{52} \times \frac{3}{51} = \frac{12}{2652} = \frac{1}{221}$</li>
+            </ul>
+
+            <h4 class="text-2xl font-semibold mb-3">2.3 Conditional Probability: When Information Matters</h4>
+            <p class="mb-4">Conditional probability is the probability of an event occurring given that another event has already occurred. It is denoted as $P(B|A)$, read as "the probability of B given A."</p>
+            <p class="mb-4">The formula for conditional probability is:</p>
+            <p class="math">$P(B|A) = \frac{P(A \cap B)}{P(A)}$, where $P(A) > 0$.</p>
+            <p class="mb-4">This formula can be rearranged to derive the Multiplication Rule for dependent events: $P(A \cap B) = P(A) \times P(B|A)$.</p>
+            <p class="font-semibold mt-4">Example 2.3.1: Medical Test</p>
+            <p>Suppose 10% of the population has a certain disease (D). A test for the disease is 90% accurate (meaning it correctly identifies the disease 90% of the time, and correctly identifies no disease 90% of the time).</p>
+            <p>Let:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>D = Has the disease</li>
+                <li>ND = Does not have the disease</li>
+                <li>PT = Positive test result</li>
+                <li>NT = Negative test result</li>
+            </ul>
+            <p>We are given:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$P(D) = 0.10$</li>
+                <li>$P(ND) = 0.90$</li>
+                <li>$P(PT|D) = 0.90$ (True positive rate)</li>
+                <li>$P(NT|ND) = 0.90$ (True negative rate)</li>
+            </ul>
+            <p>From these, we can infer:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$P(NT|D) = 1 - P(PT|D) = 1 - 0.90 = 0.10$ (False negative rate)</li>
+                <li>$P(PT|ND) = 1 - P(NT|ND) = 1 - 0.90 = 0.10$ (False positive rate)</li>
+            </ul>
+            <p>Now, let's find the probability that a person <em>actually has the disease given they tested positive</em>, i.e., $P(D|PT)$.</p>
+            <p>Using Bayes' Theorem (which is derived from conditional probability):</p>
+            <p class="math">$P(D|PT) = \frac{P(PT|D) \times P(D)}{P(PT)}$</p>
+            <p>First, we need $P(PT)$. A positive test can occur in two ways:</p>
+            <ol class="list-decimal list-inside ml-4 mb-4">
+                <li>A person has the disease AND tests positive ($D \cap PT$)</li>
+                <li>A person does NOT have the disease AND tests positive ($ND \cap PT$)</li>
+            </ol>
+            <p class="math">$P(PT) = P(PT|D)P(D) + P(PT|ND)P(ND)$</p>
+            <p class="math">$P(PT) = (0.90 \times 0.10) + (0.10 \times 0.90)$</p>
+            <p class="math">$P(PT) = 0.09 + 0.09 = 0.18$</p>
+            <p>Now, calculate $P(D|PT)$:</p>
+            <p class="math">$P(D|PT) = \frac{0.90 \times 0.10}{0.18} = \frac{0.09}{0.18} = 0.5$</p>
+            <p class="mb-4">This surprising result shows that even with a 90% accurate test, if only 10% of the population has the disease, a positive test only means a 50% chance of actually having the disease. This highlights the importance of understanding conditional probability.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.4 The Complement Rule: "NOT" Events</h4>
+            <p class="mb-4">The probability of an event <em>not</em> occurring is 1 minus the probability that it <em>does</em> occur.</p>
+            <p class="math">$P(E') = 1 - P(E)$</p>
+            <p class="mb-4">Where $E'$ (or $E^c$) denotes the complement of event $E$.</p>
+            <p class="font-semibold mt-4">Example 2.4.1:</p>
+            <p>The probability of rain tomorrow is 0.3. What is the probability that it will <em>not</em> rain tomorrow?</p>
+            <p class="math">$P(\text{No Rain}) = 1 - P(\text{Rain}) = 1 - 0.3 = 0.7$</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 3: Counting Principles – The Foundation for Complex Probabilities</h3>
+            <p class="mb-4">Many probability problems require us to count the number of possible outcomes or favorable outcomes. This is where counting principles become indispensable.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">3.1 The Fundamental Counting Principle (Multiplication Principle)</h4>
+            <p class="mb-4">If there are $n_1$ ways to do one thing, and $n_2$ ways to do another thing, and so on, then there are $n_1 \times n_2 \times \dots \times n_k$ ways to do all $k$ things.</p>
+            <p class="font-semibold mt-4">Example 3.1.1: Outfit Combinations</p>
+            <p>You have 3 shirts, 2 pairs of pants, and 4 pairs of shoes. How many different outfits can you make?</p>
+            <p class="math">Number of outfits = $3 \times 2 \times 4 = 24$ outfits.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">3.2 Permutations: Order Matters!</h4>
+            <p class="mb-4">A permutation is an arrangement of objects in a specific order. The order of selection or arrangement is crucial.</p>
+
+            <p class="font-semibold mt-4">3.2.1 Permutations of $n$ distinct objects taken $r$ at a time:</p>
+            <p class="mb-4">The number of permutations of $n$ distinct objects taken $r$ at a time is given by:</p>
+            <p class="math">$P(n, r) = \frac{n!}{(n-r)!}$</p>
+            <p class="mb-4">Where $n!$ (n factorial) is the product of all positive integers up to $n$ ($n! = n \times (n-1) \times \dots \times 2 \times 1$), and $0! = 1$.</p>
+            <p class="font-semibold mt-4">Example 3.2.1: Race Finishers</p>
+            <p>In a race with 8 runners, how many ways can the gold, silver, and bronze medals be awarded? (Here, order matters: finishing first is different from finishing second).</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$n = 8$ (total runners), $r = 3$ (medal positions)</li>
+                <li>$P(8, 3) = \frac{8!}{(8-3)!} = \frac{8!}{5!} = \frac{8 \times 7 \times 6 \times 5!}{5!} = 8 \times 7 \times 6 = 336$ ways.</li>
+            </ul>
+
+            <p class="font-semibold mt-4">3.2.2 Permutations with Repetition (when objects are not distinct):</p>
+            <p class="mb-4">If there are $n$ objects where there are $n_1$ identical objects of type 1, $n_2$ identical objects of type 2, ..., $n_k$ identical objects of type k, the number of distinct permutations is:</p>
+            <p class="math">$\frac{n!}{n_1! n_2! \dots n_k!}$</p>
+            <p class="font-semibold mt-4">Example 3.2.2: Anagrams</p>
+            <p>How many distinct permutations can be made from the letters of the word "MISSISSIPPI"?</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$n = 11$ (total letters)</li>
+                <li>I appears 4 times ($n_I = 4$)</li>
+                <li>S appears 4 times ($n_S = 4$)</li>
+                <li>P appears 2 times ($n_P = 2$)</li>
+                <li>M appears 1 time ($n_M = 1$)</li>
+                <li>Number of permutations = $\frac{11!}{4! 4! 2! 1!} = \frac{39,916,800}{(24)(24)(2)(1)} = \frac{39,916,800}{1152} = 34,650$</li>
+            </ul>
+
+            <h4 class="text-2xl font-semibold mb-3">3.3 Combinations: Order Doesn't Matter!</h4>
+            <p class="mb-4">A combination is a selection of objects where the order of selection does not matter.</p>
+
+            <p class="font-semibold mt-4">3.3.1 Combinations of $n$ distinct objects taken $r$ at a time:</p>
+            <p class="mb-4">The number of combinations of $n$ distinct objects taken $r$ at a time is given by:</p>
+            <p class="math">$C(n, r) = \binom{n}{r} = \frac{n!}{r!(n-r)!}$</p>
+            <p class="font-semibold mt-4">Example 3.3.1: Forming a Committee</p>
+            <p>From a group of 10 people, how many different committees of 3 people can be formed? (The order in which people are chosen for the committee doesn't change the committee itself).</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$n = 10$ (total people), $r = 3$ (people on the committee)</li>
+                <li>$C(10, 3) = \frac{10!}{3!(10-3)!} = \frac{10!}{3!7!} = \frac{10 \times 9 \times 8 \times 7!}{ (3 \times 2 \times 1) \times 7!} = \frac{10 \times 9 \times 8}{3 \times 2 \times 1} = \frac{720}{6} = 120$ committees.</li>
+            </ul>
+
+            <p class="font-semibold mt-4">Probability Applications of Counting Principles:</p>
+            <p class="mb-4">Many probability problems involve calculating combinations or permutations for both the numerator (favorable outcomes) and the denominator (total possible outcomes).</p>
+            <p class="font-semibold mt-4">Example 3.3.2: Lottery Probability</p>
+            <p>In a lottery, you choose 6 numbers from 49. What is the probability of winning if the order of numbers doesn't matter?</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Total possible outcomes: $C(49, 6) = \frac{49!}{6!(49-6)!} = \frac{49!}{6!43!} = 13,983,816$</li>
+                <li>Favorable outcomes (winning combination): 1</li>
+                <li>$P(\text{Winning}) = \frac{1}{13,983,816}$</li>
+            </ul>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 4: Understanding Odds – A Different Perspective on Likelihood</h3>
+            <p class="mb-4">While probability expresses the likelihood of an event as a fraction or decimal between 0 and 1, odds express the likelihood as a ratio of favorable outcomes to unfavorable outcomes, or vice versa. Odds are commonly used in gambling, sports betting, and risk assessment.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">4.1 Odds in Favor</h4>
+            <p class="mb-4">The odds in favor of an event are the ratio of the number of ways the event <em>can</em> occur to the number of ways the event <em>cannot</em> occur.</p>
+            <p class="math">Odds in favor of $E = \text{Number of favorable outcomes} : \text{Number of unfavorable outcomes}$</p>
+            <p class="mb-4">Or, if $P(E)$ is the probability of the event and $P(E')$ is the probability of its complement:</p>
+            <p class="math">Odds in favor of $E = P(E) : P(E')$</p>
+            <p class="font-semibold mt-4">Example 4.1.1: Rolling a Die</p>
+            <p>What are the odds in favor of rolling a "4" on a standard six-sided die?</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Favorable outcomes (rolling a 4): 1</li>
+                <li>Unfavorable outcomes (not rolling a 4): 5 (i.e., 1, 2, 3, 5, 6)</li>
+                <li>Odds in favor of rolling a 4 = $1:5$</li>
+            </ul>
+            <p class="font-semibold mt-4">Example 4.1.2: Using Probabilities</p>
+            <p>If $P(\text{Rain}) = 0.3$, then $P(\text{No Rain}) = 0.7$.</p>
+            <p class="math">Odds in favor of rain = $0.3 : 0.7$, which can be simplified to $3:7$ (by multiplying both sides by 10).</p>
+
+            <h4 class="text-2xl font-semibold mb-3">4.2 Odds Against</h4>
+            <p class="mb-4">The odds against an event are the ratio of the number of ways the event <em>cannot</em> occur to the number of ways the event <em>can</em> occur. It's simply the inverse of odds in favor.</p>
+            <p class="math">Odds against $E = \text{Number of unfavorable outcomes} : \text{Number of favorable outcomes}$</p>
+            <p class="mb-4">Or:</p>
+            <p class="math">Odds against $E = P(E') : P(E)$</p>
+            <p class="font-semibold mt-4">Example 4.2.1: Rolling a Die (Odds Against)</p>
+            <p>What are the odds against rolling a "4" on a standard six-sided die?</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Unfavorable outcomes: 5</li>
+                <li>Favorable outcomes: 1</li>
+                <li>Odds against rolling a 4 = $5:1$</li>
+            </ul>
+
+            <h4 class="text-2xl font-semibold mb-3">4.3 Converting Between Probability and Odds</h4>
+            <p class="mb-4">It's crucial to be able to convert between these two representations of likelihood.</p>
+
+            <p class="font-semibold mt-4">4.3.1 From Probability to Odds:</p>
+            <p class="mb-4">If $P(E)$ is the probability of an event:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Odds in favor of $E = P(E) : (1 - P(E))$</li>
+                <li>Odds against $E = (1 - P(E)) : P(E)$</li>
+            </ul>
+            <p class="font-semibold mt-4">Example 4.3.1:</p>
+            <p>If the probability of winning a game is $\frac{2}{5}$:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Odds in favor of winning = $\frac{2}{5} : (1 - \frac{2}{5}) = \frac{2}{5} : \frac{3}{5} = 2:3$</li>
+                <li>Odds against winning = $\frac{3}{5} : \frac{2}{5} = 3:2$</li>
+            </ul>
+
+            <p class="font-semibold mt-4">4.3.2 From Odds to Probability:</p>
+            <p class="mb-4">If the odds in favor of an event $E$ are $a:b$:</p>
+            <p class="math">$P(E) = \frac{a}{a+b}$</p>
+            <p class="mb-4">If the odds against an event $E$ are $a:b$:</p>
+            <p class="math">$P(E) = \frac{b}{a+b}$</p>
+            <p class="font-semibold mt-4">Example 4.3.2:</p>
+            <p>If the odds in favor of a horse winning a race are $3:8$:</p>
+            <p class="math">$P(\text{Winning}) = \frac{3}{3+8} = \frac{3}{11}$</p>
+            <p class="font-semibold mt-4">Example 4.3.3:</p>
+            <p>If the odds against a team winning a match are $5:2$:</p>
+            <p class="math">$P(\text{Winning}) = \frac{2}{5+2} = \frac{2}{7}$</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 5: Advanced Concepts and Applications</h3>
+
+            <h4 class="text-2xl font-semibold mb-3">5.1 Expected Value: The Long-Run Average</h4>
+            <p class="mb-4">Expected value ($E(X)$) is a concept closely related to probability, representing the average outcome of a random variable over a large number of trials. It's particularly useful in decision-making under uncertainty, especially in finance, gambling, and insurance.</p>
+            <p class="mb-4">For a discrete random variable $X$ with possible outcomes $x_1, x_2, \dots, x_n$ and corresponding probabilities $P(x_1), P(x_2), \dots, P(x_n)$:</p>
+            <p class="math">$E(X) = \sum_{i=1}^{n} x_i P(x_i) = x_1 P(x_1) + x_2 P(x_2) + \dots + x_n P(x_n)$</p>
+            <p class="font-semibold mt-4">Example 5.1.1: A Simple Game</p>
+            <p>You play a game where you roll a fair six-sided die. If you roll a 6, you win \$10. If you roll a 5, you win \$5. If you roll any other number (1, 2, 3, 4), you lose \$3. What is the expected value of playing this game?</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Outcome $x_1 = \$10$, $P(x_1) = P(\text{rolling a 6}) = \frac{1}{6}$</li>
+                <li>Outcome $x_2 = \$5$, $P(x_2) = P(\text{rolling a 5}) = \frac{1}{6}$</li>
+                <li>Outcome $x_3 = -\$3$, $P(x_3) = P(\text{rolling 1, 2, 3, or 4}) = \frac{4}{6}$</li>
+            </ul>
+            <p class="math">$E(X) = (\$10 \times \frac{1}{6}) + (\$5 \times \frac{1}{6}) + (-\$3 \times \frac{4}{6})$</p>
+            <p class="math">$E(X) = \frac{10}{6} + \frac{5}{6} - \frac{12}{6}$</p>
+            <p class="math">$E(X) = \frac{15 - 12}{6} = \frac{3}{6} = \$0.50$</p>
+            <p class="mb-4">This means that, on average, you can expect to win \$0.50 per game if you play many times. A positive expected value suggests a favorable game in the long run, while a negative expected value suggests an unfavorable one.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">5.2 Introduction to Probability Distributions (Brief Overview)</h4>
+            <p class="mb-4">Probability distributions describe how probabilities are distributed over the values of a random variable.</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Discrete Probability Distributions:</strong> For random variables that can only take on a countable number of values (e.g., number of heads in coin flips, number of defects).
+                    <ul class="list-disc list-inside ml-6 mt-1">
+                        <li><strong>Binomial Distribution:</strong> Describes the number of successes in a fixed number of independent Bernoulli trials (trials with only two outcomes, success/failure).</li>
+                        <li><strong>Poisson Distribution:</strong> Describes the number of events occurring in a fixed interval of time or space, given a constant average rate.</li>
+                    </ul>
+                </li>
+                <li class="mb-2"><strong>Continuous Probability Distributions:</strong> For random variables that can take on any value within a given range (e.g., height, weight, time).
+                    <ul class="list-disc list-inside ml-6 mt-1">
+                        <li><strong>Normal Distribution (Gaussian Distribution):</strong> The most common continuous distribution, characterized by its bell-shaped curve. Many natural phenomena follow a normal distribution.</li>
+                        <li><strong>Uniform Distribution:</strong> All values within a given range have an equal probability.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p class="mb-4">Understanding these distributions allows for more sophisticated probabilistic modeling and inference.</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 6: Real-World Applications of Probability & Odds</h3>
+            <p class="mb-4">Probability and odds are not just academic exercises; they are powerful tools used across countless disciplines:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Gambling and Gaming:</strong> The most obvious application. Casinos, lotteries, and sports betting all rely heavily on probability and odds calculations to set payouts and determine house advantage.</li>
+                <li><strong>Finance and Investing:</strong> Risk assessment, portfolio management, option pricing, and predicting market movements all involve probabilistic models.</li>
+                <li><strong>Insurance:</strong> Actuaries use probability to calculate premiums, assess risks, and determine payouts for various policies (life, health, auto, property).</li>
+                <li><strong>Medicine and Public Health:</strong> Clinical trials, disease prevalence, diagnostic test accuracy (as seen in our conditional probability example), and epidemic modeling all use probability.</li>
+                <li><strong>Science and Engineering:</strong> Quality control, reliability engineering, statistical mechanics, quantum mechanics, and experimental design.</li>
+                <li><strong>Artificial Intelligence and Machine Learning:</strong> Bayesian networks, probabilistic graphical models, and various classification algorithms are built on probabilistic foundations.</li>
+                <li><strong>Weather Forecasting:</strong> Predicting the likelihood of rain, snow, or extreme weather events.</li>
+                <li><strong>Sports Analytics:</strong> Calculating win probabilities, player performance metrics, and strategic decision-making.</li>
+                <li><strong>Everyday Decision Making:</strong> From deciding whether to carry an umbrella to choosing a route with less traffic, we implicitly use probabilistic thinking.</li>
+            </ul>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 7: Common Misconceptions and Pitfalls</h3>
+            <p class="mb-4">Despite their widespread use, probability and odds are often misunderstood. Be aware of these common pitfalls:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>The Gambler's Fallacy:</strong> The mistaken belief that past events influence future independent events. For example, after a series of coin flips landing on "Heads," believing "Tails" is "due." Each flip is independent, $P(Heads) = 0.5$ every time.</li>
+                <li><strong>Ignoring Sample Size:</strong> Small sample sizes can lead to highly variable empirical probabilities that don't reflect the true theoretical probability. The Law of Large Numbers only applies with a sufficient number of trials.</li>
+                <li><strong>Misinterpreting Conditional Probability:</strong> As seen in the medical test example, $P(A|B)$ is not the same as $P(B|A)$.</li>
+                <li><strong>Confusion Between Probability and Odds:</strong> While related, they are distinct measures. A 50% probability is $1:1$ odds, not $1:2$ or $2:1$.</li>
+                <li><strong>Base Rate Fallacy:</strong> Neglecting the overall prevalence (base rate) of an event when interpreting conditional probabilities, as demonstrated in the medical test example.</li>
+            </ul>
+        </section>
+
+        <section class="lesson-section text-center">
+            <h3 class="text-3xl font-semibold mb-4">Conclusion: Embracing the World of Uncertainty with Confidence</h3>
+            <p class="mb-4">You've now journeyed through the intricate landscape of "Probability & Odds," from their foundational definitions to their complex rules and powerful real-world applications. You've learned to quantify chance, understand the nuances of dependent and independent events, master counting techniques, and distinguish between probability and odds.</p>
+            <p class="mb-4">The ability to think probabilistically is an invaluable skill in an unpredictable world. It empowers you to make more informed decisions, critically evaluate information, and navigate uncertainty with a clearer understanding of potential outcomes. As you continue your mathematical exploration, remember that probability is not about eliminating uncertainty, but about understanding and managing it.</p>
+            <p class="text-xl font-bold text-blue-700 dark:text-blue-400">Keep practicing, keep exploring, and keep unraveling the fascinating language of likelihood with Whizmath!</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Practice Problems (with Solutions)</h3>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 1: Basic Probability</p>
+                <p class="mb-2 text-gray-700 dark:text-gray-300">A bag contains 5 red marbles, 3 blue marbles, and 2 green marbles. If you pick one marble at random:</p>
+                <p class="mb-2 text-gray-700 dark:text-gray-300">a) What is the probability of picking a red marble?</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">b) What is the probability of picking a blue or a green marble?</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 1:</p>
+                        <p class="mb-2">Total marbles = $5 + 3 + 2 = 10$</p>
+                        <p class="mb-2">a) $P(\text{Red}) = \frac{\text{Number of red marbles}}{\text{Total marbles}} = \frac{5}{10} = \frac{1}{2}$</p>
+                        <p class="mb-2">b) $P(\text{Blue or Green}) = P(\text{Blue}) + P(\text{Green})$ (mutually exclusive events)</p>
+                        <p class="mb-2">&nbsp;&nbsp;&nbsp;$P(\text{Blue}) = \frac{3}{10}$</p>
+                        <p class="mb-2">&nbsp;&nbsp;&nbsp;$P(\text{Green}) = \frac{2}{10}$</p>
+                        <p>$P(\text{Blue or Green}) = \frac{3}{10} + \frac{2}{10} = \frac{5}{10} = \frac{1}{2}$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 2: Dependent Events</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">You draw two cards from a standard 52-card deck without replacement. What is the probability that both cards are Queens?</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 2:</p>
+                        <p class="mb-2">$P(\text{1st card is Queen}) = \frac{4}{52}$</p>
+                        <p class="mb-2">$P(\text{2nd card is Queen | 1st card was Queen}) = \frac{3}{51}$ (3 Queens left, 51 cards left)</p>
+                        <p>$P(\text{Both Queens}) = P(\text{1st Queen}) \times P(\text{2nd Queen | 1st Queen})$</p>
+                        <p class="math">$= \frac{4}{52} \times \frac{3}{51} = \frac{12}{2652} = \frac{1}{221}$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 3: Combinations</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">A pizza place offers 8 different toppings. You want to choose 3 toppings for your pizza. How many different combinations of toppings can you choose?</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 3:</p>
+                        <p class="mb-2">This is a combination problem because the order of choosing toppings doesn't matter.</p>
+                        <p class="mb-2">$n = 8$ (total toppings), $r = 3$ (toppings to choose)</p>
+                        <p class="math">$C(8, 3) = \frac{8!}{3!(8-3)!} = \frac{8!}{3!5!} = \frac{8 \times 7 \times 6}{3 \times 2 \times 1} = 8 \times 7 = 56$ combinations.</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 4: Odds Conversion</p>
+                <p class="mb-2 text-gray-700 dark:text-gray-300">The probability of a new product succeeding in the market is estimated to be 0.6.</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">a) What are the odds in favor of the product succeeding?</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">b) What are the odds against the product succeeding?</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 4:</p>
+                        <p class="mb-2">$P(\text{Success}) = 0.6$</p>
+                        <p class="mb-2">$P(\text{Failure}) = 1 - 0.6 = 0.4$</p>
+                        <p class="mb-2">a) Odds in favor = $P(\text{Success}) : P(\text{Failure}) = 0.6 : 0.4 = 6:4 = 3:2$</p>
+                        <p>b) Odds against = $P(\text{Failure}) : P(\text{Success}) = 0.4 : 0.6 = 4:6 = 2:3$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 5: Expected Value</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">You buy a raffle ticket for \$2. There are 500 tickets sold. One ticket wins a \$200 prize, and two tickets win a \$50 prize. What is your expected net gain or loss from buying one ticket?</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 5:</p>
+                        <p class="mb-2">Cost of ticket = -\$2 (loss)</p>
+                        <p class="mb-2">Possible outcomes and their probabilities:</p>
+                        <ul class="list-disc list-inside ml-4 mb-4">
+                            <li>Win \$200: $P(\text{Win \$200}) = \frac{1}{500}$</li>
+                            <li>Win \$50: $P(\text{Win \$50}) = \frac{2}{500}$</li>
+                            <li>Win \$0 (lose \$2): $P(\text{Win \$0}) = \frac{497}{500}$</li>
+                        </ul>
+                        <p class="mb-2">Expected winnings (before subtracting ticket cost):</p>
+                        <p class="math">$E(\text{Winnings}) = (\$200 \times \frac{1}{500}) + (\$50 \times \frac{2}{500}) + (\$0 \times \frac{497}{500})$</p>
+                        <p class="math">$E(\text{Winnings}) = \frac{200}{500} + \frac{100}{500} + 0 = \frac{300}{500} = \$0.60$</p>
+                        <p class="mb-2">Expected net gain/loss = Expected winnings - Cost of ticket</p>
+                        <p class="math">Expected net gain/loss = $\$0.60 - \$2.00 = -\$1.40$</p>
+                        <p>On average, you can expect to lose \$1.40 each time you buy a ticket.</p>
+                    </div>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-blue-600 text-white py-8 mt-auto relative z-10">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2023 WhizMath. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Privacy Policy</a>
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Terms of Service</a>
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Contact Us</a>
+            </div>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.237 2.636 7.855 6.356 9.314.464.086.66-.2.66-.447 0-.22-.008-.809-.013-1.581-2.56.56-3.1-1.23-3.1-1.23-.418-1.06-.99-1.343-.07-.993.92.062 1.403.957 1.403.957.82 1.403 2.152.997 2.67.765.083-.597.323-.997.593-1.226-2.04-.23-4.183-1.02-4.183-4.523 0-1.002.358-1.823.94-2.462-.095-.23-.41-.1.085-1.29 0 0 .768-.246 2.522.94.72-.2 1.48-.3 2.24-.304.76.004 1.52.104 2.24.304 1.754-1.186 2.522-.94 2.522-.94.495 1.19.18 1.06.085 1.29.582.639.94 1.46.94 2.462 0 3.51-2.146 4.29-4.194 4.516.33.284.626.846.626 1.705 0 1.23-.012 2.219-.012 2.512 0 .249.195.533.663.446C19.364 19.855 22 16.237 22 12c0-5.523-4.477-10-10-10z"></path></svg>
+                </a>
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.8.35-1.64.59-2.5.66.9-.54 1.5-1.4 1.8-2.4-.84.5-1.78.87-2.78 1.07C18.35 4.5 17.2 4 16 4c-2.48 0-4.5 2.02-4.5 4.5 0 .35.04.68.12 1-.37-.02-.74-.08-1.1-.18-3.08-.15-5.8-1.63-7.68-4.07-.32.55-.5 1.18-.5 1.87 0 1.2.6 2.25 1.58 2.87-.7-.02-1.3-.2-1.8-.5v.05c0 2.18 1.55 4 3.6 4.4-.37.1-.76.15-1.16.15-.28 0-.55-.03-.8-.08.57 1.8 2.2 3.1 4.13 3.4-1.55 1.2-3.5 1.9-5.6 1.9-.36 0-.7-.02-1.04-.06C2.9 20.3 5.3 21 8 21c7.2 0 11.15-5.95 11.15-11.15 0-.17-.0-.33-.01-.5.77-.55 1.45-1.24 1.98-2.02z"></path></svg>
+                </a>
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.148 3.252-1.691 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.07-1.645-.07-4.85s.012-3.584.07-4.85c.148-3.252 1.691-4.771 4.919-4.919 1.266-.058 1.644-.07 4.85-.07zm0 2.163c-3.204 0-3.584.012-4.85.07-2.77.126-3.958 1.46-4.084 4.084-.058 1.265-.07 1.645-.07 4.85s.012 3.584.07 4.85c.126 2.77 1.46 3.958 4.084 4.084 1.265.058 1.645.07 4.85.07s3.584-.012 4.85-.07c2.77-.126 3.958-1.46 4.084-4.084.058-1.265.07-1.645.07-4.85s-.012-3.584-.07-4.85c-.126-2.77-1.46-3.958-4.084-4.084-1.265-.058-1.645-.07-4.85-.07zm0 3.627c-2.481 0-4.5 2.019-4.5 4.5s2.019 4.5 4.5 4.5 4.5-2.019 4.5-4.5-2.019-4.5-4.5-4.5zm0 2.163c1.282 0 2.337 1.055 2.337 2.337s-1.055 2.337-2.337 2.337-2.337-1.055-2.337-2.337 1.055-2.337 2.337-2.337zm6.406-5.463c-.47-.47-.94-.705-1.41-.705s-.94.235-1.41.705c-.47.47-.705.94-.705 1.41s.235.94.705 1.41c.47.47.94.705 1.41.705s.94-.235 1.41-.705c.47-.47.705-.94.705-1.41s-.235-.94-.705-1.41z"></path></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <button id="scroll-to-top-btn" class="bg-blue-600">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <script>
+        // --- Theme Toggle Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+            localStorage.setItem('theme', theme);
+            // Removed updateParticleColors call from here to prevent "cannot access before initialization" error
+            // It will be called once Three.js is fully initialized in window.onload
+        }
+
+        // Check for saved theme on load
+        const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+        setTheme(savedTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // --- Mobile Sidebar Menu Logic ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            mobileMenuOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling body when menu is open
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('open');
+            document.body.style.overflow = ''; // Restore body scrolling
+        }
+
+        mobileMenuButton.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('open')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu); // Close when clicking overlay
+
+        // Close mobile menu if a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                // Only close if it's a small screen
+                if (window.innerWidth < 768) {
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Handle resize: ensure menu is correct on desktop/mobile switch
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint
+                closeMobileMenu(); // Ensure sidebar is closed on desktop
+            }
+        });
+
+        // --- Three.js Global Background Animation Logic ---
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('global-background-canvas');
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles
+            const particleCount = 12500;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            // Define colors for light and dark mode for particles
+            const lightModeColors = [
+                new THREE.Color(0xADD8E6), // Light blue
+                new THREE.Color(0x87CEEB), // Sky blue
+                new THREE.Color(0x6495ED)  // Cornflower blue
+            ];
+            const darkModeColors = [
+                new THREE.Color(0x3182ce), // Blue-600 dark
+                new THREE.Color(0x4299e1), // Blue-500 dark
+                new THREE.Color(0x63b3ed)  // Blue-400 dark
+            ];
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
+                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
+                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
+
+                // Assign initial color based on current theme
+                const currentColors = htmlElement.classList.contains('dark') ? darkModeColors : lightModeColors;
+                const colorIndex = Math.floor(Math.random() * currentColors.length);
+                const color = currentColors[colorIndex];
+
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+            });
+
+            particles = new THREE.Points(geometry, particleMaterial);
+            scene.add(particles);
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Function to update particle colors based on theme
+        function updateParticleColors(isDarkMode) {
+            // Check if particles object is initialized before trying to access its properties
+            if (!particles || !particles.geometry || !particles.geometry.attributes.color) {
+                console.warn("Three.js particles not yet initialized for color update.");
+                return;
+            }
+
+            const colors = particles.geometry.attributes.color.array;
+            const targetColors = isDarkMode ? [
+                new THREE.Color(0x3182ce), // Blue-600 dark
+                new THREE.Color(0x4299e1), // Blue-500 dark
+                new THREE.Color(0x63b3ed)  // Blue-400 dark
+            ] : [
+                new THREE.Color(0xADD8E6), // Light blue
+                new THREE.Color(0x87CEEB), // Sky blue
+                new THREE.Color(0x6495ED)  // Cornflower blue
+            ];
+
+            for (let i = 0; i < colors.length; i += 3) {
+                const colorIndex = Math.floor(Math.random() * targetColors.length); // Re-randomize color from target palette
+                const targetColor = targetColors[colorIndex];
+                colors[i] = targetColor.r;
+                colors[i + 1] = targetColor.g;
+                colors[i + 2] = targetColor.b;
+            }
+            particles.geometry.attributes.color.needsUpdate = true;
+        }
+
+
+        // --- Scroll to Top Button Logic ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling 300px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll animation
+            });
+        });
+
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+            // Now safely call updateParticleColors after Three.js particles are initialized
+            updateParticleColors(htmlElement.classList.contains('dark'));
+        };
+    </script>
+</body>
+</html>

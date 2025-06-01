@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizmath: Exploring Complex Numbers</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Light mode styles */
+        .light .bg-gray-100 { background-color: #f3f4f6; }
+        .light .text-gray-900 { color: #1f2937; }
+        .light .bg-white { background-color: #ffffff; }
+        .light .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .light .text-gray-800 { color: #1f2937; }
+        .light .text-blue-700 { color: #1d4ed8; }
+        .light .bg-blue-600 { background-color: #2563eb; }
+        .light .bg-blue-700 { background-color: #1d4ed8; }
+        .light .bg-blue-500 { background-color: #3b82f6; }
+        .light .from-blue-500 { --tw-gradient-from: #3b82f6; }
+        .light .to-indigo-600 { --tw-gradient-to: #4f46e5; }
+        .light .bg-gray-50 { background-color: #f9fafb; } /* Card background */
+        .light .text-gray-600 { color: #4b5563; } /* Card description text */
+        .light .text-gray-700 { color: #374151; } /* Section description text */
+        .light .bg-blue-100 { background-color: #dbeafe; } /* Autocomplete hover */
+        .light .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .light .social-icon-bg { background-color: #3b82f6; } /* Social icon background */
+        .light .social-icon-bg:hover { background-color: #2563eb; } /* Social icon hover background */
+        .light #scroll-to-top-btn { background-color: #2563eb; } /* Scroll to top button */
+        .light #scroll-to-top-btn:hover { background-color: #1d4ed8; } /* Scroll to top button hover */
+
+
+        /* Dark mode styles */
+        .dark .bg-gray-100 { background-color: #1a202c; }
+        .dark .text-gray-900 { color: #e2e8f0; }
+        .dark .bg-white { background-color: #2d3748; } /* Main content section background */
+        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15); }
+        .dark .text-gray-800 { color: #cbd5e0; }
+        .dark .text-blue-700 { color: #90cdf4; } /* Section title */
+        .dark .bg-blue-600 { background-color: #1a365d; }
+        .dark .bg-blue-700 { background-color: #2a4365; }
+        .dark .bg-blue-500 { background-color: #3182ce; }
+        .dark .from-blue-500 { --tw-gradient-from: #3182ce; }
+        .dark .to-indigo-600 { --tw-gradient-to: #5a67d8; }
+        .dark .bg-gray-800 { background-color: #1a202c; }
+        .dark .text-white { color: #e2e8f0; }
+        .dark .bg-gray-50 { background-color: #1f2937; } /* Card background for dark mode */
+        .dark .text-gray-600 { color: #a0aec0; } /* Card description text for dark mode */
+        .dark .text-gray-700 { color: #cbd5e0; } /* Section description text for dark mode */
+        .dark .bg-blue-100 { background-color: #1e3a8a; } /* Autocomplete hover for dark mode */
+        .dark .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .dark .social-icon-bg { background-color: #3182ce; } /* Social icon background */
+        .dark .social-icon-bg:hover { background-color: #2b6cb0; } /* Social icon hover background */
+        .dark #scroll-to-top-btn { background-color: #3182ce; } /* Scroll to top button */
+        .dark #scroll-to-top-btn:hover { background-color: #2b6cb0; } /* Scroll to top button hover */
+
+
+        /* Ensure smooth transitions for all elements */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Global Three.js Canvas for background animation */
+        #global-background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none; /* Allows clicks to pass through to content */
+            opacity: 0.7; /* Slightly transparent */
+        }
+
+        /* Mobile sidebar styling */
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 256px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 50;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* Overlay for when sidebar is open */
+        #mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        #mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Custom Nav Link Hover Effect */
+        .nav-link-effect {
+            position: relative;
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .nav-link-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease-out;
+            border-radius: 6px;
+            z-index: -1;
+        }
+
+        .nav-link-effect::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease-out, left 0.3s ease-out;
+        }
+
+        .nav-link-effect:hover::before {
+            transform: scaleX(1);
+        }
+
+        .nav-link-effect:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Dark mode specific hover effect adjustments */
+        .dark .nav-link-effect::before {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .dark .nav-link-effect::after {
+            background-color: #90cdf4; /* Blue-300 for dark mode */
+        }
+
+        /* Adjust mobile menu links for the new effect */
+        #mobile-menu .nav-link-effect {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+        }
+
+        /* Scroll to Top Button */
+        #scroll-to-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 9999px; /* Fully rounded */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 100;
+        }
+
+        #scroll-to-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Lesson content specific styles */
+        .lesson-section {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .light .lesson-section {
+            background-color: #ffffff; /* bg-white */
+        }
+        .dark .lesson-section {
+            background-color: #2d3748; /* dark:bg-gray-700 */
+        }
+        .lesson-section h3 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 1rem;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .lesson-section h3 {
+            color: #90cdf4; /* dark:text-blue-400 */
+        }
+        .lesson-section p {
+            line-height: 1.75; /* leading-relaxed */
+            margin-bottom: 1rem;
+            color: #374151; /* text-gray-700 */
+        }
+        .dark .lesson-section p {
+            color: #cbd5e0; /* dark:text-gray-300 */
+        }
+        .lesson-section ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .lesson-section ul {
+            color: #cbd5e0;
+        }
+        .lesson-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        .example-box {
+            background-color: #e0f2fe; /* bg-blue-50 */
+            border-left: 4px solid #3b82f6; /* border-blue-500 */
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .example-box {
+            background-color: #1e3a8a; /* dark:bg-blue-900 */
+            border-color: #60a5fa; /* dark:border-blue-400 */
+            color: #90cdf4; /* dark:text-blue-300 */
+        }
+        /* Markdown specific styling for equations - keeping from previous version for consistency */
+        .lesson-content p code {
+            background-color: #e5e7eb; /* Gray-200 */
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-family: 'Fira Code', monospace; /* Or any monospaced font */
+        }
+        html.dark .lesson-content p code {
+            background-color: #374151; /* Gray-700 */
+        }
+        .lesson-content h1, .lesson-content h2, .lesson-content h3, .lesson-content h4 {
+            color: #3b82f6; /* Blue-500 */
+        }
+        html.dark .lesson-content h1, html.dark .lesson-content h2, html.dark .lesson-content h3, html.dark .lesson-content h4 {
+            color: #60a5fa; /* Blue-400 */
+        }
+        .lesson-content strong {
+            color: #3b82f6; /* Blue-500 */
+        }
+        html.dark .lesson-content strong {
+            color: #60a5fa; /* Blue-400 */
+        }
+
+        /* Basic styling for math formulas */
+        .lesson-content .math {
+            display: block;
+            overflow-x: auto; /* For wide equations */
+            padding: 0.5em 0;
+            text-align: center;
+            font-size: 1.1em;
+            color: #1f2937; /* Gray-900 */
+        }
+        html.dark .lesson-content .math {
+            color: #e5e7eb; /* Gray-200 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+    <canvas id="global-background-canvas"></canvas>
+
+    <div id="mobile-menu-overlay" class="md:hidden"></div>
+
+    <header class="bg-blue-600 text-white p-4 shadow-md relative z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold rounded-md px-2 py-1">WhizMath</h1>
+            <nav class="flex items-center space-x-6 relative">
+                <ul class="hidden md:flex space-x-2">
+                    <li><a href="index.html" class="nav-link-effect">Home</a></li>
+                    <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+                    <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+                    <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+                    <li><a href="games.html" class="nav-link-effect">Games</a></li>
+                    <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+                </ul>
+
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+
+                <button id="theme-toggle" class="p-2 rounded-full bg-blue-700 hover:bg-blue-800 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ml-4">
+                    <svg id="moon-icon" class="w-6 h-6 text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <svg id="sun-icon" class="w-6 h-6 text-yellow-300 transition-all duration-300 ease-in-out hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.354 3.354l-.707.707M5.646 5.646l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="bg-blue-600 text-white p-6 md:hidden">
+        <ul class="flex flex-col space-y-4 pt-8">
+            <li><a href="index.html" class="nav-link-effect">Home</a></li>
+            <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+            <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+            <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+            <li><a href="games.html" class="nav-link-effect">Games</a></li>
+            <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+        </ul>
+    </div>
+
+    <main class="container mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg relative z-10">
+        <h2 class="text-4xl font-bold mb-6 text-center text-blue-700 dark:text-blue-400">Exploring Complex Numbers: Beyond the Real Line</h2>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Introduction: What are Complex Numbers?</h3>
+            <p class="mb-4">Welcome to a fascinating realm of mathematics where numbers take on a new dimension! In our journey through mathematics, we've primarily dealt with real numbers—numbers that can be plotted on a single number line. However, what happens when we encounter equations like $x^2 + 1 = 0$? There are no real solutions for $x$, as the square of any real number is non-negative.</p>
+            <p class="mb-4">This is where <strong>complex numbers</strong> come into play. They extend the concept of real numbers by introducing an "imaginary" unit, allowing us to solve equations that are otherwise unsolvable within the real number system. Complex numbers are not just theoretical constructs; they are indispensable tools in fields like electrical engineering, physics, signal processing, and fluid dynamics.</p>
+            <p class="mb-4">In this lesson, we will demystify complex numbers, starting from their fundamental definition, exploring their arithmetic, and visualizing them in the complex plane. Prepare to expand your mathematical horizons and discover the elegance and utility of these extraordinary numbers!</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 1: The Imaginary Unit and Basic Form</h3>
+
+            <h4 class="text-2xl font-semibold mb-3">1.1 Defining the Imaginary Unit ($i$)</h4>
+            <p class="mb-4">The cornerstone of complex numbers is the <strong>imaginary unit</strong>, denoted by $i$ (or sometimes $j$ in engineering contexts). It is defined as:</p>
+            <p class="math">$i = \sqrt{-1}$</p>
+            <p class="mb-4">From this definition, it immediately follows that:</p>
+            <p class="math">$i^2 = -1$</p>
+            <p class="mb-4">This property is fundamental and allows us to work with square roots of negative numbers.</p>
+            <p class="font-semibold mt-4">Powers of $i$:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$i^1 = i$</li>
+                <li>$i^2 = -1$</li>
+                <li>$i^3 = i^2 \cdot i = -1 \cdot i = -i$</li>
+                <li>$i^4 = i^2 \cdot i^2 = (-1) \cdot (-1) = 1$</li>
+            </ul>
+            <p class="mb-4">The powers of $i$ cycle with a period of 4. This pattern is very useful for simplifying higher powers of $i$. For example, $i^{25} = i^{4 \cdot 6 + 1} = (i^4)^6 \cdot i^1 = 1^6 \cdot i = i$.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">1.2 Standard Form of a Complex Number</h4>
+            <p class="mb-4">A complex number $z$ is generally expressed in the <strong>standard form</strong> (or rectangular form):</p>
+            <p class="math">$z = a + bi$</p>
+            <p class="mb-4">Where:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>$a$</strong> is the <strong>real part</strong> of $z$, denoted as $\text{Re}(z)$.</li>
+                <li class="mb-2"><strong>$b$</strong> is the <strong>imaginary part</strong> of $z$, denoted as $\text{Im}(z)$.</li>
+                <li class="mb-2">Both $a$ and $b$ are real numbers.</li>
+            </ul>
+            <p class="font-semibold mt-4">Example 1.2.1:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$z = 3 + 4i$: Real part is 3, imaginary part is 4.</li>
+                <li>$z = -2 - 7i$: Real part is -2, imaginary part is -7.</li>
+                <li>$z = 5$: This is a real number, but can be written as $5 + 0i$. So, real numbers are a subset of complex numbers.</li>
+                <li>$z = -6i$: This is a pure imaginary number, can be written as $0 - 6i$. Real part is 0, imaginary part is -6.</li>
+            </ul>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 2: Operations with Complex Numbers</h3>
+
+            <h4 class="text-2xl font-semibold mb-3">2.1 Addition and Subtraction</h4>
+            <p class="mb-4">To add or subtract complex numbers, you simply add or subtract their corresponding real parts and imaginary parts separately.</p>
+            <p class="mb-4">Let $z_1 = a + bi$ and $z_2 = c + di$.</p>
+            <p class="font-semibold mt-4">Addition:</p>
+            <p class="math">$z_1 + z_2 = (a + c) + (b + d)i$</p>
+            <p class="font-semibold mt-4">Subtraction:</p>
+            <p class="math">$z_1 - z_2 = (a - c) + (b - d)i$</p>
+            <p class="font-semibold mt-4">Example 2.1.1:</p>
+            <p>$(3 + 2i) + (1 - 4i) = (3+1) + (2-4)i = 4 - 2i$</p>
+            <p class="font-semibold mt-4">Example 2.1.2:</p>
+            <p>$(5 - i) - (-2 + 3i) = (5 - (-2)) + (-1 - 3)i = (5 + 2) + (-1 - 3)i = 7 - 4i$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.2 Multiplication</h4>
+            <p class="mb-4">Multiplication of complex numbers is similar to multiplying two binomials, remembering that $i^2 = -1$.</p>
+            <p class="mb-4">Let $z_1 = a + bi$ and $z_2 = c + di$.</p>
+            <p class="math">$z_1 \cdot z_2 = (a + bi)(c + di) = ac + adi + bci + bdi^2$</p>
+            <p class="mb-4">Since $i^2 = -1$:</p>
+            <p class="math">$z_1 \cdot z_2 = ac + adi + bci - bd = (ac - bd) + (ad + bc)i$</p>
+            <p class="font-semibold mt-4">Example 2.2.1:</p>
+            <p>$(2 + 3i)(4 - i) = (2)(4) + (2)(-i) + (3i)(4) + (3i)(-i)$</p>
+            <p class="math">$ = 8 - 2i + 12i - 3i^2$</p>
+            <p class="math">$ = 8 + 10i - 3(-1)$</p>
+            <p class="math">$ = 8 + 10i + 3 = 11 + 10i$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.3 Complex Conjugate</h4>
+            <p class="mb-4">The <strong>complex conjugate</strong> of a complex number $z = a + bi$ is denoted as $\bar{z}$ (or $z^*$) and is obtained by changing the sign of the imaginary part:</p>
+            <p class="math">$\bar{z} = a - bi$</p>
+            <p class="mb-4">The product of a complex number and its conjugate is always a real number:</p>
+            <p class="math">$z \cdot \bar{z} = (a + bi)(a - bi) = a^2 - (bi)^2 = a^2 - b^2i^2 = a^2 + b^2$</p>
+            <p class="font-semibold mt-4">Example 2.3.1:</p>
+            <p>The conjugate of $3 + 4i$ is $3 - 4i$.</p>
+            <p>$(3 + 4i)(3 - 4i) = 3^2 + 4^2 = 9 + 16 = 25$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.4 Division</h4>
+            <p class="mb-4">To divide complex numbers, we use the complex conjugate of the denominator to eliminate the imaginary part from the denominator. This process is similar to rationalizing the denominator with square roots.</p>
+            <p class="mb-4">Let $z_1 = a + bi$ and $z_2 = c + di$. To compute $\frac{z_1}{z_2}$:</p>
+            <p class="math">$\frac{a + bi}{c + di} = \frac{a + bi}{c + di} \cdot \frac{c - di}{c - di} = \frac{(a + bi)(c - di)}{c^2 + d^2}$</p>
+            <p class="font-semibold mt-4">Example 2.4.1:</p>
+            <p>$\frac{2 + 3i}{1 - 2i} = \frac{2 + 3i}{1 - 2i} \cdot \frac{1 + 2i}{1 + 2i}$</p>
+            <p class="math">$ = \frac{2 + 4i + 3i + 6i^2}{1^2 + (-2)^2}$</p>
+            <p class="math">$ = \frac{2 + 7i - 6}{5}$</p>
+            <p class="math">$ = \frac{-4 + 7i}{5} = -\frac{4}{5} + \frac{7}{5}i$</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 3: The Complex Plane (Argand Diagram)</h3>
+            <p class="mb-4">Just as real numbers can be represented on a number line, complex numbers can be represented as points in a two-dimensional plane called the <strong>complex plane</strong> or <strong>Argand diagram</strong>.</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2">The horizontal axis is the <strong>real axis</strong>, representing the real part ($a$).</li>
+                <li class="mb-2">The vertical axis is the <strong>imaginary axis</strong>, representing the imaginary part ($b$).</li>
+            </ul>
+            <p class="mb-4">A complex number $z = a + bi$ is plotted as the point $(a, b)$ in the complex plane.</p>
+            <p class="font-semibold mt-4">Example 3.1.1: Plotting Complex Numbers</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$z_1 = 3 + 2i$ is plotted at $(3, 2)$.</li>
+                <li>$z_2 = -2 + i$ is plotted at $(-2, 1)$.</li>
+                <li>$z_3 = -4 - 3i$ is plotted at $(-4, -3)$.</li>
+                <li>$z_4 = 5i$ is plotted at $(0, 5)$.</li>
+                <li>$z_5 = -6$ is plotted at $(-6, 0)$.</li>
+            </ul>
+
+            <h4 class="text-2xl font-semibold mb-3">3.2 Modulus (Absolute Value) of a Complex Number</h4>
+            <p class="mb-4">The <strong>modulus</strong> (or absolute value) of a complex number $z = a + bi$ is the distance from the origin $(0,0)$ to the point $(a,b)$ in the complex plane. It is denoted as $|z|$.</p>
+            <p class="mb-4">Using the Pythagorean theorem:</p>
+            <p class="math">$|z| = \sqrt{a^2 + b^2}$</p>
+            <p class="font-semibold mt-4">Example 3.2.1:</p>
+            <p>Find the modulus of $z = 3 + 4i$.</p>
+            <p class="math">$|z| = \sqrt{3^2 + 4^2} = \sqrt{9 + 16} = \sqrt{25} = 5$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">3.3 Argument (Angle) of a Complex Number</h4>
+            <p class="mb-4">The <strong>argument</strong> of a complex number $z = a + bi$ is the angle $\theta$ (theta) that the line segment from the origin to the point $(a,b)$ makes with the positive real axis. It is typically measured in radians and restricted to the interval $(-\pi, \pi]$ or $[0, 2\pi)$.</p>
+            <p class="mb-4">The argument can be found using trigonometric functions:</p>
+            <p class="math">$\tan \theta = \frac{b}{a}$</p>
+            <p class="mb-4">However, care must be taken to determine the correct quadrant for $\theta$ based on the signs of $a$ and $b$. The `atan2(b, a)` function is often used in programming to get the correct angle directly.</p>
+            <p class="font-semibold mt-4">Example 3.3.1:</p>
+            <p>Find the argument of $z = 1 + i$.</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$a = 1, b = 1$. The point $(1,1)$ is in the first quadrant.</li>
+                <li>$\tan \theta = \frac{1}{1} = 1$</li>
+                <li>$\theta = \arctan(1) = \frac{\pi}{4}$ radians (or $45^\circ$)</li>
+            </ul>
+            <p class="font-semibold mt-4">Example 3.3.2:</p>
+            <p>Find the argument of $z = -1 + i$.</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$a = -1, b = 1$. The point $(-1,1)$ is in the second quadrant.</li>
+                <li>$\tan \theta = \frac{1}{-1} = -1$</li>
+                <li>Using `atan2(1, -1)` or considering the quadrant, $\theta = \frac{3\pi}{4}$ radians (or $135^\circ$)</li>
+            </ul>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 4: Polar Form and Euler's Formula</h3>
+
+            <h4 class="text-2xl font-semibold mb-3">4.1 Polar Form (Trigonometric Form)</h4>
+            <p class="mb-4">A complex number $z = a + bi$ can also be expressed in <strong>polar form</strong> (or trigonometric form), which uses its modulus $r = |z|$ and argument $\theta = \arg(z)$.</p>
+            <p class="mb-4">From the complex plane, we can see that:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>$a = r \cos \theta$</li>
+                <li>$b = r \sin \theta$</li>
+            </ul>
+            <p class="mb-4">Substituting these into $z = a + bi$ gives:</p>
+            <p class="math">$z = r \cos \theta + (r \sin \theta)i = r(\cos \theta + i \sin \theta)$</p>
+            <p class="font-semibold mt-4">Example 4.1.1: Converting to Polar Form</p>
+            <p>Convert $z = 1 + \sqrt{3}i$ to polar form.</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Modulus: $r = |z| = \sqrt{1^2 + (\sqrt{3})^2} = \sqrt{1 + 3} = \sqrt{4} = 2$</li>
+                <li>Argument: $\tan \theta = \frac{\sqrt{3}}{1} = \sqrt{3}$. Since $(1, \sqrt{3})$ is in the first quadrant, $\theta = \frac{\pi}{3}$.</li>
+                <li>So, $z = 2(\cos \frac{\pi}{3} + i \sin \frac{\pi}{3})$</li>
+            </ul>
+
+            <h4 class="text-2xl font-semibold mb-3">4.2 Euler's Formula</h4>
+            <p class="mb-4">One of the most beautiful and profound formulas in mathematics, <strong>Euler's Formula</strong>, connects complex exponentials with trigonometric functions:</p>
+            <p class="math">$e^{i\theta} = \cos \theta + i \sin \theta$</p>
+            <p class="mb-4">Where $e$ is Euler's number (the base of the natural logarithm, approximately 2.71828).</p>
+            <p class="mb-4">Using Euler's formula, the polar form of a complex number can be written as the <strong>exponential form</strong>:</p>
+            <p class="math">$z = re^{i\theta}$</p>
+            <p class="font-semibold mt-4">Example 4.2.1: Converting to Exponential Form</p>
+            <p>Convert $z = 1 + \sqrt{3}i$ to exponential form (from Example 4.1.1, we found $r=2$ and $\theta=\frac{\pi}{3}$).</p>
+            <p class="math">$z = 2e^{i\frac{\pi}{3}}$</p>
+
+            <h4 class="text-2xl font-semibold mb-3">4.3 De Moivre's Theorem</h4>
+            <p class="mb-4">De Moivre's Theorem is incredibly useful for finding powers and roots of complex numbers. For any integer $n$:</p>
+            <p class="math">$(r(\cos \theta + i \sin \theta))^n = r^n (\cos (n\theta) + i \sin (n\theta))$</p>
+            <p class="mb-4">In exponential form, this is even simpler:</p>
+            <p class="math">$(re^{i\theta})^n = r^n e^{in\theta}$</p>
+            <p class="font-semibold mt-4">Example 4.3.1: Powers of Complex Numbers</p>
+            <p>Calculate $(1 + i)^4$.</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>First, convert $1+i$ to polar form: $r = \sqrt{1^2 + 1^2} = \sqrt{2}$, $\theta = \frac{\pi}{4}$.</li>
+                <li>So, $1 + i = \sqrt{2}(\cos \frac{\pi}{4} + i \sin \frac{\pi}{4})$.</li>
+                <li>Using De Moivre's Theorem with $n=4$:</li>
+                <li>$(\sqrt{2})^4 (\cos (4 \cdot \frac{\pi}{4}) + i \sin (4 \cdot \frac{\pi}{4}))$</li>
+                <li>$= 4 (\cos \pi + i \sin \pi)$</li>
+                <li>$= 4 (-1 + i \cdot 0) = -4$</li>
+            </ul>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 5: Applications of Complex Numbers</h3>
+            <p class="mb-4">Complex numbers are far from abstract curiosities; they are fundamental to many areas of science and engineering:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Electrical Engineering:</strong> Used to analyze AC circuits. Impedance, voltage, and current are often represented as complex numbers, simplifying calculations involving phase shifts.</li>
+                <li><strong>Physics:</strong> Quantum mechanics uses complex numbers extensively to describe wave functions. They are also used in optics, electromagnetism, and fluid dynamics.</li>
+                <li><strong>Signal Processing:</strong> Fourier analysis, which decomposes signals into their constituent frequencies, relies heavily on complex exponentials.</li>
+                <li><strong>Control Systems:</strong> Used in stability analysis and design of control systems, often visualized using pole-zero plots in the complex plane.</li>
+                <li><strong>Fractals:</strong> The Mandelbrot set and Julia sets are generated using iterative functions in the complex plane, producing stunning visual patterns.</li>
+                <li><strong>Computer Graphics:</strong> Transformations like rotations and scaling in 2D graphics can be elegantly represented and performed using complex number multiplication.</li>
+            </ul>
+        </section>
+
+        <section class="lesson-section text-center">
+            <h3 class="text-3xl font-semibold mb-4">Conclusion: Unlocking New Mathematical Horizons</h3>
+            <p class="mb-4">You've now taken a significant step beyond the familiar real number line into the expansive and powerful world of complex numbers. From the simple yet profound definition of the imaginary unit $i$ to the elegance of Euler's formula and De Moivre's Theorem, you've gained a solid understanding of their structure, arithmetic, and geometric interpretation.</p>
+            <p class="mb-4">Complex numbers provide a unified framework that simplifies many problems in physics, engineering, and computer science. Their ability to represent both magnitude and phase makes them indispensable for analyzing oscillations, waves, and rotations.</p>
+            <p class="text-xl font-bold text-blue-700 dark:text-blue-400">Keep practicing, keep exploring, and keep embracing the complexity (and beauty!) of mathematics with Whizmath!</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Practice Problems (with Solutions)</h3>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 1: Basic Operations</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Given $z_1 = 5 + 2i$ and $z_2 = -3 + 6i$, calculate:</p>
+                <p class="mb-2 text-gray-700 dark:text-gray-300">a) $z_1 + z_2$</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">b) $z_1 - z_2$</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 1:</p>
+                        <p class="mb-2">a) $z_1 + z_2 = (5 + (-3)) + (2 + 6)i = 2 + 8i$</p>
+                        <p class="mb-2">b) $z_1 - z_2 = (5 - (-3)) + (2 - 6)i = (5 + 3) + (-4)i = 8 - 4i$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 2: Multiplication</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Calculate $(4 - 2i)(1 + 3i)$.</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 2:</p>
+                        <p class="math">$(4 - 2i)(1 + 3i) = 4(1) + 4(3i) - 2i(1) - 2i(3i)$</p>
+                        <p class="math">$ = 4 + 12i - 2i - 6i^2$</p>
+                        <p class="math">$ = 4 + 10i - 6(-1)$</p>
+                        <p class="math">$ = 4 + 10i + 6 = 10 + 10i$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 3: Division</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Calculate $\frac{3 + i}{2 - i}$.</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 3:</p>
+                        <p class="math">$\frac{3 + i}{2 - i} = \frac{3 + i}{2 - i} \cdot \frac{2 + i}{2 + i}$</p>
+                        <p class="math">$ = \frac{6 + 3i + 2i + i^2}{4 + 1}$</p>
+                        <p class="math">$ = \frac{6 + 5i - 1}{5}$</p>
+                        <p class="math">$ = \frac{5 + 5i}{5} = 1 + i$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 4: Modulus and Argument</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Find the modulus and argument of $z = -1 - \sqrt{3}i$.</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 4:</p>
+                        <p class="mb-2">$a = -1, b = -\sqrt{3}$. This point is in the third quadrant.</p>
+                        <p class="mb-2">Modulus: $|z| = \sqrt{(-1)^2 + (-\sqrt{3})^2} = \sqrt{1 + 3} = \sqrt{4} = 2$</p>
+                        <p class="mb-2">Argument: $\tan \theta = \frac{-\sqrt{3}}{-1} = \sqrt{3}$. Since it's in the third quadrant, $\theta = \arctan(\sqrt{3}) - \pi = \frac{\pi}{3} - \pi = -\frac{2\pi}{3}$ (or $\frac{4\pi}{3}$ if using $[0, 2\pi)$).</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 5: De Moivre's Theorem</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Calculate $( \sqrt{2} + \sqrt{2}i )^3$.</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 5:</p>
+                        <p class="mb-2">First, convert $z = \sqrt{2} + \sqrt{2}i$ to polar form:</p>
+                        <p class="mb-2">$r = |\sqrt{2} + \sqrt{2}i| = \sqrt{(\sqrt{2})^2 + (\sqrt{2})^2} = \sqrt{2 + 2} = \sqrt{4} = 2$</p>
+                        <p class="mb-2">$\tan \theta = \frac{\sqrt{2}}{\sqrt{2}} = 1$. Since it's in the first quadrant, $\theta = \frac{\pi}{4}$.</p>
+                        <p class="mb-2">So, $z = 2(\cos \frac{\pi}{4} + i \sin \frac{\pi}{4})$.</p>
+                        <p class="mb-2">Now, use De Moivre's Theorem with $n=3$:</p>
+                        <p class="math">$(2(\cos \frac{\pi}{4} + i \sin \frac{\pi}{4}))^3 = 2^3 (\cos (3 \cdot \frac{\pi}{4}) + i \sin (3 \cdot \frac{\pi}{4}))$</p>
+                        <p class="math">$ = 8 (\cos \frac{3\pi}{4} + i \sin \frac{3\pi}{4})$</p>
+                        <p class="math">$ = 8 (-\frac{\sqrt{2}}{2} + i \frac{\sqrt{2}}{2})$</p>
+                        <p class="math">$ = -4\sqrt{2} + 4\sqrt{2}i$</p>
+                    </div>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-blue-600 text-white py-8 mt-auto relative z-10">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2023 WhizMath. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Privacy Policy</a>
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Terms of Service</a>
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Contact Us</a>
+            </div>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.237 2.636 7.855 6.356 9.314.464.086.66-.2.66-.447 0-.22-.008-.809-.013-1.581-2.56.56-3.1-1.23-3.1-1.23-.418-1.06-.99-1.343-.07-.993.92.062 1.403.957 1.403.957.82 1.403 2.152.997 2.67.765.083-.597.323-.997.593-1.226-2.04-.23-4.183-1.02-4.183-4.523 0-1.002.358-1.823.94-2.462-.095-.23-.41-.1.085-1.29 0 0 .768-.246 2.522.94.72-.2 1.48-.3 2.24-.304.76.004 1.52.104 2.24.304 1.754-1.186 2.522-.94 2.522-.94.495 1.19.18 1.06.085 1.29.582.639.94 1.46.94 2.462 0 3.51-2.146 4.29-4.194 4.516.33.284.626.846.626 1.705 0 1.23-.012 2.219-.012 2.512 0 .249.195.533.663.446C19.364 19.855 22 16.237 22 12c0-5.523-4.477-10-10-10z"></path></svg>
+                </a>
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.8.35-1.64.59-2.5.66.9-.54 1.5-1.4 1.8-2.4-.84.5-1.78.87-2.78 1.07C18.35 4.5 17.2 4 16 4c-2.48 0-4.5 2.02-4.5 4.5 0 .35.04.68.12 1-.37-.02-.74-.08-1.1-.18-3.08-.15-5.8-1.63-7.68-4.07-.32.55-.5 1.18-.5 1.87 0 1.2.6 2.25 1.58 2.87-.7-.02-1.3-.2-1.8-.5v.05c0 2.18 1.55 4 3.6 4.4-.37.1-.76.15-1.16.15-.28 0-.55-.03-.8-.08.57 1.8 2.2 3.1 4.13 3.4-1.55 1.2-3.5 1.9-5.6 1.9-.36 0-.7-.02-1.04-.06C2.9 20.3 5.3 21 8 21c7.2 0 11.15-5.95 11.15-11.15 0-.17-.0-.33-.01-.5.77-.55 1.45-1.24 1.98-2.02z"></path></svg>
+                </a>
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.148 3.252-1.691 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.07-1.645-.07-4.85s.012-3.584.07-4.85c.148-3.252 1.691-4.771 4.919-4.919 1.266-.058 1.644-.07 4.85-.07zm0 2.163c-3.204 0-3.584.012-4.85.07-2.77.126-3.958 1.46-4.084 4.084-.058 1.265-.07 1.645-.07 4.85s.012 3.584.07 4.85c.126 2.77 1.46 3.958 4.084 4.084 1.265.058 1.645.07 4.85.07s3.584-.012 4.85-.07c2.77-.126 3.958-1.46 4.084-4.084.058-1.265.07-1.645.07-4.85s-.012-3.584-.07-4.85c-.126-2.77-1.46-3.958-4.084-4.084-1.265-.058-1.645-.07-4.85-.07zm0 3.627c-2.481 0-4.5 2.019-4.5 4.5s2.019 4.5 4.5 4.5 4.5-2.019 4.5-4.5-2.019-4.5-4.5-4.5zm0 2.163c1.282 0 2.337 1.055 2.337 2.337s-1.055 2.337-2.337 2.337-2.337-1.055-2.337-2.337 1.055-2.337 2.337-2.337zm6.406-5.463c-.47-.47-.94-.705-1.41-.705s-.94.235-1.41.705c-.47.47-.705.94-.705 1.41s.235.94.705 1.41c.47.47.94.705 1.41.705s.94-.235 1.41-.705c-.47-.47-.705-.94-.705-1.41s-.235-.94-.705-1.41z"></path></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <button id="scroll-to-top-btn" class="bg-blue-600">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <script>
+        // --- Theme Toggle Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+            localStorage.setItem('theme', theme);
+            // Removed updateParticleColors call from here. It will be called in window.onload
+        }
+
+        // Check for saved theme on load
+        const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+        setTheme(savedTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+            // Call updateParticleColors here for immediate visual feedback on theme change
+            if (typeof particles !== 'undefined' && particles) {
+                updateParticleColors(newTheme === 'dark');
+            }
+        });
+
+        // --- Mobile Sidebar Menu Logic ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            mobileMenuOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling body when menu is open
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('open');
+            document.body.style.overflow = ''; // Restore body scrolling
+        }
+
+        mobileMenuButton.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('open')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu); // Close when clicking overlay
+
+        // Close mobile menu if a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                // Only close if it's a small screen
+                if (window.innerWidth < 768) {
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Handle resize: ensure menu is correct on desktop/mobile switch
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint
+                closeMobileMenu(); // Ensure sidebar is closed on desktop
+            }
+        });
+
+        // --- Three.js Global Background Animation Logic ---
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('global-background-canvas');
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles
+            const particleCount = 12500;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            // Define colors for light and dark mode for particles
+            const lightModeColors = [
+                new THREE.Color(0xADD8E6), // Light blue
+                new THREE.Color(0x87CEEB), // Sky blue
+                new THREE.Color(0x6495ED)  // Cornflower blue
+            ];
+            const darkModeColors = [
+                new THREE.Color(0x3182ce), // Blue-600 dark
+                new THREE.Color(0x4299e1), // Blue-500 dark
+                new THREE.Color(0x63b3ed)  // Blue-400 dark
+            ];
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
+                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
+                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
+
+                // Assign initial color based on current theme
+                const currentColors = htmlElement.classList.contains('dark') ? darkModeColors : lightModeColors;
+                const colorIndex = Math.floor(Math.random() * currentColors.length);
+                const color = currentColors[colorIndex];
+
+                colors[i * 3] = color.r;
+                colors[i + 1] = color.g; // Fixed: was i*3 + 1, should be i*3 + 1
+                colors[i + 2] = color.b; // Fixed: was i*3 + 2, should be i*3 + 2
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+            });
+
+            particles = new THREE.Points(geometry, particleMaterial);
+            scene.add(particles);
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Function to update particle colors based on theme
+        function updateParticleColors(isDarkMode) {
+            // Check if particles object is initialized before trying to access its properties
+            if (!particles || !particles.geometry || !particles.geometry.attributes.color) {
+                console.warn("Three.js particles not yet initialized for color update.");
+                return;
+            }
+
+            const colors = particles.geometry.attributes.color.array;
+            const targetColors = isDarkMode ? [
+                new THREE.Color(0x3182ce), // Blue-600 dark
+                new THREE.Color(0x4299e1), // Blue-500 dark
+                new THREE.Color(0x63b3ed)  // Blue-400 dark
+            ] : [
+                new THREE.Color(0xADD8E6), // Light blue
+                new THREE.Color(0x87CEEB), // Sky blue
+                new THREE.Color(0x6495ED)  // Cornflower blue
+            ];
+
+            for (let i = 0; i < colors.length; i += 3) {
+                const colorIndex = Math.floor(Math.random() * targetColors.length); // Re-randomize color from target palette
+                const targetColor = targetColors[colorIndex];
+                colors[i] = targetColor.r;
+                colors[i + 1] = targetColor.g;
+                colors[i + 2] = targetColor.b;
+            }
+            particles.geometry.attributes.color.needsUpdate = true;
+        }
+
+
+        // --- Scroll to Top Button Logic ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling 300px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll animation
+            });
+        });
+
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+            // Now safely call updateParticleColors after Three.js particles are initialized
+            updateParticleColors(htmlElement.classList.contains('dark'));
+        };
+    </script>
+</body>
+</html>

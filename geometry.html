@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhizMath - Geometry Basics Lesson</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Light mode styles */
+        .light .bg-gray-100 { background-color: #f3f4f6; }
+        .light .text-gray-900 { color: #1f2937; }
+        .light .bg-white { background-color: #ffffff; }
+        .light .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .light .text-gray-800 { color: #1f2937; }
+        .light .text-blue-700 { color: #1d4ed8; }
+        .light .bg-blue-600 { background-color: #2563eb; }
+        .light .bg-blue-700 { background-color: #1d4ed8; }
+        .light .bg-blue-500 { background-color: #3b82f6; }
+        .light .from-blue-500 { --tw-gradient-from: #3b82f6; }
+        .light .to-indigo-600 { --tw-gradient-to: #4f46e5; }
+        .light .bg-gray-50 { background-color: #f9fafb; } /* Card background */
+        .light .text-gray-600 { color: #4b5563; } /* Card description text */
+        .light .text-gray-700 { color: #374151; } /* Section description text */
+        .light .bg-blue-100 { background-color: #dbeafe; } /* Autocomplete hover */
+        .light .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .light .social-icon-bg { background-color: #3b82f6; } /* Social icon background */
+        .light .social-icon-bg:hover { background-color: #2563eb; } /* Social icon hover background */
+        .light #scroll-to-top-btn { background-color: #2563eb; } /* Scroll to top button */
+        .light #scroll-to-top-btn:hover { background-color: #1d4ed8; } /* Scroll to top button hover */
+
+
+        /* Dark mode styles */
+        .dark .bg-gray-100 { background-color: #1a202c; }
+        .dark .text-gray-900 { color: #e2e8f0; }
+        .dark .bg-white { background-color: #2d3748; } /* Main content section background */
+        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15); }
+        .dark .text-gray-800 { color: #cbd5e0; }
+        .dark .text-blue-700 { color: #90cdf4; } /* Section title */
+        .dark .bg-blue-600 { background-color: #1a365d; }
+        .dark .bg-blue-700 { background-color: #2a4365; }
+        .dark .bg-blue-500 { background-color: #3182ce; }
+        .dark .from-blue-500 { --tw-gradient-from: #3182ce; }
+        .dark .to-indigo-600 { --tw-gradient-to: #5a67d8; }
+        .dark .bg-gray-800 { background-color: #1a202c; }
+        .dark .text-white { color: #e2e8f0; }
+        .dark .bg-gray-50 { background-color: #1f2937; } /* Card background for dark mode */
+        .dark .text-gray-600 { color: #a0aec0; } /* Card description text for dark mode */
+        .dark .text-gray-700 { color: #cbd5e0; } /* Section description text for dark mode */
+        .dark .bg-blue-100 { background-color: #1e3a8a; } /* Autocomplete hover for dark mode */
+        .dark .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .dark .social-icon-bg { background-color: #3182ce; } /* Social icon background */
+        .dark .social-icon-bg:hover { background-color: #2b6cb0; } /* Social icon hover background */
+        .dark #scroll-to-top-btn { background-color: #3182ce; } /* Scroll to top button */
+        .dark #scroll-to-top-btn:hover { background-color: #2b6cb0; } /* Scroll to top button hover */
+
+
+        /* Ensure smooth transitions for all elements */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Global Three.js Canvas for background animation */
+        #global-background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        /* Mobile sidebar styling */
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 256px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 50;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* Overlay for when sidebar is open */
+        #mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        #mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Custom Nav Link Hover Effect */
+        .nav-link-effect {
+            position: relative;
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .nav-link-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease-out;
+            border-radius: 6px;
+            z-index: -1;
+        }
+
+        .nav-link-effect::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease-out, left 0.3s ease-out;
+        }
+
+        .nav-link-effect:hover::before {
+            transform: scaleX(1);
+        }
+
+        .nav-link-effect:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Dark mode specific hover effect adjustments */
+        .dark .nav-link-effect::before {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .dark .nav-link-effect::after {
+            background-color: #90cdf4;
+        }
+
+        /* Adjust mobile menu links for the new effect */
+        #mobile-menu .nav-link-effect {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+        }
+
+        /* Scroll to Top Button */
+        #scroll-to-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 9999px; /* Fully rounded */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 100;
+        }
+
+        #scroll-to-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Lesson content specific styles */
+        .lesson-section {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .lesson-section h3 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 1rem;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .lesson-section h3 {
+            color: #90cdf4; /* dark:text-blue-400 */
+        }
+        .lesson-section p {
+            line-height: 1.75; /* leading-relaxed */
+            margin-bottom: 1rem;
+            color: #374151; /* text-gray-700 */
+        }
+        .dark .lesson-section p {
+            color: #cbd5e0; /* dark:text-gray-300 */
+        }
+        .lesson-section ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .lesson-section ul {
+            color: #cbd5e0;
+        }
+        .lesson-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        .example-box {
+            background-color: #e0f2fe; /* bg-blue-50 */
+            border-left: 4px solid #3b82f6; /* border-blue-500 */
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .example-box {
+            background-color: #1e3a8a; /* dark:bg-blue-900 */
+            border-color: #60a5fa; /* dark:border-blue-400 */
+            color: #90cdf4; /* dark:text-blue-300 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+    <canvas id="global-background-canvas"></canvas>
+
+    <div id="mobile-menu-overlay" class="md:hidden"></div>
+
+    <header class="bg-blue-600 text-white p-4 shadow-md relative z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold rounded-md px-2 py-1">WhizMath</h1>
+            <nav class="flex items-center space-x-6 relative">
+                <ul class="hidden md:flex space-x-2">
+                    <li><a href="index.html" class="nav-link-effect">Home</a></li>
+                    <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+                    <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+                    <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+                    <li><a href="games.html" class="nav-link-effect">Games</a></li>
+                    <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+                </ul>
+
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+
+                <button id="theme-toggle" class="p-2 rounded-full bg-blue-700 hover:bg-blue-800 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ml-4">
+                    <svg id="moon-icon" class="w-6 h-6 text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <svg id="sun-icon" class="w-6 h-6 text-yellow-300 transition-all duration-300 ease-in-out hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.354 3.354l-.707.707M5.646 5.646l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="bg-blue-600 text-white p-6 md:hidden">
+        <ul class="flex flex-col space-y-4 pt-8">
+            <li><a href="index.html" class="nav-link-effect">Home</a></li>
+            <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+            <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+            <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+            <li><a href="games.html" class="nav-link-effect">Games</a></li>
+            <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+        </ul>
+    </div>
+
+    <main class="flex-grow container mx-auto p-4 py-8 relative z-10">
+
+        <section class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg mb-12 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-blue-700 dark:text-blue-400">Geometry Basics: Understanding Shapes and Space</h2>
+            <p class="text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+                Geometry is the branch of mathematics concerned with the properties and relations of points, lines, surfaces, solids, and higher dimensional analogs. It's about understanding the world around us in terms of shapes, sizes, positions, and spatial relationships. This comprehensive lesson will guide you through the foundational concepts of geometry, from basic elements to complex shapes and transformations.
+            </p>
+        </section>
+
+        <div class="lesson-content">
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>1. Introduction to Geometry: The Study of Space</h3>
+                <p>
+                    Geometry, derived from the Greek words "geo" (earth) and "metron" (measurement), literally means "earth measurement." Historically, it emerged from practical needs in surveying, astronomy, and construction. Today, it's a vast field that underpins many areas of science, engineering, art, and even computer graphics.
+                </p>
+                <p>
+                    At its core, geometry helps us describe and analyze the world in terms of its spatial properties. It answers questions like:
+                </p>
+                <ul>
+                    <li>How much space does an object occupy? (Volume)</li>
+                    <li>What is the distance between two points? (Length)</li>
+                    <li>How much surface does something cover? (Area)</li>
+                    <li>How are different shapes related to each other? (Congruence, Similarity)</li>
+                </ul>
+                <p>
+                    Understanding geometry develops logical reasoning, problem-solving skills, and spatial awareness, which are valuable in countless real-world applications.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>2. Basic Geometric Elements: The Undefined Terms</h3>
+                <p>
+                    In Euclidean geometry, there are three fundamental, undefined terms from which all other definitions are built. We understand them by their descriptions and how they relate to each other.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Point:</strong> A point is a location in space. It has no size, no width, no length, and no depth. It is represented by a dot and named with a capital letter.
+                        <div class="example-box">
+                            <strong>Example:</strong> Point A (represented as $\cdot A$)
+                        </div>
+                        <p>Points are the most basic building blocks of all geometric figures.</p>
+                    </li>
+                    <li>
+                        <strong>Line:</strong> A line is a straight path that extends infinitely in two opposite directions. It has no thickness or width. A line is defined by at least two points and can be named by two points on the line (e.g., Line AB or $\overleftrightarrow{AB}$) or by a single lowercase letter (e.g., line $l$).
+                        <div class="example-box">
+                            <strong>Example:</strong> A line passing through points P and Q can be written as $\overleftrightarrow{PQ}$.
+                        </div>
+                        <p>A line segment is a part of a line with two distinct endpoints (e.g., $\overline{AB}$). A ray is a part of a line with one endpoint, extending infinitely in one direction (e.g., $\overrightarrow{AB}$).</p>
+                    </li>
+                    <li>
+                        <strong>Plane:</strong> A plane is a flat surface that extends infinitely in all directions. It has no thickness. A plane is defined by at least three non-collinear points (points not on the same line) or by a line and a point not on the line. It is often represented by a parallelogram and named by a single capital letter or by three non-collinear points (e.g., Plane R or Plane ABC).
+                        <div class="example-box">
+                            <strong>Example:</strong> The surface of a table is a good analogy for a plane, though it is finite.
+                        </div>
+                        <p>Points and lines can lie within a plane. Space is the set of all points, extending in three dimensions.</p>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>3. Angles and Their Types: Measuring Turns</h3>
+                <p>
+                    An angle is formed by two rays that share a common endpoint, called the <strong>vertex</strong>. The rays are called the <strong>sides</strong> or <strong>arms</strong> of the angle. Angles are measured in degrees ($\circ$) or radians.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Types of Angles:</p>
+                <ul>
+                    <li>
+                        <strong>Acute Angle:</strong> An angle that measures less than $90^\circ$.
+                        <div class="example-box">
+                            <strong>Example:</strong> An angle measuring $45^\circ$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Right Angle:</strong> An angle that measures exactly $90^\circ$. It is often indicated by a small square symbol at the vertex.
+                        <div class="example-box">
+                            <strong>Example:</strong> The corner of a square or a book.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Obtuse Angle:</strong> An angle that measures greater than $90^\circ$ but less than $180^\circ$.
+                        <div class="example-box">
+                            <strong>Example:</strong> An angle measuring $120^\circ$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Straight Angle:</strong> An angle that measures exactly $180^\circ$. It forms a straight line.
+                        <div class="example-box">
+                            <strong>Example:</strong> A straight line.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Reflex Angle:</strong> An angle that measures greater than $180^\circ$ but less than $360^\circ$.
+                        <div class="example-box">
+                            <strong>Example:</strong> An angle measuring $270^\circ$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Full Rotation (or Full Angle):</strong> An angle that measures exactly $360^\circ$. It represents a complete circle.
+                        <div class="example-box">
+                            <strong>Example:</strong> One full turn of a clock hand.
+                        </div>
+                    </li>
+                </ul>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Angle Relationships:</p>
+                <ul>
+                    <li><strong>Complementary Angles:</strong> Two angles whose sum is $90^\circ$.</li>
+                    <li><strong>Supplementary Angles:</strong> Two angles whose sum is $180^\circ$.</li>
+                    <li><strong>Vertical Angles:</strong> Two non-adjacent angles formed by the intersection of two lines. Vertical angles are always equal.</li>
+                    <li><strong>Adjacent Angles:</strong> Two angles that share a common vertex and a common side but no common interior points.</li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>4. Types of Lines: Relationships in a Plane</h3>
+                <p>
+                    Lines in a plane can interact in specific ways, defining important geometric relationships.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Parallel Lines:</strong> Two lines in a plane that never intersect, no matter how far they are extended. They maintain a constant distance from each other. Parallel lines are denoted by the symbol $\parallel$.
+                        <div class="example-box">
+                            <strong>Example:</strong> The opposite sides of a rectangle; railroad tracks.
+                            If line $l_1$ is parallel to line $l_2$, we write $l_1 \parallel l_2$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Perpendicular Lines:</strong> Two lines that intersect to form a right angle ($90^\circ$). Perpendicular lines are denoted by the symbol $\perp$.
+                        <div class="example-box">
+                            <strong>Example:</strong> The adjacent sides of a square; the intersection of a wall and the floor.
+                            If line $l_1$ is perpendicular to line $l_2$, we write $l_1 \perp l_2$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Intersecting Lines:</strong> Two lines that cross each other at exactly one point. If they are not perpendicular, they form angles that are not $90^\circ$.
+                        <div class="example-box">
+                            <strong>Example:</strong> The hands of a clock at 2:00.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Transversal Line:</strong> A line that intersects two or more other lines. When a transversal intersects parallel lines, it creates special angle relationships (e.g., corresponding angles, alternate interior angles, consecutive interior angles).
+                        <div class="example-box">
+                            These angle pairs are crucial for proving lines parallel or for finding unknown angles when lines are known to be parallel.
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>5. Polygons: Closed Shapes with Straight Sides</h3>
+                <p>
+                    A polygon is a closed two-dimensional figure made up of three or more straight line segments called sides. The sides meet at points called vertices. Polygons are named according to the number of their sides.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Common Types of Polygons:</p>
+                <ul>
+                    <li>
+                        <strong>Triangle (3 sides):</strong> A polygon with three sides and three angles. The sum of the interior angles of any triangle is always $180^\circ$.
+                        <p>Types of Triangles based on sides:</p>
+                        <ul>
+                            <li><strong>Equilateral:</strong> All three sides are equal, and all three angles are $60^\circ$.</li>
+                            <li><strong>Isosceles:</strong> Two sides are equal, and the angles opposite those sides are equal.</li>
+                            <li><strong>Scalene:</strong> All three sides are different lengths, and all three angles are different.</li>
+                        </ul>
+                        <p>Types of Triangles based on angles:</p>
+                        <ul>
+                            <li><strong>Acute:</strong> All three angles are acute (less than $90^\circ$).</li>
+                            <li><strong>Right:</strong> Has one right angle ($90^\circ$).</li>
+                            <li><strong>Obtuse:</strong> Has one obtuse angle (greater than $90^\circ$).</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Quadrilateral (4 sides):</strong> A polygon with four sides and four angles. The sum of the interior angles of any quadrilateral is always $360^\circ$.
+                        <p>Common Quadrilaterals:</p>
+                        <ul>
+                            <li><strong>Square:</strong> Four equal sides, four right angles.</li>
+                            <li><strong>Rectangle:</strong> Opposite sides are equal and parallel, four right angles.</li>
+                            <li><strong>Parallelogram:</strong> Opposite sides are parallel and equal in length.</li>
+                            <li><strong>Rhombus:</strong> Four equal sides, opposite angles are equal.</li>
+                            <li><strong>Trapezoid:</strong> At least one pair of parallel sides.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Pentagon (5 sides)</strong>
+                    </li>
+                    <li>
+                        <strong>Hexagon (6 sides)</strong>
+                    </li>
+                    <li>
+                        <strong>Heptagon (7 sides)</strong>
+                    </li>
+                    <li>
+                        <strong>Octagon (8 sides)</strong>
+                    </li>
+                    <li>
+                        ...and so on.
+                    </li>
+                </ul>
+                <p>
+                    Polygons can be <strong>regular</strong> (all sides and all angles are equal, e.g., a square or an equilateral triangle) or <strong>irregular</strong>. They can also be <strong>convex</strong> (all interior angles are less than $180^\circ$) or <strong>concave</strong> (at least one interior angle is greater than $180^\circ$).
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>6. Circles: The Perfect Round Shape</h3>
+                <p>
+                    A circle is a set of all points in a plane that are equidistant from a fixed central point.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Key Terms Related to Circles:</p>
+                <ul>
+                    <li>
+                        <strong>Center:</strong> The fixed central point from which all points on the circle are equidistant.
+                    </li>
+                    <li>
+                        <strong>Radius ($r$):</strong> The distance from the center to any point on the circle.
+                    </li>
+                    <li>
+                        <strong>Diameter ($d$):</strong> The distance across the circle passing through the center. It is twice the radius ($d = 2r$).
+                    </li>
+                    <li>
+                        <strong>Chord:</strong> A line segment connecting any two points on the circle. The diameter is the longest chord.
+                    </li>
+                    <li>
+                        <strong>Arc:</strong> A portion of the circumference of a circle.
+                    </li>
+                    <li>
+                        <strong>Sector:</strong> A region of a circle bounded by two radii and an arc.
+                    </li>
+                    <li>
+                        <strong>Tangent:</strong> A line that touches the circle at exactly one point.
+                    </li>
+                    <li>
+                        <strong>Circumference ($C$):</strong> The distance around the circle.
+                        <div class="example-box">
+                            Formula: $C = 2\pi r$ or $C = \pi d$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Area ($A$):</strong> The amount of space enclosed by the circle.
+                        <div class="example-box">
+                            Formula: $A = \pi r^2$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>$\pi$ (Pi):</strong> A mathematical constant approximately equal to $3.14159$. It represents the ratio of a circle's circumference to its diameter.
+                    </li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>7. Perimeter and Area: Measuring 2D Shapes</h3>
+                <p>
+                    Perimeter and area are two fundamental measurements for two-dimensional (2D) shapes.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Perimeter:</strong> The total distance around the outside of a two-dimensional shape. It is calculated by adding the lengths of all its sides. For circles, the perimeter is called the circumference.
+                        <div class="example-box">
+                            <strong>Rectangle:</strong> For a rectangle with length $L$ and width $W$, $P = 2L + 2W$.<br>
+                            <strong>Square:</strong> For a square with side $s$, $P = 4s$.<br>
+                            <strong>Triangle:</strong> For a triangle with sides $a, b, c$, $P = a + b + c$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Area:</strong> The amount of surface a two-dimensional shape covers. It is measured in square units (e.g., $\text{cm}^2$, $\text{m}^2$, $\text{ft}^2$).
+                        <div class="example-box">
+                            <strong>Rectangle:</strong> $A = L \times W$<br>
+                            <strong>Square:</strong> $A = s^2$<br>
+                            <strong>Triangle:</strong> $A = \frac{1}{2} \times \text{base} \times \text{height}$<br>
+                            <strong>Circle:</strong> $A = \pi r^2$
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>8. Volume and Surface Area: Measuring 3D Objects</h3>
+                <p>
+                    For three-dimensional (3D) objects (solids), we measure their volume and surface area.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Volume:</strong> The amount of space an object occupies. It is measured in cubic units (e.g., $\text{cm}^3$, $\text{m}^3$, $\text{ft}^3$).
+                        <div class="example-box">
+                            <strong>Rectangular Prism (Box):</strong> For a prism with length $L$, width $W$, and height $H$, $V = L \times W \times H$.<br>
+                            <strong>Cube:</strong> For a cube with side $s$, $V = s^3$.<br>
+                            <strong>Cylinder:</strong> For a cylinder with radius $r$ and height $H$, $V = \pi r^2 H$.<br>
+                            <strong>Sphere:</strong> For a sphere with radius $r$, $V = \frac{4}{3}\pi r^3$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Surface Area:</strong> The total area of all the surfaces (faces) of a three-dimensional object. It is measured in square units.
+                        <div class="example-box">
+                            <strong>Rectangular Prism (Box):</strong> $SA = 2(LW + LH + WH)$.<br>
+                            <strong>Cube:</strong> $SA = 6s^2$.<br>
+                            <strong>Cylinder (closed):</strong> $SA = 2\pi r H + 2\pi r^2$.<br>
+                            <strong>Sphere:</strong> $SA = 4\pi r^2$.
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>9. Geometric Transformations: Moving Shapes in Space</h3>
+                <p>
+                    Geometric transformations are operations that move or change a geometric figure in some way to produce a new figure, called the image. The original figure is called the pre-image.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Translation:</strong> A slide. Moving a figure from one location to another without changing its orientation or size. Every point of the figure is moved the same distance in the same direction.
+                        <div class="example-box">
+                            <strong>Example:</strong> Shifting a square 3 units to the right and 2 units up.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Rotation:</strong> A turn. Rotating a figure about a fixed point (the center of rotation) by a certain angle. The orientation of the figure changes, but its size and shape remain the same.
+                        <div class="example-box">
+                            <strong>Example:</strong> Rotating a triangle $90^\circ$ clockwise around the origin.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Reflection:</strong> A flip. Creating a mirror image of a figure across a line (the line of reflection). The orientation is reversed, but the size and shape are preserved.
+                        <div class="example-box">
+                            <strong>Example:</strong> Reflecting a letter 'F' across the y-axis.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Dilation:</strong> A resizing. Changing the size of a figure by a scale factor from a fixed point (the center of dilation). The shape remains the same, but the size changes.
+                        <div class="example-box">
+                            <strong>Example:</strong> Enlarging a circle by a scale factor of 2.
+                        </div>
+                    </li>
+                </ul>
+                <p>
+                    Translations, rotations, and reflections are called <strong>rigid transformations</strong> or <strong>isometries</strong> because they preserve the size and shape of the figure. Dilation is a non-rigid transformation.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>10. The Pythagorean Theorem: A Cornerstone of Right Triangles</h3>
+                <p>
+                    The Pythagorean Theorem is one of the most famous and fundamental theorems in geometry. It applies specifically to <strong>right-angled triangles</strong> (triangles with one $90^\circ$ angle).
+                </p>
+                <p>
+                    In a right triangle, the side opposite the right angle is called the <strong>hypotenuse</strong> (always the longest side), and the other two sides are called <strong>legs</strong>.
+                </p>
+                <p>
+                    The theorem states that the square of the length of the hypotenuse ($c$) is equal to the sum of the squares of the lengths of the two legs ($a$ and $b$).
+                </p>
+                <div class="example-box">
+                    <strong>Formula:</strong> $a^2 + b^2 = c^2$
+                </div>
+                <div class="example-box">
+                    <strong>Example:</strong> A right triangle has legs measuring 3 units and 4 units. Find the length of the hypotenuse.<br>
+                    Using the formula $a^2 + b^2 = c^2$:<br>
+                    $3^2 + 4^2 = c^2$<br>
+                    $9 + 16 = c^2$<br>
+                    $25 = c^2$<br>
+                    $c = \sqrt{25}$<br>
+                    $c = 5$ units
+                </div>
+                <div class="example-box">
+                    <strong>Example:</strong> A right triangle has a hypotenuse of 13 units and one leg of 5 units. Find the length of the other leg.<br>
+                    Using the formula $a^2 + b^2 = c^2$:<br>
+                    $5^2 + b^2 = 13^2$<br>
+                    $25 + b^2 = 169$<br>
+                    Subtract 25 from both sides:<br>
+                    $b^2 = 169 - 25$<br>
+                    $b^2 = 144$<br>
+                    $b = \sqrt{144}$<br>
+                    $b = 12$ units
+                </div>
+                <p>
+                    The Pythagorean Theorem is widely used in construction, navigation, physics, and many other areas where distances and right angles are involved.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>Practice Problems: Test Your Geometric Understanding</h3>
+                <p>Apply the concepts you've learned in this lesson to solve the following practice problems.</p>
+                <ol class="list-decimal list-inside space-y-3">
+                    <li><strong>Angles:</strong> An angle measures $110^\circ$. Is it acute, right, or obtuse? What is its supplementary angle?</li>
+                    <li><strong>Lines:</strong> If line AB is parallel to line CD, and line EF intersects both, what is the relationship between the corresponding angles?</li>
+                    <li><strong>Triangles:</strong> A triangle has angles measuring $50^\circ$ and $70^\circ$. What is the measure of the third angle? What type of triangle is it (based on angles)?</li>
+                    <li><strong>Quadrilaterals:</strong> A quadrilateral has sides of length 5 cm, 8 cm, 5 cm, and 8 cm. What is its perimeter? If it has four right angles, what specific type of quadrilateral is it?</li>
+                    <li><strong>Circles:</strong> A circle has a radius of 7 cm. Calculate its circumference and area. (Use $\pi \approx 3.14$)</li>
+                    <li><strong>Area:</strong> A rectangular garden is 12 meters long and 7 meters wide. What is its area?</li>
+                    <li><strong>Volume:</strong> A cube has a side length of 4 inches. Calculate its volume and surface area.</li>
+                    <li><strong>Pythagorean Theorem:</strong> A ladder 10 feet long is leaning against a wall. If the base of the ladder is 6 feet from the wall, how high up the wall does the ladder reach?</li>
+                    <li><strong>Transformations:</strong> Describe the transformation that moves a shape from coordinates $(2,3)$ to $(5,1)$ without changing its orientation or size.</li>
+                    <li><strong>Definitions:</strong> What is the difference between a line segment and a ray?</li>
+                </ol>
+                <p class="mt-4 text-gray-700 dark:text-gray-300"><em>(Solutions are not provided here, encouraging self-assessment, peer discussion, or seeking further assistance.)</em></p>
+            </section>
+
+        </div>
+
+    </main>
+
+    <footer class="bg-gray-800 dark:bg-gray-900 text-white p-8 mt-12 relative z-10">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
+            <div>
+                <h3 class="text-xl font-bold mb-4">WhizMath</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    Your ultimate destination for mastering mathematics. We provide free tools, comprehensive lessons, and engaging quizzes to help you succeed.
+                </p>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="index.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Home</a></li>
+                    <li><a href="tools.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Tools</a></li>
+                    <li><a href="lessons.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Learn</a></li>
+                    <li><a href="quizzes.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Quizzes</a></li>
+                    <li><a href="games.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Games</a></li>
+                    <li><a href="contact.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Popular Tools</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Scientific Calculator</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Graphing Calculator</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Unit Converter</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Equation Solver</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Popular Lessons</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Algebra Essentials</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Geometry Basics</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Calculus Introduction</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Statistics Fundamentals</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="flex justify-center md:justify-start space-x-4 mt-6">
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="Facebook">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.776-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
+                </svg>
+            </a>
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="X (Twitter)">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.21-6.89L4.93 21.75H1.625l7.73-8.835L1.25 2.25h3.308l5.97 7.68L18.244 2.25zm.426 17.565L16.63 4.393 4.126 2.25H2.808l13.785 18.125h1.275z" />
+                </svg>
+            </a>
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="Instagram">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.792.006 3.24.016a8.97 8.97 0 011.8.093c.895.119 1.57.34 2.1.598.98.483 1.62.94 2.22 1.638.6.698 1.04 1.347 1.43 2.278.39.93.593 1.776.66 2.825.02.324.037.79.037 1.393 0 2.43-.006 2.792-.016 3.24a8.97 8.97 0 01-.093 1.8c-.119.895-.34 1.57-.598 2.1-.483.98-.94 1.62-1.638 2.22-.698.6-1.347 1.04-2.278 1.43-.93.39-1.776.593-2.825.66-.324.02-.79.037-1.393.037-2.43 0-2.792-.006-3.24-.016a8.97 8.97 0 01-1.8-.093c-.895-.119-1.57-.34-2.1-.598-.98-.483-1.62-.94-2.22-1.638-.6-.698-1.347-1.04-2.278-1.43-.93-.39-1.776-.593-2.825-.66-.324-.02-.037-.79-.037-1.393 0-2.43.006-2.792.016-3.24.093-1.8.314.598-4.035.483-.98.94-1.62 1.638-2.22.698-.6 1.347-1.04 2.278-1.43.93-.39 1.776-.593 2.825-.66.324-.02.79-.037 1.393-.037zm0 2.164c-2.093 0-3.193.013-3.793.023a6.83 6.83 0 00-1.46.074c-.66.088-1.09.283-1.48.473-.59.28-1.04.57-1.44.97-.4.4-.69.85-.97 1.44-.19.39-.385.82-.473 1.48-.06.4-.073.74-.083 1.34-.01.6-.013 1.093-.013 3.793s.003 3.193.013 3.793c.01.4.023.74.083 1.34.088.66.283 1.09.473 1.48.28.59.57 1.04.97 1.44.4.4.85.69 1.44.97.39.19.82.385 1.48.473.4.06.74.073 1.34.083.6.01 1.093.013 3.793.013s3.193-.003 3.793-.013c.4-.01.74-.023 1.34-.083.66-.088 1.09-.283 1.48-.473.59-.28 1.04-.57 1.44-.97.4-.4.69-.85.97-1.44.19-.39.385-.82.473-1.48.06-.4.073-.74.083-1.34.01-.6.013-1.093.013-3.793s-.003-3.193-.013-3.793c-.01-.4-.023-.74-.083-1.34-.088-.66-.283-1.09-.473-1.48-.28-.59-.57-1.04-.97-1.44-.4-.4-.85-.69-1.44-.97-.39-.19-.82-.385-1.48-.473-.4-.06-.74-.073-1.34-.083-.6-.01-1.093-.013-3.793-.013zm0 3.52c-2.467 0-4.475 2.008-4.475 4.475s2.008 4.475 4.475 4.475 4.475-2.008 4.475-4.475-2.008-4.475-4.475-4.475zM12.315 18a5.685 5.685 0 110-11.37 5.685 5.685 0 010 11.37zm7.25-10.975a1.18 1.18 0 100 2.36 1.18 1.18 0 000-2.36z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="YouTube">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M19.812 5.405c.781-.144 1.406-.395 1.834-.693.376-.258.629-.533.868-.904.2-.315.353-.69.451-1.042C23.63 2.656 24 2.14 24 1.516a.754.754 0 00-.001-.194c-.035-.3-.153-.591-.355-.845-.224-.287-.516-.566-.867-.862-.375-.316-.763-.618-1.284-.903-.795-.445-1.745-.853-2.925-1.127C17.062 0 12 0 12 0s-5.062 0-7.063.093c-1.18.274-2.13.682-2.925 1.127-.521.285-.91.566-1.285.862-.202.254-.32.545-.355.845A.754.754 0 000 1.516c0 .624.37 1.14.734 1.55.098.352.251.727.452 1.042.239.37.492.645.868.904.428.298 1.053.549 1.834.693C4.938 6 12 6 12 6s7.063 0 7.812-.595zM12 8.75c-3.12 0-5.625 2.505-5.625 5.625S8.88 20 12 20s5.625-2.505 5.625-5.625S15.12 8.75 12 8.75z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        <div class="border-t border-gray-700 dark:border-gray-800 pt-6 mt-8 text-center text-sm text-gray-400">
+            <p>&copy; 2025 WhizMath. All rights reserved.</p>
+            <p class="mt-2">Designed with <span class="text-red-500">&hearts;</span> by Your AI Assistant</p>
+        </div>
+    </footer>
+
+    <button id="scroll-to-top-btn">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v14"></path>
+        </svg>
+    </button>
+
+    <script>
+        // --- Theme Toggle Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        // Check for saved theme on load
+        const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+        setTheme(savedTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // --- Mobile Sidebar Menu Logic ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            mobileMenuOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling body when menu is open
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('open');
+            document.body.style.overflow = ''; // Restore body scrolling
+        }
+
+        mobileMenuButton.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('open')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu); // Close when clicking overlay
+
+        // Close mobile menu if a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                // Only close if it's a small screen
+                if (window.innerWidth < 768) {
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Handle resize: ensure menu is correct on desktop/mobile switch
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint
+                closeMobileMenu(); // Ensure sidebar is closed on desktop
+            }
+        });
+
+        // --- Three.js Global Background Animation Logic ---
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('global-background-canvas');
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles
+            const particleCount = 12500;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            const color1 = new THREE.Color(0xADD8E6); // Light blue
+            const color2 = new THREE.Color(0x87CEEB); // Sky blue
+            const color3 = new THREE.Color(0x6495ED); // Cornflower blue
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
+                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
+                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
+
+                const rand = Math.random();
+                let color;
+                if (rand < 0.33) {
+                    color = color1;
+                } else if (rand < 0.66) {
+                    color = color2;
+                } else {
+                    color = color3;
+                }
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+            });
+
+            particles = new THREE.Points(geometry, particleMaterial);
+            scene.add(particles);
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+        };
+
+        // --- Scroll to Top Button Logic ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling 300px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll animation
+            });
+        });
+    </script>
+</body>
+</html>

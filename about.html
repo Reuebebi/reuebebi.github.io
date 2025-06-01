@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Whizmath</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS for Three.js canvas and general styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Styles for light mode */
+        html.light body {
+            background-color: #f3f4f6; /* light gray */
+            color: #1f2937; /* dark gray text */
+        }
+        html.light .bg-card {
+            background-color: #ffffff; /* white card background */
+            color: #1f2937;
+        }
+        html.light .text-primary {
+            color: #1f2937;
+        }
+        html.light .text-secondary {
+            color: #4b5563;
+        }
+        html.light .border-primary {
+            border-color: #e5e7eb;
+        }
+        html.light .svg-icon {
+            fill: #4b5563; /* Icon color for light mode */
+        }
+        html.light #scroll-to-top-btn {
+            background-color: #4f46e5; /* Indigo */
+            color: #ffffff;
+        }
+
+        /* Styles for dark mode */
+        html.dark body {
+            background-color: #111827; /* dark blue-gray */
+            color: #e5e7eb; /* light gray text */
+        }
+        html.dark .bg-card {
+            background-color: #1f2937; /* darker gray card background */
+            color: #e5e7eb;
+        }
+        html.dark .text-primary {
+            color: #e5e7eb;
+        }
+        html.dark .text-secondary {
+            color: #9ca3af;
+        }
+        html.dark .border-primary {
+            border-color: #374151;
+        }
+        html.dark .svg-icon {
+            fill: #e5e7eb; /* Icon color for dark mode */
+        }
+        html.dark #scroll-to-top-btn {
+            background-color: #6366f1; /* Lighter indigo */
+            color: #ffffff;
+        }
+
+        /* Three.js Canvas Styling */
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send it to the background */
+            opacity: 0.2; /* Subtle background */
+            transition: opacity 0.5s ease;
+        }
+
+        /* Light/Dark Toggle Button Styling */
+        #theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 50; /* Above content */
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0.75rem;
+            border-radius: 9999px; /* Full rounded */
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #theme-toggle:hover {
+            background-color: rgba(0, 0, 0, 0.1); /* Subtle hover effect */
+            transform: scale(1.05);
+        }
+        html.dark #theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* SVG icon animation */
+        .svg-icon {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease, fill 0.3s ease;
+        }
+        html.dark .svg-icon {
+            transform: rotate(180deg); /* Rotate for moon icon */
+        }
+
+        /* Scroll to Top Button Styling */
+        #scroll-to-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 40; /* Above content, below toggle */
+            padding: 0.75rem 1rem;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.3s ease, transform 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+            opacity: 0; /* Hidden by default */
+            visibility: hidden;
+        }
+
+        #scroll-to-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        #scroll-to-top-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        /* Custom scrollbar for better aesthetics (optional) */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        html.dark ::-webkit-scrollbar-track {
+            background: #374151;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #6b7280;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        html.dark ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <canvas id="three-canvas"></canvas>
+
+    <button id="theme-toggle" aria-label="Toggle light and dark mode">
+        <svg class="svg-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path id="sun-path" d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.182a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.06l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5h2.25a.75.75 0 01.75.75zM17.243 18.894a.75.75 0 101.06-1.06l-1.59-1.591a.75.75 0 00-1.06 1.06l1.59 1.591zM12 18.75a.75.75 0 01-.75.75v2.25a.75.75 0 011.5 0v-2.25a.75.75 0 01-.75-.75zM5.56 17.243a.75.75 0 00-1.06-1.06l-1.59 1.591a.75.75 0 001.06 1.06l1.591-1.59zM3 12a.75.75 0 01-.75-.75h-2.25a.75.75 0 010-1.5h2.25a.75.75 0 01.75.75zM6.182 5.56a.75.75 0 00-1.06-1.06L3.53 6.09a.75.75 0 101.06 1.06l1.59-1.59z"/>
+            <path id="moon-path" class="hidden" d="M9.599 4.884c.96-.501 2.052-.767 3.17-.767 3.658 0 6.626 2.966 6.626 6.624 0 2.02-.96 3.851-2.414 5.072-1.586 1.309-3.69 2.01-5.912 2.01-3.658 0-6.626-2.966-6.626-6.624 0-1.04.24-2.022.684-2.904zm2.617 1.194a.75.75 0 00-.813-.424A6.75 6.75 0 0110.5 12.75 6.75 6.75 0 012.75 12c0-.986.279-1.903.766-2.671a.75.75 0 00-.339-.904A9.75 9.75 0 0012 21.75c5.385 0 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25a9.75 9.75 0 00-3.326.696z"/>
+        </svg>
+    </button>
+
+    <div class="relative z-10 flex-grow px-4 py-8 md:px-8 lg:px-12 flex items-center justify-center">
+        <main class="w-full max-w-4xl mx-auto bg-card rounded-xl shadow-2xl p-6 md:p-10 lg:p-12 border border-primary transition-colors duration-300">
+            <header class="text-center mb-10">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-primary mb-4 tracking-tight">Whizmath</h1>
+                <p class="text-xl md:text-2xl text-secondary">Making Math Accessible, Engaging, and Enjoyable</p>
+            </header>
+
+            <section class="mb-8">
+                <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4 border-b-2 border-primary pb-2">About Us</h2>
+                <p class="text-lg md:text-xl text-secondary leading-relaxed mb-4">
+                    Welcome to Whizmath, your go-to destination for transforming the way you experience mathematics. We believe that math is not just a subject, but a powerful tool for understanding the world, and it should be accessible and exciting for everyone.
+                </p>
+                <p class="text-lg md:text-xl text-secondary leading-relaxed">
+                    Our platform is designed to demystify complex concepts, foster critical thinking, and ignite a passion for numbers in learners of all ages and backgrounds.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4 border-b-2 border-primary pb-2">Our Mission</h2>
+                <p class="text-lg md:text-xl text-secondary leading-relaxed">
+                    At Whizmath, our mission is simple yet profound: to empower learners to build confidence and excel in their mathematical journey. We strive to provide clear, concise, and engaging resources that make even the most challenging topics understandable and enjoyable.
+                </p>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4 border-b-2 border-primary pb-2">What We Offer</h2>
+                <ul class="list-disc list-inside text-lg md:text-xl text-secondary space-y-2">
+                    <li><strong>Simplified Explanations:</strong> Breaking down intricate theories into easy-to-digest segments.</li>
+                    <li><strong>Interactive Tutorials:</strong> Hands-on exercises and simulations to solidify understanding.</li>
+                    <li><strong>Practical Examples:</strong> Real-world applications of mathematical principles.</li>
+                    <li><strong>Comprehensive Resources:</strong> Covering everything from foundational arithmetic to advanced calculus.</li>
+                    <li><strong>Community Support:</strong> A supportive environment for questions and collaborative learning.</li>
+                </ul>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4 border-b-2 border-primary pb-2">Our Approach</h2>
+                <p class="text-lg md:text-xl text-secondary leading-relaxed">
+                    We believe that learning math should be an exciting adventure, not a daunting task. Our pedagogical approach combines clarity with creativity, utilizing visual aids, step-by-step guidance, and problem-solving strategies that cater to diverse learning styles. We're constantly innovating to ensure Whizmath remains at the forefront of online math education.
+                </p>
+            </section>
+
+            <section class="text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">Join the Whizmath Community!</h2>
+                <p class="text-lg md:text-xl text-secondary leading-relaxed mb-6">
+                    Whether you're a student striving for better grades, a professional looking to sharpen your analytical skills, or simply curious about the inherent beauty of mathematics, Whizmath is here to guide you. Explore, learn, and discover the 'whiz' in you!
+                </p>
+                <a href="#" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-transform transform hover:scale-105 duration-200">
+                    Start Your Math Journey
+                </a>
+            </section>
+        </main>
+    </div>
+
+    <footer class="relative z-10 text-center py-6 text-secondary text-sm md:text-base border-t border-primary mt-auto">
+        <p>&copy; 2025 Whizmath. All rights reserved.</p>
+    </footer>
+
+    <button id="scroll-to-top-btn" aria-label="Scroll to top">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        // --- Three.js Animated Background ---
+        let scene, camera, renderer, particles;
+        const canvas = document.getElementById('three-canvas');
+
+        function initThreeJS() {
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setClearColor(0x000000, 0); // Transparent background for canvas
+
+            // Particles
+            const particleCount = 1000;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            const color1 = new THREE.Color();
+            const color2 = new THREE.Color();
+
+            // Define colors for particles, blending between two shades for subtle variation
+            const lightModeColor = new THREE.Color(0x4b5563); // Darker gray for light mode
+            const darkModeColor = new THREE.Color(0x9ca3af); // Lighter gray for dark mode
+
+            for (let i = 0; i < particleCount; i++) {
+                // Position particles randomly in a cube
+                positions[i * 3] = (Math.random() - 0.5) * 100; // x
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 100; // y
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 100; // z
+
+                // Assign color based on current theme
+                const themeColor = document.documentElement.classList.contains('dark') ? darkModeColor : lightModeColor;
+                color1.set(themeColor);
+                color2.set(themeColor).multiplyScalar(0.8); // Slightly darker shade
+
+                const mixedColor = color1.lerp(color2, Math.random()); // Blend colors
+                colors[i * 3] = mixedColor.r;
+                colors[i * 3 + 1] = mixedColor.g;
+                colors[i * 3 + 2] = mixedColor.b;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.1,
+                vertexColors: true, // Use colors from geometry
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending, // For glowing effect
+                sizeAttenuation: true
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            // Rotate particles slowly
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        function onWindowResizeThreeJS() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // Initialize and animate Three.js when the window loads
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+        };
+
+        window.addEventListener('resize', onWindowResizeThreeJS);
+
+        // --- Light/Dark Mode Toggle ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const sunPath = document.getElementById('sun-path');
+        const moonPath = document.getElementById('moon-path');
+        const threeCanvas = document.getElementById('three-canvas');
+
+        // Function to update particle colors based on theme
+        function updateParticleColors(isDarkMode) {
+            if (!particles || !particles.geometry) return;
+
+            const colors = particles.geometry.attributes.color.array;
+            const lightModeColor = new THREE.Color(0x4b5563); // Darker gray for light mode
+            const darkModeColor = new THREE.Color(0x9ca3af); // Lighter gray for dark mode
+
+            const targetColor = isDarkMode ? darkModeColor : lightModeColor;
+
+            // Simple transition for particle color (can be more complex with shaders)
+            for (let i = 0; i < particles.geometry.attributes.position.count; i++) {
+                const currentColor = new THREE.Color(colors[i * 3], colors[i * 3 + 1], colors[i * 3 + 2]);
+                currentColor.lerp(targetColor, 0.1); // Smoothly interpolate
+                colors[i * 3] = currentColor.r;
+                colors[i * 3 + 1] = currentColor.g;
+                colors[i * 3 + 2] = currentColor.b;
+            }
+            particles.geometry.attributes.color.needsUpdate = true;
+        }
+
+
+        // Set initial theme based on localStorage or system preference
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme) {
+            htmlElement.classList.remove('light', 'dark');
+            htmlElement.classList.add(storedTheme);
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            htmlElement.classList.add('dark');
+        } else {
+            htmlElement.classList.add('light');
+        }
+
+        // Update SVG icon and Three.js particles on initial load
+        function updateThemeUI() {
+            const isDarkMode = htmlElement.classList.contains('dark');
+            if (isDarkMode) {
+                sunPath.classList.add('hidden');
+                moonPath.classList.remove('hidden');
+                threeCanvas.style.opacity = 0.1; // Slightly less opaque in dark mode
+            } else {
+                sunPath.classList.remove('hidden');
+                moonPath.classList.add('hidden');
+                threeCanvas.style.opacity = 0.2; // More opaque in light mode
+            }
+            updateParticleColors(isDarkMode); // Update particle colors
+        }
+
+        updateThemeUI(); // Call once on load
+
+        themeToggleBtn.addEventListener('click', () => {
+            const isDarkMode = htmlElement.classList.contains('dark');
+            if (isDarkMode) {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlElement.classList.remove('light');
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+            updateThemeUI(); // Update UI after theme change
+        });
+
+        // --- Scroll to Top Button ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling 300px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll animation
+            });
+        });
+    </script>
+</body>
+</html>

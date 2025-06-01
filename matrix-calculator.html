@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizmath - Matrix Calculator</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        /* Custom styles for the matrix calculator and animations */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden; /* Prevent horizontal scroll due to Three.js */
+            position: relative;
+            min-height: 100vh; /* Ensure body takes full height for scroll-to-top */
+        }
+
+        /* Three.js canvas styling */
+        #matrix-background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Send to background */
+            opacity: 0.8; /* Subtle background */
+        }
+
+        /* Scrollbar styling for a smoother look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Dark mode scrollbar */
+        .dark ::-webkit-scrollbar-track {
+            background: #333;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #555;
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+
+        /* Button hover and active states */
+        .action-button {
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .action-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Light/Dark mode toggle animation */
+        #theme-toggle svg {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #theme-toggle.toggled svg {
+            transform: rotate(360deg);
+        }
+
+        /* Scroll to top button */
+        #scroll-to-top-btn {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none; /* Disable interaction when hidden */
+        }
+
+        #scroll-to-top-btn.show {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto; /* Enable interaction when shown */
+        }
+
+        /* Matrix input grid styling */
+        .matrix-grid {
+            display: grid;
+            gap: 0.5rem;
+        }
+        .matrix-input {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid #d1d5db;
+            background-color: #f9fafb;
+            text-align: center;
+            font-size: 1rem;
+            color: #1f2937;
+        }
+        .dark .matrix-input {
+            border-color: #4b5563;
+            background-color: #374151;
+            color: #f9fafb;
+        }
+        .matrix-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
+        }
+
+        /* Matrix result display styling */
+        .matrix-result-display {
+            display: grid;
+            gap: 0.5rem;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background-color: #e0e7ff; /* Light blue background for result */
+            color: #1e3a8a; /* Dark blue text */
+            font-weight: bold;
+            text-align: center;
+            min-height: 80px;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        .dark .matrix-result-display {
+            background-color: #1f2937; /* Dark background for result */
+            color: #c7d2fe; /* Light blue text */
+        }
+        .matrix-result-element {
+            padding: 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <canvas id="matrix-background-canvas"></canvas>
+
+    <button id="theme-toggle" class="fixed top-4 right-4 p-3 rounded-full bg-gray-200 dark:bg-gray-700 shadow-lg hover:scale-105 transition-transform z-50">
+        <svg id="moon-icon" class="w-6 h-6 text-gray-800 dark:text-gray-200 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+        </svg>
+        <svg id="sun-icon" class="w-6 h-6 text-gray-800 dark:text-gray-200 transition-colors duration-300 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M3 12h1m15.325-7.757l-.707-.707M6.343 17.657l-.707.707M18.364 18.364l-.707.707M6.343 6.343l-.707-.707M12 18a6 6 0 100-12 6 6 0 000 12z"></path>
+        </svg>
+    </button>
+
+    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 relative z-10">
+        <h1 class="text-5xl font-extrabold mb-8 text-indigo-700 dark:text-indigo-300 drop-shadow-lg animate-fade-in">Whizmath</h1>
+
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl w-full max-w-4xl transition-all duration-300 transform scale-95 md:scale-100 hover:scale-[1.01]">
+            <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6 text-center">Matrix Calculator</h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl shadow-inner">
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Matrix A</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div>
+                            <label for="matrixARows" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rows:</label>
+                            <input type="number" id="matrixARows" value="2" min="1" max="4" class="w-20 p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label for="matrixACols" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Columns:</label>
+                            <input type="number" id="matrixACols" value="2" min="1" max="4" class="w-20 p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    <div id="matrixAInputs" class="matrix-grid">
+                        </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl shadow-inner">
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Matrix B</h3>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div>
+                            <label for="matrixBRows" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rows:</label>
+                            <input type="number" id="matrixBRows" value="2" min="1" max="4" class="w-20 p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label for="matrixBCols" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Columns:</label>
+                            <input type="number" id="matrixBCols" value="2" min="1" max="4" class="w-20 p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    <div id="matrixBInputs" class="matrix-grid">
+                        </div>
+                </div>
+            </div>
+
+            <div class="mb-8 bg-gray-50 dark:bg-gray-700 p-6 rounded-xl shadow-inner">
+                <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Operations</h3>
+                <div class="flex flex-wrap gap-3 mb-4">
+                    <button id="addMatricesBtn" class="action-button bg-indigo-600 text-white p-3 rounded-xl text-base font-semibold hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">A + B</button>
+                    <button id="subtractMatricesBtn" class="action-button bg-indigo-600 text-white p-3 rounded-xl text-base font-semibold hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">A - B</button>
+                    <button id="multiplyMatricesBtn" class="action-button bg-indigo-600 text-white p-3 rounded-xl text-base font-semibold hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">A x B</button>
+                    <button id="transposeABtn" class="action-button bg-purple-600 text-white p-3 rounded-xl text-base font-semibold hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600">Transpose A</button>
+                    <button id="transposeBBtn" class="action-button bg-purple-600 text-white p-3 rounded-xl text-base font-semibold hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600">Transpose B</button>
+                    <button id="determinantABtn" class="action-button bg-green-600 text-white p-3 rounded-xl text-base font-semibold hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">Determinant A</button>
+                    <button id="determinantBBtn" class="action-button bg-green-600 text-white p-3 rounded-xl text-base font-semibold hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">Determinant B</button>
+                    <button id="inverseABtn" class="action-button bg-red-600 text-white p-3 rounded-xl text-base font-semibold hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Inverse A (2x2 only)</button>
+                    <button id="inverseBBtn" class="action-button bg-red-600 text-white p-3 rounded-xl text-base font-semibold hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Inverse B (2x2 only)</button>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <label for="scalarInput" class="block text-lg font-medium text-gray-700 dark:text-gray-300">Scalar (k):</label>
+                    <input type="number" id="scalarInput" value="2" class="w-24 p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    <button id="scalarMultiplyABtn" class="action-button bg-yellow-600 text-white p-3 rounded-xl text-base font-semibold hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600">k * A</button>
+                    <button id="scalarMultiplyBBtn" class="action-button bg-yellow-600 text-white p-3 rounded-xl text-base font-semibold hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600">k * B</button>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl shadow-inner">
+                <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Result</h3>
+                <div id="resultDisplay" class="matrix-result-display">
+                    <p>Result will appear here.</p>
+                </div>
+                <div id="matrixCalculatorError" class="text-red-500 dark:text-red-400 mt-4 text-center font-medium hidden"></div>
+            </div>
+        </div>
+
+        <div class="h-48"></div>
+    </div>
+
+    <button id="scroll-to-top-btn" class="fixed bottom-8 right-8 p-3 rounded-full bg-indigo-600 text-white shadow-lg hover:scale-105 transition-transform z-40">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <script>
+        // --- Light/Dark Mode Toggle ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        // Check for saved theme on load
+        const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+        setTheme(savedTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+
+            // Add and remove animation class for the button
+            themeToggle.classList.add('toggled');
+            setTimeout(() => {
+                themeToggle.classList.remove('toggled');
+            }, 300); // Match transition duration
+        });
+
+
+        // --- Three.js Global Background Animation Logic ---
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('matrix-background-canvas');
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles
+            const particleCount = 10000; // Consistent particle count
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            // New color palette for the matrix calculator background (teal and blue-gray)
+            const color1 = new THREE.Color(0x14b8a6); // Teal 500
+            const color2 = new THREE.Color(0x64748b); // Blue Gray 500
+            const color3 = new THREE.Color(0x34d399); // Emerald 400
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
+                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
+                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
+
+                const rand = Math.random();
+                let color;
+                if (rand < 0.33) {
+                    color = color1;
+                } else if (rand < 0.66) {
+                    color = color2;
+                } else {
+                    color = color3;
+                }
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+            });
+
+            particles = new THREE.Points(geometry, particleMaterial);
+            scene.add(particles);
+
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // --- Matrix Calculator Logic ---
+        const matrixARowsInput = document.getElementById('matrixARows');
+        const matrixAColsInput = document.getElementById('matrixACols');
+        const matrixAInputsDiv = document.getElementById('matrixAInputs');
+
+        const matrixBRowsInput = document.getElementById('matrixBRows');
+        const matrixBColsInput = document.getElementById('matrixBCols');
+        const matrixBInputsDiv = document.getElementById('matrixBInputs');
+
+        const resultDisplay = document.getElementById('resultDisplay');
+        const matrixCalculatorError = document.getElementById('matrixCalculatorError');
+
+        // Operation Buttons
+        const addMatricesBtn = document.getElementById('addMatricesBtn');
+        const subtractMatricesBtn = document.getElementById('subtractMatricesBtn');
+        const multiplyMatricesBtn = document.getElementById('multiplyMatricesBtn');
+        const transposeABtn = document.getElementById('transposeABtn');
+        const transposeBBtn = document.getElementById('transposeBBtn');
+        const determinantABtn = document.getElementById('determinantABtn');
+        const determinantBBtn = document.getElementById('determinantBBtn');
+        const inverseABtn = document.getElementById('inverseABtn');
+        const inverseBBtn = document.getElementById('inverseBBtn');
+        const scalarInput = document.getElementById('scalarInput');
+        const scalarMultiplyABtn = document.getElementById('scalarMultiplyABtn');
+        const scalarMultiplyBBtn = document.getElementById('scalarMultiplyBBtn');
+
+        // Function to generate matrix input fields
+        function generateMatrixInputs(rowsInput, colsInput, inputsDiv, matrixName) {
+            const rows = parseInt(rowsInput.value);
+            const cols = parseInt(colsInput.value);
+
+            inputsDiv.innerHTML = ''; // Clear existing inputs
+            inputsDiv.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.classList.add('matrix-input');
+                    input.dataset.row = i;
+                    input.dataset.col = j;
+                    input.id = `${matrixName}-${i}-${j}`;
+                    input.value = Math.floor(Math.random() * 10); // Default random value
+                    inputsDiv.appendChild(input);
+                }
+            }
+        }
+
+        // Function to read matrix values from input fields
+        function getMatrixFromInputs(rowsInput, colsInput, inputsDiv) {
+            const rows = parseInt(rowsInput.value);
+            const cols = parseInt(colsInput.value);
+            const matrix = [];
+
+            for (let i = 0; i < rows; i++) {
+                matrix[i] = [];
+                for (let j = 0; j < cols; j++) {
+                    const input = inputsDiv.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+                    const value = parseFloat(input.value);
+                    if (isNaN(value)) {
+                        throw new Error('Matrix elements must be valid numbers.');
+                    }
+                    matrix[i][j] = value;
+                }
+            }
+            return matrix;
+        }
+
+        // Function to display a matrix result
+        function displayMatrixResult(matrix) {
+            matrixCalculatorError.classList.add('hidden');
+            resultDisplay.innerHTML = '';
+            resultDisplay.style.gridTemplateColumns = `repeat(${matrix[0].length}, minmax(0, 1fr))`;
+
+            matrix.forEach(row => {
+                row.forEach(element => {
+                    const span = document.createElement('span');
+                    span.classList.add('matrix-result-element');
+                    span.textContent = element.toFixed(4); // Format to 4 decimal places
+                    resultDisplay.appendChild(span);
+                });
+            });
+        }
+
+        // Function to display a scalar result
+        function displayScalarResult(scalar, label = "Result") {
+            matrixCalculatorError.classList.add('hidden');
+            resultDisplay.innerHTML = `<p>${label}: <span class="text-indigo-600 dark:text-indigo-400 font-bold text-2xl">${scalar.toFixed(4)}</span></p>`;
+            resultDisplay.style.gridTemplateColumns = '1fr'; // Reset grid for scalar
+        }
+
+        // --- Matrix Operations ---
+
+        // Addition
+        function addMatrices() {
+            try {
+                const matrixA = getMatrixFromInputs(matrixARowsInput, matrixAColsInput, matrixAInputsDiv);
+                const matrixB = getMatrixFromInputs(matrixBRowsInput, matrixBColsInput, matrixBInputsDiv);
+
+                if (matrixA.length !== matrixB.length || matrixA[0].length !== matrixB[0].length) {
+                    throw new Error('Matrices must have the same dimensions for addition.');
+                }
+
+                const result = matrixA.map((row, i) =>
+                    row.map((val, j) => val + matrixB[i][j])
+                );
+                displayMatrixResult(result);
+            } catch (error) {
+                matrixCalculatorError.textContent = `Addition Error: ${error.message}`;
+                matrixCalculatorError.classList.remove('hidden');
+            }
+        }
+
+        // Subtraction
+        function subtractMatrices() {
+            try {
+                const matrixA = getMatrixFromInputs(matrixARowsInput, matrixAColsInput, matrixAInputsDiv);
+                const matrixB = getMatrixFromInputs(matrixBRowsInput, matrixBColsInput, matrixBInputsDiv);
+
+                if (matrixA.length !== matrixB.length || matrixA[0].length !== matrixB[0].length) {
+                    throw new Error('Matrices must have the same dimensions for subtraction.');
+                }
+
+                const result = matrixA.map((row, i) =>
+                    row.map((val, j) => val - matrixB[i][j])
+                );
+                displayMatrixResult(result);
+            } catch (error) {
+                matrixCalculatorError.textContent = `Subtraction Error: ${error.message}`;
+                matrixCalculatorError.classList.remove('hidden');
+            }
+        }
+
+        // Multiplication
+        function multiplyMatrices() {
+            try {
+                const matrixA = getMatrixFromInputs(matrixARowsInput, matrixAColsInput, matrixAInputsDiv);
+                const matrixB = getMatrixFromInputs(matrixBRowsInput, matrixBColsInput, matrixBInputsDiv);
+
+                const aRows = matrixA.length;
+                const aCols = matrixA[0].length;
+                const bRows = matrixB.length;
+                const bCols = matrixB[0].length;
+
+                if (aCols !== bRows) {
+                    throw new Error('Number of columns in Matrix A must equal number of rows in Matrix B for multiplication.');
+                }
+
+                const result = Array(aRows).fill(0).map(() => Array(bCols).fill(0));
+
+                for (let i = 0; i < aRows; i++) {
+                    for (let j = 0; j < bCols; j++) {
+                        for (let k = 0; k < aCols; k++) {
+                            result[i][j] += matrixA[i][k] * matrixB[k][j];
+                        }
+                    }
+                }
+                displayMatrixResult(result);
+            } catch (error) {
+                matrixCalculatorError.textContent = `Multiplication Error: ${error.message}`;
+                matrixCalculatorError.classList.remove('hidden');
+            }
+        }
+
+        // Scalar Multiplication
+        function scalarMultiply(matrix, scalar) {
+            return matrix.map(row => row.map(element => element * scalar));
+        }
+
+        // Transpose
+        function transposeMatrix(matrix) {
+            const rows = matrix.length;
+            const cols = matrix[0].length;
+            const result = Array(cols).fill(0).map(() => Array(rows).fill(0));
+
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    result[j][i] = matrix[i][j];
+                }
+            }
+            return result;
+        }
+
+        // Determinant
+        function calculateDeterminant(matrix) {
+            const rows = matrix.length;
+            const cols = matrix[0].length;
+
+            if (rows !== cols) {
+                throw new Error('Determinant can only be calculated for square matrices.');
+            }
+
+            if (rows === 1) {
+                return matrix[0][0];
+            } else if (rows === 2) {
+                return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+            } else if (rows === 3) {
+                // Sarrus' Rule for 3x3
+                return (
+                    matrix[0][0] * (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1]) -
+                    matrix[0][1] * (matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0]) +
+                    matrix[0][2] * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0])
+                );
+            } else if (rows === 4) {
+                // Using cofactor expansion for 4x4 (can be computationally intensive for larger matrices)
+                let det = 0;
+                for (let j = 0; j < cols; j++) {
+                    const subMatrix = getSubMatrix(matrix, 0, j);
+                    det += (j % 2 === 0 ? 1 : -1) * matrix[0][j] * calculateDeterminant(subMatrix);
+                }
+                return det;
+            } else {
+                throw new Error('Determinant calculation is supported for matrices up to 4x4.');
+            }
+        }
+
+        // Helper for determinant (gets sub-matrix by removing row and col)
+        function getSubMatrix(matrix, excludeRow, excludeCol) {
+            const subMatrix = [];
+            for (let i = 0; i < matrix.length; i++) {
+                if (i === excludeRow) continue;
+                const row = [];
+                for (let j = 0; j < matrix[i].length; j++) {
+                    if (j === excludeCol) continue;
+                    row.push(matrix[i][j]);
+                }
+                subMatrix.push(row);
+            }
+            return subMatrix;
+        }
+
+
+        // Inverse (2x2 only for simplicity)
+        function calculateInverse(matrix) {
+            const rows = matrix.length;
+            const cols = matrix[0].length;
+
+            if (rows !== 2 || cols !== 2) {
+                throw new Error('Inverse calculation is only supported for 2x2 matrices.');
+            }
+
+            const det = calculateDeterminant(matrix);
+            if (det === 0) {
+                throw new Error('Matrix is singular (determinant is zero) and cannot be inverted.');
+            }
+
+            const invDet = 1 / det;
+            return [
+                [matrix[1][1] * invDet, -matrix[0][1] * invDet],
+                [-matrix[1][0] * invDet, matrix[0][0] * invDet]
+            ];
+        }
+
+
+        // --- Event Listeners ---
+
+        // Matrix A dimension changes
+        matrixARowsInput.addEventListener('input', () => generateMatrixInputs(matrixARowsInput, matrixAColsInput, matrixAInputsDiv, 'matrixA'));
+        matrixAColsInput.addEventListener('input', () => generateMatrixInputs(matrixARowsInput, matrixAColsInput, matrixAInputsDiv, 'matrixA'));
+
+        // Matrix B dimension changes
+        matrixBRowsInput.addEventListener('input', () => generateMatrixInputs(matrixBRowsInput, matrixBColsInput, matrixBInputsDiv, 'matrixB'));
+        matrixBColsInput.addEventListener('input', () => generateMatrixInputs(matrixBRowsInput, matrixBColsInput, matrixBInputsDiv, 'matrixB'));
+
+        // Operation button listeners
+        addMatricesBtn.addEventListener('click', addMatrices);
+        subtractMatricesBtn.addEventListener('click', subtractMatrices);
+        multiplyMatricesBtn.addEventListener('click', multiplyMatrices);
+
+        transposeABtn.addEventListener('click', () => {
+            try {
+                const matrixA = getMatrixFromInputs(matrixARowsInput, matrixAColsInput, matrixAInputsDiv);
+                displayMatrixResult(transposeMatrix(matrixA));
+            } catch (error) {
+                matrixCalculatorError.textContent = `Transpose Error: ${error.message}`;
+                matrixCalculatorError.classList.remove('hidden');
+            }
+        });
+        transposeBBtn.addEventListener('click', () => {
+            try {
+                const matrixB = getMatrixFromInputs(matrixBRowsInput, matrixBColsInput, matrixBInputsDiv);
+                displayMatrixResult(transposeMatrix(matrixB));
+            } catch (error) {
+                matrixCalculatorError.textContent = `Transpose Error: ${error.message}`;
+                matrixCalculatorError.classList.remove('hidden');
+            }
+        });
+
+        determinantABtn.addEventListener('click', () => {
+            try {
+                const matrixA = getMatrixFromInputs(matrixARowsInput, matrixAColsInput, matrixAInputsDiv);
+                const det = calculateDeterminant(matrixA);
+                displayScalarResult(det, 'Determinant of A');
+            } catch (error) {
+                matrixCalculatorError.textContent = `Determinant Error: ${error.message}`;
+                matrixCalculatorError.classList.remove('hidden');
+            }
+        });
+        determinantBBtn.addEventListener('click', () => {
+            try {
+                const matrixB = getMatrixFromInputs(matrixBRowsInput, matrixBColsInput, matrixBInputsDiv);
+                const det = calculateDeterminant(matrixB);
+                displayScalarResult(det, 'Determinant of B');
+            }
+            catch (error) {
+                matrixCalculatorError.textContent = `Determinant Error: ${error.message}`;
+                matrixCalculatorError.classList.remove('hidden');
+            }
+        });
+
+        inverseABtn.addEventListener('click', () => {
+            try {
+                const matrixA = getMatrixFromInputs(matrixARowsInput, matrixAColsInput, matrixAInputsDiv);
+                displayMatrixResult(calculateInverse(matrixA));
+            } catch (error) {
+                matrixCalculatorError.textContent = `Inverse Error: ${error.message}`;
+                matrixCalculatorError.classList.remove('hidden');
+            }
+        });
+        inverseBBtn.addEventListener('click', () => {
+            try {
+                const matrixB = getMatrixFromInputs(matrixBRowsInput, matrixBColsInput, matrixBInputsDiv);
+                displayMatrixResult(calculateInverse(matrixB));
+            } catch (error) {
+                matrixCalculatorError.textContent = `Inverse Error: ${error.message}`;
+                matrixCalculatorError.classList.remove('hidden');
+            }
+        });
+
+        scalarMultiplyABtn.addEventListener('click', () => {
+            try {
+                const matrixA = getMatrixFromInputs(matrixARowsInput, matrixAColsInput, matrixAInputsDiv);
+                const scalar = parseFloat(scalarInput.value);
+                if (isNaN(scalar)) throw new Error('Scalar must be a valid number.');
+                displayMatrixResult(scalarMultiply(matrixA, scalar));
+            } catch (error) {
+                matrixCalculatorError.textContent = `Scalar Multiplication Error: ${error.message}`;
+                matrixCalculatorError.classList.remove('hidden');
+            }
+        });
+        scalarMultiplyBBtn.addEventListener('click', () => {
+            try {
+                const matrixB = getMatrixFromInputs(matrixBRowsInput, matrixBColsInput, matrixBInputsDiv);
+                const scalar = parseFloat(scalarInput.value);
+                if (isNaN(scalar)) throw new Error('Scalar must be a valid number.');
+                displayMatrixResult(scalarMultiply(matrixB, scalar));
+            } catch (error) {
+                matrixCalculatorError.textContent = `Scalar Multiplication Error: ${error.message}`;
+                matrixCalculatorError.classList.remove('hidden');
+            }
+        });
+
+
+        // Initial setup on load
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+            // Generate initial 2x2 matrices
+            generateMatrixInputs(matrixARowsInput, matrixAColsInput, matrixAInputsDiv, 'matrixA');
+            generateMatrixInputs(matrixBRowsInput, matrixBColsInput, matrixBInputsDiv, 'matrixB');
+        };
+
+        // --- Scroll to Top Button ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 200) { // Show button after scrolling 200px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll
+            });
+        });
+    </script>
+</body>
+</html>

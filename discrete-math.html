@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhizMath - Discrete Math Fundamentals Lesson</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Light mode styles */
+        .light .bg-gray-100 { background-color: #f3f4f6; }
+        .light .text-gray-900 { color: #1f2937; }
+        .light .bg-white { background-color: #ffffff; }
+        .light .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .light .text-gray-800 { color: #1f2937; }
+        .light .text-blue-700 { color: #1d4ed8; }
+        .light .bg-blue-600 { background-color: #2563eb; }
+        .light .bg-blue-700 { background-color: #1d4ed8; }
+        .light .bg-blue-500 { background-color: #3b82f6; }
+        .light .from-blue-500 { --tw-gradient-from: #3b82f6; }
+        .light .to-indigo-600 { --tw-gradient-to: #4f46e5; }
+        .light .bg-gray-50 { background-color: #f9fafb; } /* Card background */
+        .light .text-gray-600 { color: #4b5563; } /* Card description text */
+        .light .text-gray-700 { color: #374151; } /* Section description text */
+        .light .bg-blue-100 { background-color: #dbeafe; } /* Autocomplete hover */
+        .light .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .light .social-icon-bg { background-color: #3b82f6; } /* Social icon background */
+        .light .social-icon-bg:hover { background-color: #2563eb; } /* Social icon hover background */
+        .light #scroll-to-top-btn { background-color: #2563eb; } /* Scroll to top button */
+        .light #scroll-to-top-btn:hover { background-color: #1d4ed8; } /* Scroll to top button hover */
+
+
+        /* Dark mode styles */
+        .dark .bg-gray-100 { background-color: #1a202c; }
+        .dark .text-gray-900 { color: #e2e8f0; }
+        .dark .bg-white { background-color: #2d3748; } /* Main content section background */
+        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15); }
+        .dark .text-gray-800 { color: #cbd5e0; }
+        .dark .text-blue-700 { color: #90cdf4; } /* Section title */
+        .dark .bg-blue-600 { background-color: #1a365d; }
+        .dark .bg-blue-700 { background-color: #2a4365; }
+        .dark .bg-blue-500 { background-color: #3182ce; }
+        .dark .from-blue-500 { --tw-gradient-from: #3182ce; }
+        .dark .to-indigo-600 { --tw-gradient-to: #5a67d8; }
+        .dark .bg-gray-800 { background-color: #1a202c; }
+        .dark .text-white { color: #e2e8f0; }
+        .dark .bg-gray-50 { background-color: #1f2937; } /* Card background for dark mode */
+        .dark .text-gray-600 { color: #a0aec0; } /* Card description text for dark mode */
+        .dark .text-gray-700 { color: #cbd5e0; } /* Section description text for dark mode */
+        .dark .bg-blue-100 { background-color: #1e3a8a; } /* Autocomplete hover for dark mode */
+        .dark .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .dark .social-icon-bg { background-color: #3182ce; } /* Social icon background */
+        .dark .social-icon-bg:hover { background-color: #2b6cb0; } /* Social icon hover background */
+        .dark #scroll-to-top-btn { background-color: #3182ce; } /* Scroll to top button */
+        .dark #scroll-to-top-btn:hover { background-color: #2b6cb0; } /* Scroll to top button hover */
+
+
+        /* Ensure smooth transitions for all elements */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Global Three.js Canvas for background animation */
+        #global-background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        /* Mobile sidebar styling */
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 256px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 50;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* Overlay for when sidebar is open */
+        #mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        #mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Custom Nav Link Hover Effect */
+        .nav-link-effect {
+            position: relative;
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .nav-link-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease-out;
+            border-radius: 6px;
+            z-index: -1;
+        }
+
+        .nav-link-effect::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease-out, left 0.3s ease-out;
+        }
+
+        .nav-link-effect:hover::before {
+            transform: scaleX(1);
+        }
+
+        .nav-link-effect:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Dark mode specific hover effect adjustments */
+        .dark .nav-link-effect::before {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .dark .nav-link-effect::after {
+            background-color: #90cdf4;
+        }
+
+        /* Adjust mobile menu links for the new effect */
+        #mobile-menu .nav-link-effect {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+        }
+
+        /* Scroll to Top Button */
+        #scroll-to-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 9999px; /* Fully rounded */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 6px (0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 100;
+        }
+
+        #scroll-to-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Lesson content specific styles */
+        .lesson-section {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .lesson-section h3 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 1rem;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .lesson-section h3 {
+            color: #90cdf4; /* dark:text-blue-400 */
+        }
+        .lesson-section p {
+            line-height: 1.75; /* leading-relaxed */
+            margin-bottom: 1rem;
+            color: #374151; /* text-gray-700 */
+        }
+        .dark .lesson-section p {
+            color: #cbd5e0; /* dark:text-gray-300 */
+        }
+        .lesson-section ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .lesson-section ul {
+            color: #cbd5e0;
+        }
+        .lesson-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        .example-box {
+            background-color: #e0f2fe; /* bg-blue-50 */
+            border-left: 4px solid #3b82f6; /* border-blue-500 */
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .example-box {
+            background-color: #1e3a8a; /* dark:bg-blue-900 */
+            border-color: #60a5fa; /* dark:border-blue-400 */
+            color: #90cdf4; /* dark:text-blue-300 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+    <canvas id="global-background-canvas"></canvas>
+
+    <div id="mobile-menu-overlay" class="md:hidden"></div>
+
+    <header class="bg-blue-600 text-white p-4 shadow-md relative z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold rounded-md px-2 py-1">WhizMath</h1>
+            <nav class="flex items-center space-x-6 relative">
+                <ul class="hidden md:flex space-x-2">
+                    <li><a href="index.html" class="nav-link-effect">Home</a></li>
+                    <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+                    <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+                    <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+                    <li><a href="games.html" class="nav-link-effect">Games</a></li>
+                    <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+                </ul>
+
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+
+                <button id="theme-toggle" class="p-2 rounded-full bg-blue-700 hover:bg-blue-800 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ml-4">
+                    <svg id="moon-icon" class="w-6 h-6 text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <svg id="sun-icon" class="w-6 h-6 text-yellow-300 transition-all duration-300 ease-in-out hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.354 3.354l-.707.707M5.646 5.646l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="bg-blue-600 text-white p-6 md:hidden">
+        <ul class="flex flex-col space-y-4 pt-8">
+            <li><a href="index.html" class="nav-link-effect">Home</a></li>
+            <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+            <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+            <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+            <li><a href="games.html" class="nav-link-effect">Games</a></li>
+            <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+        </ul>
+    </div>
+
+    <main class="flex-grow container mx-auto p-4 py-8 relative z-10">
+
+        <section class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg mb-12 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-blue-700 dark:text-blue-400">Discrete Math Fundamentals: The Mathematics of Distinct Structures</h2>
+            <p class="text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+                Discrete mathematics is the study of mathematical structures that are fundamentally "discrete" rather than "continuous." Unlike calculus, which deals with continuous change, discrete math deals with countable, distinct elements and their relationships. It forms the bedrock of computer science and is essential for understanding algorithms, data structures, logic, and network design.
+            </p>
+        </section>
+
+        <div class="lesson-content">
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>1. Introduction to Discrete Mathematics: The Foundation of Computing</h3>
+                <p>
+                    Discrete mathematics explores objects that can be counted or separated, such as integers, graphs, and logical statements. It provides the theoretical framework for many areas of modern technology and problem-solving.
+                </p>
+                <p>
+                    Key characteristics of discrete structures include:
+                </p>
+                <ul>
+                    <li><strong>Countable:</strong> Elements can be enumerated (e.g., number of nodes in a network).</li>
+                    <li><strong>Distinct:</strong> Elements are separate and distinguishable (e.g., individual bits in a binary string).</li>
+                    <li><strong>Finite or Infinitely Countable:</strong> Often deals with finite sets, but sometimes with infinite sets that can be put into one-to-one correspondence with natural numbers.</li>
+                </ul>
+                <p>
+                    Discrete math is indispensable in fields like:
+                </p>
+                <ul>
+                    <li><strong>Computer Science:</strong> Designing algorithms, databases, cryptography, and artificial intelligence.</li>
+                    <li><strong>Software Engineering:</strong> Verifying program correctness, analyzing algorithm efficiency.</li>
+                    <li><strong>Operations Research:</strong> Optimizing resource allocation, scheduling.</li>
+                    <li><strong>Logic:</strong> Formalizing reasoning and argumentation.</li>
+                    <li><strong>Network Design:</strong> Understanding connectivity and flow in communication networks.</li>
+                </ul>
+                <p>
+                    This lesson will introduce you to the fundamental concepts that make up this vital branch of mathematics.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>2. Logic and Proofs: The Art of Valid Reasoning</h3>
+                <p>
+                    Logic is the study of reasoning and argumentation. It provides a formal system for analyzing the validity of statements and arguments. Proofs are the methods used to establish the truth of mathematical statements.
+                </p>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Propositional Logic:</p>
+                <ul>
+                    <li>
+                        <strong>Proposition:</strong> A declarative sentence that is either true (T) or false (F), but not both.
+                        <div class="example-box">
+                            <strong>Examples:</strong> "The sky is blue." (True); "2 + 2 = 5." (False).
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Logical Connectives:</strong> Operators used to combine propositions into more complex statements.
+                        <ul>
+                            <li><strong>Negation ($\neg$):</strong> "not P" (e.g., $\neg P$)</li>
+                            <li><strong>Conjunction ($\land$):</strong> "P and Q" (e.g., $P \land Q$) - True only if both P and Q are true.</li>
+                            <li><strong>Disjunction ($\lor$):</strong> "P or Q" (e.g., $P \lor Q$) - True if at least one of P or Q is true (inclusive or).</li>
+                            <li><strong>Implication ($\to$):</strong> "If P, then Q" (e.g., $P \to Q$) - False only if P is true and Q is false.</li>
+                            <li><strong>Biconditional ($\leftrightarrow$):</strong> "P if and only if Q" (e.g., $P \leftrightarrow Q$) - True if P and Q have the same truth value.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Truth Tables:</strong> Tables that show the truth value of a compound proposition for all possible truth values of its constituent propositions.
+                        <div class="example-box">
+                            <strong>Truth Table for $P \land Q$:</strong><br>
+                            <table>
+                                <thead>
+                                    <tr><th>P</th><th>Q</th><th>$P \land Q$</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>T</td><td>T</td><td>T</td></tr>
+                                    <tr><td>T</td><td>F</td><td>F</td></tr>
+                                    <tr><td>F</td><td>T</td><td>F</td></tr>
+                                    <tr><td>F</td><td>F</td><td>F</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </li>
+                </ul>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Basic Proof Techniques:</p>
+                <ul>
+                    <li>
+                        <strong>Direct Proof:</strong> Assume the hypothesis is true, and logically deduce that the conclusion must also be true.
+                        <div class="example-box">
+                            <strong>Proof of:</strong> If $n$ is an even integer, then $n^2$ is an even integer.<br>
+                            Assume $n$ is an even integer. By definition, $n = 2k$ for some integer $k$.<br>
+                            Then $n^2 = (2k)^2 = 4k^2 = 2(2k^2)$.<br>
+                            Since $2k^2$ is an integer, $n^2$ is of the form $2 \times (\text{integer})$, so $n^2$ is even.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Proof by Contraposition:</strong> To prove $P \to Q$, prove its contrapositive $\neg Q \to \neg P$.
+                    </li>
+                    <li>
+                        <strong>Proof by Contradiction:</strong> Assume the statement to be proven is false, and then show that this assumption leads to a contradiction.
+                    </li>
+                    <li>
+                        <strong>Mathematical Induction:</strong> Used to prove statements about natural numbers. It involves a base case and an inductive step.
+                    </li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>3. Set Theory: Collections of Objects</h3>
+                <p>
+                    Set theory is a fundamental branch of mathematics that deals with collections of objects, called sets. These objects are called elements or members of the set.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Set Notation:</strong> Sets are typically denoted by capital letters and their elements are enclosed in curly braces $\{ \}$.
+                        <div class="example-box">
+                            <strong>Examples:</strong><br>
+                            $A = \{1, 2, 3, 4\}$<br>
+                            $B = \{\text{red, blue, green}\}$<br>
+                            $C = \{x \mid x \text{ is an even integer}\}$ (Set-builder notation)
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Cardinality:</strong> The number of distinct elements in a set, denoted by $|A|$.
+                        <div class="example-box">
+                            If $A = \{1, 2, 3, 4\}$, then $|A| = 4$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Subset ($\subseteq$):</strong> Set A is a subset of set B if every element of A is also an element of B.
+                        <div class="example-box">
+                            If $A = \{1, 2\}$ and $B = \{1, 2, 3\}$, then $A \subseteq B$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Proper Subset ($\subset$):</strong> Set A is a proper subset of set B if A is a subset of B and A is not equal to B.
+                    </li>
+                    <li>
+                        <strong>Empty Set ($\emptyset$ or $\{\}$):</strong> A set containing no elements.
+                    </li>
+                    <li>
+                        <strong>Universal Set ($U$):</strong> The set of all possible elements under consideration.
+                    </li>
+                </ul>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Set Operations:</p>
+                <ul>
+                    <li>
+                        <strong>Union ($\cup$):</strong> The set of all elements that are in A OR in B (or both).
+                        <div class="example-box">
+                            $A = \{1, 2, 3\}$, $B = \{3, 4, 5\}$<br>
+                            $A \cup B = \{1, 2, 3, 4, 5\}$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Intersection ($\cap$):</strong> The set of all elements that are in A AND in B.
+                        <div class="example-box">
+                            $A = \{1, 2, 3\}$, $B = \{3, 4, 5\}$<br>
+                            $A \cap B = \{3\}$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Complement ($A'$ or $A^c$):</strong> The set of all elements in the universal set $U$ that are NOT in A.
+                        <div class="example-box">
+                            If $U = \{1, 2, 3, 4, 5\}$ and $A = \{1, 2\}$, then $A' = \{3, 4, 5\}$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Difference (A - B or A \ B):</strong> The set of all elements that are in A but NOT in B.
+                        <div class="example-box">
+                            $A = \{1, 2, 3\}$, $B = \{3, 4, 5\}$<br>
+                            $A - B = \{1, 2\}$
+                        </div>
+                    </li>
+                </ul>
+                <p>
+                    <strong>Venn Diagrams:</strong> Visual representations of sets and their relationships, using overlapping circles within a rectangle (representing the universal set).
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>4. Functions and Relations: Mapping Elements</h3>
+                <p>
+                    Functions and relations describe how elements from one set are associated with elements from another set.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Relation:</strong> A set of ordered pairs $(a, b)$ where $a$ is an element from a set called the domain, and $b$ is an element from a set called the codomain.
+                        <div class="example-box">
+                            <strong>Example:</strong> $R = \{(1, \text{apple}), (2, \text{banana}), (1, \text{orange})\}$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Function:</strong> A special type of relation where each element in the domain is mapped to *exactly one* element in the codomain.
+                        <div class="example-box">
+                            <strong>Example:</strong> $f(x) = x^2$. For each $x$, there is only one $x^2$.<br>
+                            $G = \{(1, \text{apple}), (2, \text{banana}), (3, \text{orange})\}$ is a function.
+                        </div>
+                        <p>A relation like $R = \{(1, \text{apple}), (1, \text{orange})\}$ is NOT a function because 1 maps to two different elements.</p>
+                    </li>
+                </ul>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Types of Functions:</p>
+                <ul>
+                    <li>
+                        <strong>Injective (One-to-One):</strong> Each element in the codomain is mapped to by at most one element in the domain. No two distinct elements in the domain map to the same element in the codomain.
+                        <div class="example-box">
+                            $f(x) = x + 5$ is injective.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Surjective (Onto):</strong> Every element in the codomain is mapped to by at least one element in the domain. The range of the function is equal to its codomain.
+                        <div class="example-box">
+                            $f(x) = x^2$ from $\mathbb{R}$ to $[0, \infty)$ is surjective.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Bijective (One-to-One Correspondence):</strong> A function that is both injective and surjective. Bijective functions have inverse functions.
+                        <div class="example-box">
+                            $f(x) = 2x + 1$ from $\mathbb{R}$ to $\mathbb{R}$ is bijective.
+                        </div>
+                    </li>
+                </ul>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Properties of Relations:</p>
+                <p>For a relation $R$ on a set $A$ (i.e., $R \subseteq A \times A$):</p>
+                <ul>
+                    <li>
+                        <strong>Reflexive:</strong> For every $a \in A$, $(a, a) \in R$. (e.g., "is equal to")
+                    </li>
+                    <li>
+                        <strong>Symmetric:</strong> For every $a, b \in A$, if $(a, b) \in R$, then $(b, a) \in R$. (e.g., "is a sibling of")
+                    </li>
+                    <li>
+                        <strong>Transitive:</strong> For every $a, b, c \in A$, if $(a, b) \in R$ and $(b, c) \in R$, then $(a, c) \in R$. (e.g., "is less than")
+                    </li>
+                    <li>
+                        <strong>Equivalence Relation:</strong> A relation that is reflexive, symmetric, and transitive. (e.g., "is equal to", "is congruent to")
+                    </li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>5. Counting Principles (Combinatorics): The Art of Counting Possibilities</h3>
+                <p>
+                    Combinatorics is the branch of discrete mathematics concerned with counting, arrangement, and combination of objects. It's essential for probability, algorithm analysis, and many other areas.
+                </p>
+                <ul>
+                    <li>
+                        <strong>The Product Rule:</strong> If there are $n_1$ ways to do a first task and $n_2$ ways to do a second task, then there are $n_1 \times n_2$ ways to do both tasks in sequence.
+                        <div class="example-box">
+                            <strong>Example:</strong> A restaurant offers 3 appetizers and 5 main courses. How many different 2-course meals can be ordered?<br>
+                            $3 \times 5 = 15$ meals.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>The Sum Rule:</strong> If there are $n_1$ ways to do a first task and $n_2$ ways to do a second task, and these tasks cannot be done at the same time, then there are $n_1 + n_2$ ways to do one of these tasks.
+                        <div class="example-box">
+                            <strong>Example:</strong> A student can choose a project from 3 lists containing 10, 12, and 8 projects respectively, with no overlap. How many choices are there?<br>
+                            $10 + 12 + 8 = 30$ choices.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Permutations:</strong> The number of ways to arrange $k$ items from a set of $n$ distinct items, where the order of arrangement matters.
+                        <p class="font-semibold text-gray-800 dark:text-gray-200">Formula:</p>
+                        <div class="example-box">
+                            $P(n, k) = \frac{n!}{(n - k)!}$<br>
+                            Where $n!$ (n factorial) is $n \times (n-1) \times \dots \times 1$.
+                        </div>
+                        <div class="example-box">
+                            <strong>Example:</strong> How many ways can 3 students be chosen and arranged for 3 distinct positions (President, VP, Secretary) from a class of 10 students?<br>
+                            $P(10, 3) = \frac{10!}{(10 - 3)!} = \frac{10!}{7!} = 10 \times 9 \times 8 = 720$ ways.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Combinations:</strong> The number of ways to choose $k$ items from a set of $n$ distinct items, where the order of selection does NOT matter.
+                        <p class="font-semibold text-gray-800 dark:text-gray-200">Formula:</p>
+                        <div class="example-box">
+                            $C(n, k) = \binom{n}{k} = \frac{n!}{k!(n - k)!}$
+                        </div>
+                        <div class="example-box">
+                            <strong>Example:</strong> How many ways can 3 students be chosen for a committee from a class of 10 students?<br>
+                            $C(10, 3) = \frac{10!}{3!(10 - 3)!} = \frac{10!}{3!7!} = \frac{10 \times 9 \times 8}{3 \times 2 \times 1} = 10 \times 3 \times 4 = 120$ ways.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Pigeonhole Principle:</strong> If you have more pigeons than pigeonholes, then at least one pigeonhole must contain more than one pigeon. More formally, if $N$ items are placed into $K$ containers, then at least one container must contain at least $\lceil N/K \rceil$ items.
+                        <div class="example-box">
+                            <strong>Example:</strong> In any group of 13 people, at least two people must have been born in the same month.<br>
+                            Pigeons = 13 people, Pigeonholes = 12 months. $13 > 12$.
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>6. Graph Theory: Networks and Relationships</h3>
+                <p>
+                    Graph theory is the study of graphs, which are mathematical structures used to model pairwise relations between objects. A graph consists of a set of vertices (or nodes) and a set of edges (or links) that connect pairs of vertices.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Vertex (Node):</strong> A point or an entity in the graph.
+                    </li>
+                    <li>
+                        <strong>Edge (Link):</strong> A connection between two vertices.
+                    </li>
+                    <li>
+                        <strong>Degree of a Vertex:</strong> The number of edges incident to a vertex.
+                    </li>
+                </ul>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Types of Graphs:</p>
+                <ul>
+                    <li>
+                        <strong>Undirected Graph:</strong> Edges have no direction (e.g., a friendship network where if A is friends with B, B is friends with A).
+                    </li>
+                    <li>
+                        <strong>Directed Graph (Digraph):</strong> Edges have a direction (e.g., a one-way street map, a Twitter follower relationship).
+                    </li>
+                    <li>
+                        <strong>Weighted Graph:</strong> Edges have numerical values (weights) associated with them (e.g., distance between cities, cost of a connection).
+                    </li>
+                    <li>
+                        <strong>Simple Graph:</strong> No loops (edges connecting a vertex to itself) and no multiple edges between the same pair of vertices.
+                    </li>
+                </ul>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Key Concepts in Graph Theory:</p>
+                <ul>
+                    <li>
+                        <strong>Path:</strong> A sequence of distinct vertices connected by edges.
+                    </li>
+                    <li>
+                        <strong>Cycle:</strong> A path that starts and ends at the same vertex, with no repeated edges or intermediate vertices.
+                    </li>
+                    <li>
+                        <strong>Connected Graph:</strong> A graph where there is a path between every pair of vertices.
+                    </li>
+                    <li>
+                        <strong>Tree:</strong> A connected graph with no cycles.
+                    </li>
+                    <li>
+                        <strong>Spanning Tree:</strong> A subgraph that includes all vertices of the original graph and is a tree.
+                    </li>
+                </ul>
+                <p>
+                    Graph theory is used to model social networks, transportation systems, computer networks, and many optimization problems.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>7. Sequences and Series: Ordered Lists and Their Sums</h3>
+                <p>
+                    Sequences are ordered lists of numbers, while series are the sums of the terms in a sequence.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Sequence:</strong> An ordered list of numbers, often defined by a formula for the $n^{th}$ term or a recurrence relation.
+                        <div class="example-box">
+                            <strong>Example:</strong> $1, 3, 5, 7, \dots$ (arithmetic sequence)<br>
+                            The $n^{th}$ term is $a_n = 2n - 1$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Series:</strong> The sum of the terms of a sequence.
+                        <div class="example-box">
+                            <strong>Example:</strong> $1 + 3 + 5 + 7 + \dots$
+                        </div>
+                    </li>
+                </ul>
+                <p class="font-semibold text-gray-800 dark:text-gray-200">Types of Sequences/Series:</p>
+                <ul>
+                    <li>
+                        <strong>Arithmetic Sequence:</strong> Each term after the first is obtained by adding a constant value (the common difference, $d$) to the previous term.
+                        <div class="example-box">
+                            $a_n = a_1 + (n-1)d$<br>
+                            Sum of first $n$ terms: $S_n = \frac{n}{2}(a_1 + a_n)$ or $S_n = \frac{n}{2}(2a_1 + (n-1)d)$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Geometric Sequence:</strong> Each term after the first is obtained by multiplying the previous term by a constant value (the common ratio, $r$).
+                        <div class="example-box">
+                            $a_n = a_1 r^{n-1}$<br>
+                            Sum of first $n$ terms: $S_n = a_1 \frac{(1 - r^n)}{1 - r}$ (for $r \neq 1$)
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Recurrence Relations:</strong> A sequence where each term is defined as a function of its preceding terms.
+                        <div class="example-box">
+                            <strong>Example: Fibonacci Sequence:</strong> $F_n = F_{n-1} + F_{n-2}$, with $F_0 = 0, F_1 = 1$.<br>
+                            $0, 1, 1, 2, 3, 5, 8, \dots$
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>8. Number Theory Basics: Properties of Integers</h3>
+                <p>
+                    Number theory is a branch of pure mathematics devoted primarily to the study of integers and integer-valued functions. It explores properties like divisibility, prime numbers, and congruences.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Divisibility:</strong> An integer $a$ divides an integer $b$ (denoted $a \mid b$) if there exists an integer $k$ such that $b = ak$.
+                        <div class="example-box">
+                            $3 \mid 12$ because $12 = 3 \times 4$.
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Prime Numbers:</strong> A natural number greater than 1 that has no positive divisors other than 1 and itself.
+                        <div class="example-box">
+                            <strong>Examples:</strong> $2, 3, 5, 7, 11, 13, \dots$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Composite Numbers:</strong> A natural number greater than 1 that is not prime (i.e., has more than two divisors).
+                        <div class="example-box">
+                            <strong>Examples:</strong> $4, 6, 8, 9, 10, \dots$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Fundamental Theorem of Arithmetic:</strong> Every integer greater than 1 can be uniquely represented as a product of prime numbers (ignoring the order of the factors).
+                        <div class="example-box">
+                            $12 = 2^2 \times 3$<br>
+                            $30 = 2 \times 3 \times 5$
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Modular Arithmetic:</strong> A system of arithmetic for integers, where numbers "wrap around" after reaching a certain value called the modulus.
+                        <p class="font-semibold text-gray-800 dark:text-gray-200">Notation:</p>
+                        <div class="example-box">
+                            $a \equiv b \pmod{m}$ (read as "$a$ is congruent to $b$ modulo $m$")<br>
+                            This means $a$ and $b$ have the same remainder when divided by $m$. Equivalently, $m$ divides $(a - b)$.
+                        </div>
+                        <div class="example-box">
+                            <strong>Example:</strong> $17 \equiv 5 \pmod{12}$ because $17 - 5 = 12$, and $12$ divides $12$. Also, $17 \div 12$ gives remainder 5.
+                        </div>
+                    </li>
+                </ul>
+                <p>
+                    Number theory is fundamental to cryptography (e.g., RSA encryption), coding theory, and computer security.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>9. Algorithms: Step-by-Step Problem Solving</h3>
+                <p>
+                    In discrete mathematics and computer science, an algorithm is a finite sequence of well-defined, computer-implementable instructions, typically to solve a class of problems or to perform a computation.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Characteristics of an Algorithm:</strong>
+                        <ul>
+                            <li><strong>Input:</strong> Zero or more quantities are externally supplied.</li>
+                            <li><strong>Output:</strong> At least one quantity is produced.</li>
+                            <li><strong>Definiteness:</strong> Each step is precisely defined.</li>
+                            <li><strong>Finiteness:</strong> The algorithm terminates after a finite number of steps.</li>
+                            <li><strong>Effectiveness:</strong> Each step can be performed exactly and in a finite amount of time.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Pseudocode:</strong> An informal high-level description of the operating principle of a computer program or other algorithm. It uses the structural conventions of a programming language but is intended for human reading rather than machine reading.
+                        <div class="example-box">
+                            <strong>Example: Algorithm to find the maximum element in a list:</strong><br>
+                            <pre>
+                                FUNCTION FIND_MAX(List L):
+                                    IF L is empty THEN
+                                        RETURN "List is empty"
+                                    END IF
+                                    max_val = L[0]
+                                    FOR each element x in L:
+                                        IF x > max_val THEN
+                                            max_val = x
+                                        END IF
+                                    END FOR
+                                    RETURN max_val
+                                END FUNCTION
+                            </pre>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Algorithm Analysis (Complexity):</strong> Studying the efficiency of algorithms in terms of time (how many operations) and space (how much memory) required as the input size grows. This often involves using Big O notation ($O(n)$, $O(n^2)$, $O(\log n)$, etc.).
+                        <div class="example-box">
+                            The `FIND_MAX` algorithm above has a time complexity of $O(n)$ because it iterates through the list once, where $n$ is the number of elements in the list.
+                        </div>
+                    </li>
+                </ul>
+                <p>
+                    Algorithms are at the heart of all computational processes, from searching the internet to running complex simulations.
+                </p>
+            </section>
+
+            <section class="lesson-section bg-gray-50 dark:bg-gray-800">
+                <h3>Practice Problems: Apply Your Discrete Math Knowledge</h3>
+                <p>Test your understanding of fundamental discrete mathematics concepts with these practice problems.</p>
+                <ol class="list-decimal list-inside space-y-3">
+                    <li><strong>Logic:</strong> Construct a truth table for the compound proposition: $(P \lor Q) \land \neg P$.</li>
+                    <li><strong>Set Theory:</strong> Given $U = \{1, 2, 3, 4, 5, 6, 7, 8, 9, 10\}$, $A = \{1, 3, 5, 7, 9\}$, and $B = \{2, 3, 4, 5, 6\}$. Find:
+                        <ul>
+                            <li>$A \cup B$</li>
+                            <li>$A \cap B$</li>
+                            <li>$A'$ (complement of A)</li>
+                            <li>$B - A$</li>
+                        </ul>
+                    </li>
+                    <li><strong>Functions:</strong> Is the relation $R = \{(1, a), (2, b), (3, a)\}$ a function? Is it injective, surjective (assuming codomain is $\{a, b\}$), or bijective?</li>
+                    <li><strong>Counting (Permutations):</strong> How many different ways can the letters of the word "MATH" be arranged?</li>
+                    <li><strong>Counting (Combinations):</strong> A committee of 4 people is to be selected from a group of 12 people. How many different committees can be formed?</li>
+                    <li><strong>Graph Theory:</strong> Draw a simple undirected graph with 4 vertices ($V_1, V_2, V_3, V_4$) and edges $(V_1, V_2)$, $(V_2, V_3)$, $(V_3, V_4)$, $(V_4, V_1)$. What is the degree of each vertex? Is this graph connected? Does it contain a cycle?</li>
+                    <li><strong>Sequences:</strong> Find the 7th term of an arithmetic sequence where the first term is 3 and the common difference is 4.</li>
+                    <li><strong>Number Theory:</strong> What is the remainder when 25 is divided by 7? Express this using modular arithmetic notation.</li>
+                    <li><strong>Algorithms:</strong> Describe in pseudocode an algorithm to check if a given number is prime.</li>
+                    <li><strong>Conceptual:</strong> Explain the difference between a permutation and a combination.</li>
+                </ol>
+                <p class="mt-4 text-gray-700 dark:text-gray-300"><em>(Solutions are not provided here, encouraging self-assessment, peer discussion, or seeking further assistance.)</em></p>
+            </section>
+
+        </div>
+
+    </main>
+
+    <footer class="bg-gray-800 dark:bg-gray-900 text-white p-8 mt-12 relative z-10">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
+            <div>
+                <h3 class="text-xl font-bold mb-4">WhizMath</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    Your ultimate destination for mastering mathematics. We provide free tools, comprehensive lessons, and engaging quizzes to help you succeed.
+                </p>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="index.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Home</a></li>
+                    <li><a href="tools.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Tools</a></li>
+                    <li><a href="lessons.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Learn</a></li>
+                    <li><a href="quizzes.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Quizzes</a></li>
+                    <li><a href="games.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Games</a></li>
+                    <li><a href="contact.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Popular Tools</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Scientific Calculator</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Graphing Calculator</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Unit Converter</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Equation Solver</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Popular Lessons</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="algebra-essentials.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Algebra Essentials</a></li>
+                    <li><a href="geometry-basics.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Geometry Basics</a></li>
+                    <li><a href="calculus-introduction.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Calculus Introduction</a></li>
+                    <li><a href="statistics-fundamentals.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Statistics Fundamentals</a></li>
+                    <li><a href="trigonometry-fundamentals.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Trigonometry Fundamentals</a></li>
+                    <li><a href="finance-math-fundamentals.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Finance Math Fundamentals</a></li>
+                    <li><a href="discrete-math-fundamentals.html" class="text-gray-300 hover:text-white footer-link-hover transition duration-200 ease-in-out">Discrete Math Fundamentals</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="flex justify-center md:justify-start space-x-4 mt-6">
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="Facebook">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.776-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
+                </svg>
+            </a>
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="X (Twitter)">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.21-6.89L4.93 21.75H1.625l7.73-8.835L1.25 2.25h3.308l5.97 7.68L18.244 2.25zm.426 17.565L16.63 4.393 4.126 2.25H2.808l13.785 18.125h1.275z" />
+                </svg>
+            </a>
+            <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="Instagram">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.792.006 3.24.016a8.97 8.97 0 011.8.093c.895.119 1.57.34 2.1.598.98.483 1.62.94 2.22 1.638.6.698 1.04 1.347 1.43 2.278.39.93.593 1.776.66 2.825.02.324.037.79.037 1.393 0 2.43-.006 2.792-.016 3.24a8.97 8.97 0 01-.093 1.8c-.119.895-.34 1.57-.598 2.1-.483.98-.94 1.62-1.638 2.22-.698.6-1.347 1.04-2.278 1.43-.93.39-1.776.593-2.825.66-.324.02-.79.037-1.393.037-2.43 0-2.792-.006-3.24-.016a8.97 8.97 0 01-1.8-.093c-.895-.119-1.57-.34-2.1-.598-.98-.483-1.62-.94-2.22-1.638-.6-.698-1.347-1.04-2.278-1.43-.93-.39-1.776-.593-2.825.66-.324-.02-.037-.79-.037-1.393 0-2.43.006-2.792.016-3.24.093-1.8.314.598-4.035.483-.98.94-1.62 1.638-2.22.698-.6 1.347-1.04 2.278-1.43.93-.39 1.776-.593 2.825-.66-.324-.02.79-.037 1.393-.037zm0 2.164c-2.093 0-3.193.013-3.793.023a6.83 6.83 0 00-1.46.074c-.66.088-1.09.283-1.48.473-.59.28-1.04.57-1.44.97-.4.4-.69.85-.97 1.44-.19.39-.385.82-.473 1.48-.06.4-.073.74-.083 1.34-.01.6-.013 1.093-.013 3.793s.003 3.193.013 3.793c.01.4.023.74.083 1.34.088.66.283 1.09.473 1.48.28.59.57 1.04.97 1.44.4.4.85.69 1.44.97.39.19.82.385 1.48.473.4.06.74.073 1.34.083.6.01 1.093.013 3.793.013s3.193-.003 3.793-.013c.4-.01.74-.023 1.34-.083.66-.088 1.09-.283 1.48-.473.59-.28 1.04-.57 1.44-.97.4-.4.69-.85.97-1.44.19-.39.82-.385-1.48-.473-.4-.06-.74-.073-1.34-.083-.6-.01-1.093-.013-3.793-.013zm0 3.52c-2.467 0-4.475 2.008-4.475 4.475s2.008 4.475 4.475 4.475 4.475-2.008 4.475-4.475-2.008-4.475-4.475-4.475zM12.315 18a5.685 5.685 0 110-11.37 5.685 5.685 0 010 11.37zm7.25-10.975a1.18 1.18 0 100 2.36 1.18 1.18 0 000-2.36z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-blue-500 social-icon-bg rounded-full flex items-center justify-center hover:scale-110 transition duration-300 ease-in-out" aria-label="YouTube">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M19.812 5.405c.781-.144 1.406-.395 1.834-.693.376-.258.629-.533.868-.904.2-.315.353-.69.451-1.042C23.63 2.656 24 2.14 24 1.516a.754.754 0 00-.001-.194c-.035-.3-.153-.591-.355-.845-.224-.287-.516-.566-.867-.862-.375-.316-.763-.618-1.284-.903-.795-.445-1.745-.853-2.925-1.127C17.062 0 12 0 12 0s-5.062 0-7.063.093c-1.18.274-2.13.682-2.925 1.127-.521.285-.91.566-1.285.862-.202.254-.32.545-.355.845A.754.754 0 000 1.516c0 .624.37 1.14.734 1.55.098.352.251.727.452 1.042.239.37.492.645.868.904.428.298 1.053.549 1.834.693C4.938 6 12 6 12 6s7.063 0 7.812-.595zM12 8.75c-3.12 0-5.625 2.505-5.625 5.625S8.88 20 12 20s5.625-2.505 5.625-5.625S15.12 8.75 12 8.75z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        <div class="border-t border-gray-700 dark:border-gray-800 pt-6 mt-8 text-center text-sm text-gray-400">
+            <p>&copy; 2025 WhizMath. All rights reserved.</p>
+            <p class="mt-2">Designed with <span class="text-red-500">&hearts;</span> by Your AI Assistant</p>
+        </div>
+    </footer>
+
+    <button id="scroll-to-top-btn">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v14"></path>
+        </svg>
+    </button>
+
+    <script>
+        // --- Theme Toggle Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        // Check for saved theme on load
+        const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+        setTheme(savedTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // --- Mobile Sidebar Menu Logic ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            mobileMenuOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling body when menu is open
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('open');
+            document.body.style.overflow = ''; // Restore body scrolling
+        }
+
+        mobileMenuButton.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('open')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu); // Close when clicking overlay
+
+        // Close mobile menu if a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                // Only close if it's a small screen
+                if (window.innerWidth < 768) {
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Handle resize: ensure menu is correct on desktop/mobile switch
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint
+                closeMobileMenu(); // Ensure sidebar is closed on desktop
+            }
+        });
+
+        // --- Three.js Global Background Animation Logic ---
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('global-background-canvas');
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles
+            const particleCount = 12500;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            const color1 = new THREE.Color(0xADD8E6); // Light blue
+            const color2 = new THREE.Color(0x87CEEB); // Sky blue
+            const color3 = new THREE.Color(0x6495ED); // Cornflower blue
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
+                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
+                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
+
+                const rand = Math.random();
+                let color;
+                if (rand < 0.33) {
+                    color = color1;
+                } else if (rand < 0.66) {
+                    color = color2;
+                } else {
+                    color = color3;
+                }
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+            });
+
+            particles = new THREE.Points(geometry, particleMaterial);
+            scene.add(particles);
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+        };
+
+        // --- Scroll to Top Button Logic ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling 300px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll animation
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizmath: Exponents & Logarithms - Unveiling Growth and Scale</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Light mode styles */
+        .light .bg-gray-100 { background-color: #f3f4f6; }
+        .light .text-gray-900 { color: #1f2937; }
+        .light .bg-white { background-color: #ffffff; }
+        .light .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .light .text-gray-800 { color: #1f2937; }
+        .light .text-blue-700 { color: #1d4ed8; }
+        .light .bg-blue-600 { background-color: #2563eb; }
+        .light .bg-blue-700 { background-color: #1d4ed8; }
+        .light .bg-blue-500 { background-color: #3b82f6; }
+        .light .from-blue-500 { --tw-gradient-from: #3b82f6; }
+        .light .to-indigo-600 { --tw-gradient-to: #4f46e5; }
+        .light .bg-gray-50 { background-color: #f9fafb; } /* Card background */
+        .light .text-gray-600 { color: #4b5563; } /* Card description text */
+        .light .text-gray-700 { color: #374151; } /* Section description text */
+        .light .bg-blue-100 { background-color: #dbeafe; } /* Autocomplete hover */
+        .light .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .light .social-icon-bg { background-color: #3b82f6; } /* Social icon background */
+        .light .social-icon-bg:hover { background-color: #2563eb; } /* Social icon hover background */
+        .light #scroll-to-top-btn { background-color: #2563eb; } /* Scroll to top button */
+        .light #scroll-to-top-btn:hover { background-color: #1d4ed8; } /* Scroll to top button hover */
+
+
+        /* Dark mode styles */
+        .dark .bg-gray-100 { background-color: #1a202c; }
+        .dark .text-gray-900 { color: #e2e8f0; }
+        .dark .bg-white { background-color: #2d3748; } /* Main content section background */
+        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15); }
+        .dark .text-gray-800 { color: #cbd5e0; }
+        .dark .text-blue-700 { color: #90cdf4; } /* Section title */
+        .dark .bg-blue-600 { background-color: #1a365d; }
+        .dark .bg-blue-700 { background-color: #2a4365; }
+        .dark .bg-blue-500 { background-color: #3182ce; }
+        .dark .from-blue-500 { --tw-gradient-from: #3182ce; }
+        .dark .to-indigo-600 { --tw-gradient-to: #5a67d8; }
+        .dark .bg-gray-800 { background-color: #1a202c; }
+        .dark .text-white { color: #e2e8f0; }
+        .dark .bg-gray-50 { background-color: #1f2937; } /* Card background for dark mode */
+        .dark .text-gray-600 { color: #a0aec0; } /* Card description text for dark mode */
+        .dark .text-gray-700 { color: #cbd5e0; } /* Section description text for dark mode */
+        .dark .bg-blue-100 { background-color: #1e3a8a; } /* Autocomplete hover for dark mode */
+        .dark .footer-link-hover:hover { color: #60a5fa; } /* Footer link hover */
+        .dark .social-icon-bg { background-color: #3182ce; } /* Social icon background */
+        .dark .social-icon-bg:hover { background-color: #2b6cb0; } /* Social icon hover background */
+        .dark #scroll-to-top-btn { background-color: #3182ce; } /* Scroll to top button */
+        .dark #scroll-to-top-btn:hover { background-color: #2b6cb0; } /* Scroll to top button hover */
+
+
+        /* Ensure smooth transitions for all elements */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Global Three.js Canvas for background animation */
+        #global-background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none; /* Allows clicks to pass through to content */
+            opacity: 0.7; /* Slightly transparent */
+        }
+
+        /* Mobile sidebar styling */
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 256px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 50;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* Overlay for when sidebar is open */
+        #mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        #mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Custom Nav Link Hover Effect */
+        .nav-link-effect {
+            position: relative;
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .nav-link-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease-out;
+            border-radius: 6px;
+            z-index: -1;
+        }
+
+        .nav-link-effect::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease-out, left 0.3s ease-out;
+        }
+
+        .nav-link-effect:hover::before {
+            transform: scaleX(1);
+        }
+
+        .nav-link-effect:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Dark mode specific hover effect adjustments */
+        .dark .nav-link-effect::before {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .dark .nav-link-effect::after {
+            background-color: #90cdf4; /* Blue-300 for dark mode */
+        }
+
+        /* Adjust mobile menu links for the new effect */
+        #mobile-menu .nav-link-effect {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+        }
+
+        /* Scroll to Top Button */
+        #scroll-to-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 9999px; /* Fully rounded */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 100;
+        }
+
+        #scroll-to-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Lesson content specific styles */
+        .lesson-section {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .light .lesson-section {
+            background-color: #ffffff; /* bg-white */
+        }
+        .dark .lesson-section {
+            background-color: #2d3748; /* dark:bg-gray-700 */
+        }
+        .lesson-section h3 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 1rem;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .lesson-section h3 {
+            color: #90cdf4; /* dark:text-blue-400 */
+        }
+        .lesson-section p {
+            line-height: 1.75; /* leading-relaxed */
+            margin-bottom: 1rem;
+            color: #374151; /* text-gray-700 */
+        }
+        .dark .lesson-section p {
+            color: #cbd5e0; /* dark:text-gray-300 */
+        }
+        .lesson-section ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .lesson-section ul {
+            color: #cbd5e0;
+        }
+        .lesson-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        .example-box {
+            background-color: #e0f2fe; /* bg-blue-50 */
+            border-left: 4px solid #3b82f6; /* border-blue-500 */
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            color: #1d4ed8; /* text-blue-700 */
+        }
+        .dark .example-box {
+            background-color: #1e3a8a; /* dark:bg-blue-900 */
+            border-color: #60a5fa; /* dark:border-blue-400 */
+            color: #90cdf4; /* dark:text-blue-300 */
+        }
+        /* Markdown specific styling for equations - keeping from previous version for consistency */
+        .lesson-content p code {
+            background-color: #e5e7eb; /* Gray-200 */
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-family: 'Fira Code', monospace; /* Or any monospaced font */
+        }
+        html.dark .lesson-content p code {
+            background-color: #374151; /* Gray-700 */
+        }
+        .lesson-content h1, .lesson-content h2, .lesson-content h3, .lesson-content h4 {
+            color: #3b82f6; /* Blue-500 */
+        }
+        html.dark .lesson-content h1, html.dark .lesson-content h2, html.dark .lesson-content h3, html.dark .lesson-content h4 {
+            color: #60a5fa; /* Blue-400 */
+        }
+        .lesson-content strong {
+            color: #3b82f6; /* Blue-500 */
+        }
+        html.dark .lesson-content strong {
+            color: #60a5fa; /* Blue-400 */
+        }
+
+        /* Basic styling for math formulas */
+        .lesson-content .math {
+            display: block;
+            overflow-x: auto; /* For wide equations */
+            padding: 0.5em 0;
+            text-align: center;
+            font-size: 1.1em;
+            color: #1f2937; /* Gray-900 */
+        }
+        html.dark .lesson-content .math {
+            color: #e5e7eb; /* Gray-200 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+    <canvas id="global-background-canvas"></canvas>
+
+    <div id="mobile-menu-overlay" class="md:hidden"></div>
+
+    <header class="bg-blue-600 text-white p-4 shadow-md relative z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold rounded-md px-2 py-1">WhizMath</h1>
+            <nav class="flex items-center space-x-6 relative">
+                <ul class="hidden md:flex space-x-2">
+                    <li><a href="index.html" class="nav-link-effect">Home</a></li>
+                    <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+                    <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+                    <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+                    <li><a href="games.html" class="nav-link-effect">Games</a></li>
+                    <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+                </ul>
+
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+
+                <button id="theme-toggle" class="p-2 rounded-full bg-blue-700 hover:bg-blue-800 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ml-4">
+                    <svg id="moon-icon" class="w-6 h-6 text-white transition-all duration-300 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <svg id="sun-icon" class="w-6 h-6 text-yellow-300 transition-all duration-300 ease-in-out hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.354 3.354l-.707.707M5.646 5.646l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="bg-blue-600 text-white p-6 md:hidden">
+        <ul class="flex flex-col space-y-4 pt-8">
+            <li><a href="index.html" class="nav-link-effect">Home</a></li>
+            <li><a href="tools.html" class="nav-link-effect">Tools</a></li>
+            <li><a href="lessons.html" class="nav-link-effect">Learn</a></li>
+            <li><a href="quizzes.html" class="nav-link-effect">Quizzes</a></li>
+            <li><a href="games.html" class="nav-link-effect">Games</a></li>
+            <li><a href="contact.html" class="nav-link-effect">Contact</a></li>
+        </ul>
+    </div>
+
+    <main class="container mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg relative z-10">
+        <h2 class="text-4xl font-bold mb-6 text-center text-blue-700 dark:text-blue-400">Exponents & Logarithms: Unveiling Growth and Scale</h2>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Introduction: The Language of Rapid Change</h3>
+            <p class="mb-4">Welcome to Whizmath, where we explore the powerful operations that describe rapid growth, decay, and vast scales! Today, we delve into the interconnected concepts of <strong>Exponents</strong> and <strong>Logarithms</strong>. While exponents describe repeated multiplication, leading to exponential growth or decay, logarithms provide the inverse operation, allowing us to ask "what power?" and effectively compress large ranges of numbers.</p>
+            <p class="mb-4">These mathematical tools are indispensable across a multitude of fields: from calculating compound interest in finance and modeling population growth in biology, to measuring earthquake intensity on the Richter scale and sound levels in decibels in physics. Understanding exponents and logarithms is key to comprehending phenomena that span many orders of magnitude.</p>
+            <p class="mb-4">In this comprehensive lesson, we will define exponents and their fundamental properties, then introduce logarithms as their inverse, exploring their properties and various applications. You'll learn how to solve both exponential and logarithmic equations, equipping you with essential skills for advanced mathematics and real-world problem-solving. Prepare to unlock the secrets of exponential relationships and the power of logarithmic scales!</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 1: Exponents (Powers) – Repeated Multiplication</h3>
+            <p class="mb-4">An <strong>exponent</strong> (or power) indicates how many times a base number is multiplied by itself.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">1.1 Definition and Terminology</h4>
+            <p class="mb-4">In the expression $b^n$:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>$b$</strong> is the <strong>base</strong> (the number being multiplied).</li>
+                <li class="mb-2"><strong>$n$</strong> is the <strong>exponent</strong> (the number of times the base is used as a factor).</li>
+                <li class="mb-2">The entire expression $b^n$ is called a <strong>power</strong>.</li>
+            </ul>
+            <p class="font-semibold mt-4">Example:</p>
+            <p>$2^3 = 2 \times 2 \times 2 = 8$ (Here, 2 is the base, 3 is the exponent, and 8 is the power).</p>
+
+            <h4 class="text-2xl font-semibold mb-3">1.2 Fundamental Properties of Exponents</h4>
+            <p class="mb-4">These rules simplify calculations involving powers:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Product of Powers:</strong> When multiplying powers with the same base, add the exponents.
+                    <p class="math">$b^m \cdot b^n = b^{m+n}$</p>
+                    <p class="example-box">Example: $x^3 \cdot x^5 = x^{3+5} = x^8$</p>
+                </li>
+                <li class="mb-2"><strong>Quotient of Powers:</strong> When dividing powers with the same base, subtract the exponents.
+                    <p class="math">$\frac{b^m}{b^n} = b^{m-n}$</p>
+                    <p class="example-box">Example: $\frac{y^7}{y^2} = y^{7-2} = y^5$</p>
+                </li>
+                <li class="mb-2"><strong>Power of a Power:</strong> When raising a power to another power, multiply the exponents.
+                    <p class="math">$(b^m)^n = b^{m \cdot n}$</p>
+                    <p class="example-box">Example: $( (a^4)^3 = a^{4 \cdot 3} = a^{12} )$</p>
+                </li>
+                <li class="mb-2"><strong>Power of a Product:</strong> Distribute the exponent to each factor in a product.
+                    <p class="math">$(ab)^n = a^n b^n$</p>
+                    <p class="example-box">Example: $( (2x)^3 = 2^3 x^3 = 8x^3 )$</p>
+                </li>
+                <li class="mb-2"><strong>Power of a Quotient:</strong> Distribute the exponent to both the numerator and the denominator.
+                    <p class="math">$(\frac{a}{b})^n = \frac{a^n}{b^n}$</p>
+                    <p class="example-box">Example: $(\frac{x}{3})^2 = \frac{x^2}{3^2} = \frac{x^2}{9}$</p>
+                </li>
+                <li class="mb-2"><strong>Zero Exponent:</strong> Any non-zero base raised to the power of zero is 1.
+                    <p class="math">$b^0 = 1 \quad (b \neq 0)$</p>
+                    <p class="example-box">Example: $5^0 = 1$, $(xy)^0 = 1$</p>
+                </li>
+                <li class="mb-2"><strong>Negative Exponent:</strong> A base raised to a negative exponent is equal to the reciprocal of the base raised to the positive exponent.
+                    <p class="math">$b^{-n} = \frac{1}{b^n}$</p>
+                    <p class="example-box">Example: $2^{-3} = \frac{1}{2^3} = \frac{1}{8}$</p>
+                </li>
+                <li class="mb-2"><strong>Fractional Exponent (Radicals):</strong> A fractional exponent represents a root.
+                    <p class="math">$b^{m/n} = \sqrt[n]{b^m} = (\sqrt[n]{b})^m$</p>
+                    <p class="example-box">Example: $8^{2/3} = (\sqrt[3]{8})^2 = 2^2 = 4$</p>
+                </li>
+            </ul>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 2: Logarithms – The Inverse of Exponents</h3>
+            <p class="mb-4">A <strong>logarithm</strong> answers the question: "To what power must a base be raised to produce a given number?" It's the inverse operation of exponentiation.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">2.1 Definition and Relationship to Exponents</h4>
+            <p class="mb-4">The logarithmic statement $\log_b x = y$ is equivalent to the exponential statement $b^y = x$.</p>
+            <p class="math">$\log_b x = y \iff b^y = x$</p>
+            <p class="mb-4">Where:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>$b$</strong> is the <strong>base</strong> of the logarithm ($b > 0, b \neq 1$).</li>
+                <li class="mb-2"><strong>$x$</strong> is the <strong>argument</strong> (the number you're taking the logarithm of, $x > 0$).</li>
+                <li class="mb-2"><strong>$y$</strong> is the <strong>exponent</strong> or <strong>logarithm</strong> (the power to which $b$ must be raised to get $x$).</li>
+            </ul>
+            <p class="font-semibold mt-4">Example 2.1.1: Converting between Forms</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Exponential: $2^3 = 8 \iff$ Logarithmic: $\log_2 8 = 3$</li>
+                <li>Exponential: $10^2 = 100 \iff$ Logarithmic: $\log_{10} 100 = 2$</li>
+                <li>Logarithmic: $\log_5 25 = 2 \iff$ Exponential: $5^2 = 25$</li>
+            </ul>
+
+            <h4 class="text-2xl font-semibold mb-3">2.2 Common and Natural Logarithms</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Common Logarithm:</strong> A logarithm with base 10. It's often written without the base.
+                    <p class="math">$\log x = \log_{10} x$</p>
+                    <p class="example-box">Example: $\log 1000 = 3$ (because $10^3 = 1000$)</p>
+                </li>
+                <li class="mb-2"><strong>Natural Logarithm:</strong> A logarithm with base $e$ (Euler's number, approximately 2.71828). It's written as $\ln$.
+                    <p class="math">$\ln x = \log_e x$</p>
+                    <p class="example-box">Example: $\ln e^5 = 5$ (because $e^5 = e^5$)</p>
+                </li>
+            </ul>
+
+            <h4 class="text-2xl font-semibold mb-3">2.3 Fundamental Properties of Logarithms</h4>
+            <p class="mb-4">These properties are derived directly from the exponent rules and are crucial for simplifying and solving logarithmic equations.</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Product Rule:</strong> The logarithm of a product is the sum of the logarithms.
+                    <p class="math">$\log_b (MN) = \log_b M + \log_b N$</p>
+                    <p class="example-box">Example: $\log_2 (4 \cdot 8) = \log_2 4 + \log_2 8 = 2 + 3 = 5$. (Also $\log_2 32 = 5$)</p>
+                </li>
+                <li class="mb-2"><strong>Quotient Rule:</strong> The logarithm of a quotient is the difference of the logarithms.
+                    <p class="math">$\log_b (\frac{M}{N}) = \log_b M - \log_b N$</p>
+                    <p class="example-box">Example: $\log_3 (\frac{81}{3}) = \log_3 81 - \log_3 3 = 4 - 1 = 3$. (Also $\log_3 27 = 3$)</p>
+                </li>
+                <li class="mb-2"><strong>Power Rule:</strong> The logarithm of a power is the exponent times the logarithm of the base.
+                    <p class="math">$\log_b (M^p) = p \log_b M$</p>
+                    <p class="example-box">Example: $\log_5 (25^3) = 3 \log_5 25 = 3 \cdot 2 = 6$. (Also $\log_5 (15625) = 6$)</p>
+                </li>
+                <li class="mb-2"><strong>Change of Base Formula:</strong> Allows you to convert a logarithm from one base to another (often to base 10 or $e$ for calculator use).
+                    <p class="math">$\log_b M = \frac{\log_a M}{\log_a b}$</p>
+                    <p class="example-box">Example: $\log_2 7 = \frac{\log 7}{\log 2} \approx \frac{0.845}{0.301} \approx 2.807$</p>
+                </li>
+                <li class="mb-2"><strong>Inverse Properties:</strong>
+                    <p class="math">$\log_b b^x = x$</p>
+                    <p class="math">$b^{\log_b x} = x$</p>
+                    <p class="example-box">Example: $\log_{10} 10^5 = 5$, $e^{\ln 9} = 9$</p>
+                </li>
+            </ul>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 3: Solving Exponential Equations</h3>
+            <p class="mb-4">An <strong>exponential equation</strong> is an equation where the variable appears in the exponent.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">3.1 Method 1: Using Common Bases</h4>
+            <p class="mb-4">If both sides of the equation can be expressed with the same base, you can equate the exponents and solve.</p>
+            <p class="font-semibold mt-4">Example 3.1.1:</p>
+            <div class="example-box">
+                <p>Solve for $x$: $2^{x+1} = 16$</p>
+                <p>Rewrite 16 as a power of 2:</p>
+                <p>$2^{x+1} = 2^4$</p>
+                <p>Equate exponents:</p>
+                <p>$x+1 = 4$</p>
+                <p>$x = 3$</p>
+            </div>
+
+            <h4 class="text-2xl font-semibold mb-3">3.2 Method 2: Using Logarithms</h4>
+            <p class="mb-4">When common bases are not easily found, take the logarithm (common or natural) of both sides of the equation. Then use the power rule of logarithms to bring the exponent down.</p>
+            <p class="font-semibold mt-4">Example 3.2.1:</p>
+            <div class="example-box">
+                <p>Solve for $x$: $5^x = 1250$</p>
+                <p>Take $\log_{10}$ (or $\ln$) of both sides:</p>
+                <p>$\log 5^x = \log 1250$</p>
+                <p>Apply power rule:</p>
+                <p>$x \log 5 = \log 1250$</p>
+                <p>Solve for $x$:</p>
+                <p>$x = \frac{\log 1250}{\log 5}$</p>
+                <p>$x \approx \frac{3.0969}{0.6989} \approx 4.431$</p>
+            </div>
+            <p class="font-semibold mt-4">Example 3.2.2 (with $e$):</p>
+            <div class="example-box">
+                <p>Solve for $t$: $e^{0.04t} = 3$</p>
+                <p>Take natural logarithm ($\ln$) of both sides:</p>
+                <p>$\ln(e^{0.04t}) = \ln 3$</p>
+                <p>Apply inverse property ($\ln e^A = A$):</p>
+                <p>$0.04t = \ln 3$</p>
+                <p>Solve for $t$:</p>
+                <p>$t = \frac{\ln 3}{0.04}$</p>
+                <p>$t \approx \frac{1.0986}{0.04} \approx 27.465$</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 4: Solving Logarithmic Equations</h3>
+            <p class="mb-4">A <strong>logarithmic equation</strong> is an equation that involves logarithms of variable expressions.</p>
+
+            <h4 class="text-2xl font-semibold mb-3">4.1 Method 1: Condensing and Converting to Exponential Form</h4>
+            <p class="mb-4">Use logarithm properties to condense multiple log terms into a single log. Then, convert the logarithmic equation to its equivalent exponential form to solve.</p>
+            <p class="font-semibold mt-4">Example 4.1.1:</p>
+            <div class="example-box">
+                <p>Solve for $x$: $\log_2 (x + 3) = 4$</p>
+                <p>Convert to exponential form ($b^y = x$):</p>
+                <p>$2^4 = x + 3$</p>
+                <p>$16 = x + 3$</p>
+                <p>$x = 13$</p>
+                <p>Check (important for log equations!): $\log_2 (13+3) = \log_2 16 = 4$. (True)</p>
+            </div>
+            <p class="font-semibold mt-4">Example 4.1.2 (Condensing):</p>
+            <div class="example-box">
+                <p>Solve for $x$: $\log_3 x + \log_3 (x - 2) = 1$</p>
+                <p>Use product rule to condense:</p>
+                <p>$\log_3 (x(x - 2)) = 1$</p>
+                <p>$\log_3 (x^2 - 2x) = 1$</p>
+                <p>Convert to exponential form:</p>
+                <p>$3^1 = x^2 - 2x$</p>
+                <p>$3 = x^2 - 2x$</p>
+                <p>Rearrange to quadratic equation:</p>
+                <p>$x^2 - 2x - 3 = 0$</p>
+                <p>Factor:</p>
+                <p>$(x - 3)(x + 1) = 0$</p>
+                <p>$x = 3 \quad \text{or} \quad x = -1$</p>
+                <p>Check solutions (argument of log must be positive):</p>
+                <p>For $x=3$: $\log_3 3 + \log_3 (3-2) = \log_3 3 + \log_3 1 = 1 + 0 = 1$. (Valid)</p>
+                <p>For $x=-1$: $\log_3 (-1)$ is undefined. So, $x=-1$ is an extraneous solution.</p>
+                <p>Solution: $x = 3$</p>
+            </div>
+
+            <h4 class="text-2xl font-semibold mb-3">4.2 Method 2: Equating Logarithms</h4>
+            <p class="mb-4">If you have a single logarithm on both sides with the same base, you can equate their arguments and solve.</p>
+            <p class="math">$\log_b M = \log_b N \implies M = N$</p>
+            <p class="font-semibold mt-4">Example 4.2.1:</p>
+            <div class="example-box">
+                <p>Solve for $x$: $\ln (x + 5) = \ln (2x - 1)$</p>
+                <p>Equate arguments:</p>
+                <p>$x + 5 = 2x - 1$</p>
+                <p>$5 + 1 = 2x - x$</p>
+                <p>$6 = x$</p>
+                <p>Check: $\ln (6+5) = \ln 11$. $\ln (2(6)-1) = \ln (12-1) = \ln 11$. (Valid)</p>
+                <p>Solution: $x = 6$</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 5: Real-World Applications of Exponents and Logarithms</h3>
+            <p class="mb-4">These concepts are fundamental to modeling and understanding many real-world phenomena:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Finance:</strong>
+                    <ul class="list-disc list-inside ml-6 mt-1">
+                        <li><strong>Compound Interest:</strong> $A = P(1 + r/n)^{nt}$ (exponential growth).</li>
+                        <li><strong>Loan Repayments:</strong> Calculating future values or present values.</li>
+                    </ul>
+                </li>
+                <li><strong>Population Growth/Decay:</strong> Modeling how populations change over time (e.g., $P(t) = P_0 e^{kt}$).</li>
+                <li><strong>Radioactive Decay:</strong> The half-life of radioactive substances follows an exponential decay model.</li>
+                <li><strong>Science (Logarithmic Scales):</strong>
+                    <ul class="list-disc list-inside ml-6 mt-1">
+                        <li><strong>pH Scale:</strong> Measures acidity/alkalinity ($pH = -\log[H^+]$).</li>
+                        <li><strong>Richter Scale:</strong> Measures earthquake intensity (logarithmic scale).</li>
+                        <li><strong>Decibel Scale:</strong> Measures sound intensity (logarithmic scale).</li>
+                        <li><strong>Stellar Brightness:</strong> Apparent magnitude of stars is on a logarithmic scale.</li>
+                    </ul>
+                </li>
+                <li><strong>Computer Science:</strong> Analyzing algorithm complexity (e.g., logarithmic time complexity for binary search).</li>
+                <li><strong>Biology:</strong> Modeling bacterial growth or drug concentration in the bloodstream.</li>
+            </ul>
+            <p class="font-semibold mt-4">Example: Compound Interest</p>
+            <p>If you invest \$1000 at an annual interest rate of 5% compounded annually, how much will you have after 10 years?</p>
+            <div class="example-box">
+                <p>Formula: $A = P(1 + r)^t$</p>
+                <p>$P = 1000$, $r = 0.05$, $t = 10$</p>
+                <p>$A = 1000(1 + 0.05)^{10}$</p>
+                <p>$A = 1000(1.05)^{10}$</p>
+                <p>$A \approx 1000(1.62889)$</p>
+                <p>$A \approx \$1628.89$</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Chapter 6: Common Pitfalls and Tips for Success</h3>
+            <p class="mb-4">Exponents and logarithms require careful attention to detail. Watch out for these common mistakes:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Confusing Properties:</strong> Mixing up product/quotient rules for exponents and logarithms.</li>
+                <li class="mb-2"><strong>Negative/Zero Exponents:</strong> Forgetting that $b^0=1$ or how to handle negative exponents.</li>
+                <li class="mb-2"><strong>Logarithm Domain:</strong> The argument of a logarithm must always be positive ($x > 0$ in $\log_b x$). Always check solutions to logarithmic equations for validity.</li>
+                <li class="mb-2"><strong>Base Mismatches:</strong> When solving exponential equations, ensure bases are the same before equating exponents, or use logarithms consistently.</li>
+                <li class="mb-2"><strong>Calculator Use:</strong> Be careful with order of operations when using a calculator for logs (e.g., $\log(A/B)$ vs. $\log A / \log B$).</li>
+            </ul>
+            <p class="font-semibold mt-4">Tips for Success:</p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li class="mb-2"><strong>Memorize Properties:</strong> Solid understanding of all exponent and logarithm properties is crucial.</li>
+                <li class="mb-2"><strong>Practice Conversions:</strong> Fluently convert between exponential and logarithmic forms.</li>
+                <li class="mb-2"><strong>Isolate the Power/Log:</strong> Before applying inverse operations, isolate the exponential or logarithmic term.</li>
+                <li class="mb-2"><strong>Check Solutions:</strong> Especially for logarithmic equations, always verify that your solutions do not result in taking the logarithm of a non-positive number.</li>
+                <li class="mb-2"><strong>Use Natural Logarithms for Base $e$:</strong> For equations involving $e^x$, using $\ln$ simplifies the process significantly.</li>
+            </ul>
+        </section>
+
+        <section class="lesson-section text-center">
+            <h3 class="text-3xl font-semibold mb-4">Conclusion: Harnessing the Power of Exponential Relationships</h3>
+            <p class="mb-4">You have now navigated the intricate yet elegant world of exponents and logarithms. You've uncovered how these inverse operations provide a powerful framework for describing phenomena ranging from rapid growth and decay to vast differences in scale.</p>
+            <p class="mb-4">The ability to manipulate exponential and logarithmic expressions and solve equations involving them is a cornerstone of higher mathematics and a vital skill for understanding quantitative relationships in science, engineering, finance, and beyond. Continue to practice, explore, and apply these concepts, and you will find yourself equipped to tackle increasingly complex challenges.</p>
+            <p class="text-xl font-bold text-blue-700 dark:text-blue-400">Keep growing your knowledge, keep scaling your understanding, and keep mastering mathematics with Whizmath!</p>
+        </section>
+
+        <section class="lesson-section">
+            <h3 class="text-3xl font-semibold mb-4">Practice Problems (with Solutions)</h3>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 1: Exponent Properties</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Simplify: $(3x^2y^{-1})^2 \cdot (2x^{-3}y^4)$</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 1:</p>
+                        <p class="mb-2">$(3x^2y^{-1})^2 \cdot (2x^{-3}y^4)$</p>
+                        <p class="mb-2">$ = (3^2 (x^2)^2 (y^{-1})^2) \cdot (2x^{-3}y^4)$</p>
+                        <p class="mb-2">$ = (9x^4y^{-2}) \cdot (2x^{-3}y^4)$</p>
+                        <p class="mb-2">$ = (9 \cdot 2) (x^4 \cdot x^{-3}) (y^{-2} \cdot y^4)$</p>
+                        <p class="mb-2">$ = 18x^{4-3}y^{-2+4}$</p>
+                        <p>$ = 18xy^2$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 2: Converting Logarithmic Form</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Convert $\log_4 64 = 3$ to exponential form.</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 2:</p>
+                        <p class="mb-2">Using $\log_b x = y \iff b^y = x$:</p>
+                        <p>$4^3 = 64$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 3: Solving Exponential Equation</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Solve for $x$: $3^{x-1} = 27^{x-5}$</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 3:</p>
+                        <p class="mb-2">Rewrite with common base (3):</p>
+                        <p class="mb-2">$3^{x-1} = (3^3)^{x-5}$</p>
+                        <p class="mb-2">$3^{x-1} = 3^{3(x-5)}$</p>
+                        <p class="mb-2">Equate exponents:</p>
+                        <p class="mb-2">$x - 1 = 3x - 15$</p>
+                        <p class="mb-2">$15 - 1 = 3x - x$</p>
+                        <p class="mb-2">$14 = 2x$</p>
+                        <p>$x = 7$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 4: Solving Logarithmic Equation</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">Solve for $x$: $\log_5 (x + 1) - \log_5 (x - 3) = 1$</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 4:</p>
+                        <p class="mb-2">Use quotient rule to condense:</p>
+                        <p class="mb-2">$\log_5 \left(\frac{x+1}{x-3}\right) = 1$</p>
+                        <p class="mb-2">Convert to exponential form:</p>
+                        <p class="mb-2">$5^1 = \frac{x+1}{x-3}$</p>
+                        <p class="mb-2">$5(x - 3) = x + 1$</p>
+                        <p class="mb-2">$5x - 15 = x + 1$</p>
+                        <p class="mb-2">$4x = 16$</p>
+                        <p class="mb-2">$x = 4$</p>
+                        <p>Check: $\log_5 (4+1) - \log_5 (4-3) = \log_5 5 - \log_5 1 = 1 - 0 = 1$. (Valid)</p>
+                        <p>Solution: $x = 4$</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6 shadow-md">
+                <p class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Problem 5: Real-World Application (Exponential Growth)</p>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">A bacterial population doubles every hour. If you start with 100 bacteria, how many will there be after 5 hours?</p>
+                <details class="mt-4">
+                    <summary class="font-semibold text-blue-700 dark:text-blue-400 cursor-pointer">Show Solution</summary>
+                    <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-md shadow-inner text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold mb-2">Solution 5:</p>
+                        <p class="mb-2">This is an exponential growth problem. The formula can be $P(t) = P_0 \cdot 2^t$, where $P_0$ is the initial population and $t$ is time in hours.</p>
+                        <p class="mb-2">$P_0 = 100$, $t = 5$</p>
+                        <p class="mb-2">$P(5) = 100 \cdot 2^5$</p>
+                        <p class="mb-2">$P(5) = 100 \cdot 32$</p>
+                        <p>$P(5) = 3200$ bacteria</p>
+                    </div>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-blue-600 text-white py-8 mt-auto relative z-10">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2023 WhizMath. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Privacy Policy</a>
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Terms of Service</a>
+                <a href="#" class="text-white hover:text-blue-200 footer-link-hover">Contact Us</a>
+            </div>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.237 2.636 7.855 6.356 9.314.464.086.66-.2.66-.447 0-.22-.008-.809-.013-1.581-2.56.56-3.1-1.23-3.1-1.23-.418-1.06-.99-1.343-.07-.993.92.062 1.403.957 1.403.957.82 1.403 2.152.997 2.67.765.083-.597.323-.997.593-1.226-2.04-.23-4.183-1.02-4.183-4.523 0-1.002.358-1.823.94-2.462-.095-.23-.41-.1.085-1.29 0 0 .768-.246 2.522.94.72-.2 1.48-.3 2.24-.304.76.004 1.52.104 2.24.304 1.754-1.186 2.522-.94 2.522-.94.495 1.19.18 1.06.085 1.29.582.639.94 1.46.94 2.462 0 3.51-2.146 4.29-4.194 4.516.33.284.626.846.626 1.705 0 1.23-.012 2.219-.012 2.512 0 .249.195.533.663.446C19.364 19.855 22 16.237 22 12c0-5.523-4.477-10-10-10z"></path></svg>
+                </a>
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.8.35-1.64.59-2.5.66.9-.54 1.5-1.4 1.8-2.4-.84.5-1.78.87-2.78 1.07C18.35 4.5 17.2 4 16 4c-2.48 0-4.5 2.02-4.5 4.5 0 .35.04.68.12 1-.37-.02-.74-.08-1.1-.18-3.08-.15-5.8-1.63-7.68-4.07-.32.55-.5 1.18-.5 1.87 0 1.2.6 2.25 1.58 2.87-.7-.02-1.3-.2-1.8-.5v.05c0 2.18 1.55 4 3.6 4.4-.37.1-.76.15-1.16.15-.28 0-.55-.03-.8-.08.57 1.8 2.2 3.1 4.13 3.4-1.55 1.2-3.5 1.9-5.6 1.9-.36 0-.7-.02-1.04-.06C2.9 20.3 5.3 21 8 21c7.2 0 11.15-5.95 11.15-11.15 0-.17-.0-.33-.01-.5.77-.55 1.45-1.24 1.98-2.02z"></path></svg>
+                </a>
+                <a href="#" class="social-icon-bg p-2 rounded-full transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.148 3.252-1.691 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.07-1.645-.07-4.85s.012-3.584.07-4.85c.148-3.252 1.691-4.771 4.919-4.919 1.266-.058 1.644-.07 4.85-.07zm0 2.163c-3.204 0-3.584.012-4.85.07-2.77.126-3.958 1.46-4.084 4.084-.058 1.265-.07 1.645-.07 4.85s.012 3.584.07 4.85c.126 2.77 1.46 3.958 4.084 4.084 1.265.058 1.645.07 4.85.07s3.584-.012 4.85-.07c2.77-.126 3.958-1.46 4.084-4.084.058-1.265.07-1.645.07-4.85s-.012-3.584-.07-4.85c-.126-2.77-1.46-3.958-4.084-4.084-1.265-.058-1.645-.07-4.85-.07zm0 3.627c-2.481 0-4.5 2.019-4.5 4.5s2.019 4.5 4.5 4.5 4.5-2.019 4.5-4.5-2.019-4.5-4.5-4.5zm0 2.163c1.282 0 2.337 1.055 2.337 2.337s-1.055 2.337-2.337 2.337-2.337-1.055-2.337-2.337 1.055-2.337 2.337-2.337zm6.406-5.463c-.47-.47-.94-.705-1.41-.705s-.94.235-1.41.705c-.47.47-.705.94-.705 1.41s.235.94.705 1.41c.47.47.94.705 1.41.705s.94-.235 1.41-.705c-.47-.47-.705-.94-.705-1.41s-.235-.94-.705-1.41z"></path></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <button id="scroll-to-top-btn" class="bg-blue-600">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <script>
+        // --- Theme Toggle Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+            localStorage.setItem('theme', theme);
+            // Removed updateParticleColors call from here. It will be called in window.onload
+        }
+
+        // Check for saved theme on load
+        const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+        setTheme(savedTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+            // Call updateParticleColors here for immediate visual feedback on theme change
+            if (typeof particles !== 'undefined' && particles) {
+                updateParticleColors(newTheme === 'dark');
+            }
+        });
+
+        // --- Mobile Sidebar Menu Logic ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('open');
+            mobileMenuOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling body when menu is open
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('open');
+            mobileMenuOverlay.classList.remove('open');
+            document.body.style.overflow = ''; // Restore body scrolling
+        }
+
+        mobileMenuButton.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('open')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu); // Close when clicking overlay
+
+        // Close mobile menu if a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                // Only close if it's a small screen
+                if (window.innerWidth < 768) {
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Handle resize: ensure menu is correct on desktop/mobile switch
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint
+                closeMobileMenu(); // Ensure sidebar is closed on desktop
+            }
+        });
+
+        // --- Three.js Global Background Animation Logic ---
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('global-background-canvas');
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles
+            const particleCount = 12500;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            // Define colors for light and dark mode for particles
+            const lightModeColors = [
+                new THREE.Color(0xADD8E6), // Light blue
+                new THREE.Color(0x87CEEB), // Sky blue
+                new THREE.Color(0x6495ED)  // Cornflower blue
+            ];
+            const darkModeColors = [
+                new THREE.Color(0x3182ce), // Blue-600 dark
+                new THREE.Color(0x4299e1), // Blue-500 dark
+                new THREE.Color(0x63b3ed)  // Blue-400 dark
+            ];
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
+                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
+                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
+
+                // Assign initial color based on current theme
+                const currentColors = htmlElement.classList.contains('dark') ? darkModeColors : lightModeColors;
+                const colorIndex = Math.floor(Math.random() * currentColors.length);
+                const color = currentColors[colorIndex];
+
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+            });
+
+            particles = new THREE.Points(geometry, particleMaterial);
+            scene.add(particles);
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Function to update particle colors based on theme
+        function updateParticleColors(isDarkMode) {
+            // Check if particles object is initialized before trying to access its properties
+            if (!particles || !particles.geometry || !particles.geometry.attributes.color) {
+                console.warn("Three.js particles not yet initialized for color update.");
+                return;
+            }
+
+            const colors = particles.geometry.attributes.color.array;
+            const targetColors = isDarkMode ? [
+                new THREE.Color(0x3182ce), // Blue-600 dark
+                new THREE.Color(0x4299e1), // Blue-500 dark
+                new THREE.Color(0x63b3ed)  // Blue-400 dark
+            ] : [
+                new THREE.Color(0xADD8E6), // Light blue
+                new THREE.Color(0x87CEEB), // Sky blue
+                new THREE.Color(0x6495ED)  // Cornflower blue
+            ];
+
+            for (let i = 0; i < colors.length; i += 3) {
+                const colorIndex = Math.floor(Math.random() * targetColors.length); // Re-randomize color from target palette
+                const targetColor = targetColors[colorIndex];
+                colors[i] = targetColor.r;
+                colors[i + 1] = targetColor.g;
+                colors[i + 2] = targetColor.b;
+            }
+            particles.geometry.attributes.color.needsUpdate = true;
+        }
+
+
+        // --- Scroll to Top Button Logic ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling 300px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll animation
+            });
+        });
+
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+            // Now safely call updateParticleColors after Three.js particles are initialized
+            updateParticleColors(htmlElement.classList.contains('dark'));
+        };
+    </script>
+</body>
+</html>

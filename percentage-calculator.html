@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizmath - Percentage Calculator</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        /* Custom styles for the percentage calculator and animations */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden; /* Prevent horizontal scroll due to Three.js */
+            position: relative;
+            min-height: 100vh; /* Ensure body takes full height for scroll-to-top */
+        }
+
+        /* Three.js canvas styling */
+        #percentage-background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Send to background */
+            opacity: 0.8; /* Subtle background */
+        }
+
+        /* Scrollbar styling for a smoother look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Dark mode scrollbar */
+        .dark ::-webkit-scrollbar-track {
+            background: #333;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #555;
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+
+        /* Button hover and active states */
+        .action-button {
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .action-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Light/Dark mode toggle animation */
+        #theme-toggle svg {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #theme-toggle.toggled svg {
+            transform: rotate(360deg);
+        }
+
+        /* Scroll to top button */
+        #scroll-to-top-btn {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none; /* Disable interaction when hidden */
+        }
+
+        #scroll-to-top-btn.show {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto; /* Enable interaction when shown */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <canvas id="percentage-background-canvas"></canvas>
+
+    <button id="theme-toggle" class="fixed top-4 right-4 p-3 rounded-full bg-gray-200 dark:bg-gray-700 shadow-lg hover:scale-105 transition-transform z-50">
+        <svg id="moon-icon" class="w-6 h-6 text-gray-800 dark:text-gray-200 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+        </svg>
+        <svg id="sun-icon" class="w-6 h-6 text-gray-800 dark:text-gray-200 transition-colors duration-300 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M3 12h1m15.325-7.757l-.707-.707M6.343 17.657l-.707.707M18.364 18.364l-.707.707M6.343 6.343l-.707-.707M12 18a6 6 0 100-12 6 6 0 000 12z"></path>
+        </svg>
+    </button>
+
+    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 relative z-10">
+        <h1 class="text-5xl font-extrabold mb-8 text-indigo-700 dark:text-indigo-300 drop-shadow-lg animate-fade-in">Whizmath</h1>
+
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl w-full max-w-lg transition-all duration-300 transform scale-95 md:scale-100 hover:scale-[1.01]">
+            <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6 text-center">Percentage Calculator</h2>
+
+            <div class="space-y-8">
+                <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl shadow-inner">
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">1. What is <span class="text-indigo-600 dark:text-indigo-400">X%</span> of <span class="text-indigo-600 dark:text-indigo-400">Y</span>?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+                        <div>
+                            <label for="percentOfX" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">X (%):</label>
+                            <input type="number" id="percentOfX" value="15" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label for="percentOfY" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Y (number):</label>
+                            <input type="number" id="percentOfY" value="200" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    <button id="calculatePercentOfButton" class="action-button w-full mt-4 bg-indigo-600 text-white p-3 rounded-xl text-lg font-semibold hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">Calculate</button>
+                    <div class="mt-4 text-center">
+                        <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">Result:</p>
+                        <div id="percentOfResult" class="bg-gray-100 dark:bg-gray-900 p-3 rounded-lg text-3xl font-bold text-indigo-600 dark:text-indigo-400 overflow-hidden break-words">0</div>
+                        <div id="percentOfError" class="text-red-500 dark:text-red-400 mt-2 text-sm hidden"></div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl shadow-inner">
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">2. <span class="text-indigo-600 dark:text-indigo-400">X</span> is what <span class="text-indigo-600 dark:text-indigo-400">%</span> of <span class="text-indigo-600 dark:text-indigo-400">Y</span>?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+                        <div>
+                            <label for="whatPercentX" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">X (part):</label>
+                            <input type="number" id="whatPercentX" value="30" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label for="whatPercentY" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Y (whole):</label>
+                            <input type="number" id="whatPercentY" value="200" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    <button id="calculateWhatPercentButton" class="action-button w-full mt-4 bg-indigo-600 text-white p-3 rounded-xl text-lg font-semibold hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">Calculate</button>
+                    <div class="mt-4 text-center">
+                        <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">Result:</p>
+                        <div id="whatPercentResult" class="bg-gray-100 dark:bg-gray-900 p-3 rounded-lg text-3xl font-bold text-indigo-600 dark:text-indigo-400 overflow-hidden break-words">0%</div>
+                        <div id="whatPercentError" class="text-red-500 dark:text-red-400 mt-2 text-sm hidden"></div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl shadow-inner">
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">3. Percentage Change from <span class="text-indigo-600 dark:text-indigo-400">X</span> to <span class="text-indigo-600 dark:text-indigo-400">Y</span>:</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+                        <div>
+                            <label for="changeFromX" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">X (original value):</label>
+                            <input type="number" id="changeFromX" value="100" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label for="changeToY" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Y (new value):</label>
+                            <input type="number" id="changeToY" value="120" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    <button id="calculateChangeButton" class="action-button w-full mt-4 bg-indigo-600 text-white p-3 rounded-xl text-lg font-semibold hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">Calculate Change</button>
+                    <div class="mt-4 text-center">
+                        <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">Result:</p>
+                        <div id="changeResult" class="bg-gray-100 dark:bg-gray-900 p-3 rounded-lg text-3xl font-bold text-indigo-600 dark:text-indigo-400 overflow-hidden break-words">0%</div>
+                        <div id="changeError" class="text-red-500 dark:text-red-400 mt-2 text-sm hidden"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="h-48"></div>
+    </div>
+
+    <button id="scroll-to-top-btn" class="fixed bottom-8 right-8 p-3 rounded-full bg-indigo-600 text-white shadow-lg hover:scale-105 transition-transform z-40">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <script>
+        // --- Light/Dark Mode Toggle ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        // Check for saved theme on load
+        const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+        setTheme(savedTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+
+            // Add and remove animation class for the button
+            themeToggle.classList.add('toggled');
+            setTimeout(() => {
+                themeToggle.classList.remove('toggled');
+            }, 300); // Match transition duration
+        });
+
+
+        // --- Three.js Global Background Animation Logic ---
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('percentage-background-canvas');
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles
+            const particleCount = 10000; // Consistent particle count
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            // New color palette for the percentage calculator background (purple and pink)
+            const color1 = new THREE.Color(0x8b5cf6); // Violet 500
+            const color2 = new THREE.Color(0xec4899); // Pink 500
+            const color3 = new THREE.Color(0xa78bfa); // Violet 400
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
+                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
+                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
+
+                const rand = Math.random();
+                let color;
+                if (rand < 0.33) {
+                    color = color1;
+                } else if (rand < 0.66) {
+                    color = color2;
+                } else {
+                    color = color3;
+                }
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+            });
+
+            particles = new THREE.Points(geometry, particleMaterial);
+            scene.add(particles);
+
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // --- Percentage Calculator Logic ---
+
+        // Section 1: What is X% of Y?
+        const percentOfXInput = document.getElementById('percentOfX');
+        const percentOfYInput = document.getElementById('percentOfY');
+        const calculatePercentOfButton = document.getElementById('calculatePercentOfButton');
+        const percentOfResultDisplay = document.getElementById('percentOfResult');
+        const percentOfErrorDisplay = document.getElementById('percentOfError');
+
+        function calculatePercentOf() {
+            percentOfErrorDisplay.classList.add('hidden');
+            const x = parseFloat(percentOfXInput.value);
+            const y = parseFloat(percentOfYInput.value);
+
+            if (isNaN(x) || isNaN(y)) {
+                percentOfErrorDisplay.textContent = 'Please enter valid numbers for X and Y.';
+                percentOfErrorDisplay.classList.remove('hidden');
+                percentOfResultDisplay.textContent = 'Error';
+                return;
+            }
+
+            const result = (x / 100) * y;
+            percentOfResultDisplay.textContent = result.toFixed(4);
+        }
+        calculatePercentOfButton.addEventListener('click', calculatePercentOf);
+        percentOfXInput.addEventListener('input', calculatePercentOf);
+        percentOfYInput.addEventListener('input', calculatePercentOf);
+
+
+        // Section 2: X is what % of Y?
+        const whatPercentXInput = document.getElementById('whatPercentX');
+        const whatPercentYInput = document.getElementById('whatPercentY');
+        const calculateWhatPercentButton = document.getElementById('calculateWhatPercentButton');
+        const whatPercentResultDisplay = document.getElementById('whatPercentResult');
+        const whatPercentErrorDisplay = document.getElementById('whatPercentError');
+
+        function calculateWhatPercent() {
+            whatPercentErrorDisplay.classList.add('hidden');
+            const x = parseFloat(whatPercentXInput.value);
+            const y = parseFloat(whatPercentYInput.value);
+
+            if (isNaN(x) || isNaN(y)) {
+                whatPercentErrorDisplay.textContent = 'Please enter valid numbers for X and Y.';
+                whatPercentErrorDisplay.classList.remove('hidden');
+                whatPercentResultDisplay.textContent = 'Error';
+                return;
+            }
+            if (y === 0) {
+                whatPercentErrorDisplay.textContent = 'Y cannot be zero.';
+                whatPercentErrorDisplay.classList.remove('hidden');
+                whatPercentResultDisplay.textContent = 'Undefined';
+                return;
+            }
+
+            const result = (x / y) * 100;
+            whatPercentResultDisplay.textContent = `${result.toFixed(2)}%`;
+        }
+        calculateWhatPercentButton.addEventListener('click', calculateWhatPercent);
+        whatPercentXInput.addEventListener('input', calculateWhatPercent);
+        whatPercentYInput.addEventListener('input', calculateWhatPercent);
+
+
+        // Section 3: Percentage Change from X to Y
+        const changeFromXInput = document.getElementById('changeFromX');
+        const changeToYInput = document.getElementById('changeToY');
+        const calculateChangeButton = document.getElementById('calculateChangeButton');
+        const changeResultDisplay = document.getElementById('changeResult');
+        const changeErrorDisplay = document.getElementById('changeError');
+
+        function calculatePercentageChange() {
+            changeErrorDisplay.classList.add('hidden');
+            const x = parseFloat(changeFromXInput.value);
+            const y = parseFloat(changeToYInput.value);
+
+            if (isNaN(x) || isNaN(y)) {
+                changeErrorDisplay.textContent = 'Please enter valid numbers for original and new values.';
+                changeErrorDisplay.classList.remove('hidden');
+                changeResultDisplay.textContent = 'Error';
+                return;
+            }
+            if (x === 0) {
+                changeErrorDisplay.textContent = 'Original value (X) cannot be zero for percentage change.';
+                changeErrorDisplay.classList.remove('hidden');
+                changeResultDisplay.textContent = 'Undefined';
+                return;
+            }
+
+            const change = y - x;
+            const percentageChange = (change / x) * 100;
+
+            let resultText = `${percentageChange.toFixed(2)}%`;
+            if (percentageChange > 0) {
+                resultText = `+${resultText} (Increase)`;
+            } else if (percentageChange < 0) {
+                resultText = `${resultText} (Decrease)`;
+            } else {
+                resultText = `0% (No Change)`;
+            }
+            changeResultDisplay.textContent = resultText;
+        }
+        calculateChangeButton.addEventListener('click', calculatePercentageChange);
+        changeFromXInput.addEventListener('input', calculatePercentageChange);
+        changeToYInput.addEventListener('input', calculatePercentageChange);
+
+
+        // Initial setup on load
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+            // Perform initial calculations for the default values
+            calculatePercentOf();
+            calculateWhatPercent();
+            calculatePercentageChange();
+        };
+
+        // --- Scroll to Top Button ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 200) { // Show button after scrolling 200px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizmath - Area Calculator</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        /* Custom styles for the area calculator and animations */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            position: relative;
+            min-height: 100vh; /* Ensure body takes full height for scroll-to-top */
+            background-color: #f3f4f6; /* Default light gray for light mode */
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        /* Dark mode body background */
+        .dark body {
+            background-color: #111827; /* Default dark gray for dark mode */
+        }
+
+        /* Three.js canvas styling */
+        #area-background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Send to background */
+            opacity: 0.8; /* Subtle background */
+        }
+
+        /* Scrollbar styling for a smoother look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Dark mode scrollbar */
+        .dark ::-webkit-scrollbar-track {
+            background: #333;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #555;
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+
+        /* Button hover and active states */
+        .action-button {
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .action-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Light/Dark mode toggle animation */
+        #theme-toggle svg {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #theme-toggle.toggled svg {
+            transform: rotate(360deg);
+        }
+
+        /* Scroll to top button */
+        #scroll-to-top-btn {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none; /* Disable interaction when hidden */
+        }
+
+        #scroll-to-top-btn.show {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto; /* Enable interaction when shown */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <canvas id="area-background-canvas"></canvas>
+
+    <button id="theme-toggle" class="fixed top-4 right-4 p-3 rounded-full bg-gray-200 dark:bg-gray-700 shadow-lg hover:scale-105 transition-transform z-50">
+        <svg id="moon-icon" class="w-6 h-6 text-gray-800 dark:text-gray-200 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+        </svg>
+        <svg id="sun-icon" class="w-6 h-6 text-gray-800 dark:text-gray-200 transition-colors duration-300 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M3 12h1m15.325-7.757l-.707-.707M6.343 17.657l-.707.707M18.364 18.364l-.707.707M6.343 6.343l-.707-.707M12 18a6 6 0 100-12 6 6 0 000 12z"></path>
+        </svg>
+    </button>
+
+    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 relative z-10">
+        <h1 class="text-5xl font-extrabold mb-8 text-indigo-700 dark:text-indigo-300 drop-shadow-lg animate-fade-in">Whizmath</h1>
+
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl w-full max-w-2xl transition-all duration-300 transform scale-95 md:scale-100 hover:scale-[1.01]">
+            <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6 text-center">Area Calculator</h2>
+
+            <div class="space-y-8">
+                <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl shadow-inner">
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Square / Rectangle</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <div>
+                            <label for="rectLength" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Length:</label>
+                            <input type="number" id="rectLength" value="10" min="0" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label for="rectWidth" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Width:</label>
+                            <input type="number" id="rectWidth" value="5" min="0" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <button id="calculateRectBtn" class="action-button bg-indigo-600 text-white p-3 rounded-xl text-lg font-semibold hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">Calculate</button>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">Area:</p>
+                        <div id="rectResult" class="bg-gray-100 dark:bg-gray-900 p-3 rounded-lg text-3xl font-bold text-indigo-600 dark:text-indigo-400 overflow-hidden break-words">0</div>
+                        <div id="rectError" class="text-red-500 dark:text-red-400 mt-2 text-sm hidden"></div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl shadow-inner">
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Circle</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+                        <div>
+                            <label for="circleRadius" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Radius:</label>
+                            <input type="number" id="circleRadius" value="7" min="0" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <button id="calculateCircleBtn" class="action-button bg-indigo-600 text-white p-3 rounded-xl text-lg font-semibold hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">Calculate</button>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">Area:</p>
+                        <div id="circleResult" class="bg-gray-100 dark:bg-gray-900 p-3 rounded-lg text-3xl font-bold text-indigo-600 dark:text-indigo-400 overflow-hidden break-words">0</div>
+                        <div id="circleError" class="text-red-500 dark:text-red-400 mt-2 text-sm hidden"></div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl shadow-inner">
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Triangle</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <div>
+                            <label for="triangleBase" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Base:</label>
+                            <input type="number" id="triangleBase" value="10" min="0" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label for="triangleHeight" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Height:</label>
+                            <input type="number" id="triangleHeight" value="8" min="0" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <button id="calculateTriangleBtn" class="action-button bg-indigo-600 text-white p-3 rounded-xl text-lg font-semibold hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">Calculate</button>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">Area:</p>
+                        <div id="triangleResult" class="bg-gray-100 dark:bg-gray-900 p-3 rounded-lg text-3xl font-bold text-indigo-600 dark:text-indigo-400 overflow-hidden break-words">0</div>
+                        <div id="triangleError" class="text-red-500 dark:text-red-400 mt-2 text-sm hidden"></div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl shadow-inner">
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Trapezoid</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                        <div>
+                            <label for="trapBase1" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Base 1:</label>
+                            <input type="number" id="trapBase1" value="6" min="0" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label for="trapBase2" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Base 2:</label>
+                            <input type="number" id="trapBase2" value="10" min="0" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label for="trapHeight" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Height:</label>
+                            <input type="number" id="trapHeight" value="5" min="0" class="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <button id="calculateTrapBtn" class="action-button bg-indigo-600 text-white p-3 rounded-xl text-lg font-semibold hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">Calculate</button>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-lg font-semibold text-gray-700 dark:text-gray-300">Area:</p>
+                        <div id="trapResult" class="bg-gray-100 dark:bg-gray-900 p-3 rounded-lg text-3xl font-bold text-indigo-600 dark:text-indigo-400 overflow-hidden break-words">0</div>
+                        <div id="trapError" class="text-red-500 dark:text-red-400 mt-2 text-sm hidden"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="h-48"></div>
+    </div>
+
+    <button id="scroll-to-top-btn" class="fixed bottom-8 right-8 p-3 rounded-full bg-indigo-600 text-white shadow-lg hover:scale-105 transition-transform z-40">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <script>
+        // --- Light/Dark Mode Toggle ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+
+        // Function to set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                htmlElement.classList.remove('light');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            } else {
+                htmlElement.classList.remove('dark');
+                htmlElement.classList.add('light');
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        // Check for saved theme on load
+        const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+        setTheme(savedTheme);
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+
+            // Add and remove animation class for the button
+            themeToggle.classList.add('toggled');
+            setTimeout(() => {
+                themeToggle.classList.remove('toggled');
+            }, 300); // Match transition duration
+        });
+
+
+        // --- Three.js Global Background Animation Logic ---
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            const canvas = document.createElement('canvas'); // Create canvas dynamically
+            canvas.id = 'area-background-canvas';
+            document.body.prepend(canvas); // Add to beginning of body
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles
+            const particleCount = 10000;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            // Blue color palette for the background elements
+            const color1 = new THREE.Color(0x3b82f6); // Blue 500
+            const color2 = new THREE.Color(0x2563eb); // Blue 600
+            const color3 = new THREE.Color(0x1d4ed8); // Blue 700
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
+                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
+                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
+
+                const rand = Math.random();
+                let color;
+                if (rand < 0.33) {
+                    color = color1;
+                } else if (rand < 0.66) {
+                    color = color2;
+                } else {
+                    color = color3;
+                }
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+            });
+
+            particles = new THREE.Points(geometry, particleMaterial);
+            scene.add(particles);
+
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // --- Area Calculator Logic ---
+
+        // Helper function for input validation and error display
+        function validateInputs(inputs, errorDisplay) {
+            errorDisplay.classList.add('hidden');
+            for (const input of inputs) {
+                const value = parseFloat(input.value);
+                if (isNaN(value) || value < 0) {
+                    errorDisplay.textContent = 'Please enter valid non-negative numbers for all dimensions.';
+                    errorDisplay.classList.remove('hidden');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Square / Rectangle
+        const rectLengthInput = document.getElementById('rectLength');
+        const rectWidthInput = document.getElementById('rectWidth');
+        const calculateRectBtn = document.getElementById('calculateRectBtn');
+        const rectResultDisplay = document.getElementById('rectResult');
+        const rectErrorDisplay = document.getElementById('rectError');
+
+        function calculateRectArea() {
+            if (!validateInputs([rectLengthInput, rectWidthInput], rectErrorDisplay)) {
+                rectResultDisplay.textContent = 'Error';
+                return;
+            }
+            const length = parseFloat(rectLengthInput.value);
+            const width = parseFloat(rectWidthInput.value);
+            const area = length * width;
+            rectResultDisplay.textContent = area.toFixed(4);
+        }
+        calculateRectBtn.addEventListener('click', calculateRectArea);
+        rectLengthInput.addEventListener('input', calculateRectArea);
+        rectWidthInput.addEventListener('input', calculateRectArea);
+
+
+        // Circle
+        const circleRadiusInput = document.getElementById('circleRadius');
+        const calculateCircleBtn = document.getElementById('calculateCircleBtn');
+        const circleResultDisplay = document.getElementById('circleResult');
+        const circleErrorDisplay = document.getElementById('circleError');
+
+        function calculateCircleArea() {
+            if (!validateInputs([circleRadiusInput], circleErrorDisplay)) {
+                circleResultDisplay.textContent = 'Error';
+                return;
+            }
+            const radius = parseFloat(circleRadiusInput.value);
+            const area = Math.PI * Math.pow(radius, 2);
+            circleResultDisplay.textContent = area.toFixed(4);
+        }
+        calculateCircleBtn.addEventListener('click', calculateCircleArea);
+        circleRadiusInput.addEventListener('input', calculateCircleArea);
+
+
+        // Triangle
+        const triangleBaseInput = document.getElementById('triangleBase');
+        const triangleHeightInput = document.getElementById('triangleHeight');
+        const calculateTriangleBtn = document.getElementById('calculateTriangleBtn');
+        const triangleResultDisplay = document.getElementById('triangleResult');
+        const triangleErrorDisplay = document.getElementById('triangleError');
+
+        function calculateTriangleArea() {
+            if (!validateInputs([triangleBaseInput, triangleHeightInput], triangleErrorDisplay)) {
+                triangleResultDisplay.textContent = 'Error';
+                return;
+            }
+            const base = parseFloat(triangleBaseInput.value);
+            const height = parseFloat(triangleHeightInput.value);
+            const area = 0.5 * base * height;
+            triangleResultDisplay.textContent = area.toFixed(4);
+        }
+        calculateTriangleBtn.addEventListener('click', calculateTriangleArea);
+        triangleBaseInput.addEventListener('input', calculateTriangleArea);
+        triangleHeightInput.addEventListener('input', calculateTriangleArea);
+
+
+        // Trapezoid
+        const trapBase1Input = document.getElementById('trapBase1');
+        const trapBase2Input = document.getElementById('trapBase2');
+        const trapHeightInput = document.getElementById('trapHeight');
+        const calculateTrapBtn = document.getElementById('calculateTrapBtn');
+        const trapResultDisplay = document.getElementById('trapResult');
+        const trapErrorDisplay = document.getElementById('trapError');
+
+        function calculateTrapArea() {
+            if (!validateInputs([trapBase1Input, trapBase2Input, trapHeightInput], trapErrorDisplay)) {
+                trapResultDisplay.textContent = 'Error';
+                return;
+            }
+            const base1 = parseFloat(trapBase1Input.value);
+            const base2 = parseFloat(trapBase2Input.value);
+            const height = parseFloat(trapHeightInput.value);
+            const area = 0.5 * (base1 + base2) * height;
+            trapResultDisplay.textContent = area.toFixed(4);
+        }
+        calculateTrapBtn.addEventListener('click', calculateTrapArea);
+        trapBase1Input.addEventListener('input', calculateTrapArea);
+        trapBase2Input.addEventListener('input', calculateTrapArea);
+        trapHeightInput.addEventListener('input', calculateTrapArea);
+
+
+        // Initial setup on load
+        window.onload = function() {
+            initThreeJS(); // Initialize Three.js background
+            animateThreeJS(); // Start Three.js animation
+            // Perform initial calculations for the default values
+            calculateRectArea();
+            calculateCircleArea();
+            calculateTriangleArea();
+            calculateTrapArea();
+        };
+
+        // --- Scroll to Top Button ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 200) { // Show button after scrolling 200px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll
+            });
+        });
+    </script>
+</body>
+</html>
