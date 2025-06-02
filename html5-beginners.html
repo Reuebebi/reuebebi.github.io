@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5 for Beginners: Building Modern Web Pages | Whizmath</title>
+    <meta name="description" content="Start your modern web development journey with Whizmath's comprehensive HTML5 lesson. Learn basic HTML5 structure, semantic tags, enhanced forms, media embedding, Canvas, and more, with practical examples.">
+    <meta name="keywords" content="HTML5, beginner HTML5, web development, learn HTML5, HTML5 tutorial, basic HTML5, HTML5 tags, semantic HTML, HTML5 forms, HTML5 tables, HTML5 comments, HTML5 entities, embedding media, HTML5 canvas, geolocation API, web storage, drag and drop, Whizmath, online learning, coding for beginners">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles (Dark Mode) */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll due to animations */
+            background-color: #0d1117; /* Dark background for modern feel */
+            color: #e6edf3; /* Light text color */
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Send canvas to background */
+            opacity: 0.25; /* Subtle background animation */
+            transition: opacity 0.5s ease;
+        }
+
+        .content-section {
+            background-color: rgba(22, 27, 34, 0.88); /* Slightly more opaque dark background for content */
+            backdrop-filter: blur(15px); /* Stronger frosted glass effect */
+            border-radius: 2rem; /* Even more rounded corners */
+            padding: 3rem; /* More padding */
+            margin-bottom: 3rem; /* More margin */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); /* Deeper, softer shadow */
+            transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out, background-color 0.5s ease, border-color 0.5s ease;
+            border: 1px solid rgba(60, 65, 75, 0.6); /* Subtle border */
+        }
+
+        .content-section:hover {
+            transform: translateY(-10px); /* More pronounced lift on hover */
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6); /* Enhanced shadow on hover */
+        }
+
+        .code-block {
+            background-color: #161b22; /* Darker background for code */
+            border-radius: 1.25rem; /* More rounded code blocks */
+            padding: 1.5rem; /* More padding in code blocks */
+            overflow-x: auto; /* Allow horizontal scrolling for long code lines */
+            font-family: 'Fira Code', monospace; /* Monospace font for code */
+            font-size: 1rem; /* Slightly larger code font */
+            line-height: 1.6;
+            position: relative;
+            border: 1px solid rgba(60, 65, 75, 0.8); /* Subtle border for code blocks */
+            transition: background-color 0.5s ease, border-color 0.5s ease;
+        }
+
+        /* Basic syntax highlighting colors (can be expanded) */
+        .code-block .html-tag { color: #569cd6; } /* Blue for tags */
+        .code-block .html-attr { color: #9cdcfe; } /* Light blue for attributes */
+        .code-block .html-attr-value { color: #ce9178; } /* Orange for attribute values */
+        .code-block .html-comment { color: #6a9955; } /* Green for comments */
+        .code-block .css-selector { color: #dcdcaa; } /* Yellow for CSS selectors */
+        .code-block .css-property { color: #4ec9b0; } /* Teal for CSS properties */
+        .code-block .css-value { color: #b5cea8; } /* Light green for CSS values */
+
+        .copy-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: #2a3039;
+            color: #e6edf3;
+            padding: 0.6rem 0.9rem;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color 0.2s ease, transform 0.1s ease-in-out, color 0.5s ease;
+            border: 1px solid #3b424d;
+        }
+
+        .copy-button:hover {
+            background-color: #3b424d;
+            transform: translateY(-3px);
+        }
+
+        /* Floating Buttons Base Style */
+        .floating-button {
+            position: fixed;
+            background-color: #2a3039;
+            color: #e6edf3;
+            border: 1px solid #3b424d;
+            border-radius: 9999px; /* Fully rounded */
+            padding: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            z-index: 50; /* Ensure it floats above content */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-button:hover {
+            background-color: #3b424d;
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .floating-button svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor; /* Use current text color for SVG */
+        }
+
+        /* Specific positioning for toggle and home buttons */
+        #theme-toggle {
+            top: 1.5rem;
+            right: 1.5rem;
+        }
+
+        #home-button {
+            top: 1.5rem;
+            left: 1.5rem;
+        }
+
+        /* Light Mode Styles (controlled by data-theme="light" on html) */
+        html[data-theme="light"] body {
+            background-color: #f0f2f5; /* Very light grey background */
+            color: #333; /* Dark text color for general content */
+        }
+
+        html[data-theme="light"] #three-canvas {
+            opacity: 0.05; /* Much more subtle in light mode */
+        }
+
+        html[data-theme="light"] .content-section {
+            background-color: rgba(255, 255, 255, 0.98); /* Near white, slightly transparent */
+            border-color: rgba(180, 180, 180, 0.7); /* Slightly darker, more defined border */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08); /* Lighter shadow */
+        }
+
+        html[data-theme="light"] .content-section:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12); /* Enhanced shadow on hover */
+        }
+
+        html[data-theme="light"] .code-block {
+            background-color: #f8f9fa; /* Very light grey code background */
+            border-color: rgba(160, 160, 160, 0.8); /* Slightly more defined border */
+        }
+
+        /* Light mode syntax highlighting colors */
+        html[data-theme="light"] .code-block .html-tag { color: #007bff; } /* Vibrant blue */
+        html[data-theme="light"] .code-block .html-attr { color: #6c757d; } /* Standard grey for attributes */
+        html[data-theme="light"] .code-block .html-attr-value { color: #dc3545; } /* Reddish for attribute values */
+        html[data-theme="light"] .code-block .html-comment { color: #28a745; } /* Vibrant green for comments */
+        html[data-theme="light"] .code-block .css-selector { color: #6f42c1; } /* Purple-ish for CSS selectors */
+        html[data-theme="light"] .code-block .css-property { color: #fd7e14; } /* Orange for CSS properties */
+        html[data-theme="light"] .code-block .css-value { color: #17a2b8; } /* Teal for CSS values */
+
+
+        html[data-theme="light"] .copy-button {
+            background-color: #c0c2c5;
+            color: #333;
+            border-color: #b0b2b5;
+        }
+
+        html[data-theme="light"] .copy-button:hover {
+            background-color: #b0b2b5;
+        }
+
+        html[data-theme="light"] .floating-button {
+            background-color: #ffffff; /* Pure white for crisp look */
+            color: #333;
+            border-color: #d0d0d0; /* Lighter border */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Lighter shadow */
+        }
+
+        html[data-theme="light"] .floating-button:hover {
+            background-color: #f0f0f0; /* Slight grey on hover */
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Light mode text colors for headings and branded text */
+        html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3 {
+            color: #1e40af; /* Darker blue for headings */
+        }
+        html[data-theme="light"] .text-blue-400 { color: #1e40af; }
+        html[data-theme="light"] .text-blue-300 { color: #1e40af; }
+        html[data-theme="light"] .text-blue-200 { color: #1e40af; }
+        html[data-theme="light"] .text-purple-400 { color: #6f42c1; } /* Slightly more vibrant purple for Whizmath */
+
+        /* Ensure specific Tailwind text colors are overridden for light mode visibility */
+        html[data-theme="light"] .text-gray-300 {
+            color: #4a5568; /* Darker grey for better contrast in light mode */
+        }
+        html[data-theme="light"] .text-gray-400 {
+            color: #718096; /* Slightly lighter dark grey for footer, still visible */
+        }
+
+
+        /* CSS Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(60px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        .animate-fade-in-delay {
+            animation: fadeIn 1.2s ease-out 0.6s forwards;
+            opacity: 0; /* Hidden initially */
+        }
+
+        .animate-slide-up {
+            opacity: 0; /* Hidden initially */
+            animation: slideUp 1s ease-out forwards;
+        }
+
+        /* Staggered animation for sections */
+        .content-section:nth-of-type(1) { animation-delay: 1s; }
+        .content-section:nth-of-type(2) { animation-delay: 1.3s; }
+        .content-section:nth-of-type(3) { animation-delay: 1.6s; }
+        .content-section:nth-of-type(4) { animation-delay: 1.9s; }
+        .content-section:nth-of-type(5) { animation-delay: 2.2s; }
+        .content-section:nth-of-type(6) { animation-delay: 2.5s; }
+        .content-section:nth-of-type(7) { animation-delay: 2.8s; }
+        .content-section:nth-of-type(8) { animation-delay: 3.1s; } /* New section */
+        .content-section:nth-of-type(9) { animation-delay: 3.4s; } /* New section */
+        .content-section:nth-of-type(10) { animation-delay: 3.7s; }
+        .content-section:nth-of-type(11) { animation-delay: 4.0s; }
+        .content-section:nth-of-type(12) { animation-delay: 4.3s; }
+        .content-section:nth-of-type(13) { animation-delay: 4.6s; }
+        .content-section:nth-of-type(14) { animation-delay: 4.9s; }
+        .content-section:nth-of-type(15) { animation-delay: 5.2s; }
+        .content-section:nth-of-type(16) { animation-delay: 5.5s; }
+
+
+        /* Responsive adjustments for floating buttons */
+        @media (max-width: 480px) {
+            .floating-button { top: 1rem; padding: 0.6rem; }
+            .floating-button svg { width: 20px; height: 20px; }
+            #theme-toggle { right: 1rem; }
+            #home-button { left: 1rem; }
+        }
+    </style>
+</head>
+<body class="text-gray-200 min-h-screen flex flex-col">
+    <canvas id="three-canvas"></canvas>
+
+    <button id="home-button" class="floating-button" aria-label="Go back to previous page">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clip-rule="evenodd" />
+        </svg>
+    </button>
+
+    <button id="theme-toggle" class="floating-button" aria-label="Toggle dark and light mode">
+        <svg id="moon-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.106a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.06l1.59-1.591ZM12 18a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V18a.75.75 0 0 1 .75-.75ZM5.05 10.95a.75.75 0 1 0-1.06-1.06l-1.59 1.59a.75.75 0 1 0 1.06 1.06l1.59-1.59ZM18.894 17.894a.75.75 0 1 0 1.06-1.06l-1.59-1.59a.75.75 0 0 0-1.06 1.06l1.59 1.59ZM3.25 12a.75.75 0 0 1-.75.75H.25a.75.75 0 0 1 0-1.5H2.5c.414 0 .75.336.75.75ZM6.106 5.05a.75.75 0 1 0-1.06 1.06l1.59 1.59a.75.75 0 1 0 1.06-1.06l-1.59-1.59ZM12 5.25a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM19.75 12a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5H20.5a.75.75 0 0 1-.75-.75Z" />
+        </svg>
+    </button>
+
+    <div class="relative z-10 flex-grow container mx-auto px-4 py-8 md:py-12 lg:py-16">
+
+        <header class="text-center mb-12 md:mb-16 lg:mb-20">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-400 leading-tight mb-4 animate-fade-in">
+                HTML5 for Beginners: Building Modern Web Pages at <span class="text-purple-400">Whizmath</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto animate-fade-in-delay">
+                Welcome to the exciting world of modern web development! HTML5 is the latest major revision of HTML, bringing powerful new features for multimedia, graphics, and enhanced user interaction.
+                Think of it as the advanced skeleton of a website, providing richer structure and capabilities. This comprehensive lesson will guide you through the essentials of HTML5, getting you ready to create dynamic and interactive web pages!
+            </p>
+        </header>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">1. What is HTML5? The Evolution of the Web</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                HTML5 is not just an update; it's a significant evolution of the HTML standard. It introduces new elements, attributes, and JavaScript APIs that allow for richer web applications without the need for external plugins (like Flash). It aims to make web development easier, more powerful, and more semantic.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Simplified DOCTYPE</strong>: The `<!DOCTYPE html>` declaration is the simplest and standard for HTML5, indicating a modern HTML document.</li>
+                <li><strong class="text-blue-200">Semantic Elements</strong>: New tags that give meaning to content, improving accessibility and SEO.</li>
+                <li><strong class="text-blue-200">Multimedia Support</strong>: Native `<video>` and `<audio>` elements for embedding media directly.</li>
+                <li><strong class="text-blue-200">Graphics and Animation</strong>: The `<canvas>` element for drawing and the SVG integration for vector graphics.</li>
+                <li><strong class="text-blue-200">Enhanced Forms</strong>: New input types and attributes for better user input validation and experience.</li>
+                <li><strong class="text-blue-200">New APIs</strong>: Features like Geolocation, Web Storage, Drag and Drop, and Web Workers for more interactive and performant applications.</li>
+            </ul>
+            <p class="text-lg leading-relaxed">
+                HTML5 is the backbone of modern web pages, enabling everything from responsive layouts to complex online games and interactive data visualizations.
+            </p>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">2. The Essential HTML5 Document Structure</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                The basic structure of an HTML5 document is streamlined and easy to remember. The most notable change from older HTML versions is the simplified `<!DOCTYPE html>` declaration.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;!DOCTYPE html&gt;</span> <span class="html-comment">&lt;!-- This is the HTML5 DOCTYPE, simple and standard --&gt;</span>
+<span class="html-tag">&lt;html</span> <span class="html-attr">lang=</span><span class="html-attr-value">"en"</span><span class="html-tag">&gt;</span>
+<span class="html-tag">&lt;head&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">charset=</span><span class="html-attr-value">"UTF-8"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">name=</span><span class="html-attr-value">"viewport"</span> <span class="html-attr">content=</span><span class="html-attr-value">"width=device-width, initial-scale=1.0"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;title&gt;</span>My First HTML5 Page<span class="html-tag">&lt;/title&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">name=</span><span class="html-attr-value">"description"</span> <span class="html-attr">content=</span><span class="html-attr-value">"A basic HTML5 page structure for learning."</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;link</span> <span class="html-attr">rel=</span><span class="html-attr-value">"stylesheet"</span> <span class="html-attr">href=</span><span class="html-attr-value">"styles.css"</span><span class="html-tag">&gt;</span> <span class="html-comment">&lt;!-- Link to your CSS --&gt;</span>
+<span class="html-tag">&lt;/head&gt;</span>
+<span class="html-tag">&lt;body&gt;</span>
+    <span class="html-comment">&lt;!-- All visible content goes here! --&gt;</span>
+    <span class="html-tag">&lt;script</span> <span class="html-attr">src=</span><span class="html-attr-value">"script.js"</span><span class="html-tag">&gt;&lt;/script&gt;</span> <span class="html-comment">&lt;!-- Link to your JavaScript --&gt;</span>
+<span class="html-tag">&lt;/body&gt;</span>
+<span class="html-tag">&lt;/html&gt;</span></code></pre>
+            </div>
+            <p class="mb-4 text-lg leading-relaxed">Key components and their significance in HTML5:</p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`<!DOCTYPE html>`</strong>: This declaration is short, sweet, and tells the browser to render the page in HTML5 standards mode. It's the only DOCTYPE you'll typically use for modern web development.</li>
+                <li><strong class="text-blue-200">`&lt;html lang="en"&gt;...&lt;/html&gt;`</strong>: The root element, specifying the document's language. Essential for accessibility and SEO.</li>
+                <li><strong class="text-blue-200">`&lt;head&gt;...&lt;/head&gt;`</strong>: Contains metadata. HTML5 didn't change this fundamental role, but the `<meta charset="UTF-8">` and `<meta name="viewport">` tags remain critically important for modern web pages.</li>
+                <li><strong class="text-blue-200">`&lt;body&gt;...&lt;/body&gt;`</strong>: Holds all the visible content. HTML5 encourages using new semantic elements within the `<body>` to structure your content more meaningfully.</li>
+            </ul>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">3. Fundamental HTML Tags (Elements) in HTML5</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                While HTML5 introduced many new tags, the core elements for structuring text and basic content remain the same. Understanding these is paramount.
+            </p>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. Headings (`&lt;h1&gt;` to `&lt;h6&gt;`)</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                Headings define the hierarchy of your content. Use them logically: `&lt;h1&gt;` for the main title (once per page), and `&lt;h2&gt;` through `&lt;h6&gt;` for subheadings. This is vital for document outline, accessibility, and SEO.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;h1&gt;</span>Main Article Title<span class="html-tag">&lt;/h1&gt;</span>
+<span class="html-tag">&lt;h2&gt;</span>Introduction to HTML5<span class="html-tag">&lt;/h2&gt;</span>
+<span class="html-tag">&lt;h3&gt;</span>New Semantic Elements<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;h4&gt;</span>Understanding the Header Tag<span class="html-tag">&lt;/h4&gt;</span>
+</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Paragraphs (`&lt;p&gt;`)</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                The `&lt;p&gt;` tag is the standard for blocks of textual content.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;p&gt;</span>This is a paragraph explaining the basics of HTML5. It's where your main textual content goes.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;p&gt;</span>HTML5 focuses on providing a more semantic structure to web documents, making them easier to read and parse by both humans and machines.<span class="html-tag">&lt;/p&gt;</span></code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">c. Links (`&lt;a&gt;`)</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                Links are the essence of the "HyperText" in HTML. The `&lt;a&gt;` tag creates hyperlinks, and the `href` attribute specifies the destination. HTML5 also introduced `rel="noopener"` and `rel="noreferrer"` for security when using `target="_blank"`.
+            </p>
+            <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                <li><strong class="text-blue-200">External Link (New Tab, Secure):</strong>
+                    `&lt;a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank" rel="noopener noreferrer"&gt;MDN HTML Docs&lt;/a&gt;`
+                </li>
+                <li><strong class="text-blue-200">Internal Link (Same Page):</strong>
+                    `&lt;a href="#semantic-html"&gt;Jump to Semantic HTML Section&lt;/a&gt;`
+                </li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;p&gt;</span>Learn more about HTML5 at the official <span class="html-tag">&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"https://www.w3.org/TR/html5/"</span> <span class="html-attr">target=</span><span class="html-attr-value">"_blank"</span> <span class="html-attr">rel=</span><span class="html-attr-value">"noopener noreferrer"</span><span class="html-tag">&gt;</span>W3C HTML5 Specification<span class="html-tag">&lt;/a&gt;</span>.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;p&gt;</span>You can also find useful resources on <span class="html-tag">&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"https://www.w3schools.com/html/html5_intro.asp"</span><span class="html-tag">&gt;</span>W3Schools HTML5 Tutorial<span class="html-tag">&lt;/a&gt;</span>.<span class="html-tag">&lt;/p&gt;</span>
+</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">d. Images (`&lt;img&gt;`)</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                The `&lt;img&gt;` tag is used to embed images. It's a self-closing tag and remains fundamental in HTML5. Remember to always include `alt` for accessibility and `width`/`height` for performance.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;img</span> <span class="html-attr">src=</span><span class="html-attr-value">"https://placehold.co/700x450/4CAF50/FFFFFF?text=HTML5+Web"</span> <span class="html-attr">alt=</span><span class="html-attr-value">"A green placeholder image with white text saying HTML5 Web"</span> <span class="html-attr">width=</span><span class="html-attr-value">"700"</span> <span class="html-attr">height=</span><span class="html-attr-value">"450"</span><span class="html-tag">&gt;</span>
+<span class="html-tag">&lt;p&gt;</span>A visual representation of modern web development.<span class="html-tag">&lt;/p&gt;</span>
+</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">e. Lists (`&lt;ul&gt;`, `&lt;ol&gt;`, `&lt;li&gt;`, `&lt;dl&gt;`, `&lt;dt&gt;`, `&lt;dd&gt;`)</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                Lists are crucial for organizing content clearly. HTML5 continues to support unordered, ordered, and definition lists.
+            </p>
+            <h4 class="text-xl md:text-2xl font-medium text-blue-200 mb-2">Unordered Lists (`&lt;ul&gt;`)</h4>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;h3&gt;</span>Key HTML5 Features:<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;ul&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Semantic Elements<span class="html-tag">&lt;/li&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Video & Audio Support<span class="html-tag">&lt;/li&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Canvas Graphics<span class="html-tag">&lt;/li&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>New Form Controls<span class="html-tag">&lt;/li&gt;</span>
+<span class="html-tag">&lt;/ul&gt;</span>
+</code></pre>
+            </div>
+
+            <h4 class="text-xl md:text-2xl font-medium text-blue-200 mb-2">Ordered Lists (`&lt;ol&gt;`)</h4>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;h3&gt;</span>Steps to Create an HTML5 Page:<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;ol&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Start with <span class="html-tag">&lt;!DOCTYPE html&gt;</span>.<span class="html-tag">&lt;/li&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Add <span class="html-tag">&lt;html&gt;</span>, <span class="html-tag">&lt;head&gt;</span>, and <span class="html-tag">&lt;body&gt;</span> tags.<span class="html-tag">&lt;/li&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Include meta tags for charset and viewport.<span class="html-tag">&lt;/li&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Populate the body with semantic content.<span class="html-tag">&lt;/li&gt;</span>
+<span class="html-tag">&lt;/ol&gt;</span>
+</code></pre>
+            </div>
+
+            <h4 class="text-xl md:text-2xl font-medium text-blue-200 mb-2">Definition Lists (`&lt;dl&gt;`)</h4>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;h3&gt;</span>HTML5 Terminology:<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;dl&gt;</span>
+    <span class="html-tag">&lt;dt&gt;</span>Semantic HTML<span class="html-tag">&lt;/dt&gt;</span>
+    <span class="html-tag">&lt;dd&gt;</span>Using HTML elements according to their meaning, not just their default presentation.<span class="html-tag">&lt;/dd&gt;</span>
+
+    <span class="html-tag">&lt;dt&gt;</span>Canvas<span class="html-tag">&lt;/dt&gt;</span>
+    <span class="html-tag">&lt;dd&gt;</span>An HTML5 element used to draw graphics on a web page using JavaScript.<span class="html-tag">&lt;/dd&gt;</span>
+<span class="html-tag">&lt;/dl&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up" id="attributes-section">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">4. Attributes in HTML5: Enhanced Control</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                HTML5 introduced new attributes and enhanced existing ones to provide more control and functionality.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`placeholder` (for `&lt;input&gt;` and `&lt;textarea&gt;`):</strong> Provides a hint to the user about what kind of information is expected in the field.</li>
+                <li><strong class="text-blue-200">`required` (for form inputs):</strong> Makes an input field mandatory before form submission.</li>
+                <li><strong class="text-blue-200">`autofocus` (for form inputs):</strong> Automatically focuses on an input field when the page loads.</li>
+                <li><strong class="text-blue-200">`pattern` (for `&lt;input type="text"&gt;`):</strong> Specifies a regular expression that the input's value must match for validity.</li>
+                <li><strong class="text-blue-200">`controls` (for `&lt;video&gt;` and `&lt;audio&gt;`):</strong> Displays standard play/pause, volume controls.</li>
+                <li><strong class="text-blue-200">`autoplay`, `loop`, `muted` (for media):</strong> Control media playback behavior.</li>
+                <li><strong class="text-blue-200">`download` (for `&lt;a&gt;`):</strong> Prompts the user to download the linked resource instead of navigating to it.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;input</span> <span class="html-attr">type=</span><span class="html-attr-value">"text"</span> <span class="html-attr">placeholder=</span><span class="html-attr-value">"Enter your name"</span> <span class="html-attr">required</span><span class="html-tag">&gt;</span>
+<span class="html-tag">&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"document.pdf"</span> <span class="html-attr">download=</span><span class="html-attr-value">"MyDocument.pdf"</span><span class="html-tag">&gt;</span>Download PDF<span class="html-tag">&lt;/a&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">5. Text Formatting and Structure Elements (HTML5 Context)</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                These tags remain important for conveying meaning and structure to text. HTML5 reinforced the semantic meaning of `&lt;strong&gt;` and `&lt;em&gt;` over purely presentational tags like `&lt;b&gt;` and `&lt;i&gt;`.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`&lt;strong&gt;`</strong>: For content of strong importance. Rendered as **bold**.</li>
+                <li><strong class="text-blue-200">`&lt;em&gt;`</strong>: For emphasized content. Rendered as *italic*.</li>
+                <li><strong class="text-blue-200">`&lt;br&gt;`</strong>: Single line break.</li>
+                <li><strong class="text-blue-200">`&lt;hr&gt;`</strong>: Thematic break (horizontal rule).</li>
+                <li><strong class="text-blue-200">`&lt;span&gt;`</strong>: Inline container for styling/scripting small text parts.</li>
+                <li><strong class="text-blue-200">`&lt;div&gt;`</strong>: Block-level container for grouping larger sections. Still useful when no semantic tag fits.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;p&gt;</span>This is a <span class="html-tag">&lt;strong&gt;</span>critical update<span class="html-tag">&lt;/strong&gt;</span> regarding HTML5.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;p&gt;</span>Please pay <span class="html-tag">&lt;em&gt;</span>close attention<span class="html-tag">&lt;/em&gt;</span> to the new features.<span class="html-tag">&lt;/p&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up" id="semantic-html">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">6. Semantic HTML5: Structuring for Meaning</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                One of HTML5's biggest contributions is a set of new semantic elements that provide clearer meaning to the structure of your web page. This is crucial for:
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Accessibility:</strong> Screen readers can better interpret the page's layout.</li>
+                <li><strong class="text-blue-200">SEO:</strong> Search engines understand your content better, potentially improving rankings.</li>
+                <li><strong class="text-blue-200">Maintainability:</strong> Code becomes more readable and easier to manage for developers.</li>
+            </ul>
+            <p class="mb-4 text-lg leading-relaxed">Key Semantic HTML5 Tags:</p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`&lt;header&gt;`</strong>: Introductory content, usually at the top of a document or section.</li>
+                <li><strong class="text-blue-200">`&lt;nav&gt;`</strong>: Navigation links.</li>
+                <li><strong class="text-blue-200">`&lt;main&gt;`</strong>: The dominant content unique to this document. (Only one per page).</li>
+                <li><strong class="text-blue-200">`&lt;article&gt;`</strong>: Self-contained, independent content (e.g., blog post, news article).</li>
+                <li><strong class="text-blue-200">`&lt;section&gt;`</strong>: A thematic grouping of content, typically with a heading.</li>
+                <li><strong class="text-blue-200">`&lt;aside&gt;`</strong>: Content tangentially related to the main content (e.g., sidebar, pull-quote).</li>
+                <li><strong class="text-blue-200">`&lt;footer&gt;`</strong>: Concluding content for its section or document (e.g., copyright, contact info).</li>
+                <li><strong class="text-blue-200">`&lt;figure&gt;` and `&lt;figcaption&gt;`</strong>: For self-contained content like images, diagrams, or code snippets, with an optional caption.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;header&gt;</span>
+    <span class="html-tag">&lt;h1&gt;</span>Whizmath Blog<span class="html-tag">&lt;/h1&gt;</span>
+    <span class="html-tag">&lt;nav&gt;</span>
+        <span class="html-tag">&lt;ul&gt;</span>
+            <span class="html-tag">&lt;li&gt;&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"/"</span><span class="html-tag">&gt;</span>Home<span class="html-tag">&lt;/a&gt;&lt;/li&gt;</span>
+            <span class="html-tag">&lt;li&gt;&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"/tutorials"</span><span class="html-tag">&gt;</span>Tutorials<span class="html-tag">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="html-tag">&lt;/ul&gt;</span>
+    <span class="html-tag">&lt;/nav&gt;</span>
+<span class="html-tag">&lt;/header&gt;</span>
+
+<span class="html-tag">&lt;main&gt;</span>
+    <span class="html-tag">&lt;article&gt;</span>
+        <span class="html-tag">&lt;h2&gt;</span>The Power of HTML5 Semantic Tags<span class="html-tag">&lt;/h2&gt;</span>
+        <span class="html-tag">&lt;p&gt;</span>Semantic HTML tags help define the structure and meaning of web content.<span class="html-tag">&lt;/p&gt;</span>
+        <span class="html-tag">&lt;figure&gt;</span>
+            <span class="html-tag">&lt;img</span> <span class="html-attr">src=</span><span class="html-attr-value">"https://placehold.co/400x200/FFD700/000000?text=Semantic+Web"</span> <span class="html-attr">alt=</span><span class="html-attr-value">"Diagram of semantic web structure"</span><span class="html-tag">&gt;</span>
+            <span class="html-tag">&lt;figcaption&gt;</span>Figure 1: Illustration of semantic web structure.<span class="html-tag">&lt;/figcaption&gt;</span>
+        <span class="html-tag">&lt;/figure&gt;</span>
+    <span class="html-tag">&lt;/article&gt;</span>
+
+    <span class="html-tag">&lt;aside&gt;</span>
+        <span class="html-tag">&lt;h3&gt;</span>Related Articles<span class="html-tag">&lt;/h3&gt;</span>
+        <span class="html-tag">&lt;ul&gt;</span>
+            <span class="html-tag">&lt;li&gt;&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"#"</span><span class="html-tag">&gt;</span>CSS Fundamentals<span class="html-tag">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="html-tag">&lt;/ul&gt;</span>
+    <span class="html-tag">&lt;/aside&gt;</span>
+<span class="html-tag">&lt;/main&gt;</span>
+
+<span class="html-tag">&lt;footer&gt;</span>
+    <span class="html-tag">&lt;p&gt;</span>&copy; 2025 Whizmath. All rights reserved.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;/footer&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">7. Tables: Organizing Tabular Data</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                HTML tables are used to display data in a structured, tabular format (rows and columns). While HTML5 didn't introduce new table tags, it reinforced the importance of using `&lt;thead&gt;`, `&lt;tbody&gt;`, and `&lt;tfoot&gt;` for semantic grouping of table content.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`&lt;table&gt;`</strong>: The container for the entire table.</li>
+                <li><strong class="text-blue-200">`&lt;caption&gt;`</strong>: Provides a title or description for the table.</li>
+                <li><strong class="text-blue-200">`&lt;thead&gt;`</strong>: Groups the header content.</li>
+                <li><strong class="text-blue-200">`&lt;tbody&gt;`</strong>: Groups the main body content.</li>
+                <li><strong class="text-blue-200">`&lt;tfoot&gt;`</strong>: Groups the footer content (e.g., totals).</li>
+                <li><strong class="text-blue-200">`&lt;tr&gt;`</strong>: (Table Row) Defines a row.</li>
+                <li><strong class="text-blue-200">`&lt;th&gt;`</strong>: (Table Header) Defines a header cell.</li>
+                <li><strong class="text-blue-200">`&lt;td&gt;`</strong>: (Table Data) Defines a data cell.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;h3&gt;</span>Whizmath Course Enrollment:<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;table</span> <span class="html-attr">style=</span><span class="html-attr-value">"width:100%; border-collapse: collapse;"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;caption</span> <span class="html-attr">style=</span><span class="html-attr-value">"padding: 10px; font-weight: bold; background-color: #f2f2f2;"</span><span class="html-tag">&gt;</span>Course Enrollment Data<span class="html-tag">&lt;/caption&gt;</span>
+    <span class="html-tag">&lt;thead&gt;</span>
+        <span class="html-tag">&lt;tr&gt;</span>
+            <span class="html-tag">&lt;th</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px; text-align: left;"</span><span class="html-tag">&gt;</span>Course ID<span class="html-tag">&lt;/th&gt;</span>
+            <span class="html-tag">&lt;th</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px; text-align: left;"</span><span class="html-tag">&gt;</span>Course Name<span class="html-tag">&lt;/th&gt;</span>
+            <span class="html-tag">&lt;th</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px; text-align: left;"</span><span class="html-tag">&gt;</span>Students Enrolled<span class="html-tag">&lt;/th&gt;</span>
+        <span class="html-tag">&lt;/tr&gt;</span>
+    <span class="html-tag">&lt;/thead&gt;</span>
+    <span class="html-tag">&lt;tbody&gt;</span>
+        <span class="html-tag">&lt;tr&gt;</span>
+            <span class="html-tag">&lt;td</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px;"</span><span class="html-tag">&gt;</span>C001<span class="html-tag">&lt;/td&gt;</span>
+            <span class="html-tag">&lt;td</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px;"</span><span class="html-tag">&gt;</span>HTML5 Basics<span class="html-tag">&lt;/td&gt;</span>
+            <span class="html-tag">&lt;td</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px;"</span><span class="html-tag">&gt;</span>150<span class="html-tag">&lt;/td&gt;</span>
+        <span class="html-tag">&lt;/tr&gt;</span>
+        <span class="html-tag">&lt;tr&gt;</span>
+            <span class="html-tag">&lt;td</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px;"</span><span class="html-tag">&gt;</span>C002<span class="html-tag">&lt;/td&gt;</span>
+            <span class="html-tag">&lt;td</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px;"</span><span class="html-tag">&gt;</span>CSS Styling<span class="html-tag">&lt;/td&gt;</span>
+            <span class="html-tag">&lt;td</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px;"</span><span class="html-tag">&gt;</span>120<span class="html-tag">&lt;/td&gt;</span>
+        <span class="html-tag">&lt;/tr&gt;</span>
+    <span class="html-tag">&lt;/tbody&gt;</span>
+    <span class="html-tag">&lt;tfoot&gt;</span>
+        <span class="html-tag">&lt;tr&gt;</span>
+            <span class="html-tag">&lt;td</span> <span class="html-attr">colspan=</span><span class="html-attr-value">"2"</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px; text-align: right; font-weight: bold;"</span><span class="html-tag">&gt;</span>Total Students:<span class="html-tag">&lt;/td&gt;</span>
+            <span class="html-tag">&lt;td</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px; font-weight: bold;"</span><span class="html-tag">&gt;</span>270<span class="html-tag">&lt;/td&gt;</span>
+        <span class="html-tag">&lt;/tr&gt;</span>
+    <span class="html-tag">&lt;/tfoot&gt;</span>
+<span class="html-tag">&lt;/table&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up" id="forms-section">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">8. HTML5 Forms: Smarter User Input</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                HTML5 significantly enhanced forms with new input types and attributes, improving user experience and client-side validation without JavaScript.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">New Input Types:</strong>
+                    `type="email"`, `type="url"`, `type="number"`, `type="date"`, `type="range"`, `type="color"`, `type="search"`, `type="tel"`. These provide specialized keyboards on mobile devices and built-in validation.
+                </li>
+                <li><strong class="text-blue-200">New Attributes:</strong>
+                    `placeholder`, `required`, `autofocus`, `pattern`, `min`, `max`, `step`, `list` (with `&lt;datalist&gt;`).
+                </li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;h3&gt;</span>Whizmath Registration Form:<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;form</span> <span class="html-attr">action=</span><span class="html-attr-value">"/register"</span> <span class="html-attr">method=</span><span class="html-attr-value">"post"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">style=</span><span class="html-attr-value">"margin-bottom: 15px;"</span><span class="html-tag">&gt;</span>
+        <span class="html-tag">&lt;label</span> <span class="html-attr">for=</span><span class="html-attr-value">"username"</span> <span class="html-attr">style=</span><span class="html-attr-value">"display: block; margin-bottom: 5px;"</span><span class="html-tag">&gt;</span>Username:<span class="html-tag">&lt;/label&gt;</span>
+        <span class="html-tag">&lt;input</span> <span class="html-attr">type=</span><span class="html-attr-value">"text"</span> <span class="html-attr">id=</span><span class="html-attr-value">"username"</span> <span class="html-attr">name=</span><span class="html-attr-value">"username"</span> <span class="html-attr">placeholder=</span><span class="html-attr-value">"Choose a username"</span> <span class="html-attr">required</span> <span class="html-attr">autofocus</span> <span class="html-attr">style=</span><span class="html-attr-value">"width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;/div&gt;</span>
+
+    <span class="html-tag">&lt;div</span> <span class="html-attr">style=</span><span class="html-attr-value">"margin-bottom: 15px;"</span><span class="html-tag">&gt;</span>
+        <span class="html-tag">&lt;label</span> <span class="html-attr">for=</span><span class="html-attr-value">"email"</span> <span class="html-attr">style=</span><span class="html-attr-value">"display: block; margin-bottom: 5px;"</span><span class="html-tag">&gt;</span>Email:<span class="html-tag">&lt;/label&gt;</span>
+        <span class="html-tag">&lt;input</span> <span class="html-attr">type=</span><span class="html-attr-value">"email"</span> <span class="html-attr">id=</span><span class="html-attr-value">"email"</span> <span class="html-attr">name=</span><span class="html-attr-value">"email"</span> <span class="html-attr">placeholder=</span><span class="html-attr-value">"your@example.com"</span> <span class="html-attr">required</span> <span class="html-attr">style=</span><span class="html-attr-value">"width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;/div&gt;</span>
+
+    <span class="html-tag">&lt;div</span> <span class="html-attr">style=</span><span class="html-attr-value">"margin-bottom: 15px;"</span><span class="html-tag">&gt;</span>
+        <span class="html-tag">&lt;label</span> <span class="html-attr">for=</span><span class="html-attr-value">"dob"</span> <span class="html-attr">style=</span><span class="html-attr-value">"display: block; margin-bottom: 5px;"</span><span class="html-tag">&gt;</span>Date of Birth:<span class="html-tag">&lt;/label&gt;</span>
+        <span class="html-tag">&lt;input</span> <span class="html-attr">type=</span><span class="html-attr-value">"date"</span> <span class="html-attr">id=</span><span class="html-attr-value">"dob"</span> <span class="html-attr">name=</span><span class="html-attr-value">"dob"</span> <span class="html-attr">style=</span><span class="html-attr-value">"width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;/div&gt;</span>
+
+    <span class="html-tag">&lt;div</span> <span class="html-attr">style=</span><span class="html-attr-value">"margin-bottom: 15px;"</span><span class="html-tag">&gt;</span>
+        <span class="html-tag">&lt;label</span> <span class="html-attr">for=</span><span class="html-attr-value">"volume"</span> <span class="html-attr">style=</span><span class="html-attr-value">"display: block; margin-bottom: 5px;"</span><span class="html-tag">&gt;</span>Volume (0-100):<span class="html-tag">&lt;/label&gt;</span>
+        <span class="html-tag">&lt;input</span> <span class="html-attr">type=</span><span class="html-attr-value">"range"</span> <span class="html-attr">id=</span><span class="html-attr-value">"volume"</span> <span class="html-attr">name=</span><span class="html-attr-value">"volume"</span> <span class="html-attr">min=</span><span class="html-attr-value">"0"</span> <span class="html-attr">max=</span><span class="html-attr-value">"100"</span> <span class="html-attr">value=</span><span class="html-attr-value">"50"</span> <span class="html-attr">style=</span><span class="html-attr-value">"width: 100%;"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;/div&gt;</span>
+
+    <span class="html-tag">&lt;div</span> <span class="html-attr">style=</span><span class="html-attr-value">"margin-bottom: 15px;"</span><span class="html-tag">&gt;</span>
+        <span class="html-tag">&lt;label</span> <span class="html-attr">for=</span><span class="html-attr-value">"favcolor"</span> <span class="html-attr">style=</span><span class="html-attr-value">"display: block; margin-bottom: 5px;"</span><span class="html-tag">&gt;</span>Favorite Color:<span class="html-tag">&lt;/label&gt;</span>
+        <span class="html-tag">&lt;input</span> <span class="html-attr">type=</span><span class="html-attr-value">"color"</span> <span class="html-attr">id=</span><span class="html-attr-value">"favcolor"</span> <span class="html-attr">name=</span><span class="html-attr-value">"favcolor"</span> <span class="html-attr">value=</span><span class="html-attr-value">"#ff0000"</span> <span class="html-attr">style=</span><span class="html-attr-value">"width: 100px; height: 40px; border: none;"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;/div&gt;</span>
+
+    <span class="html-tag">&lt;button</span> <span class="html-attr">type=</span><span class="html-attr-value">"submit"</span> <span class="html-attr">style=</span><span class="html-attr-value">"background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;"</span><span class="html-tag">&gt;</span>Register<span class="html-tag">&lt;/button&gt;</span>
+<span class="html-tag">&lt;/form&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">9. HTML Comments: Explaining Your Code</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Comments are notes that you add to your code to make it more understandable for yourself and other developers. They are ignored by the browser and are not displayed on the web page. This remains unchanged in HTML5, but good commenting practices are always encouraged.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-comment">&lt;!-- This is an HTML comment. It will not be visible in the browser. --&gt;</span>
+<span class="html-tag">&lt;p&gt;</span>This paragraph is visible.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-comment">&lt;!-- &lt;p&gt;This paragraph is commented out and will not render.&lt;/p&gt; --&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">10. HTML Entities: Displaying Special Characters</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                HTML entities are used to display characters that are reserved in HTML syntax (like `&lt;` and `&gt;`) or characters not easily typed on a standard keyboard (like copyright symbols or mathematical symbols). This concept is fundamental to HTML and applies universally across versions.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`&lt;` for `<` (less than)</li>
+                <li>`&gt;` for `>` (greater than)</li>
+                <li>`&amp;` for `&` (ampersand)</li>
+                <li>`&copy;` for `©` (copyright symbol)</li>
+                <li>`&nbsp;` for a non-breaking space (useful for adding extra spaces that won't collapse)</li>
+                <li>`&trade;` for `™` (trademark symbol)</li>
+                <li>`&euro;` for `€` (Euro symbol)</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;p&gt;</span>To display the less than symbol, use: <span class="html-attr-value">&amp;lt;</span><span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;p&gt;</span>Copyright <span class="html-attr-value">&amp;copy;</span> 2025 Whizmath. All rights reserved.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;p&gt;</span>This text has extra&nbsp;&nbsp;&nbsp;spaces and a trademark symbol <span class="html-attr-value">&amp;trade;</span>.<span class="html-tag">&lt;/p&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">11. Embedding Media: Native HTML5 Audio and Video</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                One of HTML5's most anticipated features was the native support for embedding audio and video, eliminating the need for third-party plugins like Flash. This significantly improved performance, accessibility, and cross-device compatibility.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`&lt;video&gt;`</strong>: Embeds a video player.
+                    * `src`: Path to the video file.
+                    * `controls`: Adds default video controls (play/pause, volume, fullscreen).
+                    * `autoplay`: Starts playing automatically (often blocked by browsers without `muted`).
+                    * `loop`: Plays the video repeatedly.
+                    * `muted`: Mutes the audio by default.
+                    * `poster`: An image to display before the video loads.
+                </li>
+                <li><strong class="text-blue-200">`&lt;audio&gt;`</strong>: Embeds an audio player.
+                    * `src`: Path to the audio file.
+                    * `controls`: Adds default audio controls.
+                    * `autoplay`, `loop`, `muted`: Similar to video.
+                </li>
+                <li><strong class="text-blue-200">`&lt;source&gt;`</strong>: Used inside `&lt;video&gt;` or `&lt;audio&gt;` to specify multiple media sources (different formats), allowing the browser to choose the best format it supports. This ensures broader compatibility.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;h3&gt;</span>Example Video (HTML5):<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;video</span> <span class="html-attr">width=</span><span class="html-attr-value">"480"</span> <span class="html-attr">height=</span><span class="html-attr-value">"270"</span> <span class="html-attr">controls</span> <span class="html-attr">poster=</span><span class="html-attr-value">"https://placehold.co/480x270/0000FF/FFFFFF?text=Video+Lesson"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;source</span> <span class="html-attr">src=</span><span class="html-attr-value">"video.mp4"</span> <span class="html-attr">type=</span><span class="html-attr-value">"video/mp4"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;source</span> <span class="html-attr">src=</span><span class="html-attr-value">"video.webm"</span> <span class="html-attr">type=</span><span class="html-attr-value">"video/webm"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;p&gt;</span>Your browser does not support the video tag. Please update your browser.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;/video&gt;</span>
+
+<span class="html-tag">&lt;h3&gt;</span>Example Audio (HTML5):<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;audio</span> <span class="html-attr">controls</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;source</span> <span class="html-attr">src=</span><span class="html-attr-value">"audio.mp3"</span> <span class="html-attr">type=</span><span class="html-attr-value">"audio/mpeg"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;source</span> <span class="html-attr">src=</span><span class="html-attr-value">"audio.ogg"</span> <span class="html-attr">type=</span><span class="html-attr-value">"audio/ogg"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;p&gt;</span>Your browser does not support the audio element. Please update your browser.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;/audio&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">12. The `&lt;canvas&gt;` Element: Dynamic Graphics</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                The `&lt;canvas&gt;` element is one of HTML5's most powerful features, allowing you to draw graphics, animations, and even games directly on a web page using JavaScript. It's a blank drawing surface.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>It acts as a container for graphics. The actual drawing is done with JavaScript.</li>
+                <li>Common uses include charts, graphs, photo editors, animations, and game development.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;h3&gt;</span>Simple Canvas Drawing:<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;canvas</span> <span class="html-attr">id=</span><span class="html-attr-value">"myCanvas"</span> <span class="html-attr">width=</span><span class="html-attr-value">"300"</span> <span class="html-attr">height=</span><span class="html-attr-value">"150"</span> <span class="html-attr">style=</span><span class="html-attr-value">"border:1px solid #d3d3d3; background-color: #f0f0f0;"</span><span class="html-tag">&gt;</span>
+    Your browser does not support the HTML5 canvas tag.
+<span class="html-tag">&lt;/canvas&gt;</span>
+
+<span class="html-tag">&lt;script&gt;</span>
+    <span class="html-comment">// Get the canvas element</span>
+    <span class="css-selector">const</span> <span class="css-property">canvas</span> = <span class="css-value">document.getElementById('myCanvas')</span>;
+    <span class="html-comment">// Get the 2D rendering context</span>
+    <span class="css-selector">const</span> <span class="css-property">ctx</span> = <span class="css-value">canvas.getContext('2d')</span>;
+
+    <span class="html-comment">// Draw a red rectangle</span>
+    <span class="css-property">ctx.fillStyle</span> = <span class="css-value">'#FF0000'</span>;
+    <span class="css-value">ctx.fillRect(20, 20, 150, 100)</span>; <span class="html-comment">// x, y, width, height</span>
+
+    <span class="html-comment">// Draw a blue circle</span>
+    <span class="css-property">ctx.beginPath()</span>;
+    <span class="css-value">ctx.arc(200, 75, 50, 0, 2 * Math.PI)</span>; <span class="html-comment">// x, y, radius, startAngle, endAngle</span>
+    <span class="css-property">ctx.fillStyle</span> = <span class="css-value">'#0000FF'</span>;
+    <span class="css-value">ctx.fill()</span>;
+    <span class="css-value">ctx.stroke()</span>; <span class="html-comment">// Draws the outline</span>
+<span class="html-tag">&lt;/script&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">13. Other Powerful HTML5 APIs (Brief Overview)</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                HTML5 brought a suite of JavaScript APIs that extend browser capabilities significantly.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Geolocation API:</strong> Allows web applications to access the user's geographical location (with user permission).</li>
+                <li><strong class="text-blue-200">Web Storage (localStorage and sessionStorage):</strong> Provides a way for web applications to store data locally within the user's browser, offering more capacity and persistence than cookies.</li>
+                <li><strong class="text-blue-200">Drag and Drop API:</strong> Enables elements to be dragged and dropped within a web page.</li>
+                <li><strong class="text-blue-200">Web Workers API:</strong> Allows JavaScript to run scripts in the background without interfering with the responsiveness of the web page.</li>
+                <li><strong class="text-blue-200">Microdata:</strong> A way to embed semantic markup within existing HTML content, making it machine-readable for search engines and other applications.</li>
+            </ul>
+            <p class="text-lg leading-relaxed">
+                These APIs open up a world of possibilities for creating richer, more interactive, and more performant web applications.
+            </p>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">14. Your First Complete HTML5 Page (Comprehensive Example)</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Here's a more comprehensive example integrating many of the HTML5 concepts we've discussed.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;!DOCTYPE html&gt;</span>
+<span class="html-tag">&lt;html</span> <span class="html-attr">lang=</span><span class="html-attr-value">"en"</span><span class="html-tag">&gt;</span>
+<span class="html-tag">&lt;head&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">charset=</span><span class="html-attr-value">"UTF-8"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">name=</span><span class="html-attr-value">"viewport"</span> <span class="html-attr">content=</span><span class="html-attr-value">"width=device-width, initial-scale=1.0"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;title&gt;</span>My Comprehensive HTML5 Page | Whizmath<span class="html-tag">&lt;/title&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">name=</span><span class="html-attr-value">"description"</span> <span class="html-attr">content=</span><span class="html-attr-value">"A comprehensive example of an HTML5 page, showcasing semantic elements, forms, and media."</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;style&gt;</span>
+        <span class="html-comment">/* Basic CSS for demonstration - in a real project, use external .css file */</span>
+        <span class="css-selector">body</span> { <span class="css-property">font-family</span>: <span class="css-value">'Segoe UI', Tahoma, Geneva, Verdana, sans-serif</span>; <span class="css-property">margin</span>: <span class="css-value">25px</span>; <span class="css-property">background-color</span>: <span class="css-value">#f9f9f9</span>; <span class="css-property">color</span>: <span class="css-value">#333</span>; <span class="css-property">line-height</span>: <span class="css-value">1.6</span>; }
+        <span class="css-selector">header</span>, <span class="css-selector">footer</span>, <span class="css-selector">section</span>, <span class="css-selector">article</span>, <span class="css-selector">aside</span>, <span class="css-selector">nav</span> {
+            <span class="css-property">margin-bottom</span>: <span class="css-value">20px</span>; <span class="css-property">padding</span>: <span class="css-value">18px</span>; <span class="css-property">border</span>: <span class="css-value">1px solid #e0e0e0</span>; <span class="css-property">border-radius</span>: <span class="css-value">10px</span>; <span class="css-property">background-color</span>: <span class="css-value">#fff</span>;
+            <span class="css-property">box-shadow</span>: <span class="css-value">0 4px 8px rgba(0,0,0,0.05)</span>;
+        }
+        <span class="css-selector">h1</span>, <span class="css-selector">h2</span>, <span class="css-selector">h3</span> { <span class="css-property">color</span>: <span class="css-value">#2c3e50</span>; <span class="css-property">margin-bottom</span>: <span class="css-value">10px</span>; }
+        <span class="css-selector">a</span> { <span class="css-property">color</span>: <span class="css-value">#3498db</span>; <span class="css-property">text-decoration</span>: <span class="css-value">none</span>; }
+        <span class="css-selector">a:hover</span> { <span class="css-property">text-decoration</span>: <span class="css-value">underline</span>; }
+        <span class="css-selector">img</span>, <span class="css-selector">video</span>, <span class="css-selector">audio</span> { <span class="css-property">max-width</span>: <span class="css-value">100%</span>; <span class="css-property">height</span>: <span class="css-value">auto</span>; <span class="css-property">border-radius</span>: <span class="css-value">8px</span>; <span class="css-property">margin-top</span>: <span class="css-value">15px</span>; }
+        <span class="css-selector">ul</span>, <span class="css-selector">ol</span>, <span class="css-selector">dl</span> { <span class="css-property">margin-bottom</span>: <span class="css-value">15px</span>; <span class="css-property">padding-left</span>: <span class="css-value">25px</span>; }
+        <span class="css-selector">table</span> { <span class="css-property">width</span>: <span class="css-value">100%</span>; <span class="css-property">border-collapse</span>: <span class="css-value">collapse</span>; <span class="css-property">margin-top</span>: <span class="css-value">15px</span>; }
+        <span class="css-selector">th</span>, <span class="css-selector">td</span> { <span class="css-property">border</span>: <span class="css-value">1px solid #ddd</span>; <span class="css-property">padding</span>: <span class="css-value">10px</span>; <span class="css-property">text-align</span>: <span class="css-value">left</span>; }
+        <span class="css-selector">th</span> { <span class="css-property">background-color</span>: <span class="css-value">#f2f2f2</span>; }
+        <span class="css-selector">form div</span> { <span class="css-property">margin-bottom</span>: <span class="css-value">15px</span>; }
+        <span class="css-selector">label</span> { <span class="css-property">display</span>: <span class="css-value">block</span>; <span class="css-property">margin-bottom</span>: <span class="css-value">5px</span>; <span class="css-property">font-weight</span>: <span class="css-value">bold</span>; }
+        <span class="css-selector">input[type="text"]</span>, <span class="css-selector">input[type="email"]</span>, <span class="css-selector">input[type="date"]</span>, <span class="css-selector">textarea</span>, <span class="css-selector">select</span> {
+            <span class="css-property">width</span>: <span class="css-value">100%</span>; <span class="css-property">padding</span>: <span class="css-value">10px</span>; <span class="css-property">border</span>: <span class="css-value">1px solid #ccc</span>; <span class="css-property">border-radius</span>: <span class="css-value">4px</span>; <span class="css-property">box-sizing</span>: <span class="css-value">border-box</span>;
+        }
+        <span class="css-selector">button[type="submit"]</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#2ecc71</span>; <span class="css-property">color</span>: <span class="css-value">white</span>; <span class="css-property">padding</span>: <span class="css-value">10px 20px</span>; <span class="css-property">border</span>: <span class="css-value">none</span>; <span class="css-property">border-radius</span>: <span class="css-value">5px</span>; <span class="css-property">cursor</span>: <span class="css-value">pointer</span>; <span class="css-property">font-size</span>: <span class="css-value">16px</span>; <span class="css-property">transition</span>: <span class="css-value">background-color 0.3s ease</span>;
+        }
+        <span class="css-selector">button[type="submit"]:hover</span> { <span class="css-property">background-color</span>: <span class="css-value">#27ae60</span>; }
+        <span class="css-selector">canvas</span> { <span class="css-property">display</span>: <span class="css-value">block</span>; <span class="css-property">margin</span>: <span class="css-value">20px auto</span>; <span class="css-property">box-shadow</span>: <span class="css-value">0 2px 5px rgba(0,0,0,0.1)</span>; }
+    <span class="html-tag">&lt;/style&gt;</span>
+<span class="html-tag">&lt;/head&gt;</span>
+<span class="html-tag">&lt;body&gt;</span>
+
+    <span class="html-tag">&lt;header&gt;</span>
+        <span class="html-tag">&lt;h1&gt;</span>Welcome to My Whizmath HTML5 Journey!<span class="html-tag">&lt;/h1&gt;</span>
+        <span class="html-tag">&lt;nav&gt;</span>
+            <span class="html-tag">&lt;ul&gt;</span>
+                <span class="html-tag">&lt;li&gt;&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"#"</span><span class="html-tag">&gt;</span>Home<span class="html-tag">&lt;/a&gt;&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"#semantic-html"</span><span class="html-tag">&gt;</span>Semantic HTML<span class="html-tag">&lt;/a&gt;&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"#forms-section"</span><span class="html-tag">&gt;</span>Forms<span class="html-tag">&lt;/a&gt;&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"#canvas-section"</span><span class="html-tag">&gt;</span>Canvas<span class="html-tag">&lt;/a&gt;&lt;/li&gt;</span>
+            <span class="html-tag">&lt;/ul&gt;</span>
+        <span class="html-tag">&lt;/nav&gt;</span>
+    <span class="html-tag">&lt;/header&gt;</span>
+
+    <span class="html-tag">&lt;main&gt;</span>
+        <span class="html-tag">&lt;section&gt;</span>
+            <span class="html-tag">&lt;h2&gt;</span>What I'm Learning in HTML5:<span class="html-tag">&lt;/h2&gt;</span>
+            <span class="html-tag">&lt;p&gt;</span>Hello there! This page showcases my journey into HTML5, the latest and most powerful version of HTML. I'm excited to explore its capabilities for building modern, interactive, and accessible web experiences.<span class="html-tag">&lt;/p&gt;</span>
+            <span class="html-tag">&lt;ul&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>Understanding the streamlined HTML5 <span class="html-tag">&lt;strong&gt;</span>DOCTYPE<span class="html-tag">&lt;/strong&gt;</span>.<span class="html-tag">&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>Utilizing <span class="html-tag">&lt;strong&gt;</span>Semantic HTML5 elements<span class="html-tag">&lt;/strong&gt;</span> for better structure.<span class="html-tag">&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>Working with <span class="html-tag">&lt;strong&gt;</span>Enhanced HTML5 Forms<span class="html-tag">&lt;/strong&gt;</span> and new input types.<span class="html-tag">&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>Embedding <span class="html-tag">&lt;strong&gt;</span>Native Audio and Video<span class="html-tag">&lt;/strong&gt;</span> without plugins.<span class="html-tag">&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>Drawing graphics with the powerful <span class="html-tag">&lt;strong&gt;</span>Canvas API<span class="html-tag">&lt;/strong&gt;</span>.<span class="html-tag">&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>Exploring other HTML5 APIs like Geolocation and Web Storage.<span class="html-tag">&lt;/li&gt;</span>
+            <span class="html-tag">&lt;/ul&gt;</span>
+        <span class="html-tag">&lt;/section&gt;</span>
+
+        <span class="html-tag">&lt;section&gt;</span>
+            <span class="html-tag">&lt;h2&gt;</span>A Glimpse of HTML5 in Action:<span class="html-tag">&lt;/h2&gt;</span>
+            <span class="html-tag">&lt;figure&gt;</span>
+                <span class="html-tag">&lt;img</span> <span class="html-attr">src=</span><span class="html-attr-value">"https://placehold.co/700x350/28A745/FFFFFF?text=Modern+Web+Design"</span> <span class="html-attr">alt=</span><span class="html-attr-value">"A green placeholder image with white text saying Modern Web Design"</span> <span class="html-attr">width=</span><span class="html-attr-value">"700"</span> <span class="html-attr">height=</span><span class="html-attr-value">"350"</span><span class="html-tag">&gt;</span>
+                <span class="html-tag">&lt;figcaption&gt;</span>Figure 1: HTML5 powers responsive and dynamic web experiences.<span class="html-tag">&lt;/figcaption&gt;</span>
+            <span class="html-tag">&lt;/figure&gt;</span>
+        <span class="html-tag">&lt;/section&gt;</span>
+    <span class="html-tag">&lt;/main&gt;</span>
+
+    <span class="html-tag">&lt;footer&gt;</span>
+        <span class="html-tag">&lt;p&gt;</span>Thanks for visiting my HTML5 learning page! Stay tuned for more updates from my Whizmath adventure. &copy; 2025 Whizmath. All rights reserved.<span class="html-tag">&lt;/p&gt;</span>
+    <span class="html-tag">&lt;/footer&gt;</span>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js Animated Background Setup
+        let scene, camera, renderer, particles;
+        let mouseX = 0, mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('three-canvas');
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            camera.position.z = 20; // Adjusted camera position to compensate for larger particles
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles (simple animated background)
+            const particleCount = 1500; // Increased particle count for more density
+            const geometry = new THREE.BufferGeometry();
+            const positions = [];
+            const colors = [];
+            const color = new THREE.Color();
+
+            for (let i = 0; i < particleCount; i++) {
+                // Position particles randomly in a larger cube
+                positions.push(
+                    (Math.random() * 2 - 1) * 40, // Wider spread for particles
+                    (Math.random() * 2 - 1) * 40,
+                    (Math.random() * 2 - 1) * 40
+                );
+                // Assign a random color
+                color.setHSL(Math.random(), 0.8, 0.7); // Brighter, more saturated colors
+                colors.push(color.r, color.g, color.b);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.5, // Particles 5 times bigger (0.1 * 5 = 0.5)
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.95, // Slightly less transparent for more presence
+                blending: THREE.AdditiveBlending
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // Add mouse interactivity for camera movement
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) * 0.003; // Adjusted sensitivity
+            mouseY = (event.clientY - windowHalfY) * 0.003;
+        }
+
+        function onWindowResize() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            windowHalfX = width / 2;
+            windowHalfY = height / 2;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Animate particles
+            if (particles) {
+                particles.rotation.x += 0.0006; // Slightly slower rotation for larger particles
+                particles.rotation.y += 0.0008;
+                // Add subtle oscillation
+                particles.position.x = Math.sin(Date.now() * 0.00008) * 1; // Increased oscillation range
+                particles.position.y = Math.cos(Date.now() * 0.00012) * 1;
+            }
+
+            // Animate camera based on mouse position
+            camera.position.x += (mouseX - camera.position.x) * 0.03; // Slower camera movement
+            camera.position.y += (-mouseY - camera.position.y) * 0.03;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        // Copy code functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling; // Get the <pre><code> element
+            const code = codeBlock.innerText;
+
+            // Use document.execCommand for broader iframe compatibility
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copied!';
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                button.textContent = 'Error!';
+            }
+            document.body.removeChild(textarea);
+
+            setTimeout(() => {
+                button.textContent = 'Copy Code';
+            }, 2000);
+        }
+
+        // Dark/Light Mode Toggle Logic
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+        const threeCanvas = document.getElementById('three-canvas');
+
+        // Function to set theme
+        function setTheme(theme) {
+            htmlElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            if (theme === 'dark') {
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+                threeCanvas.style.opacity = '0.25'; // Dark mode opacity
+            } else {
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+                threeCanvas.style.opacity = '0.05'; // Light mode opacity
+            }
+        }
+
+        // Check for saved theme preference on load
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Default to dark if no preference is saved
+            setTheme('dark');
+        }
+
+        // Event listener for toggle button
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                setTheme('light');
+            } else {
+                setTheme('dark');
+            }
+        });
+
+        // Home Button Logic
+        const homeButton = document.getElementById('home-button');
+        homeButton.addEventListener('click', () => {
+            window.history.back(); // Navigate back in browser history
+        });
+
+        // Initialize Three.js and start animation on window load
+        window.onload = function() {
+            initThreeJS();
+            animate();
+        };
+    </script>
+</body>
+</html>
