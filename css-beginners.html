@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS for Beginners: Styling Your Web Pages | Whizmath</title>
+    <meta name="description" content="Start styling your web pages with Whizmath's comprehensive CSS lesson. Learn CSS syntax, selectors, the box model, layout techniques (Flexbox, Grid), responsive design, and more, with practical examples.">
+    <meta name="keywords" content="CSS, beginner CSS, web styling, learn CSS, CSS tutorial, basic CSS, CSS selectors, CSS box model, Flexbox, CSS Grid, responsive design, media queries, CSS properties, Whizmath, online learning, coding for beginners">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles (Dark Mode) */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll due to animations */
+            background-color: #0d1117; /* Dark background for modern feel */
+            color: #e6edf3; /* Light text color */
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Send canvas to background */
+            opacity: 0.25; /* Subtle background animation */
+            transition: opacity 0.5s ease;
+        }
+
+        .content-section {
+            background-color: rgba(22, 27, 34, 0.88); /* Slightly more opaque dark background for content */
+            backdrop-filter: blur(15px); /* Stronger frosted glass effect */
+            border-radius: 2rem; /* Even more rounded corners */
+            padding: 3rem; /* More padding */
+            margin-bottom: 3rem; /* More margin */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); /* Deeper, softer shadow */
+            transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out, background-color 0.5s ease, border-color 0.5s ease;
+            border: 1px solid rgba(60, 65, 75, 0.6); /* Subtle border */
+        }
+
+        .content-section:hover {
+            transform: translateY(-10px); /* More pronounced lift on hover */
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6); /* Enhanced shadow on hover */
+        }
+
+        .code-block {
+            background-color: #161b22; /* Darker background for code */
+            border-radius: 1.25rem; /* More rounded code blocks */
+            padding: 1.5rem; /* More padding in code blocks */
+            overflow-x: auto; /* Allow horizontal scrolling for long code lines */
+            font-family: 'Fira Code', monospace; /* Monospace font for code */
+            font-size: 1rem; /* Slightly larger code font */
+            line-height: 1.6;
+            position: relative;
+            border: 1px solid rgba(60, 65, 75, 0.8); /* Subtle border for code blocks */
+            transition: background-color 0.5s ease, border-color 0.5s ease;
+        }
+
+        /* Basic syntax highlighting colors (can be expanded) */
+        .code-block .html-tag { color: #569cd6; } /* Blue for tags */
+        .code-block .html-attr { color: #9cdcfe; } /* Light blue for attributes */
+        .code-block .html-attr-value { color: #ce9178; } /* Orange for attribute values */
+        .code-block .html-comment { color: #6a9955; } /* Green for comments */
+        .code-block .css-selector { color: #dcdcaa; } /* Yellow for CSS selectors */
+        .code-block .css-property { color: #4ec9b0; } /* Teal for CSS properties */
+        .code-block .css-value { color: #b5cea8; } /* Light green for CSS values */
+        .code-block .css-comment { color: #6a9955; } /* Green for CSS comments */
+
+        .copy-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: #2a3039;
+            color: #e6edf3;
+            padding: 0.6rem 0.9rem;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color 0.2s ease, transform 0.1s ease-in-out, color 0.5s ease;
+            border: 1px solid #3b424d;
+        }
+
+        .copy-button:hover {
+            background-color: #3b424d;
+            transform: translateY(-3px);
+        }
+
+        /* Floating Buttons Base Style */
+        .floating-button {
+            position: fixed;
+            background-color: #2a3039;
+            color: #e6edf3;
+            border: 1px solid #3b424d;
+            border-radius: 9999px; /* Fully rounded */
+            padding: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            z-index: 50; /* Ensure it floats above content */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-button:hover {
+            background-color: #3b424d;
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .floating-button svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor; /* Use current text color for SVG */
+        }
+
+        /* Specific positioning for toggle and home buttons */
+        #theme-toggle {
+            top: 1.5rem;
+            right: 1.5rem;
+        }
+
+        #home-button {
+            top: 1.5rem;
+            left: 1.5rem;
+        }
+
+        /* Light Mode Styles (controlled by data-theme="light" on html) */
+        html[data-theme="light"] body {
+            background-color: #f0f2f5; /* Very light grey background */
+            color: #333; /* Dark text color for general content */
+        }
+
+        html[data-theme="light"] #three-canvas {
+            opacity: 0.05; /* Much more subtle in light mode */
+        }
+
+        html[data-theme="light"] .content-section {
+            background-color: rgba(255, 255, 255, 0.98); /* Near white, slightly transparent */
+            border-color: rgba(180, 180, 180, 0.7); /* Slightly darker, more defined border */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08); /* Lighter shadow */
+        }
+
+        html[data-theme="light"] .content-section:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12); /* Enhanced shadow on hover */
+        }
+
+        html[data-theme="light"] .code-block {
+            background-color: #f8f9fa; /* Very light grey code background */
+            border-color: rgba(160, 160, 160, 0.8); /* Slightly more defined border */
+        }
+
+        /* Light mode syntax highlighting colors */
+        html[data-theme="light"] .code-block .html-tag { color: #007bff; } /* Vibrant blue */
+        html[data-theme="light"] .code-block .html-attr { color: #6c757d; } /* Standard grey for attributes */
+        html[data-theme="light"] .code-block .html-attr-value { color: #dc3545; } /* Reddish for attribute values */
+        html[data-theme="light"] .code-block .html-comment { color: #28a745; } /* Vibrant green for comments */
+        html[data-theme="light"] .code-block .css-selector { color: #6f42c1; } /* Purple-ish for CSS selectors */
+        html[data-theme="light"] .code-block .css-property { color: #fd7e14; } /* Orange for CSS properties */
+        html[data-theme="light"] .code-block .css-value { color: #17a2b8; } /* Teal for CSS values */
+        html[data-theme="light"] .code-block .css-comment { color: #28a745; } /* Vibrant green for CSS comments */
+
+
+        html[data-theme="light"] .copy-button {
+            background-color: #c0c2c5;
+            color: #333;
+            border-color: #b0b2b5;
+        }
+
+        html[data-theme="light"] .copy-button:hover {
+            background-color: #b0b2b5;
+        }
+
+        html[data-theme="light"] .floating-button {
+            background-color: #ffffff; /* Pure white for crisp look */
+            color: #333;
+            border-color: #d0d0d0; /* Lighter border */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Lighter shadow */
+        }
+
+        html[data-theme="light"] .floating-button:hover {
+            background-color: #f0f0f0; /* Slight grey on hover */
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Light mode text colors for headings and branded text */
+        html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3 {
+            color: #1e40af; /* Darker blue for headings */
+        }
+        html[data-theme="light"] .text-blue-400 { color: #1e40af; }
+        html[data-theme="light"] .text-blue-300 { color: #1e40af; }
+        html[data-theme="light"] .text-blue-200 { color: #1e40af; }
+        html[data-theme="light"] .text-purple-400 { color: #6f42c1; } /* Slightly more vibrant purple for Whizmath */
+
+        /* Ensure specific Tailwind text colors are overridden for light mode visibility */
+        html[data-theme="light"] .text-gray-300 {
+            color: #4a5568; /* Darker grey for better contrast in light mode */
+        }
+        html[data-theme="light"] .text-gray-400 {
+            color: #718096; /* Slightly lighter dark grey for footer, still visible */
+        }
+
+
+        /* CSS Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(60px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        .animate-fade-in-delay {
+            animation: fadeIn 1.2s ease-out 0.6s forwards;
+            opacity: 0; /* Hidden initially */
+        }
+
+        .animate-slide-up {
+            opacity: 0; /* Hidden initially */
+            animation: slideUp 1s ease-out forwards;
+        }
+
+        /* Staggered animation for sections */
+        .content-section:nth-of-type(1) { animation-delay: 1s; }
+        .content-section:nth-of-type(2) { animation-delay: 1.3s; }
+        .content-section:nth-of-type(3) { animation-delay: 1.6s; }
+        .content-section:nth-of-type(4) { animation-delay: 1.9s; }
+        .content-section:nth-of-type(5) { animation-delay: 2.2s; }
+        .content-section:nth-of-type(6) { animation-delay: 2.5s; }
+        .content-section:nth-of-type(7) { animation-delay: 2.8s; }
+        .content-section:nth-of-type(8) { animation-delay: 3.1s; }
+        .content-section:nth-of-type(9) { animation-delay: 3.4s; }
+        .content-section:nth-of-type(10) { animation-delay: 3.7s; }
+        .content-section:nth-of-type(11) { animation-delay: 4.0s; }
+        .content-section:nth-of-type(12) { animation-delay: 4.3s; }
+        .content-section:nth-of-type(13) { animation-delay: 4.6s; }
+        .content-section:nth-of-type(14) { animation-delay: 4.9s; }
+        .content-section:nth-of-type(15) { animation-delay: 5.2s; }
+        .content-section:nth-of-type(16) { animation-delay: 5.5s; }
+        .content-section:nth-of-type(17) { animation-delay: 5.8s; }
+        .content-section:nth-of-type(18) { animation-delay: 6.1s; }
+        .content-section:nth-of-type(19) { animation-delay: 6.4s; }
+
+
+        /* Responsive adjustments for floating buttons */
+        @media (max-width: 480px) {
+            .floating-button { top: 1rem; padding: 0.6rem; }
+            .floating-button svg { width: 20px; height: 20px; }
+            #theme-toggle { right: 1rem; }
+            #home-button { left: 1rem; }
+        }
+    </style>
+</head>
+<body class="text-gray-200 min-h-screen flex flex-col">
+    <canvas id="three-canvas"></canvas>
+
+    <button id="home-button" class="floating-button" aria-label="Go back to previous page">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clip-rule="evenodd" />
+        </svg>
+    </button>
+
+    <button id="theme-toggle" class="floating-button" aria-label="Toggle dark and light mode">
+        <svg id="moon-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.106a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.06l1.59-1.591ZM12 18a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V18a.75.75 0 0 1 .75-.75ZM5.05 10.95a.75.75 0 1 0-1.06-1.06l-1.59 1.59a.75.75 0 1 0 1.06 1.06l1.59-1.59ZM18.894 17.894a.75.75 0 1 0 1.06-1.06l-1.59-1.59a.75.75 0 0 0-1.06 1.06l1.59 1.59ZM3.25 12a.75.75 0 0 1-.75.75H.25a.75.75 0 0 1 0-1.5H2.5c.414 0 .75.336.75.75ZM6.106 5.05a.75.75 0 1 0-1.06 1.06l1.59 1.59a.75.75 0 1 0 1.06-1.06l-1.59-1.59ZM12 5.25a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM19.75 12a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5H20.5a.75.75 0 0 1-.75-.75Z" />
+        </svg>
+    </button>
+
+    <div class="relative z-10 flex-grow container mx-auto px-4 py-8 md:py-12 lg:py-16">
+
+        <header class="text-center mb-12 md:mb-16 lg:mb-20">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-400 leading-tight mb-4 animate-fade-in">
+                CSS for Beginners: Styling Your Web Pages at <span class="text-purple-400">Whizmath</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto animate-fade-in-delay">
+                Welcome to the world of beautiful web design! CSS (Cascading Style Sheets) is the language used to style the look and feel of your HTML documents.
+                While HTML provides the structure, CSS makes your web pages visually appealing, responsive, and engaging. This comprehensive lesson will guide you through the essentials of CSS, helping you transform plain HTML into stunning web experiences!
+            </p>
+        </header>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">1. What is CSS? The Art of Web Styling</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                CSS stands for **Cascading Style Sheets**. It is a stylesheet language used to describe the presentation of a document written in HTML (or XML). Think of it as the "clothes" for your HTML "skeleton." CSS handles:
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Colors:</strong> Text, backgrounds, borders.</li>
+                <li><strong class="text-blue-200">Fonts:</strong> Typeface, size, weight, style.</li>
+                <li><strong class="text-blue-200">Layout:</strong> Positioning elements, creating columns, responsive design.</li>
+                <li><strong class="text-blue-200">Spacing:</strong> Margins, padding.</li>
+                <li><strong class="text-blue-200">Visual Effects:</strong> Shadows, gradients, animations, transitions.</li>
+            </ul>
+            <p class="text-lg leading-relaxed">
+                The core principle of CSS is **separation of concerns**: HTML focuses on content and structure, while CSS focuses purely on presentation. This makes web development more organized, maintainable, and flexible.
+            </p>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">2. CSS Syntax: The Building Blocks of Rules</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                A CSS stylesheet consists of one or more **CSS rules**. Each rule has two main parts: a **selector** and one or more **declarations**.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="css-selector">selector</span> {
+    <span class="css-property">property</span>: <span class="css-value">value</span>; <span class="css-comment">/* Declaration 1 */</span>
+    <span class="css-property">property2</span>: <span class="css-value">value2</span>; <span class="css-comment">/* Declaration 2 */</span>
+}</code></pre>
+            </div>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Selector:</strong> Points to the HTML element(s) you want to style (e.g., `p`, `h1`, `.my-class`, `#my-id`).</li>
+                <li><strong class="text-blue-200">Declaration:</strong> Defines the style you want to apply. It consists of a **property** and a **value**, separated by a colon (`:`), and terminated by a semicolon (`;`).
+                    <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                        <li><strong class="text-blue-200">Property:</strong> The style attribute you want to change (e.g., `color`, `font-size`, `margin`).</li>
+                        <li><strong class="text-blue-200">Value:</strong> The value for the given property (e.g., `blue`, `16px`, `20px`).</li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="css-selector">h1</span> {
+    <span class="css-property">color</span>: <span class="css-value">darkblue</span>;
+    <span class="css-property">font-size</span>: <span class="css-value">3em</span>; <span class="css-comment">/* 3 times the base font size */</span>
+}
+
+<span class="css-selector">p</span> {
+    <span class="css-property">font-family</span>: <span class="css-value">'Arial', sans-serif</span>;
+    <span class="css-property">line-height</span>: <span class="css-value">1.5</span>;
+}</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">3. How to Include CSS in HTML</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                There are three main ways to include CSS in your HTML documents. While all work, the **external stylesheet** method is highly recommended for most projects.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. External Stylesheets (Recommended)</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                This is the most common and preferred method. You write your CSS in a separate `.css` file (e.g., `styles.css`) and link it to your HTML document using the `&lt;link&gt;` tag in the `&lt;head&gt;` section.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-comment">&lt;!-- In your HTML file (index.html) --&gt;</span>
+<span class="html-tag">&lt;head&gt;</span>
+    <span class="html-tag">&lt;link</span> <span class="html-attr">rel=</span><span class="html-attr-value">"stylesheet"</span> <span class="html-attr">href=</span><span class="html-attr-value">"styles.css"</span><span class="html-tag">&gt;</span>
+<span class="html-tag">&lt;/head&gt;</span>
+
+<span class="html-comment">&lt;!-- In your CSS file (styles.css) --&gt;</span>
+<span class="css-selector">body</span> {
+    <span class="css-property">background-color</span>: <span class="css-value">#f4f4f4</span>;
+}
+<span class="css-selector">h1</span> {
+    <span class="css-property">color</span>: <span class="css-value">#333</span>;
+}</code></pre>
+            </div>
+            <p class="text-lg leading-relaxed">
+                **Advantages:**
+                * Separation of concerns (HTML for structure, CSS for style).
+                * Easier to maintain and update styles across multiple pages.
+                * Faster page loading after the first visit (CSS file is cached).
+            </p>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Internal Stylesheets</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                You can embed CSS directly within the HTML document using the `&lt;style&gt;` tag inside the `&lt;head&gt;` section. This is useful for single-page applications or small demonstrations.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;head&gt;</span>
+    <span class="html-tag">&lt;style&gt;</span>
+        <span class="css-selector">body</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">lightblue</span>;
+        }
+        <span class="css-selector">h1</span> {
+            <span class="css-property">color</span>: <span class="css-value">navy</span>;
+        }
+    <span class="html-tag">&lt;/style&gt;</span>
+<span class="html-tag">&lt;/head&gt;</span></code></pre>
+            </div>
+            <p class="text-lg leading-relaxed">
+                **Advantages:** Styles are self-contained within the HTML file.
+                **Disadvantages:** Not suitable for large projects, as it mixes content and presentation and makes styles difficult to reuse across multiple pages.
+            </p>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">c. Inline Styles</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                You can apply CSS directly to an individual HTML element using the `style` attribute.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;p</span> <span class="html-attr">style=</span><span class="html-attr-value">"color: green; font-size: 18px;"</span><span class="html-tag">&gt;</span>This paragraph has inline styles.<span class="html-tag">&lt;/p&gt;</span></code></pre>
+            </div>
+            <p class="text-lg leading-relaxed">
+                **Advantages:** Quick for small, specific overrides.
+                **Disadvantages:** Highly discouraged for general styling. It violates separation of concerns, makes code hard to read and maintain, and prevents reuse of styles.
+            </p>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">4. CSS Selectors: Targeting HTML Elements</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Selectors are patterns used to select the HTML elements you want to style. Mastering selectors is fundamental to effective CSS.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Element (Type) Selector:</strong> Selects all instances of a given HTML element.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">p</span> { <span class="css-property">color</span>: <span class="css-value">blue</span>; } <span class="css-comment">/* Selects all &lt;p&gt; elements */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">Class Selector:</strong> Selects elements with a specific `class` attribute. Prefixed with a dot (`.`).
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">.highlight</span> { <span class="css-property">background-color</span>: <span class="css-value">yellow</span>; } <span class="css-comment">/* Selects elements with class="highlight" */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">ID Selector:</strong> Selects a single element with a specific `id` attribute. Prefixed with a hash (`#`). IDs must be unique on a page.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">#main-header</span> { <span class="css-property">text-align</span>: <span class="css-value">center</span>; } <span class="css-comment">/* Selects the element with id="main-header" */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">Universal Selector:</strong> Selects all HTML elements on the page.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">*</span> { <span class="css-property">margin</span>: <span class="css-value">0</span>; <span class="css-property">padding</span>: <span class="css-value">0</span>; } <span class="css-comment">/* Resets margin/padding for all elements */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">Grouping Selector:</strong> Selects multiple elements with the same style. Separate selectors with a comma.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">h1, h2, h3</span> { <span class="css-property">font-family</span>: <span class="css-value">Georgia, serif</span>; } <span class="css-comment">/* Selects h1, h2, and h3 elements */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">Descendant Selector:</strong> Selects an element that is a descendant of another element. Separate selectors with a space.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">ul li</span> { <span class="css-property">list-style-type</span>: <span class="css-value">square</span>; } <span class="css-comment">/* Selects &lt;li&gt; elements inside &lt;ul&gt; elements */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">Child Selector:</strong> Selects an element that is a direct child of another element. Separate selectors with `>`.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">div > p</span> { <span class="css-property">border</span>: <span class="css-value">1px solid gray</span>; } <span class="css-comment">/* Selects &lt;p&gt; elements that are direct children of &lt;div&gt; */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">Adjacent Sibling Selector:</strong> Selects an element directly following another element. Separate selectors with `+`.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">h2 + p</span> { <span class="css-property">margin-top</span>: <span class="css-value">0</span>; } <span class="css-comment">/* Selects a &lt;p&gt; element directly after an &lt;h2&gt; */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">General Sibling Selector:</strong> Selects all elements that are siblings of a specified element. Separate selectors with `~`.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">h2 ~ p</span> { <span class="css-property">background-color</span>: <span class="css-value">#f0f0f0</span>; } <span class="css-comment">/* Selects all &lt;p&gt; elements that are siblings of an &lt;h2&gt; */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">Attribute Selector:</strong> Selects elements based on the presence or value of an attribute.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">a[target="_blank"]</span> { <span class="css-property">color</span>: <span class="css-value">orange</span>; } <span class="css-comment">/* Selects &lt;a&gt; tags with target="_blank" */</span>
+<span class="css-selector">input[type="text"]</span> { <span class="css-property">border</span>: <span class="css-value">1px solid blue</span>; } <span class="css-comment">/* Selects text input fields */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">Pseudo-classes:</strong> Selects elements based on a special state (e.g., when hovered over, when a link is visited). Prefixed with a colon (`:`).
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">a:hover</span> { <span class="css-property">color</span>: <span class="css-value">red</span>; } <span class="css-comment">/* When mouse hovers over a link */</span>
+<span class="css-selector">input:focus</span> { <span class="css-property">border-color</span>: <span class="css-value">green</span>; } <span class="css-comment">/* When an input field is focused */</span>
+<span class="css-selector">p:first-child</span> { <span class="css-property">font-weight</span>: <span class="css-value">bold</span>; } <span class="css-comment">/* Selects the first &lt;p&gt; element among its siblings */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">Pseudo-elements:</strong> Selects a part of an element (e.g., the first line of a paragraph, content before an element). Prefixed with a double colon (`::`).
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">p::first-line</span> { <span class="css-property">font-variant</span>: <span class="css-value">small-caps</span>; } <span class="css-comment">/* Styles the first line of every paragraph */</span>
+<span class="css-selector">h2::before</span> { <span class="css-property">content</span>: <span class="css-value">"--- "</span>; } <span class="css-comment">/* Inserts content before each &lt;h2&gt; */</span></code></pre>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">5. The CSS Box Model: Understanding Element Dimensions</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Every HTML element is treated as a rectangular box by the browser. The CSS Box Model describes how these boxes are rendered, including their content, padding, borders, and margins. Understanding this is crucial for layout and spacing.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Content:</strong> The actual content of the element (text, images, video). Its dimensions are defined by `width` and `height`.</li>
+                <li><strong class="text-blue-200">Padding:</strong> The space between the content and the border. It pushes the border outwards from the content.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">.box</span> { <span class="css-property">padding</span>: <span class="css-value">10px</span>; } <span class="css-comment">/* 10px on all sides */</span>
+<span class="css-selector">.box</span> { <span class="css-property">padding-top</span>: <span class="css-value">5px</span>; <span class="css-property">padding-right</span>: <span class="css-value">10px</span>; <span class="css-property">padding-bottom</span>: <span class="css-value">15px</span>; <span class="css-property">padding-left</span>: <span class="css-value">20px</span>; }
+<span class="css-selector">.box</span> { <span class="css-property">padding</span>: <span class="css-value">5px 10px 15px 20px</span>; } <span class="css-comment">/* Top Right Bottom Left */</span>
+<span class="css-selector">.box</span> { <span class="css-property">padding</span>: <span class="css-value">5px 10px</span>; } <span class="css-comment">/* Top/Bottom Left/Right */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">Border:</strong> A line that goes around the padding and content. You can set its `width`, `style`, and `color`.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">.box</span> { <span class="css-property">border</span>: <span class="css-value">2px solid red</span>; }</code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">Margin:</strong> The space outside the border. It pushes other elements away from the current element.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">.box</span> { <span class="css-property">margin</span>: <span class="css-value">20px</span>; } <span class="css-comment">/* 20px on all sides */</span>
+<span class="css-selector">.box</span> { <span class="css-property">margin-top</span>: <span class="css-value">10px</span>; }</code></pre>
+                    </div>
+                </li>
+            </ul>
+            <p class="text-lg leading-relaxed">
+                By default, `width` and `height` properties apply to the content area only. Using `box-sizing: border-box;` changes this, making `width` and `height` include padding and border, which simplifies layout calculations. This is highly recommended for modern CSS.
+            </p>
+            <div class="code-block my-2">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="css-selector">*</span> {
+    <span class="css-property">box-sizing</span>: <span class="css-value">border-box</span>; <span class="css-comment">/* Apply to all elements for consistent box model */</span>
+}</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">6. The `display` Property: Controlling Element Behavior</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                The `display` property is one of the most important CSS properties for controlling the layout and behavior of elements.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`block` (Default for `&lt;p&gt;`, `&lt;div&gt;`, `&lt;h1&gt;`, etc.):</strong>
+                    * Takes up the full width available.
+                    * Starts on a new line.
+                    * Allows `width`, `height`, `margin`, `padding` to be set.
+                </li>
+                <li><strong class="text-blue-200">`inline` (Default for `&lt;span&gt;`, `&lt;a&gt;`, `&lt;img&gt;`, etc.):</strong>
+                    * Takes up only as much width as necessary.
+                    * Does not start on a new line.
+                    * `width` and `height` properties have no effect. Vertical `margin` and `padding` have no effect on layout (though horizontal do).
+                </li>
+                <li><strong class="text-blue-200">`inline-block`:</strong>
+                    * Combines characteristics of both: behaves like an inline element but allows `width`, `height`, `margin`, and `padding` to be set like a block element.
+                    * Does not start on a new line.
+                </li>
+                <li><strong class="text-blue-200">`none`:</strong>
+                    * Completely hides the element. It takes up no space in the layout.
+                </li>
+                <li><strong class="text-blue-200">`flex` and `grid`:</strong> These are modern layout modes for creating complex, responsive layouts. They are typically applied to a container element to control the layout of its direct children. We'll touch on these briefly later.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-comment">&lt;!-- HTML --&gt;</span>
+<span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"block-example"</span><span class="html-tag">&gt;</span>Block Element<span class="html-tag">&lt;/div&gt;</span>
+<span class="html-tag">&lt;span</span> <span class="html-attr">class=</span><span class="html-attr-value">"inline-example"</span><span class="html-tag">&gt;</span>Inline Element<span class="html-tag">&lt;/span&gt;</span>
+<span class="html-tag">&lt;span</span> <span class="html-attr">class=</span><span class="html-attr-value">"inline-block-example"</span><span class="html-tag">&gt;</span>Inline-Block Element<span class="html-tag">&lt;/span&gt;</span>
+
+<span class="html-comment">&lt;!-- CSS --&gt;</span>
+<span class="css-selector">.block-example</span> {
+    <span class="css-property">background-color</span>: <span class="css-value">lightcoral</span>;
+    <span class="css-property">padding</span>: <span class="css-value">10px</span>;
+    <span class="css-property">margin</span>: <span class="css-value">10px</span>;
+    <span class="css-property">display</span>: <span class="css-value">block</span>; <span class="css-comment">/* Default, but explicit */</span>
+}
+<span class="css-selector">.inline-example</span> {
+    <span class="css-property">background-color</span>: <span class="css-value">lightgreen</span>;
+    <span class="css-property">padding</span>: <span class="css-value">10px</span>; <span class="css-comment">/* Only horizontal padding affects layout */</span>
+    <span class="css-property">margin</span>: <span class="css-value">10px</span>; <span class="css-comment">/* Only horizontal margin affects layout */</span>
+    <span class="css-property">width</span>: <span class="css-value">100px</span>; <span class="css-comment">/* No effect */</span>
+    <span class="css-property">height</span>: <span class="css-value">50px</span>; <span class="css-comment">/* No effect */</span>
+    <span class="css-property">display</span>: <span class="css-value">inline</span>; <span class="css-comment">/* Default, but explicit */</span>
+}
+<span class="css-selector">.inline-block-example</span> {
+    <span class="css-property">background-color</span>: <span class="css-value">lightskyblue</span>;
+    <span class="css-property">padding</span>: <span class="css-value">10px</span>;
+    <span class="css-property">margin</span>: <span class="css-value">10px</span>;
+    <span class="css-property">width</span>: <span class="css-value">150px</span>; <span class="css-comment">/* Has effect */</span>
+    <span class="css-property">height</span>: <span class="css-value">70px</span>; <span class="css-comment">/* Has effect */</span>
+    <span class="css-property">display</span>: <span class="css-value">inline-block</span>;
+}</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">7. Colors in CSS: Adding Visual Appeal</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                CSS offers several ways to define colors for text, backgrounds, borders, and more.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Color Keywords:</strong> Simple, predefined names (e.g., `red`, `blue`, `green`, `black`, `white`).
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">p</span> { <span class="css-property">color</span>: <span class="css-value">purple</span>; }</code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">Hexadecimal (Hex) Values:</strong> A 6-digit hexadecimal number (0-9, A-F) representing RGB color values. Prefixed with `#`.
+                    * `#RRGGBB` (e.g., `#FF0000` for red)
+                    * `#RGB` (shorthand, e.g., `#F00` for red, equivalent to `#FF0000`)
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">h1</span> { <span class="css-property">color</span>: <span class="css-value">#FF4500</span>; } <span class="css-comment">/* OrangeRed */</span>
+<span class="css-selector">body</span> { <span class="css-property">background-color</span>: <span class="css-value">#333</span>; } <span class="css-comment">/* Dark gray */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">RGB (Red, Green, Blue) Values:</strong> Specifies color using an RGB model, where each value ranges from 0 to 255.
+                    * `rgb(R, G, B)` (e.g., `rgb(255, 0, 0)` for red)
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">.info</span> { <span class="css-property">color</span>: <span class="css-value">rgb(0, 128, 0)</span>; } <span class="css-comment">/* Green */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">RGBA (Red, Green, Blue, Alpha) Values:</strong> Same as RGB, but with an added alpha (opacity) channel, ranging from 0 (fully transparent) to 1 (fully opaque).
+                    * `rgba(R, G, B, A)` (e.g., `rgba(255, 0, 0, 0.5)` for 50% opaque red)
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">.overlay</span> { <span class="css-property">background-color</span>: <span class="css-value">rgba(0, 0, 0, 0.7)</span>; } <span class="css-comment">/* 70% opaque black */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">HSL (Hue, Saturation, Lightness) Values:</strong> Specifies color using a cylindrical coordinate system.
+                    * `hsl(H, S%, L%)` (e.g., `hsl(0, 100%, 50%)` for red)
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">.accent</span> { <span class="css-property">color</span>: <span class="css-value">hsl(240, 100%, 50%)</span>; } <span class="css-comment">/* Blue */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">HSLA (Hue, Saturation, Lightness, Alpha) Values:</strong> Same as HSL, with an added alpha channel.
+                    * `hsla(H, S%, L%, A)` (e.g., `hsla(120, 100%, 50%, 0.8)` for 80% opaque green)
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">.semi-transparent-green</span> { <span class="css-property">background-color</span>: <span class="css-value">hsla(120, 70%, 60%, 0.6)</span>; }</code></pre>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">8. Common CSS Properties: Text and Background</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Let's look at some of the most frequently used CSS properties for styling text and backgrounds.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. Text Properties</h3>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`color`</strong>: Sets the color of the text.</li>
+                <li><strong class="text-blue-200">`font-family`</strong>: Specifies the font for an element. Always provide fallback fonts.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">p</span> { <span class="css-property">font-family</span>: <span class="css-value">'Roboto', sans-serif</span>; }</code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">`font-size`</strong>: Sets the size of the text. Can use `px`, `em`, `rem`, `vw`, `vh`.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">h1</span> { <span class="css-property">font-size</span>: <span class="css-value">2.5em</span>; }
+<span class="css-selector">p</span> { <span class="css-property">font-size</span>: <span class="css-value">16px</span>; }</code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">`font-weight`</strong>: Sets how thick or thin characters in text should be displayed. (e.g., `normal`, `bold`, `100`-`900`).
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">strong</span> { <span class="css-property">font-weight</span>: <span class="css-value">bold</span>; }
+<span class="css-selector">h2</span> { <span class="css-property">font-weight</span>: <span class="css-value">700</span>; }</code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">`text-align`</strong>: Aligns the text within its element (`left`, `right`, `center`, `justify`).
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">h1</span> { <span class="css-property">text-align</span>: <span class="css-value">center</span>; }</code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">`line-height`</strong>: Sets the height of a line of text.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">p</span> { <span class="css-property">line-height</span>: <span class="css-value">1.8</span>; } <span class="css-comment">/* 1.8 times the font size */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">`text-decoration`</strong>: Adds or removes decorations from text (`none`, `underline`, `overline`, `line-through`).
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">a</span> { <span class="css-property">text-decoration</span>: <span class="css-value">none</span>; } <span class="css-comment">/* Removes default underline from links */</span></code></pre>
+                    </div>
+                </li>
+            </ul>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Background Properties</h3>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`background-color`</strong>: Sets the background color of an element.</li>
+                <li><strong class="text-blue-200">`background-image`</strong>: Sets one or more background images for an element.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">body</span> { <span class="css-property">background-image</span>: <span class="css-value">url('background.png')</span>; }</code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">`background-repeat`</strong>: Specifies if/how a background image should be repeated (`repeat`, `no-repeat`, `repeat-x`, `repeat-y`).
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">.hero</span> { <span class="css-property">background-repeat</span>: <span class="css-value">no-repeat</span>; }</code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">`background-position`</strong>: Sets the starting position of a background image.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">.hero</span> { <span class="css-property">background-position</span>: <span class="css-value">center center</span>; }</code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">`background-size`</strong>: Specifies the size of the background images (`auto`, `cover`, `contain`, or specific dimensions).
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">.hero</span> { <span class="css-property">background-size</span>: <span class="css-value">cover</span>; } <span class="css-comment">/* Covers the entire element */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">`background` (Shorthand):</strong> A shorthand property to set all background properties in one declaration.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">.card</span> { <span class="css-property">background</span>: <span class="css-value">#f0f0f0 url('image.png') no-repeat center / cover</span>; }</code></pre>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">9. CSS Units: Measuring Everything</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                CSS uses various units to define lengths, sizes, and other measurements. Understanding them is key to creating flexible and responsive designs.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Absolute Length Units (Fixed):</strong>
+                    * `px` (pixels): Fixed-size units. 1px is 1/96th of an inch. Good for precise control, but not responsive.
+                    <div class="code-block my-2">
+                        <pre><code><span class="css-selector">.logo</span> { <span class="css-property">width</span>: <span class="css-value">100px</span>; }</code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">Relative Length Units (Scalable):</strong> These are preferred for responsive design as they scale relative to something else.
+                    * `%` (percentage): Relative to the parent element's size.
+                        <div class="code-block my-2">
+                            <pre><code><span class="css-selector">.container</span> { <span class="css-property">width</span>: <span class="css-value">80%</span>; }</code></pre>
+                        </div>
+                    * `em`: Relative to the `font-size` of the element itself (or its parent if not set). If `font-size` is 16px, then `1em` is 16px, `2em` is 32px.
+                        <div class="code-block my-2">
+                            <pre><code><span class="css-selector">p</span> { <span class="css-property">font-size</span>: <span class="css-value">1.2em</span>; }</code></pre>
+                        </div>
+                    * `rem` (root em): Relative to the `font-size` of the root `&lt;html&gt;` element. This makes scaling more predictable across the entire document.
+                        <div class="code-block my-2">
+                            <pre><code><span class="css-selector">h1</span> { <span class="css-property">font-size</span>: <span class="css-value">3rem</span>; }</code></pre>
+                        </div>
+                    * `vw` (viewport width): Relative to 1% of the viewport's width. `100vw` is the full viewport width.
+                        <div class="code-block my-2">
+                            <pre><code><span class="css-selector">.hero-text</span> { <span class="css-property">font-size</span>: <span class="css-value">5vw</span>; }</code></pre>
+                        </div>
+                    * `vh` (viewport height): Relative to 1% of the viewport's height. `100vh` is the full viewport height.
+                        <div class="code-block my-2">
+                            <pre><code><span class="css-selector">.full-screen-section</span> { <span class="css-property">min-height</span>: <span class="css-value">100vh</span>; }</code></pre>
+                        </div>
+                </li>
+            </ul>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">10. Cascade, Specificity, and Inheritance: The CSS Rules</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                These three concepts determine how CSS rules are applied when multiple rules could affect the same element.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. Cascade</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                The "C" in CSS stands for Cascading. When multiple style rules apply to the same element, the cascade determines which rule takes precedence. The order is generally:
+            </p>
+            <ol class="list-decimal list-inside mb-4 text-lg space-y-2">
+                <li>Browser default styles (User Agent Stylesheets)</li>
+                <li>User-defined styles (from browser settings)</li>
+                <li>Author styles (your CSS)
+                    <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                        <li>External stylesheets</li>
+                        <li>Internal stylesheets</li>
+                        <li>Inline styles</li>
+                    </ul>
+                </li>
+                <li>`!important` rules (overrides almost everything, use sparingly!)</li>
+            </ol>
+            <p class="text-lg leading-relaxed">
+                Later rules in the stylesheet generally override earlier rules if they have the same specificity.
+            </p>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Specificity</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                Specificity is a scoring system that determines which CSS rule gets applied when multiple rules target the same element. A more specific selector will override a less specific one.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>**Inline styles** have the highest specificity.</li>
+                <li>**ID selectors** (`#my-id`) are highly specific.</li>
+                <li>**Class selectors** (`.my-class`), **attribute selectors** (`[type="text"]`), and **pseudo-classes** (`:hover`) are less specific than IDs.</li>
+                <li>**Element (type) selectors** (`p`, `div`) and **pseudo-elements** (`::before`) are the least specific.</li>
+                <li>The `!important` keyword overrides all specificity, but should be avoided unless absolutely necessary for debugging or specific overrides.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="css-selector">p</span> { <span class="css-property">color</span>: <span class="css-value">red</span>; } <span class="css-comment">/* Low specificity */</span>
+<span class="css-selector">.text-blue</span> { <span class="css-property">color</span>: <span class="css-value">blue</span>; } <span class="css-comment">/* Higher specificity, will win */</span>
+<span class="css-selector">#main-text</span> { <span class="css-property">color</span>: <span class="css-value">green</span>; } <span class="css-comment">/* Highest specificity, will win */</span></code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">c. Inheritance</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                Some CSS properties are inherited by child elements from their parent elements. For example, `font-family` and `color` are typically inherited, while `border` and `margin` are not.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="css-selector">body</span> {
+    <span class="css-property">font-family</span>: <span class="css-value">'Verdana', sans-serif</span>; <span class="css-comment">/* Inherited by children */</span>
+    <span class="css-property">color</span>: <span class="css-value">#333</span>; <span class="css-comment">/* Inherited by children */</span>
+    <span class="css-property">border</span>: <span class="css-value">1px solid black</span>; <span class="css-comment">/* NOT inherited by children */</span>
+}</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">11. Introduction to Layout with Flexbox and CSS Grid</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Modern CSS offers powerful layout modules: Flexbox (for one-dimensional layouts) and CSS Grid (for two-dimensional layouts). These have largely replaced older, less flexible methods like floats.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. Flexbox (Flexible Box Layout)</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Flexbox is designed for laying out items in a single dimension (either a row or a column). It's perfect for distributing space among items in an interface.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>Apply `display: flex;` to the **container** (parent) element.</li>
+                <li>Use properties like `justify-content` (for horizontal alignment) and `align-items` (for vertical alignment) on the container.</li>
+                <li>Use properties like `flex-grow`, `flex-shrink`, `flex-basis` on the **items** (children).</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-comment">&lt;!-- HTML --&gt;</span>
+<span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"flex-container"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"flex-item"</span><span class="html-tag">&gt;</span>Item 1<span class="html-tag">&lt;/div&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"flex-item"</span><span class="html-tag">&gt;</span>Item 2<span class="html-tag">&lt;/div&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"flex-item"</span><span class="html-tag">&gt;</span>Item 3<span class="html-tag">&lt;/div&gt;</span>
+<span class="html-tag">&lt;/div&gt;</span>
+
+<span class="html-comment">&lt;!-- CSS --&gt;</span>
+<span class="css-selector">.flex-container</span> {
+    <span class="css-property">display</span>: <span class="css-value">flex</span>;
+    <span class="css-property">justify-content</span>: <span class="css-value">space-around</span>; <span class="css-comment">/* Distributes items with space around them */</span>
+    <span class="css-property">align-items</span>: <span class="css-value">center</span>; <span class="css-comment">/* Vertically centers items */</span>
+    <span class="css-property">height</span>: <span class="css-value">150px</span>;
+    <span class="css-property">border</span>: <span class="css-value">2px solid #3498db</span>;
+    <span class="css-property">background-color</span>: <span class="css-value">#ecf0f1</span>;
+}
+<span class="css-selector">.flex-item</span> {
+    <span class="css-property">background-color</span>: <span class="css-value">#2ecc71</span>;
+    <span class="css-property">color</span>: <span class="css-value">white</span>;
+    <span class="css-property">padding</span>: <span class="css-value">20px</span>;
+    <span class="css-property">margin</span>: <span class="css-value">10px</span>;
+    <span class="css-property">border-radius</span>: <span class="css-value">8px</span>;
+}</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. CSS Grid Layout</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                CSS Grid is a two-dimensional layout system that allows you to design complex layouts with rows and columns. It's ideal for defining the overall page structure.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>Apply `display: grid;` to the **container** element.</li>
+                <li>Define columns and rows using `grid-template-columns` and `grid-template-rows`.</li>
+                <li>Position items using `grid-column` and `grid-row`.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-comment">&lt;!-- HTML --&gt;</span>
+<span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"grid-container"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"grid-item"</span><span class="html-tag">&gt;</span>Header<span class="html-tag">&lt;/div&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"grid-item"</span><span class="html-tag">&gt;</span>Sidebar<span class="html-tag">&lt;/div&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"grid-item"</span><span class="html-tag">&gt;</span>Content<span class="html-tag">&lt;/div&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"grid-item"</span><span class="html-tag">&gt;</span>Footer<span class="html-tag">&lt;/div&gt;</span>
+<span class="html-tag">&lt;/div&gt;</span>
+
+<span class="html-comment">&lt;!-- CSS --&gt;</span>
+<span class="css-selector">.grid-container</span> {
+    <span class="css-property">display</span>: <span class="css-value">grid</span>;
+    <span class="css-property">grid-template-columns</span>: <span class="css-value">1fr 3fr</span>; <span class="css-comment">/* One column 1 part, second 3 parts */</span>
+    <span class="css-property">grid-template-rows</span>: <span class="css-value">auto 1fr auto</span>; <span class="css-comment">/* Header, Content, Footer */</span>
+    <span class="css-property">gap</span>: <span class="css-value">10px</span>; <span class="css-comment">/* Space between grid items */</span>
+    <span class="css-property">height</span>: <span class="css-value">300px</span>;
+    <span class="css-property">border</span>: <span class="css-value">2px solid #e74c3c</span>;
+    <span class="css-property">background-color</span>: <span class="css-value">#ecf0f1</span>;
+}
+<span class="css-selector">.grid-item</span> {
+    <span class="css-property">background-color</span>: <span class="css-value">#9b59b6</span>;
+    <span class="css-property">color</span>: <span class="css-value">white</span>;
+    <span class="css-property">padding</span>: <span class="css-value">20px</span>;
+    <span class="css-property">border-radius</span>: <span class="css-value">8px</span>;
+    <span class="css-property">text-align</span>: <span class="css-value">center</span>;
+}
+<span class="css-selector">.grid-item:nth-child(1)</span> { <span class="css-property">grid-column</span>: <span class="css-value">1 / 3</span>; } <span class="css-comment">/* Header spans both columns */</span>
+<span class="css-selector">.grid-item:nth-child(4)</span> { <span class="css-property">grid-column</span>: <span class="css-value">1 / 3</span>; } <span class="css-comment">/* Footer spans both columns */</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">12. Responsive Design with Media Queries</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Responsive design ensures your website looks good and functions well on all devices (desktops, tablets, mobile phones). **Media queries** are a key CSS technique for achieving this.
+            </p>
+            <p class="mb-4 text-lg leading-relaxed">
+                A media query consists of a media type (e.g., `screen`, `print`) and one or more expressions (e.g., `(max-width: 768px)`). Styles inside a media query block only apply when the conditions are met.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="css-comment">/* Default styles for larger screens */</span>
+<span class="css-selector">.container</span> {
+    <span class="css-property">width</span>: <span class="css-value">960px</span>;
+    <span class="css-property">margin</span>: <span class="css-value">0 auto</span>;
+}
+
+<span class="css-comment">/* Styles for screens smaller than 768px (e.g., tablets, phones) */</span>
+<span class="css-selector">@media</span> <span class="css-value">screen and (max-width: 768px)</span> {
+    <span class="css-selector">.container</span> {
+        <span class="css-property">width</span>: <span class="css-value">100%</span>; <span class="css-comment">/* Take full width on smaller screens */</span>
+        <span class="css-property">padding</span>: <span class="css-value">0 15px</span>;
+    }
+    <span class="css-selector">h1</span> {
+        <span class="css-property">font-size</span>: <span class="css-value">2em</span>; <span class="css-comment">/* Smaller font for headings */</span>
+    }
+}
+
+<span class="css-comment">/* Styles for screens smaller than 480px (e.g., mobile phones) */</span>
+<span class="css-selector">@media</span> <span class="css-value">screen and (max-width: 480px)</span> {
+    <span class="css-selector">p</span> {
+        <span class="css-property">font-size</span>: <span class="css-value">0.9em</span>;
+    }
+}</code></pre>
+            </div>
+            <p class="text-lg leading-relaxed">
+                The `&lt;meta name="viewport"&gt;` tag in your HTML is essential for media queries to work correctly on mobile devices.
+            </p>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">13. Your First Complete Web Page with HTML & CSS</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Let's combine HTML and CSS to create a simple, styled web page. This example uses an internal stylesheet for simplicity, but remember to use external stylesheets for larger projects.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;!DOCTYPE html&gt;</span>
+<span class="html-tag">&lt;html</span> <span class="html-attr">lang=</span><span class="html-attr-value">"en"</span><span class="html-tag">&gt;</span>
+<span class="html-tag">&lt;head&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">charset=</span><span class="html-attr-value">"UTF-8"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">name=</span><span class="html-attr-value">"viewport"</span> <span class="html-attr">content=</span><span class="html-attr-value">"width=device-width, initial-scale=1.0"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;title&gt;</span>My Styled Page | Whizmath<span class="html-tag">&lt;/title&gt;</span>
+    <span class="html-tag">&lt;style&gt;</span>
+        <span class="css-comment">/* Internal CSS for this example */</span>
+        <span class="css-selector">body</span> {
+            <span class="css-property">font-family</span>: <span class="css-value">'Segoe UI', sans-serif</span>;
+            <span class="css-property">margin</span>: <span class="css-value">0</span>;
+            <span class="css-property">background-color</span>: <span class="css-value">#e0f7fa</span>; <span class="css-comment">/* Light blue background */</span>
+            <span class="css-property">color</span>: <span class="css-value">#333</span>;
+            <span class="css-property">line-height</span>: <span class="css-value">1.6</span>;
+        }
+        <span class="css-selector">.container</span> {
+            <span class="css-property">max-width</span>: <span class="css-value">800px</span>;
+            <span class="css-property">margin</span>: <span class="css-value">30px auto</span>;
+            <span class="css-property">padding</span>: <span class="css-value">25px</span>;
+            <span class="css-property">background-color</span>: <span class="css-value">white</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">12px</span>;
+            <span class="css-property">box-shadow</span>: <span class="css-value">0 8px 16px rgba(0,0,0,0.15)</span>;
+        }
+        <span class="css-selector">h1</span> {
+            <span class="css-property">color</span>: <span class="css-value">#00796b</span>; <span class="css-comment">/* Dark teal */</span>
+            <span class="css-property">text-align</span>: <span class="css-value">center</span>;
+            <span class="css-property">margin-bottom</span>: <span class="css-value">20px</span>;
+        }
+        <span class="css-selector">p</span> {
+            <span class="css-property">margin-bottom</span>: <span class="css-value">15px</span>;
+        }
+        <span class="css-selector">.button</span> {
+            <span class="css-property">display</span>: <span class="css-value">inline-block</span>;
+            <span class="css-property">background-color</span>: <span class="css-value">#00bcd4</span>; <span class="css-comment">/* Cyan */</span>
+            <span class="css-property">color</span>: <span class="css-value">white</span>;
+            <span class="css-property">padding</span>: <span class="css-value">12px 25px</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">8px</span>;
+            <span class="css-property">text-decoration</span>: <span class="css-value">none</span>;
+            <span class="css-property">font-weight</span>: <span class="css-value">bold</span>;
+            <span class="css-property">transition</span>: <span class="css-value">background-color 0.3s ease</span>;
+        }
+        <span class="css-selector">.button:hover</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#0097a7</span>;
+        }
+        <span class="css-selector">img</span> {
+            <span class="css-property">display</span>: <span class="css-value">block</span>;
+            <span class="css-property">margin</span>: <span class="css-value">20px auto</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">10px</span>;
+            <span class="css-property">box-shadow</span>: <span class="css-value">0 4px 8px rgba(0,0,0,0.1)</span>;
+        }
+
+        <span class="css-comment">/* Responsive adjustments */</span>
+        <span class="css-selector">@media</span> <span class="css-value">screen and (max-width: 600px)</span> {
+            <span class="css-selector">.container</span> {
+                <span class="css-property">margin</span>: <span class="css-value">15px</span>;
+                <span class="css-property">padding</span>: <span class="css-value">15px</span>;
+            }
+            <span class="css-selector">h1</span> {
+                <span class="css-property">font-size</span>: <span class="css-value">2em</span>;
+            }
+        }
+    <span class="html-tag">&lt;/style&gt;</span>
+<span class="html-tag">&lt;/head&gt;</span>
+<span class="html-tag">&lt;body&gt;</span>
+
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"container"</span><span class="html-tag">&gt;</span>
+        <span class="html-tag">&lt;h1&gt;</span>My First Styled Web Page!<span class="html-tag">&lt;/h1&gt;</span>
+        <span class="html-tag">&lt;p&gt;</span>This page demonstrates how CSS can transform plain HTML into a visually appealing layout. We're using various CSS properties to control colors, fonts, spacing, and more.<span class="html-tag">&lt;/p&gt;</span>
+        <span class="html-tag">&lt;p&gt;</span>Notice how the text color, background, and button styles enhance the user experience. CSS gives you immense power over the presentation of your web content.<span class="html-tag">&lt;/p&gt;</span>
+        <span class="html-tag">&lt;img</span> <span class="html-attr">src=</span><span class="html-attr-value">"https://placehold.co/600x300/00796b/FFFFFF?text=CSS+Styling"</span> <span class="html-attr">alt=</span><span class="html-attr-value">"A dark teal placeholder image with white text saying CSS Styling"</span> <span class="html-attr">width=</span><span class="html-attr-value">"600"</span> <span class="html-attr">height=</span><span class="html-attr-value">"300"</span><span class="html-tag">&gt;</span>
+        <span class="html-tag">&lt;p</span> <span class="html-attr">style=</span><span class="html-attr-value">"text-align: center;"</span><span class="html-tag">&gt;</span>
+            <span class="html-tag">&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"#"</span> <span class="html-attr">class=</span><span class="html-attr-value">"button"</span><span class="html-tag">&gt;</span>Learn More About CSS<span class="html-tag">&lt;/a&gt;</span>
+        <span class="html-tag">&lt;/p&gt;</span>
+    <span class="html-tag">&lt;/div&gt;</span>
+
+    <span class="html-tag">&lt;footer</span> <span class="html-attr">style=</span><span class="html-attr-value">"text-align: center; margin-top: 40px; padding: 20px; background-color: #004d40; color: white; border-radius: 10px;"</span><span class="html-tag">&gt;</span>
+        <span class="html-tag">&lt;p&gt;</span>&copy; 2025 Whizmath. All rights reserved.<span class="html-tag">&lt;/p&gt;</span>
+    <span class="html-tag">&lt;/footer&gt;</span>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js Animated Background Setup
+        let scene, camera, renderer, particles;
+        let mouseX = 0, mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('three-canvas');
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            camera.position.z = 20; // Adjusted camera position to compensate for larger particles
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles (simple animated background)
+            const particleCount = 1500; // Increased particle count for more density
+            const geometry = new THREE.BufferGeometry();
+            const positions = [];
+            const colors = [];
+            const color = new THREE.Color();
+
+            for (let i = 0; i < particleCount; i++) {
+                // Position particles randomly in a larger cube
+                positions.push(
+                    (Math.random() * 2 - 1) * 40, // Wider spread for particles
+                    (Math.random() * 2 - 1) * 40,
+                    (Math.random() * 2 - 1) * 40
+                );
+                // Assign a random color
+                color.setHSL(Math.random(), 0.8, 0.7); // Brighter, more saturated colors
+                colors.push(color.r, color.g, color.b);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.5, // Particles 5 times bigger (0.1 * 5 = 0.5)
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.95, // Slightly less transparent for more presence
+                blending: THREE.AdditiveBlending
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // Add mouse interactivity for camera movement
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) * 0.003; // Adjusted sensitivity
+            mouseY = (event.clientY - windowHalfY) * 0.003;
+        }
+
+        function onWindowResize() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            windowHalfX = width / 2;
+            windowHalfY = height / 2;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Animate particles
+            if (particles) {
+                particles.rotation.x += 0.0006; // Slightly slower rotation for larger particles
+                particles.rotation.y += 0.0008;
+                // Add subtle oscillation
+                particles.position.x = Math.sin(Date.now() * 0.00008) * 1; // Increased oscillation range
+                particles.position.y = Math.cos(Date.now() * 0.00012) * 1;
+            }
+
+            // Animate camera based on mouse position
+            camera.position.x += (mouseX - camera.position.x) * 0.03; // Slower camera movement
+            camera.position.y += (-mouseY - camera.position.y) * 0.03;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        // Copy code functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling; // Get the <pre><code> element
+            const code = codeBlock.innerText;
+
+            // Use document.execCommand for broader iframe compatibility
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copied!';
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                button.textContent = 'Error!';
+            }
+            document.body.removeChild(textarea);
+
+            setTimeout(() => {
+                button.textContent = 'Copy Code';
+            }, 2000);
+        }
+
+        // Dark/Light Mode Toggle Logic
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+        const threeCanvas = document.getElementById('three-canvas');
+
+        // Function to set theme
+        function setTheme(theme) {
+            htmlElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            if (theme === 'dark') {
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+                threeCanvas.style.opacity = '0.25'; // Dark mode opacity
+            } else {
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+                threeCanvas.style.opacity = '0.05'; // Light mode opacity
+            }
+        }
+
+        // Check for saved theme preference on load
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Default to dark if no preference is saved
+            setTheme('dark');
+        }
+
+        // Event listener for toggle button
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                setTheme('light');
+            } else {
+                setTheme('dark');
+            }
+        });
+
+        // Home Button Logic
+        const homeButton = document.getElementById('home-button');
+        homeButton.addEventListener('click', () => {
+            window.history.back(); // Navigate back in browser history
+        });
+
+        // Initialize Three.js and start animation on window load
+        window.onload = function() {
+            initThreeJS();
+            animate();
+        };
+    </script>
+</body>
+</html>
