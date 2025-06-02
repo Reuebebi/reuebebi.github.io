@@ -1,195 +1,319 @@
+
 <!DOCTYPE html>
-<html lang="en" class="light"> <head>
+<html lang="en" class="light">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Whizmath - Tic Tac Toe</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
     <style>
-        /* Custom scrollbar for a cleaner look */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-
+        /* Custom CSS for Three.js background and general styling */
         body {
             font-family: 'Inter', sans-serif;
-            overflow: hidden; /* Hide scrollbars from Three.js canvas taking full screen */
-            transition: background-color 0.3s ease, color 0.3s ease;
+            margin: 0;
+            overflow: hidden; /* Prevent scrollbars due to canvas */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            background-color: var(--bg-color-light); /* Default light mode background */
+            transition: background-color 0.3s ease-in-out;
         }
 
-        /* Light mode variables (Tailwind handles most of this via class toggling) */
-        .light {
-            --bg-primary: #f0f4f8; /* Light grayish blue */
-            --text-primary: #1e293b; /* Dark slate */
-            --text-secondary: #475569; /* Medium slate */
-            --card-bg: rgba(255, 255, 255, 0.6); /* Semi-transparent white */
-            --card-border: rgba(203, 213, 225, 0.5); /* Light slate border */
-            --button-bg: #3b82f6; /* Blue */
-            --button-text: #ffffff;
-            --cell-bg: rgba(226, 232, 240, 0.7); /* Lighter slate */
-            --cell-hover-bg: rgba(203, 213, 225, 0.9);
-            --icon-fill: #334155; /* Darker slate for icons */
-            --whizmath-text: #2563eb; /* Blue for title */
+        html.dark body {
+            background-color: var(--bg-color-dark); /* Dark mode background */
         }
 
-        /* Dark mode variables */
-        .dark {
-            --bg-primary: #1a202c; /* Darker charcoal */
-            --text-primary: #e2e8f0; /* Light slate */
-            --text-secondary: #94a3b8; /* Medium slate */
-            --card-bg: rgba(45, 55, 72, 0.6); /* Semi-transparent dark slate */
-            --card-border: rgba(71, 85, 105, 0.5); /* Darker slate border */
-            --button-bg: #60a5fa; /* Lighter blue */
-            --button-text: #1e293b;
-            --cell-bg: rgba(71, 85, 105, 0.7); /* Dark slate */
-            --cell-hover-bg: rgba(100, 116, 139, 0.9);
-            --icon-fill: #cbd5e1; /* Lighter slate for icons */
-            --whizmath-text: #93c5fd; /* Light blue for title */
+        /* Define CSS variables for colors */
+        :root {
+            --bg-color-light: #f0f9ff; /* Sky 50 */
+            --text-color-light: #1f2937; /* Gray 800 */
+            --primary-color-light: #3b82f6; /* Blue 500 */
+            --accent-color-light: #60a5fa; /* Blue 400 */
+            --border-color-light: #d1d5db; /* Gray 300 */
+            --card-bg-light: #ffffff; /* White */
+
+            --bg-color-dark: #1a202c; /* Dark Gray */
+            --text-color-dark: #e2e8f0; /* Slate 200 */
+            --primary-color-dark: #60a5fa; /* Blue 400 */
+            --accent-color-dark: #93c5fd; /* Blue 300 */
+            --border-color-dark: #4a5568; /* Gray 700 */
+            --card-bg-dark: #2d3748; /* Darker Gray */
+
+            /* Three.js particle colors (light mode) */
+            --particle-color-1-light: #ADD8E6; /* Light blue */
+            --particle-color-2-light: #87CEEB; /* Sky blue */
+            --particle-color-3-light: #6495ED; /* Cornflower blue */
+
+            /* Three.js particle colors (dark mode) */
+            --particle-color-1-dark: #4F46E5; /* Indigo 600 */
+            --particle-color-2-dark: #6366F1; /* Indigo 500 */
+            --particle-color-3-dark: #818CF8; /* Indigo 400 */
         }
 
+        /* Three.js canvas styling */
         #global-background-canvas {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1; /* Behind all other content */
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send to background */
         }
 
-        .game-container {
-            backdrop-filter: blur(10px) saturate(180%);
-            -webkit-backdrop-filter: blur(10px) saturate(180%);
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 1rem; /* 16px */
-            padding: 2rem; /* 32px */
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+        /* General text color for light/dark mode */
+        .text-primary {
+            color: var(--text-color-light);
+        }
+        html.dark .text-primary {
+            color: var(--text-color-dark);
         }
 
-        .tic-tac-toe-grid {
+        /* Card background color */
+        .card-bg {
+            background-color: var(--card-bg-light);
+            transition: background-color 0.3s ease-in-out;
+        }
+        html.dark .card-bg {
+            background-color: var(--card-bg-dark);
+        }
+
+        /* Border color */
+        .border-color {
+            border-color: var(--border-color-light);
+            transition: border-color 0.3s ease-in-out;
+        }
+        html.dark .border-color {
+            border-color: var(--border-color-dark);
+        }
+
+        /* Button styling */
+        .btn-primary {
+            background-color: var(--primary-color-light);
+            color: white;
+            transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3); /* Initial shadow */
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-color-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4); /* Enhanced shadow on hover */
+        }
+        html.dark .btn-primary {
+            background-color: var(--primary-color-dark);
+            box-shadow: 0 4px 10px rgba(96, 165, 250, 0.3);
+        }
+        html.dark .btn-primary:hover {
+            background-color: var(--accent-color-dark);
+            box-shadow: 0 8px 20px rgba(96, 165, 250, 0.4);
+        }
+
+        /* Tic-Tac-Toe board cells */
+        #gameBoard {
+            width: clamp(250px, 90vw, 400px); /* Responsive max width for the board */
+            aspect-ratio: 1 / 1; /* Keep the board square */
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem; /* 12px */
-            width: 300px; /* Fixed size for simplicity, can be responsive */
-            height: 300px;
-            margin: 1.5rem auto; /* 24px */
+            grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+            gap: 1rem; /* Gap between cells */
         }
 
         .cell {
-            background-color: var(--cell-bg);
-            border-radius: 0.5rem; /* 8px */
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 0; /* Hide default text content */
+            font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            border: 2px solid var(--border-color-light);
+            border-radius: 0.75rem; /* More rounded corners */
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Subtle cell shadow */
+            position: relative; /* For absolute positioning of X/O */
+            overflow: hidden; /* Ensure X/O stays within bounds during animation */
+        }
+        html.dark .cell {
+            border-color: var(--border-color-dark);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
-        .cell:hover:not(.disabled) {
-            background-color: var(--cell-hover-bg);
+        .cell:hover:not(.occupied) {
+            background-color: rgba(0, 0, 0, 0.03); /* Lighter hover */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        
-        .cell.disabled {
+        html.dark .cell:hover:not(.occupied) {
+            background-color: rgba(255, 255, 255, 0.03); /* Darker hover */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .cell.occupied {
             cursor: not-allowed;
         }
 
-        .cell svg {
-            width: 60%;
-            height: 60%;
-            stroke-width: 8; /* Adjusted for visibility */
-            transition: stroke 0.3s ease;
+        /* X and O styling */
+        .cell span {
+            position: absolute;
+            font-size: 5rem; /* Larger X/O */
+            line-height: 1;
+            opacity: 0;
+            transform: scale(0.5) translateY(20px);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+            text-shadow: 0 0 10px rgba(0,0,0,0.2); /* Subtle shadow for X/O */
         }
-        .cell .x-icon { stroke: #ef4444; /* Red for X */ }
-        .cell .o-icon { stroke: #3b82f6; /* Blue for O */ }
-        .dark .cell .x-icon { stroke: #f87171; /* Lighter Red for X in dark mode */ }
-        .dark .cell .o-icon { stroke: #60a5fa; /* Lighter Blue for O in dark mode */ }
 
+        .cell.occupied span {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
 
-        #theme-toggle-button {
+        .cell .player-x {
+            color: #3b82f6; /* Blue for X */
+            text-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+        }
+        .cell .player-o {
+            color: #ef4444; /* Red for O */
+            text-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
+        }
+
+        .cell.win-cell {
+            background-color: var(--accent-color-light);
+            animation: win-pulse 0.7s infinite alternate;
+            box-shadow: 0 0 20px var(--accent-color-light); /* Glow effect */
+        }
+        html.dark .cell.win-cell {
+            background-color: var(--accent-color-dark);
+            box-shadow: 0 0 20px var(--accent-color-dark);
+        }
+
+        .cell.win-cell span {
+            color: white !important; /* White text on winning cells */
+            text-shadow: none; /* Remove text shadow for better contrast */
+        }
+
+        @keyframes win-pulse {
+            from { transform: scale(1); opacity: 1; box-shadow: 0 0 10px var(--accent-color-light); }
+            to { transform: scale(1.03); opacity: 0.95; box-shadow: 0 0 25px var(--accent-color-light); }
+        }
+        html.dark @keyframes win-pulse {
+            from { transform: scale(1); opacity: 1; box-shadow: 0 0 10px var(--accent-color-dark); }
+            to { transform: scale(1.03); opacity: 0.95; box-shadow: 0 0 25px var(--accent-color-dark); }
+        }
+
+        /* Light/Dark mode toggle button */
+        #darkModeToggle {
             position: fixed;
-            top: 1.5rem; /* 24px */
-            right: 1.5rem; /* 24px */
-            z-index: 100;
-            padding: 0.5rem; /* 8px */
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 9999px; /* pill shape */
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 10;
+            width: 56px; /* Slightly larger button */
+            height: 56px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 9999px; /* Full rounded */
+            background-color: var(--card-bg-light);
+            border: 2px solid var(--border-color-light);
             cursor: pointer;
-            transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* More prominent shadow */
+            transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.3s ease-in-out;
         }
-        #theme-toggle-button:hover {
-            transform: scale(1.1);
+        html.dark #darkModeToggle {
+            background-color: var(--card-bg-dark);
+            border-color: var(--border-color-dark);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
-
-        .theme-icon {
-            width: 1.75rem; /* 28px */
-            height: 1.75rem; /* 28px */
-            fill: var(--icon-fill);
-            transition: opacity 0.3s ease, transform 0.3s ease, fill 0.3s ease;
+        #darkModeToggle:hover {
+            transform: scale(1.08); /* More pronounced hover */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
-
-        #sun-icon { opacity: 1; transform: scale(1) rotate(0deg); }
-        #moon-icon { opacity: 0; transform: scale(0) rotate(-90deg); position: absolute; top: 0.5rem; left: 0.5rem; }
-
-        .dark #sun-icon { opacity: 0; transform: scale(0) rotate(90deg); }
-        .dark #moon-icon { opacity: 1; transform: scale(1) rotate(0deg); }
-
-        .status-text {
-            color: var(--text-primary);
-            transition: color 0.3s ease;
-        }
-        
-        .whizmath-title {
-            font-size: 2.25rem; /* 36px */
-            font-weight: 700;
-            color: var(--whizmath-text);
-            transition: color 0.3s ease;
+        html.dark #darkModeToggle:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
         }
 
-        .reset-button {
-            background-color: var(--button-bg);
-            color: var(--button-text);
-            transition: background-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
+        #darkModeToggle svg {
+            width: 32px; /* Larger icon */
+            height: 32px;
+            fill: var(--text-color-light);
+            transition: fill 0.3s ease-in-out, transform 0.3s ease-in-out;
         }
-        .reset-button:hover {
-            filter: brightness(110%);
-        }
-        .reset-button:active {
-            transform: scale(0.98);
+        html.dark #darkModeToggle svg {
+            fill: var(--text-color-dark);
+            transform: rotate(180deg); /* Rotate moon icon */
         }
 
-        /* Winning line style */
-        .winning-cell {
-            animation: pulse 0.7s infinite alternate;
+        /* Modal styling */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.7); /* Darker overlay */
+            backdrop-filter: blur(5px); /* Blurred background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
         }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.05); }
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
         }
-        .dark .winning-cell .x-icon { stroke: #fda4af; } /* Lighter red for winning X in dark */
-        .dark .winning-cell .o-icon { stroke: #93c5fd; } /* Lighter blue for winning O in dark */
-        .light .winning-cell .x-icon { stroke: #dc2626; } /* Darker red for winning X in light */
-        .light .winning-cell .o-icon { stroke: #2563eb; } /* Darker blue for winning O in light */
+        .modal-content {
+            background-color: var(--card-bg-light);
+            padding: 2.5rem; /* More padding */
+            border-radius: 1.5rem; /* More rounded */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+            text-align: center;
+            transform: translateY(-50px); /* Start higher */
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.4s ease-in-out; /* Bounce effect */
+            color: var(--text-color-light);
+            max-width: 90vw; /* Responsive modal width */
+        }
+        html.dark .modal-content {
+            background-color: var(--card-bg-dark);
+            color: var(--text-color-dark);
+        }
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
 
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 640px) {
+            .text-4xl { font-size: 2.5rem; } /* Smaller title */
+            .text-2xl { font-size: 1.75rem; } /* Smaller subtitle */
+            .text-xl { font-size: 1.25rem; } /* Smaller message */
+            .cell span { font-size: 4rem; } /* Adjust X/O size */
+            #darkModeToggle {
+                width: 48px;
+                height: 48px;
+                top: 1rem;
+                right: 1rem;
+            }
+            #darkModeToggle svg {
+                width: 28px;
+                height: 28px;
+            }
+            .modal-content {
+                padding: 1.5rem;
+            }
+        }
     </style>
 </head>
-<body class="bg-[var(--bg-primary)] text-[var(--text-primary)] min-h-screen flex flex-col items-center justify-center p-4 overflow-y-auto">
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
     <canvas id="global-background-canvas"></canvas>
 
-    <button id="theme-toggle-button" aria-label="Toggle theme">
-        <svg id="sun-icon" class="theme-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <button id="darkModeToggle" aria-label="Toggle dark mode">
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="5"></circle>
             <line x1="12" y1="1" x2="12" y2="3"></line>
             <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -200,18 +324,451 @@
             <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
         </svg>
-        <svg id="moon-icon" class="theme-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="moon-icon hidden" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
     </button>
 
-    <main class="game-container w-full max-w-md text-center">
-        <h1 class="whizmath-title mb-2">Whizmath</h1>
-        <h2 class="text-2xl font-semibold status-text mb-6">Tic Tac Toe</h2>
-        
-        <div id="tic-tac-toe-board" class="tic-tac-toe-grid">
+    <div class="relative z-1 flex flex-col items-center p-6 rounded-2xl shadow-xl card-bg border border-color max-w-lg w-full mx-4 sm:p-8">
+        <h1 class="text-4xl sm:text-5xl font-extrabold mb-4 text-primary">Whizmath</h1>
+        <h2 class="text-2xl sm:text-3xl font-semibold mb-6 text-primary">Tic Tac Toe vs AI</h2>
+
+        <div class="flex justify-around w-full mb-6 text-lg sm:text-xl font-medium text-primary">
+            <div class="flex flex-col items-center">
+                <span>Player (X)</span>
+                <span id="playerScore" class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400">0</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <span>Draws</span>
+                <span id="drawScore" class="text-2xl sm:text-3xl font-bold text-gray-600 dark:text-gray-400">0</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <span>AI (O)</span>
+                <span id="aiScore" class="text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-400">0</span>
+            </div>
+        </div>
+
+        <div id="gameBoard" class="grid grid-cols-3 gap-4 mb-6">
             </div>
 
-        <p id="status-display" class="status-text text-xl my-6 h-8"></p>
+        <p id="gameMessage" class="text-xl sm:text-2xl font-semibold mb-6 text-primary text-center"></p>
 
-        <button id="reset-button" class="reset-button font-semibold py-3 px-6 rounded-lg shadow-m
+        <button id="resetButton" class="btn-primary px-8 py-3 rounded-full text-lg sm:text-xl font-semibold shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">
+            Reset Game
+        </button>
+    </div>
+
+    <div id="gameOverModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modalMessage" class="text-3xl sm:text-4xl font-bold mb-4"></h3>
+            <button id="modalCloseButton" class="btn-primary px-6 py-2 rounded-full text-lg sm:text-xl font-semibold shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 mt-4">
+                Play Again
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- Three.js Global Background Animation Logic ---
+        let scene, camera, renderer, particles, particleMaterial;
+        let particleColorsLight = [];
+        let particleColorsDark = [];
+
+        function initThreeJS() {
+            const canvas = document.getElementById('global-background-canvas');
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles
+            const particleCount = 12500;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            // Get colors from CSS variables
+            const getCssColor = (varName) => new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue(varName));
+
+            const color1Light = getCssColor('--particle-color-1-light');
+            const color2Light = getCssColor('--particle-color-2-light');
+            const color3Light = getCssColor('--particle-color-3-light');
+
+            const color1Dark = getCssColor('--particle-color-1-dark');
+            const color2Dark = getCssColor('--particle-color-2-dark');
+            const color3Dark = getCssColor('--particle-color-3-dark');
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
+                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
+                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
+
+                const rand = Math.random();
+                let colorLight, colorDark;
+
+                if (rand < 0.33) {
+                    colorLight = color1Light;
+                    colorDark = color1Dark;
+                } else if (rand < 0.66) {
+                    colorLight = color2Light;
+                    colorDark = color2Dark;
+                } else {
+                    colorLight = color3Light;
+                    colorDark = color3Dark;
+                }
+                particleColorsLight.push(colorLight.r, colorLight.g, colorLight.b);
+                particleColorsDark.push(colorDark.r, colorDark.g, colorDark.b);
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3)); // Initial colors will be set by updateParticleColors
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.25,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending,
+            });
+
+            particles = new THREE.Points(geometry, particleMaterial);
+            scene.add(particles);
+
+            // Set initial colors based on current theme
+            updateParticleColors(document.documentElement.classList.contains('dark'));
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function updateParticleColors(isDarkMode) {
+            if (!particles || !particles.geometry) return;
+
+            const colorsArray = isDarkMode ? particleColorsDark : particleColorsLight;
+            particles.geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colorsArray), 3));
+            particles.geometry.attributes.color.needsUpdate = true;
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0007;
+                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // --- Tic Tac Toe Game Logic ---
+        const PLAYER_X = 'X';
+        const PLAYER_O = 'O'; // AI will be O
+        const AI_PLAYER = PLAYER_O;
+        const HUMAN_PLAYER = PLAYER_X;
+
+        let board = ['', '', '', '', '', '', '', '', ''];
+        let currentPlayer = HUMAN_PLAYER;
+        let gameOver = false;
+        let scores = {
+            [HUMAN_PLAYER]: 0,
+            [AI_PLAYER]: 0,
+            draws: 0
+        };
+
+        const gameBoardElement = document.getElementById('gameBoard');
+        const gameMessageElement = document.getElementById('gameMessage');
+        const resetButton = document.getElementById('resetButton');
+        const playerScoreElement = document.getElementById('playerScore');
+        const aiScoreElement = document.getElementById('aiScore');
+        const drawScoreElement = document.getElementById('drawScore');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const sunIcon = darkModeToggle.querySelector('.sun-icon');
+        const moonIcon = darkModeToggle.querySelector('.moon-icon');
+        const gameOverModal = document.getElementById('gameOverModal');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalCloseButton = document.getElementById('modalCloseButton');
+
+        // Tone.js setup for sound effects
+        const playerMoveSynth = new Tone.Synth().toDestination();
+        const winSynth = new Tone.MembraneSynth().toDestination();
+        const drawSynth = new Tone.NoiseSynth({
+            noise: {
+                type: "pink"
+            },
+            envelope: {
+                attack: 0.005,
+                decay: 0.1,
+                sustain: 0.05
+            }
+        }).toDestination();
+
+        const winPatterns = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+            [0, 4, 8], [2, 4, 6]             // Diagonals
+        ];
+
+        // Initializes the game board and state
+        function initGame() {
+            board = ['', '', '', '', '', '', '', '', ''];
+            currentPlayer = HUMAN_PLAYER;
+            gameOver = false;
+            gameBoardElement.innerHTML = ''; // Clear previous board
+            gameMessageElement.textContent = `Player ${HUMAN_PLAYER}'s Turn`;
+            hideModal();
+
+            // Create 9 cells for the board
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell', 'rounded-lg', 'shadow-md');
+                cell.dataset.index = i;
+                cell.addEventListener('click', handleCellClick);
+                gameBoardElement.appendChild(cell);
+            }
+            updateScoreDisplay();
+        }
+
+        // Handles a click on a cell
+        function handleCellClick(event) {
+            const index = parseInt(event.target.dataset.index);
+
+            // If game is over or cell is already occupied, do nothing
+            if (gameOver || board[index] !== '') {
+                return;
+            }
+
+            // Player makes a move
+            makeMove(index, HUMAN_PLAYER);
+            playerMoveSynth.triggerAttackRelease("C4", "8n"); // Play sound on player move
+
+            // Check game status after player's move
+            if (!gameOver) {
+                // If game is not over, it's AI's turn
+                currentPlayer = AI_PLAYER;
+                gameMessageElement.textContent = `AI (${AI_PLAYER})'s Turn`;
+                setTimeout(makeAIMove, 700); // Add a slight delay for AI move
+            }
+        }
+
+        // Makes a move on the board
+        function makeMove(index, player) {
+            board[index] = player;
+            const cell = gameBoardElement.children[index];
+
+            // Create a span for the player mark (X or O)
+            const playerMark = document.createElement('span');
+            playerMark.textContent = player;
+            playerMark.classList.add(player === PLAYER_X ? 'player-x' : 'player-o');
+            cell.appendChild(playerMark);
+
+            cell.classList.add('occupied'); // Mark as occupied
+
+            // No need for explicit transform/opacity here, CSS handles the animation
+            // by adding/removing 'occupied' class
+            checkGameStatus();
+        }
+
+        // Checks if the current player has won
+        function checkWin(currentBoard, player) {
+            return winPatterns.some(pattern => {
+                return pattern.every(index => {
+                    return currentBoard[index] === player;
+                });
+            });
+        }
+
+        // Checks if the board is full (draw)
+        function isBoardFull(currentBoard) {
+            return currentBoard.every(cell => cell !== '');
+        }
+
+        // Checks the overall game status (win, draw, or continue)
+        function checkGameStatus() {
+            if (checkWin(board, currentPlayer)) {
+                gameMessageElement.textContent = `Player ${currentPlayer} Wins!`;
+                modalMessage.textContent = `Player ${currentPlayer} Wins!`;
+                scores[currentPlayer]++;
+                gameOver = true;
+                highlightWinningCells(currentPlayer);
+                winSynth.triggerAttackRelease("C3", "4n"); // Play win sound
+                showModal();
+            } else if (isBoardFull(board)) {
+                gameMessageElement.textContent = "It's a Draw!";
+                modalMessage.textContent = "It's a Draw!";
+                scores.draws++;
+                gameOver = true;
+                drawSynth.triggerAttackRelease("8n"); // Play draw sound
+                showModal();
+            } else {
+                // If game is not over, switch turns (this is handled by handleCellClick and makeAIMove)
+            }
+            updateScoreDisplay();
+        }
+
+        // Highlights the winning cells
+        function highlightWinningCells(winner) {
+            winPatterns.forEach(pattern => {
+                if (pattern.every(index => board[index] === winner)) {
+                    pattern.forEach(index => {
+                        gameBoardElement.children[index].classList.add('win-cell');
+                    });
+                }
+            });
+        }
+
+        // Updates the score display
+        function updateScoreDisplay() {
+            playerScoreElement.textContent = scores[HUMAN_PLAYER];
+            aiScoreElement.textContent = scores[AI_PLAYER];
+            drawScoreElement.textContent = scores.draws;
+        }
+
+        // Resets the game
+        function resetGame() {
+            initGame();
+        }
+
+        // --- AI Logic (Minimax Algorithm) ---
+        function makeAIMove() {
+            if (gameOver) return;
+
+            const bestMove = findBestMove(board);
+            if (bestMove !== -1) {
+                makeMove(bestMove, AI_PLAYER);
+                playerMoveSynth.triggerAttackRelease("G3", "8n"); // Play sound on AI move
+                if (!gameOver) {
+                    currentPlayer = HUMAN_PLAYER;
+                    gameMessageElement.textContent = `Player ${HUMAN_PLAYER}'s Turn`;
+                }
+            }
+        }
+
+        // Finds the best move for the AI using Minimax
+        function findBestMove(currentBoard) {
+            let bestVal = -Infinity;
+            let bestMove = -1;
+
+            for (let i = 0; i < 9; i++) {
+                if (currentBoard[i] === '') {
+                    currentBoard[i] = AI_PLAYER; // Make the move
+                    let moveVal = minimax(currentBoard, 0, false); // Evaluate the move
+                    currentBoard[i] = ''; // Undo the move
+
+                    if (moveVal > bestVal) {
+                        bestVal = moveVal;
+                        bestMove = i;
+                    }
+                }
+            }
+            return bestMove;
+        }
+
+        // Minimax function
+        function minimax(currentBoard, depth, isMaximizingPlayer) {
+            // Base cases: check for win/loss/draw
+            if (checkWin(currentBoard, AI_PLAYER)) {
+                return 10 - depth; // AI wins, prefer shorter path
+            } else if (checkWin(currentBoard, HUMAN_PLAYER)) {
+                return depth - 10; // Human wins, prefer longer path (for AI to avoid)
+            } else if (isBoardFull(currentBoard)) {
+                return 0; // Draw
+            }
+
+            if (isMaximizingPlayer) { // AI's turn (Maximizer)
+                let best = -Infinity;
+                for (let i = 0; i < 9; i++) {
+                    if (currentBoard[i] === '') {
+                        currentBoard[i] = AI_PLAYER;
+                        best = Math.max(best, minimax(currentBoard, depth + 1, false));
+                        currentBoard[i] = ''; // Undo
+                    }
+                }
+                return best;
+            } else { // Human's turn (Minimizer)
+                let best = Infinity;
+                for (let i = 0; i < 9; i++) {
+                    if (currentBoard[i] === '') {
+                        currentBoard[i] = HUMAN_PLAYER;
+                        best = Math.min(best, minimax(currentBoard, depth + 1, true));
+                        currentBoard[i] = ''; // Undo
+                    }
+                }
+                return best;
+            }
+        }
+
+        // --- UI/UX Functions ---
+        function showModal() {
+            gameOverModal.classList.add('show');
+        }
+
+        function hideModal() {
+            gameOverModal.classList.remove('show');
+        }
+
+        // --- Light/Dark Mode Toggle ---
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const isDarkMode = html.classList.toggle('dark'); // Toggle the 'dark' class
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light'); // Store preference
+
+            // Update icon visibility
+            if (isDarkMode) {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            } else {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            }
+
+            // Update Three.js particle colors
+            updateParticleColors(isDarkMode);
+        }
+
+        // Check for saved theme preference on load
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            } else {
+                // Default to light if no preference or 'light'
+                document.documentElement.classList.remove('dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            }
+            // Ensure Three.js particles are initialized with correct colors
+            if (particles) { // Check if particles exist before updating
+                updateParticleColors(document.documentElement.classList.contains('dark'));
+            }
+        }
+
+
+        // --- Event Listeners and Initial Setup ---
+        window.onload = function() {
+            initThreeJS();
+            animateThreeJS();
+            loadTheme(); // Load theme after Three.js init
+            initGame(); // Initialize the Tic Tac Toe game
+        };
+
+        resetButton.addEventListener('click', resetGame);
+        modalCloseButton.addEventListener('click', resetGame);
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+    </script>
+</body>
+</html>
