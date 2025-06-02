@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering Derivatives with Python: A Comprehensive Guide | Whizmath</title>
+    <meta name="description" content="Unlock advanced calculus concepts on Whizmath. Dive deep into derivatives with intuitive explanations, practical Python code examples using SymPy and NumPy, and explore real-world applications in machine learning, data science, and optimization. Your ultimate online math tutorial.">
+    <meta name="keywords" content="derivatives, calculus, python, math, programming, machine learning, data science, mathematical concepts, numerical differentiation, symbolic differentiation, partial derivatives, gradient descent, optimization, SymPy, NumPy, online math tutorials, Whizmath, calculus explained, Python for calculus, data science math, machine learning math, online learning, educational resources">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles (Dark Mode) */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll due to animations */
+            background-color: #0d1117; /* Dark background for modern feel */
+            color: #e6edf3; /* Light text color */
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Send canvas to background */
+            opacity: 0.25; /* Subtle background animation */
+            transition: opacity 0.5s ease;
+        }
+
+        .content-section {
+            background-color: rgba(22, 27, 34, 0.88); /* Slightly more opaque dark background for content */
+            backdrop-filter: blur(15px); /* Stronger frosted glass effect */
+            border-radius: 2rem; /* Even more rounded corners */
+            padding: 3rem; /* More padding */
+            margin-bottom: 3rem; /* More margin */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); /* Deeper, softer shadow */
+            transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out, background-color 0.5s ease, border-color 0.5s ease;
+            border: 1px solid rgba(60, 65, 75, 0.6); /* Subtle border */
+        }
+
+        .content-section:hover {
+            transform: translateY(-10px); /* More pronounced lift on hover */
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6); /* Enhanced shadow on hover */
+        }
+
+        .code-block {
+            background-color: #161b22; /* Darker background for code */
+            border-radius: 1.25rem; /* More rounded code blocks */
+            padding: 1.5rem; /* More padding in code blocks */
+            overflow-x: auto; /* Allow horizontal scrolling for long code lines */
+            font-family: 'Fira Code', monospace; /* Monospace font for code */
+            font-size: 1rem; /* Slightly larger code font */
+            line-height: 1.6;
+            position: relative;
+            border: 1px solid rgba(60, 65, 75, 0.8); /* Subtle border for code blocks */
+            transition: background-color 0.5s ease, border-color 0.5s ease;
+        }
+
+        /* Basic syntax highlighting colors (can be expanded) */
+        .code-block .keyword { color: #569cd6; } /* Blue */
+        .code-block .string { color: #ce9178; } /* Orange */
+        .code-block .comment { color: #6a9955; } /* Green */
+        .code-block .function { color: #dcdcaa; } /* Yellow */
+        .code-block .number { color: #b5cea8; } /* Light green */
+        .code-block .operator { color: #d4d4d4; } /* White */
+        .code-block .class-name { color: #4ec9b0; } /* Teal */
+        .code-block .variable { color: #9cdcfe; } /* Light blue */
+
+        .copy-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: #2a3039;
+            color: #e6edf3;
+            padding: 0.6rem 0.9rem;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color 0.2s ease, transform 0.1s ease-in-out, color 0.5s ease;
+            border: 1px solid #3b424d;
+        }
+
+        .copy-button:hover {
+            background-color: #3b424d;
+            transform: translateY(-3px);
+        }
+
+        /* Floating Buttons Base Style */
+        .floating-button {
+            position: fixed;
+            background-color: #2a3039;
+            color: #e6edf3;
+            border: 1px solid #3b424d;
+            border-radius: 9999px; /* Fully rounded */
+            padding: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            z-index: 50; /* Ensure it floats above content */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-button:hover {
+            background-color: #3b424d;
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .floating-button svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor; /* Use current text color for SVG */
+        }
+
+        /* Specific positioning for toggle and home buttons */
+        #theme-toggle {
+            top: 1.5rem;
+            right: 1.5rem;
+        }
+
+        #home-button {
+            top: 1.5rem;
+            left: 1.5rem;
+        }
+
+        /* Light Mode Styles (controlled by data-theme="light" on html) */
+        html[data-theme="light"] body {
+            background-color: #f0f2f5; /* Very light grey background */
+            color: #333; /* Dark text color for general content */
+        }
+
+        html[data-theme="light"] #three-canvas {
+            opacity: 0.05; /* Much more subtle in light mode */
+        }
+
+        html[data-theme="light"] .content-section {
+            background-color: rgba(255, 255, 255, 0.98); /* Near white, slightly transparent */
+            border-color: rgba(180, 180, 180, 0.7); /* Slightly darker, more defined border */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08); /* Lighter shadow */
+        }
+
+        html[data-theme="light"] .content-section:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12); /* Enhanced shadow on hover */
+        }
+
+        html[data-theme="light"] .code-block {
+            background-color: #f8f9fa; /* Very light grey code background */
+            border-color: rgba(160, 160, 160, 0.8); /* Slightly more defined border */
+        }
+
+        /* Light mode syntax highlighting colors */
+        html[data-theme="light"] .code-block .keyword { color: #007bff; } /* Vibrant blue */
+        html[data-theme="light"] .code-block .string { color: #28a745; } /* Vibrant green */
+        html[data-theme="light"] .code-block .comment { color: #6c757d; } /* Standard grey */
+        html[data-theme="light"] .code-block .function { color: #6f42c1; } /* Purple-ish */
+        html[data-theme="light"] .code-block .number { color: #dc3545; } /* Reddish */
+        html[data-theme="light"] .code-block .operator { color: #333; } /* Dark text */
+        html[data-theme="light"] .code-block .class-name { color: #fd7e14; } /* Orange */
+        html[data-theme="light"] .code-block .variable { color: #17a2b8; } /* Teal */
+
+
+        html[data-theme="light"] .copy-button {
+            background-color: #c0c2c5;
+            color: #333;
+            border-color: #b0b2b5;
+        }
+
+        html[data-theme="light"] .copy-button:hover {
+            background-color: #b0b2b5;
+        }
+
+        html[data-theme="light"] .floating-button {
+            background-color: #ffffff; /* Pure white for crisp look */
+            color: #333;
+            border-color: #d0d0d0; /* Lighter border */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Lighter shadow */
+        }
+
+        html[data-theme="light"] .floating-button:hover {
+            background-color: #f0f0f0; /* Slight grey on hover */
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Light mode text colors for headings and branded text */
+        html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3 {
+            color: #1e40af; /* Darker blue for headings */
+        }
+        html[data-theme="light"] .text-blue-400 { color: #1e40af; }
+        html[data-theme="light"] .text-blue-300 { color: #1e40af; }
+        html[data-theme="light"] .text-blue-200 { color: #1e40af; }
+        html[data-theme="light"] .text-purple-400 { color: #6f42c1; } /* Slightly more vibrant purple for Whizmath */
+
+        /* Ensure specific Tailwind text colors are overridden for light mode visibility */
+        html[data-theme="light"] .text-gray-300 {
+            color: #4a5568; /* Darker grey for better contrast in light mode */
+        }
+        html[data-theme="light"] .text-gray-400 {
+            color: #718096; /* Slightly lighter dark grey for footer, still visible */
+        }
+
+
+        /* CSS Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(60px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        .animate-fade-in-delay {
+            animation: fadeIn 1.2s ease-out 0.6s forwards;
+            opacity: 0; /* Hidden initially */
+        }
+
+        .animate-slide-up {
+            opacity: 0; /* Hidden initially */
+            animation: slideUp 1s ease-out forwards;
+        }
+
+        /* Staggered animation for sections */
+        .content-section:nth-of-type(1) { animation-delay: 1s; }
+        .content-section:nth-of-type(2) { animation-delay: 1.3s; }
+        .content-section:nth-of-type(3) { animation-delay: 1.6s; }
+        .content-section:nth-of-type(4) { animation-delay: 1.9s; }
+        .content-section:nth-of-type(5) { animation-delay: 2.2s; }
+        .content-section:nth-of-type(6) { animation-delay: 2.5s; }
+        .content-section:nth-of-type(7) { animation-delay: 2.8s; }
+        .content-section:nth-of-type(8) { animation-delay: 3.1s; } /* New section */
+        .content-section:nth-of-type(9) { animation-delay: 3.4s; } /* New section */
+
+        /* Responsive adjustments for floating buttons */
+        @media (max-width: 480px) {
+            .floating-button { top: 1rem; padding: 0.6rem; }
+            .floating-button svg { width: 20px; height: 20px; }
+            #theme-toggle { right: 1rem; }
+            #home-button { left: 1rem; }
+        }
+    </style>
+</head>
+<body class="text-gray-200 min-h-screen flex flex-col">
+    <canvas id="three-canvas"></canvas>
+
+    <button id="home-button" class="floating-button" aria-label="Go back to previous page">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clip-rule="evenodd" />
+        </svg>
+    </button>
+
+    <button id="theme-toggle" class="floating-button" aria-label="Toggle dark and light mode">
+        <svg id="moon-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.106a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.06l1.59-1.591ZM12 18a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V18a.75.75 0 0 1 .75-.75ZM5.05 10.95a.75.75 0 1 0-1.06-1.06l-1.59 1.59a.75.75 0 1 0 1.06 1.06l1.59-1.59ZM18.894 17.894a.75.75 0 1 0 1.06-1.06l-1.59-1.59a.75.75 0 0 0-1.06 1.06l1.59 1.59ZM3.25 12a.75.75 0 0 1-.75.75H.25a.75.75 0 0 1 0-1.5H2.5c.414 0 .75.336.75.75ZM6.106 5.05a.75.75 0 1 0-1.06 1.06l1.59 1.59a.75.75 0 1 0 1.06-1.06l-1.59-1.59ZM12 5.25a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM19.75 12a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5H20.5a.75.75 0 0 1-.75-.75Z" />
+        </svg>
+    </button>
+
+    <div class="relative z-10 flex-grow container mx-auto px-4 py-8 md:py-12 lg:py-16">
+
+        <header class="text-center mb-12 md:mb-16 lg:mb-20">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-400 leading-tight mb-4 animate-fade-in">
+                Mastering Derivatives with Python: A Comprehensive Guide for <span class="text-purple-400">Whizmath</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto animate-fade-in-delay">
+                Welcome to Whizmath! Dive deep into calculus by exploring derivatives through crystal-clear explanations and practical Python code examples.
+                This guide is perfect for students, aspiring data scientists, and anyone eager to understand the powerful mathematics behind modern programming.
+            </p>
+        </header>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">What Exactly Are Derivatives? The Core Concept Explored</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                At its heart, a derivative in calculus measures the **instantaneous rate of change** of a function. Imagine you're tracking the speed of a rocket. While its average speed over an hour might be 1000 mph, its *instantaneous* speed at precisely 10 minutes past launch is what the derivative tells you. It's the exact steepness of the function's curve at any given point, represented by the slope of the tangent line.
+            </p>
+            <p class="mb-4 text-lg leading-relaxed">
+                Formally, for a function $f(x)$, its derivative, commonly denoted as $f'(x)$, $\frac{dy}{dx}$, or $\frac{df}{dx}$, quantifies how much the output $y$ changes for an infinitesimally small change in its input $x$. This foundational concept underpins understanding motion, growth rates, optimization problems, and is absolutely crucial in fields ranging from physics and engineering to finance and, most importantly for Whizmath users, modern computing and machine learning.
+            </p>
+            <p class="text-lg leading-relaxed">
+                Consider a real-world example: if $P(t)$ represents the population of a city at time $t$, then $P'(t)$ gives you the instantaneous rate at which the population is growing or shrinking. If $P'(t)$ is positive, the population is increasing; if negative, it's decreasing; and if zero, the population is momentarily stable. This fundamental understanding is key to advanced mathematical concepts taught on Whizmath.
+            </p>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">Why Python is Your Best Friend for Mastering Derivatives at Whizmath</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                While the theoretical derivations of derivatives are crucial for a deep understanding, Python offers an unparalleled, hands-on environment for applying, visualizing, and computing them. Its rich ecosystem of libraries makes complex mathematical operations accessible and practical, making it an indispensable tool for anyone learning calculus or applying it in programming.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-3">
+                <li>
+                    <strong class="text-blue-200">Machine Learning & Deep Learning:</strong> Derivatives are the very backbone of optimization algorithms like Gradient Descent and its sophisticated variants. These algorithms are fundamental to how neural networks learn, iteratively adjusting model parameters to minimize prediction errors by following the steepest path of descent on the loss function. Whizmath helps you grasp this core concept.
+                </li>
+                <li>
+                    <strong class="text-blue-200">Data Science & Analytics:</strong> Understanding the sensitivity of models to input changes, quantifying feature importance, and analyzing error propagation often relies heavily on derivatives. Python provides the tools to perform these analyses efficiently.
+                </li>
+                <li>
+                    <strong class="text-blue-200">Scientific Computing & Simulations:</strong> From modeling complex physical systems and simulating engineering challenges to advanced numerical analysis, methods involving derivatives are extensively used. Python's scientific libraries accelerate these computations.
+                </li>
+                <li>
+                    <strong class="text-blue-200">Symbolic Mathematics:</strong> Libraries like SymPy allow Python to perform symbolic differentiation, providing exact analytical solutions just like you would derive on paper. This is invaluable for verifying manual calculations and exploring mathematical properties.
+                </li>
+                <li>
+                    <strong class="text-blue-200">Numerical Methods:</strong> When an exact analytical derivative is impossible or impractical to obtain, Python allows for efficient approximation of derivatives from discrete data points, a common scenario in real-world data analysis.
+                </li>
+            </ul>
+            <p class="text-lg leading-relaxed">
+                Python's clear syntax, vast community support, and powerful libraries bridge the gap between abstract mathematical theory and real-world computational challenges, making it an ideal companion for your math and programming journey with Whizmath.
+            </p>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">Python in Action: Computing Derivatives with Whizmath Insights</h2>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">1. Symbolic Differentiation with SymPy: Obtaining Exact Analytical Solutions</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                SymPy is a powerful Python library for symbolic mathematics, allowing you to perform algebraic manipulations, including differentiation, exactly as you would solve them analytically by hand. This capability is incredibly useful for verifying your manual calculus derivations or working with highly complex mathematical expressions.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="keyword">from</span> <span class="class-name">sympy</span> <span class="keyword">import</span> symbols, diff, sin, cos, exp, log
+
+<span class="comment"># Define symbolic variables for our functions</span>
+x, y = symbols(<span class="string">'x y'</span>)
+
+<span class="comment"># Example 1: Basic polynomial function - a staple in calculus tutorials</span>
+f_x = x**<span class="number">2</span> + <span class="number">3</span>*x + <span class="number">5</span>
+<span class="variable">derivative_f_x</span> = diff(f_x, x)
+<span class="function">print</span>(f<span class="string">"Derivative of {f_x} w.r.t. x is: {derivative_f_x}"</span>)
+<span class="comment"># Expected Output: Derivative of x**2 + 3*x + 5 w.r.t. x is: 2*x + 3</span>
+
+<span class="comment"># Example 2: Trigonometric function with product rule - a common challenge</span>
+g_x = sin(x) * cos(x)
+<span class="variable">derivative_g_x</span> = diff(g_x, x)
+<span class="function">print</span>(f<span class="string">"Derivative of {g_x} w.r.t. x is: {derivative_g_x}"</span>)
+<span class="comment"># Expected Output: Derivative of sin(x)*cos(x) w.r.t. x is: -sin(x)**2 + cos(x)**2</span>
+
+<span class="comment"># Example 3: Exponential function with chain rule - crucial for advanced topics</span>
+h_x = exp(x**<span class="number">2</span> + <span class="number">2</span>*x)
+<span class="variable">derivative_h_x</span> = diff(h_x, x)
+<span class="function">print</span>(f<span class="string">"Derivative of {h_x} w.r.t. x is: {derivative_h_x}"</span>)
+<span class="comment"># Expected Output: Derivative of exp(x**2 + 2*x) w.r.t. x is: (2*x + 2)*exp(x**2 + 2*x)</span>
+
+<span class="comment"># Example 4: Partial Derivative (function of multiple variables) - foundational for machine learning math</span>
+k_xy = x**<span class="number">3</span> * y**<span class="number">2</span> + <span class="number">4</span>*x*y
+<span class="variable">partial_k_x</span> = diff(k_xy, x)
+<span class="variable">partial_k_y</span> = diff(k_xy, y)
+<span class="function">print</span>(f<span class="string">"Partial derivative of {k_xy} w.r.t. x is: {partial_k_x}"</span>)
+<span class="function">print</span>(f<span class="string">"Partial derivative of {k_xy} w.r.t. y is: {partial_k_y}"</span>)
+<span class="comment"># Expected Output: Partial derivative of x**3*y**2 + 4*x*y w.r.t. x is: 3*x**2*y**2 + 4*y</span>
+<span class="comment"># Expected Output: Partial derivative of x**3*y**2 + 4*x*y w.r.t. y is: 2*x**3*y + 4*x</span>
+</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">2. Numerical Differentiation with NumPy: Approximating from Real-World Data</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                Numerical differentiation approximates the derivative using finite differences. This technique is absolutely invaluable when you don't have an explicit mathematical function to differentiate, but rather a set of discrete data points (e.g., from an experiment, sensor readings, or financial market data). NumPy provides efficient ways to perform these approximations.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="keyword">import</span> <span class="class-name">numpy</span> <span class="keyword">as</span> np
+<span class="comment"># import matplotlib.pyplot as plt # Uncomment if running in a plotting environment</span>
+
+<span class="comment"># Define a sample function for demonstration (e.g., f(x) = x^3 - 6x^2 + 5)</span>
+<span class="keyword">def</span> <span class="function">f</span>(x):
+    <span class="keyword">return</span> x**<span class="number">3</span> - <span class="number">6</span>*x**<span class="number">2</span> + <span class="number">5</span>
+
+<span class="comment"># Create a range of x values, simulating collected data points</span>
+x_values = np.linspace(<span class="number">-2</span>, <span class="number">8</span>, <span class="number">100</span>)
+y_values = f(x_values)
+
+<span class="comment"># Compute numerical derivative using np.gradient - a robust method</span>
+<span class="comment"># np.gradient calculates the gradient of an N-dimensional array.</span>
+<span class="comment"># For 1D arrays, it approximates the derivative using central differences, providing better accuracy.</span>
+numerical_derivative = np.gradient(y_values, x_values)
+
+<span class="function">print</span>(<span class="string">"First 10 numerical derivative values (rounded to 2 decimal places):"</span>)
+<span class="function">print</span>(np.round(numerical_derivative[:<span class="number">10</span>], <span class="number">2</span>))
+
+<span class="comment"># For direct comparison, the analytical derivative of f(x) = x^3 - 6x^2 + 5 is f'(x) = 3x^2 - 12x</span>
+analytical_derivative = <span class="number">3</span> * x_values**<span class="number">2</span> - <span class="number">12</span> * x_values
+
+<span class="function">print</span>(<span class="string">"\nFirst 10 analytical derivative values (for comparison):"</span>)
+<span class="function">print</span>(np.round(analytical_derivative[:<span class="number">10</span>], <span class="number">2</span>))
+
+<span class="comment"># Uncomment the following block to visualize if running in a suitable environment (e.g., Jupyter)</span>
+<span class="comment"># plt.figure(figsize=(12, 7))</span>
+<span class="comment"># plt.plot(x_values, y_values, label='f(x) = x^3 - 6x^2 + 5', color='cyan', linewidth=2)</span>
+<span class="comment"># plt.plot(x_values, numerical_derivative, label='Numerical Derivative (np.gradient)', linestyle='--', color='orange', linewidth=2)</span>
+<span class="comment"># plt.plot(x_values, analytical_derivative, label='Analytical Derivative (3x^2 - 12x)', linestyle=':', color='red', linewidth=2)</span>
+<span class="comment"># plt.title('Numerical vs. Analytical Derivative Comparison')</span>
+<span class="comment"># plt.xlabel('x')</span>
+<span class="comment"># plt.ylabel('y / dy/dx')</span>
+<span class="comment"># plt.legend()</span>
+<span class="comment"># plt.grid(True, linestyle='--', alpha=0.7)</span>
+<span class="comment"># plt.axhline(0, color='gray', linewidth=0.8) # Add x-axis line</span>
+<span class="comment"># plt.axvline(0, color='gray', linewidth=0.8) # Add y-axis line</span>
+<span class="comment"># plt.show()</span>
+</code></pre>
+            </div>
+            <p class="text-lg leading-relaxed">
+                **Important Note on Visualization:** For the `matplotlib.pyplot` visualization, you would typically execute this Python code in an interactive environment like Jupyter Notebook, Google Colab, or a local Python script with `matplotlib` installed. Direct plotting within a static HTML web page requires integrating JavaScript plotting libraries (such as Plotly.js, D3.js, or Chart.js) to render the graphs dynamically from Python output or pre-generated data. Whizmath aims to provide clear code examples for your learning journey.
+            </p>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">The Chain Rule in Python: Differentiating Composite Functions</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                The Chain Rule is one of the most powerful and frequently used rules in calculus for differentiating composite functions (functions within functions). If you have $f(g(x))$, the chain rule states that its derivative is $f'(g(x)) \cdot g'(x)$. SymPy handles this beautifully, making complex derivations straightforward.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="keyword">from</span> <span class="class-name">sympy</span> <span class="keyword">import</span> symbols, diff, sin, exp
+
+<span class="comment"># Define symbolic variable</span>
+x = symbols(<span class="string">'x'</span>)
+
+<span class="comment"># Example 1: f(x) = sin(x^2) where f(u) = sin(u) and u = x^2</span>
+composite_func_1 = sin(x**<span class="number">2</span>)
+derivative_composite_1 = diff(composite_func_1, x)
+<span class="function">print</span>(f<span class="string">"Derivative of {composite_func_1} is: {derivative_composite_1}"</span>)
+<span class="comment"># Expected Output: Derivative of sin(x**2) is: 2*x*cos(x**2)</span>
+
+<span class="comment"># Example 2: f(x) = exp(sin(x)) where f(u) = exp(u) and u = sin(x)</span>
+composite_func_2 = exp(sin(x))
+derivative_composite_2 = diff(composite_func_2, x)
+<span class="function">print</span>(f<span class="string">"Derivative of {composite_func_2} is: {derivative_composite_2}"</span>)
+<span class="comment"># Expected Output: Derivative of exp(sin(x)) is: cos(x)*exp(sin(x))</span>
+
+<span class="comment"># Example 3: More complex chain rule application</span>
+composite_func_3 = (x**<span class="number">3</span> + <span class="number">2</span>*x)**<span class="number">5</span>
+derivative_composite_3 = diff(composite_func_3, x)
+<span class="function">print</span>(f<span class="string">"Derivative of {composite_func_3} is: {derivative_composite_3}"</span>)
+<span class="comment"># Expected Output: Derivative of (x**3 + 2*x)**5 is: 5*(3*x**2 + 2)*(x**3 + 2*x)**4</span>
+</code></pre>
+            </div>
+            <p class="text-lg leading-relaxed">
+                Understanding the Chain Rule is paramount for tackling more complex functions, especially those encountered in advanced machine learning models. Whizmath provides clear examples to solidify your understanding.
+            </p>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">Visualizing Derivatives: Bringing Calculus to Life</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                While the mathematical formulas and Python code give us precise answers, visualizing derivatives helps build a deeper intuition. Seeing the relationship between a function and its derivative graphically can dramatically enhance understanding.
+            </p>
+            <p class="mb-4 text-lg leading-relaxed">
+                The derivative at a point represents the slope of the tangent line to the curve at that point. When the original function is increasing, its derivative is positive. When the function is decreasing, its derivative is negative. And when the function reaches a local maximum or minimum (a peak or valley), its derivative is zero.
+            </p>
+            <p class="text-lg leading-relaxed">
+                Using libraries like `matplotlib` (in Python environments like Jupyter Notebook or Google Colab), you can easily plot functions and their derivatives to observe these relationships firsthand. This visual approach is a core part of effective math and programming education at Whizmath.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="keyword">import</span> <span class="class-name">numpy</span> <span class="keyword">as</span> np
+<span class="keyword">import</span> <span class="class-name">matplotlib.pyplot</span> <span class="keyword">as</span> plt
+<span class="keyword">from</span> <span class="class-name">sympy</span> <span class="keyword">import</span> symbols, diff, lambdify
+
+<span class="comment"># Define symbolic variable</span>
+x_sym = symbols(<span class="string">'x'</span>)
+
+<span class="comment"># Define a function symbolically (e.g., a cubic function)</span>
+func_sym = x_sym**<span class="number">3</span> - <span class="number">3</span>*x_sym**<span class="number">2</span> + <span class="number">2</span>
+
+<span class="comment"># Compute its symbolic derivative</span>
+deriv_sym = diff(func_sym, x_sym)
+
+<span class="comment"># Convert symbolic expressions to numerical functions for plotting</span>
+func_num = lambdify(x_sym, func_sym, <span class="string">'numpy'</span>)
+deriv_num = lambdify(x_sym, deriv_sym, <span class="string">'numpy'</span>)
+
+<span class="comment"># Create x values for plotting</span>
+x_vals = np.linspace(<span class="number">-1</span>, <span class="number">3</span>, <span class="number">400</span>)
+
+<span class="comment"># Calculate y and derivative values</span>
+y_vals = func_num(x_vals)
+deriv_vals = deriv_num(x_vals)
+
+<span class="comment"># Plotting the function and its derivative</span>
+plt.figure(figsize=(<span class="number">12</span>, <span class="number">6</span>))
+plt.plot(x_vals, y_vals, label=<span class="string">'f(x) = x^3 - 3x^2 + 2'</span>, color=<span class="string">'#66ccff'</span>, linewidth=<span class="number">2.5</span>) <span class="comment"># Whizmath blue</span>
+plt.plot(x_vals, deriv_vals, label=<span class="string">"f'(x) = 3x^2 - 6x"</span>, color=<span class="string">'#ff9966'</span>, linestyle=<span class="string">'--'</span>, linewidth=<span class="number">2.5</span>) <span class="comment"># Whizmath orange</span>
+plt.axhline(<span class="number">0</span>, color=<span class="string">'gray'</span>, linestyle=<span class="string">':'</span>, linewidth=<span class="number">0.7</span>)
+plt.axvline(<span class="number">0</span>, color=<span class="string">'gray'</span>, linestyle=<span class="string">':'</span>, linewidth=<span class="number">0.7</span>)
+plt.title(<span class="string">'Function and its Derivative'</span>, fontsize=<span class="number">18</span>, color=<span class="string">'#e6edf3'</span>)
+plt.xlabel(<span class="string">'x'</span>, fontsize=<span class="number">14</span>, color=<span class="string">'#e6edf3'</span>)
+plt.ylabel(<span class="string">'y / dy/dx'</span>, fontsize=<span class="number">14</span>, color=<span class="string">'#e6edf3'</span>)
+plt.legend(fontsize=<span class="number">12</span>)
+plt.grid(<span class="keyword">True</span>, linestyle=<span class="string">'--'</span>, alpha=<span class="number">0.6</span>)
+plt.gca().set_facecolor(<span class="string">'#1a202c'</span>) <span class="comment"># Dark background for plot area</span>
+plt.tick_params(axis=<span class="string">'x'</span>, colors=<span class="string">'#e6edf3'</span>)
+plt.tick_params(axis=<span class="string">'y'</span>, colors=<span class="string">'#e6edf3'</span>)
+plt.show()
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">Real-World Applications: Where Derivatives Transform Code and Data</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                The theoretical elegance of derivatives truly comes to life when applied to practical problems across various domains. At Whizmath, we emphasize how these mathematical tools become powerful instruments in the hands of a programmer or data scientist.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-3">
+                <li>
+                    <strong class="text-blue-200">Machine Learning Optimization (Gradient Descent):</strong> This is arguably the most impactful application. Derivatives (specifically, the gradient vector) tell us the direction of the steepest ascent of a multivariable function. In machine learning, we aim to minimize a "cost" or "loss" function that quantifies how well our model performs. Gradient Descent leverages derivatives to iteratively adjust model parameters (weights and biases) by taking small steps in the *opposite* direction of the gradient, effectively finding the fastest path to the function's minimum. This is the core mechanism by which neural networks and many other models learn from data.
+                </li>
+                <li>
+                    <strong class="text-blue-200">Financial Modeling & Risk Management:</strong> In quantitative finance, derivatives are used to calculate sensitivity measures like "Greeks" (Delta, Gamma, Vega, Theta, Rho) which quantify how option prices change with respect to underlying variables (stock price, volatility, time, interest rates). This is crucial for hedging and risk assessment.
+                </li>
+                <li>
+                    <strong class="text-blue-200">Physics and Engineering Simulations:</strong> Differential equations, which involve derivatives, are the language of physics. From modeling the trajectory of a projectile to simulating fluid dynamics or heat transfer, derivatives are used to describe rates of change in physical quantities over time or space. Numerical methods for solving these equations are heavily reliant on derivative approximations.
+                </li>
+                <li>
+                    <strong class="text-blue-200">Image Processing & Computer Vision:</strong> Derivatives are fundamental for tasks like edge detection. By computing the gradient of an image (which represents the rate of change of pixel intensity), algorithms can identify sharp transitions that correspond to object boundaries. This is a core concept in many computer vision applications.
+                </li>
+                <li>
+                    <strong class="text-blue-200">Resource Optimization & Logistics:</strong> Businesses often face problems like minimizing production costs, maximizing resource allocation, or finding the most efficient delivery routes. Calculus-based optimization techniques, relying on derivatives to find critical points, are invaluable for solving these complex logistical challenges.
+                </li>
+            </ul>
+            <p class="text-lg leading-relaxed">
+                Understanding derivatives, both analytically and computationally through Python, provides a powerful lens through which to approach and solve complex problems in various scientific, technological, and business domains. Whizmath is dedicated to making these advanced concepts accessible.
+            </p>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">Ready for More? Continue Your Mathematical Journey with Whizmath</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                This comprehensive guide on Whizmath has introduced you to the fundamentals of derivatives and their practical computation in Python. However, the expansive world of calculus and its applications is truly limitless and endlessly fascinating!
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>
+                    <strong class="text-blue-200">Higher-Order Derivatives:</strong> Delve into second, third, and even higher derivatives, which describe rates of change of rates of change (e.g., acceleration is the second derivative of position, jerk is the third). These are crucial for understanding concavity and inflection points.
+                </li>
+                <li>
+                    <strong class="text-blue-200">Implicit Differentiation & Related Rates:</strong> Explore how to differentiate functions that are not explicitly solved for $y$, and solve problems involving quantities that change in relation to each other.
+                </li>
+                <li>
+                    <strong class="text-blue-200">Integrals:</strong> Discover the inverse operation of differentiation. Integrals are fundamental for calculating areas under curves, volumes of solids, and cumulative change over time – a cornerstone of advanced calculus.
+                </li>
+                <li>
+                    <strong class="text-blue-200">Multivariable Calculus:</strong> Extend your understanding to functions with multiple inputs and outputs, leading to concepts like gradients, Hessians, and Jacobians. These are absolutely fundamental for advanced machine learning, optimization, and physics.
+                </li>
+                <li>
+                    <strong class="text-blue-200">Numerical Analysis & Error Propagation:</strong> Dive deeper into the mathematical methods behind numerical approximations, understanding their limitations, error analysis, and computational efficiency. This is vital for robust scientific computing.
+                </li>
+            </ul>
+            <p class="text-lg leading-relaxed">
+                Keep practicing with Python, experiment with different functions and datasets, and explore the extensive online resources and textbooks available to deepen your understanding. The journey into mathematical computing is incredibly rewarding, and Whizmath is here to guide you every step of the way!
+            </p>
+        </section>
+
+    </div>
+
+    <footer class="relative z-10 text-center py-8 text-gray-400 text-sm">
+        <p>&copy; 2025 Whizmath. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Three.js Animated Background Setup
+        let scene, camera, renderer, particles;
+        let mouseX = 0, mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('three-canvas');
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            camera.position.z = 20; // Adjusted camera position to compensate for larger particles
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles (simple animated background)
+            const particleCount = 1500; // Increased particle count for more density
+            const geometry = new THREE.BufferGeometry();
+            const positions = [];
+            const colors = [];
+            const color = new THREE.Color();
+
+            for (let i = 0; i < particleCount; i++) {
+                // Position particles randomly in a larger cube
+                positions.push(
+                    (Math.random() * 2 - 1) * 40, // Wider spread for particles
+                    (Math.random() * 2 - 1) * 40,
+                    (Math.random() * 2 - 1) * 40
+                );
+                // Assign a random color
+                color.setHSL(Math.random(), 0.8, 0.7); // Brighter, more saturated colors
+                colors.push(color.r, color.g, color.b);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.5, // Particles 5 times bigger (0.1 * 5 = 0.5)
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.95, // Slightly less transparent for more presence
+                blending: THREE.AdditiveBlending
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // Add mouse interactivity for camera movement
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) * 0.003; // Adjusted sensitivity
+            mouseY = (event.clientY - windowHalfY) * 0.003;
+        }
+
+        function onWindowResize() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            windowHalfX = width / 2;
+            windowHalfY = height / 2;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Animate particles
+            if (particles) {
+                particles.rotation.x += 0.0006; // Slightly slower rotation for larger particles
+                particles.rotation.y += 0.0008;
+                // Add subtle oscillation
+                particles.position.x = Math.sin(Date.now() * 0.00008) * 1; // Increased oscillation range
+                particles.position.y = Math.cos(Date.now() * 0.00012) * 1;
+            }
+
+            // Animate camera based on mouse position
+            camera.position.x += (mouseX - camera.position.x) * 0.03; // Slower camera movement
+            camera.position.y += (-mouseY - camera.position.y) * 0.03;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        // Copy code functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling; // Get the <pre><code> element
+            const code = codeBlock.innerText;
+
+            // Use document.execCommand for broader iframe compatibility
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copied!';
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                button.textContent = 'Error!';
+            }
+            document.body.removeChild(textarea);
+
+            setTimeout(() => {
+                button.textContent = 'Copy Code';
+            }, 2000);
+        }
+
+        // Dark/Light Mode Toggle Logic
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+        const threeCanvas = document.getElementById('three-canvas');
+
+        // Function to set theme
+        function setTheme(theme) {
+            htmlElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            if (theme === 'dark') {
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+                threeCanvas.style.opacity = '0.25'; // Dark mode opacity
+            } else {
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+                threeCanvas.style.opacity = '0.05'; // Light mode opacity
+            }
+        }
+
+        // Check for saved theme preference on load
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Default to dark if no preference is saved
+            setTheme('dark');
+        }
+
+        // Event listener for toggle button
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                setTheme('light');
+            } else {
+                setTheme('dark');
+            }
+        });
+
+        // Home Button Logic
+        const homeButton = document.getElementById('home-button');
+        homeButton.addEventListener('click', () => {
+            // Use window.history.back() for a "back" action, which is more appropriate for a left arrow.
+            // If you specifically need to go to 'index.html' regardless of history, use window.location.href = 'index.html';
+            window.history.back();
+        });
+
+        // Initialize Three.js and start animation on window load
+        window.onload = function() {
+            initThreeJS();
+            animate();
+        };
+    </script>
+</body>
+</html>
