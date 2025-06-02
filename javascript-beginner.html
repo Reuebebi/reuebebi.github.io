@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript for Beginners: Adding Interactivity to Web Pages | Whizmath</title>
+    <meta name="description" content="Start adding dynamic behavior to your web pages with Whizmath's comprehensive JavaScript lesson. Learn basic syntax, data types, operators, control flow, functions, arrays, objects, DOM manipulation, and event handling.">
+    <meta name="keywords" content="JavaScript, JS, beginner JavaScript, web interactivity, learn JavaScript, JavaScript tutorial, basic JavaScript, JS syntax, data types, JS operators, control flow, JS functions, arrays, objects, DOM manipulation, event handling, Whizmath, online learning, coding for beginners">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles (Dark Mode) */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll due to animations */
+            background-color: #0d1117; /* Dark background for modern feel */
+            color: #e6edf3; /* Light text color */
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Send canvas to background */
+            opacity: 0.25; /* Subtle background animation */
+            transition: opacity 0.5s ease;
+        }
+
+        .content-section {
+            background-color: rgba(22, 27, 34, 0.88); /* Slightly more opaque dark background for content */
+            backdrop-filter: blur(15px); /* Stronger frosted glass effect */
+            border-radius: 2rem; /* Even more rounded corners */
+            padding: 3rem; /* More padding */
+            margin-bottom: 3rem; /* More margin */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); /* Deeper, softer shadow */
+            transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out, background-color 0.5s ease, border-color 0.5s ease;
+            border: 1px solid rgba(60, 65, 75, 0.6); /* Subtle border */
+        }
+
+        .content-section:hover {
+            transform: translateY(-10px); /* More pronounced lift on hover */
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6); /* Enhanced shadow on hover */
+        }
+
+        .code-block {
+            background-color: #161b22; /* Darker background for code */
+            border-radius: 1.25rem; /* More rounded code blocks */
+            padding: 1.5rem; /* More padding in code blocks */
+            overflow-x: auto; /* Allow horizontal scrolling for long code lines */
+            font-family: 'Fira Code', monospace; /* Monospace font for code */
+            font-size: 1rem; /* Slightly larger code font */
+            line-height: 1.6;
+            position: relative;
+            border: 1px solid rgba(60, 65, 75, 0.8); /* Subtle border for code blocks */
+            transition: background-color 0.5s ease, border-color 0.5s ease;
+        }
+
+        /* Basic syntax highlighting colors (can be expanded) */
+        .code-block .js-keyword { color: #569cd6; } /* Blue for keywords like const, let, function */
+        .code-block .js-string { color: #ce9178; } /* Orange for strings */
+        .code-block .js-number { color: #b5cea8; } /* Light green for numbers */
+        .code-block .js-comment { color: #6a9955; } /* Green for comments */
+        .code-block .js-operator { color: #d4d4d4; } /* White/light gray for operators */
+        .code-block .js-function-call { color: #dcdcaa; } /* Yellow for function calls */
+        .code-block .js-variable { color: #9cdcfe; } /* Light blue for variables */
+        .code-block .js-property { color: #4ec9b0; } /* Teal for object properties */
+        .code-block .js-boolean { color: #569cd6; } /* Blue for booleans */
+
+
+        .copy-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: #2a3039;
+            color: #e6edf3;
+            padding: 0.6rem 0.9rem;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color 0.2s ease, transform 0.1s ease-in-out, color 0.5s ease;
+            border: 1px solid #3b424d;
+        }
+
+        .copy-button:hover {
+            background-color: #3b424d;
+            transform: translateY(-3px);
+        }
+
+        /* Floating Buttons Base Style */
+        .floating-button {
+            position: fixed;
+            background-color: #2a3039;
+            color: #e6edf3;
+            border: 1px solid #3b424d;
+            border-radius: 9999px; /* Fully rounded */
+            padding: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            z-index: 50; /* Ensure it floats above content */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-button:hover {
+            background-color: #3b424d;
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .floating-button svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor; /* Use current text color for SVG */
+        }
+
+        /* Specific positioning for toggle and home buttons */
+        #theme-toggle {
+            top: 1.5rem;
+            right: 1.5rem;
+        }
+
+        #home-button {
+            top: 1.5rem;
+            left: 1.5rem;
+        }
+
+        /* Light Mode Styles (controlled by data-theme="light" on html) */
+        html[data-theme="light"] body {
+            background-color: #f0f2f5; /* Very light grey background */
+            color: #333; /* Dark text color for general content */
+        }
+
+        html[data-theme="light"] #three-canvas {
+            opacity: 0.05; /* Much more subtle in light mode */
+        }
+
+        html[data-theme="light"] .content-section {
+            background-color: rgba(255, 255, 255, 0.98); /* Near white, slightly transparent */
+            border-color: rgba(180, 180, 180, 0.7); /* Slightly darker, more defined border */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08); /* Lighter shadow */
+        }
+
+        html[data-theme="light"] .content-section:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12); /* Enhanced shadow on hover */
+        }
+
+        html[data-theme="light"] .code-block {
+            background-color: #f8f9fa; /* Very light grey code background */
+            border-color: rgba(160, 160, 160, 0.8); /* Slightly more defined border */
+        }
+
+        /* Light mode syntax highlighting colors */
+        html[data-theme="light"] .code-block .js-keyword { color: #007bff; }
+        html[data-theme="light"] .code-block .js-string { color: #dc3545; }
+        html[data-theme="light"] .code-block .js-number { color: #17a2b8; }
+        html[data-theme="light"] .code-block .js-comment { color: #28a745; }
+        html[data-theme="light"] .code-block .js-operator { color: #333; }
+        html[data-theme="light"] .code-block .js-function-call { color: #6f42c1; }
+        html[data-theme="light"] .code-block .js-variable { color: #6c757d; }
+        html[data-theme="light"] .code-block .js-property { color: #fd7e14; }
+        html[data-theme="light"] .code-block .js-boolean { color: #007bff; }
+
+
+        html[data-theme="light"] .copy-button {
+            background-color: #c0c2c5;
+            color: #333;
+            border-color: #b0b2b5;
+        }
+
+        html[data-theme="light"] .copy-button:hover {
+            background-color: #b0b2b5;
+        }
+
+        html[data-theme="light"] .floating-button {
+            background-color: #ffffff; /* Pure white for crisp look */
+            color: #333;
+            border-color: #d0d0d0; /* Lighter border */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Lighter shadow */
+        }
+
+        html[data-theme="light"] .floating-button:hover {
+            background-color: #f0f0f0; /* Slight grey on hover */
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Light mode text colors for headings and branded text */
+        html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3 {
+            color: #1e40af; /* Darker blue for headings */
+        }
+        html[data-theme="light"] .text-blue-400 { color: #1e40af; }
+        html[data-theme="light"] .text-blue-300 { color: #1e40af; }
+        html[data-theme="light"] .text-blue-200 { color: #1e40af; }
+        html[data-theme="light"] .text-purple-400 { color: #6f42c1; } /* Slightly more vibrant purple for Whizmath */
+
+        /* Ensure specific Tailwind text colors are overridden for light mode visibility */
+        html[data-theme="light"] .text-gray-300 {
+            color: #4a5568; /* Darker grey for better contrast in light mode */
+        }
+        html[data-theme="light"] .text-gray-400 {
+            color: #718096; /* Slightly lighter dark grey for footer, still visible */
+        }
+
+
+        /* CSS Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(60px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        .animate-fade-in-delay {
+            animation: fadeIn 1.2s ease-out 0.6s forwards;
+            opacity: 0; /* Hidden initially */
+        }
+
+        .animate-slide-up {
+            opacity: 0; /* Hidden initially */
+            animation: slideUp 1s ease-out forwards;
+        }
+
+        /* Staggered animation for sections */
+        .content-section:nth-of-type(1) { animation-delay: 1s; }
+        .content-section:nth-of-type(2) { animation-delay: 1.3s; }
+        .content-section:nth-of-type(3) { animation-delay: 1.6s; }
+        .content-section:nth-of-type(4) { animation-delay: 1.9s; }
+        .content-section:nth-of-type(5) { animation-delay: 2.2s; }
+        .content-section:nth-of-type(6) { animation-delay: 2.5s; }
+        .content-section:nth-of-type(7) { animation-delay: 2.8s; }
+        .content-section:nth-of-type(8) { animation-delay: 3.1s; }
+        .content-section:nth-of-type(9) { animation-delay: 3.4s; }
+        .content-section:nth-of-type(10) { animation-delay: 3.7s; }
+        .content-section:nth-of-type(11) { animation-delay: 4.0s; }
+        .content-section:nth-of-type(12) { animation-delay: 4.3s; }
+        .content-section:nth-of-type(13) { animation-delay: 4.6s; }
+        .content-section:nth-of-type(14) { animation-delay: 4.9s; }
+        .content-section:nth-of-type(15) { animation-delay: 5.2s; }
+        .content-section:nth-of-type(16) { animation-delay: 5.5s; }
+
+
+        /* Responsive adjustments for floating buttons */
+        @media (max-width: 480px) {
+            .floating-button { top: 1rem; padding: 0.6rem; }
+            .floating-button svg { width: 20px; height: 20px; }
+            #theme-toggle { right: 1rem; }
+            #home-button { left: 1rem; }
+        }
+
+        /* Specific styles for JavaScript examples */
+        .interactive-example {
+            background-color: #1a202c;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(60, 65, 75, 0.8);
+        }
+        .interactive-example button {
+            background-color: #4299e1; /* Blue-500 */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 1rem;
+        }
+        .interactive-example button:hover {
+            background-color: #3182ce; /* Blue-600 */
+            transform: translateY(-2px);
+        }
+        .interactive-example #output-display {
+            margin-top: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #a0aec0; /* Gray-400 */
+        }
+    </style>
+</head>
+<body class="text-gray-200 min-h-screen flex flex-col">
+    <canvas id="three-canvas"></canvas>
+
+    <button id="home-button" class="floating-button" aria-label="Go back to previous page">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clip-rule="evenodd" />
+        </svg>
+    </button>
+
+    <button id="theme-toggle" class="floating-button" aria-label="Toggle dark and light mode">
+        <svg id="moon-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.106a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.06l1.59-1.591ZM12 18a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V18a.75.75 0 0 1 .75-.75ZM5.05 10.95a.75.75 0 1 0-1.06-1.06l-1.59 1.59a.75.75 0 1 0 1.06 1.06l1.59-1.59ZM18.894 17.894a.75.75 0 1 0 1.06-1.06l-1.59-1.59a.75.75 0 0 0-1.06 1.06l1.59 1.59ZM3.25 12a.75.75 0 0 1-.75.75H.25a.75.75 0 0 1 0-1.5H2.5c.414 0 .75.336.75.75ZM6.106 5.05a.75.75 0 1 0-1.06 1.06l1.59 1.59a.75.75 0 1 0 1.06-1.06l-1.59-1.59ZM12 5.25a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM19.75 12a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5H20.5a.75.75 0 0 1-.75-.75Z" />
+        </svg>
+    </button>
+
+    <div class="relative z-10 flex-grow container mx-auto px-4 py-8 md:py-12 lg:py-16">
+
+        <header class="text-center mb-12 md:mb-16 lg:mb-20">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-400 leading-tight mb-4 animate-fade-in">
+                JavaScript for Beginners: Adding Interactivity to Web Pages at <span class="text-purple-400">Whizmath</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto animate-fade-in-delay">
+                Welcome to the dynamic world of JavaScript! After learning HTML (structure) and CSS (style), JavaScript is the third core technology of the World Wide Web, enabling interactive web pages and complex web applications.
+                It allows you to make your websites come alive, responding to user actions, fetching data, and much more. This comprehensive lesson will guide you through the fundamentals of JavaScript, getting you ready to build truly interactive web experiences!
+            </p>
+        </header>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">1. What is JavaScript? The Language of the Web</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                JavaScript (JS) is a lightweight, interpreted, or just-in-time compiled programming language with first-class functions. While it is most well-known as the scripting language for web pages, it's also used in many non-browser environments.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Client-Side Scripting:</strong> Primarily runs in the user's web browser, enabling dynamic and interactive content.</li>
+                <li><strong class="text-blue-200">Versatility:</strong> Used for front-end (browser), back-end (Node.js), mobile apps (React Native), desktop apps (Electron), and even IoT.</li>
+                <li><strong class="text-blue-200">Interactivity:</strong> Handles events (clicks, hovers), manipulates HTML and CSS, validates forms, loads data, and more.</li>
+                <li><strong class="text-blue-200">Standardized:</strong> Governed by the ECMAScript specification.</li>
+            </ul>
+            <p class="text-lg leading-relaxed">
+                JavaScript is what makes a website more than just static text and images. It allows for animations, interactive forms, games, and real-time updates without needing to reload the entire page.
+            </p>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">2. How to Include JavaScript in HTML</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Similar to CSS, there are a few ways to add JavaScript to your HTML documents. The most common and recommended method is using **external JavaScript files**.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. External JavaScript (Recommended)</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                You write your JavaScript code in a separate `.js` file (e.g., `script.js`) and link it to your HTML document using the `&lt;script&gt;` tag. It's best practice to place `&lt;script&gt;` tags just before the closing `&lt;/body&gt;` tag to ensure HTML content is loaded before scripts try to interact with it.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-comment">// In your HTML file (index.html)</span>
+<span class="html-tag">&lt;body&gt;</span>
+    <span class="html-comment">&lt;!-- Your HTML content here --&gt;</span>
+
+    <span class="html-tag">&lt;script</span> <span class="html-attr">src=</span><span class="html-attr-value">"script.js"</span><span class="html-tag">&gt;&lt;/script&gt;</span> <span class="html-comment">&lt;!-- Link to your external JavaScript file --&gt;</span>
+<span class="html-tag">&lt;/body&gt;</span>
+
+<span class="js-comment">// In your JavaScript file (script.js)</span>
+<span class="js-function-call">console.log</span>(<span class="js-string">"Hello from external JavaScript!"</span>);
+<span class="js-variable">document</span>.<span class="js-property">getElementById</span>(<span class="js-string">"myElement"</span>).<span class="js-property">textContent</span> <span class="js-operator">=</span> <span class="js-string">"Content changed by JS!"</span>;</code></pre>
+            </div>
+            <p class="text-lg leading-relaxed">
+                **Advantages:**
+                * Clean separation of HTML and JavaScript.
+                * Improved maintainability and reusability across multiple pages.
+                * Faster page loading (JS file can be cached by the browser).
+            </p>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Internal JavaScript</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                You can embed JavaScript directly within the HTML document using the `&lt;script&gt;` tags. This is suitable for small scripts specific to a single page.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;body&gt;</span>
+    <span class="html-tag">&lt;h1</span> <span class="html-attr">id=</span><span class="html-attr-value">"greeting"</span><span class="html-tag">&gt;</span>Hello!<span class="html-tag">&lt;/h1&gt;</span>
+
+    <span class="html-tag">&lt;script&gt;</span>
+        <span class="js-comment">// This JavaScript is embedded directly in the HTML</span>
+        <span class="js-variable">document</span>.<span class="js-property">getElementById</span>(<span class="js-string">"greeting"</span>).<span class="js-property">textContent</span> <span class="js-operator">=</span> <span class="js-string">"Hello, JavaScript!"</span>;
+    <span class="html-tag">&lt;/script&gt;</span>
+<span class="html-tag">&lt;/body&gt;</span></code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">c. Inline JavaScript</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                You can place JavaScript code directly within HTML attributes, typically for event handlers. This method is generally discouraged for larger scripts due to poor separation of concerns.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;button</span> <span class="html-attr">onclick=</span><span class="html-attr-value">"alert('Button clicked!')"</span><span class="html-tag">&gt;</span>Click Me<span class="html-tag">&lt;/button&gt;</span></code></pre>
+            </div>
+            <p class="text-lg leading-relaxed">
+                **Note:** While `alert()` is used here for demonstration, it's generally avoided in real applications as it's blocking and not user-friendly. Custom modals or console logs are preferred for debugging.
+            </p>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">3. Basic JavaScript Syntax and Variables</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                JavaScript statements are instructions to be executed by the web browser. They are typically separated by semicolons (though often optional due to Automatic Semicolon Insertion).
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. Statements and Comments</h3>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-comment">// This is a single-line comment in JavaScript</span>
+<span class="js-keyword">let</span> <span class="js-variable">message</span> <span class="js-operator">=</span> <span class="js-string">"Hello, World!"</span>; <span class="js-comment">// This is a statement</span>
+<span class="js-function-call">console.log</span>(<span class="js-variable">message</span>); <span class="js-comment">// Another statement
+
+/*
+ * This is a multi-line comment.
+ * It can span across several lines.
+ */</span></code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Variables: `var`, `let`, and `const`</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                Variables are containers for storing data values. JavaScript has three keywords for declaring variables:
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`var` (Old way):</strong> Function-scoped, can be re-declared and re-assigned. Has hoisting issues. Generally avoided in modern JS.</li>
+                <li><strong class="text-blue-200">`let` (Modern, mutable):</strong> Block-scoped, cannot be re-declared but can be re-assigned. Preferred for variables that need to change.</li>
+                <li><strong class="text-blue-200">`const` (Modern, immutable):</strong> Block-scoped, cannot be re-declared or re-assigned. Preferred for variables whose value should not change.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-comment">// Using var (less common in modern JS)</span>
+<span class="js-keyword">var</span> <span class="js-variable">oldSchoolName</span> <span class="js-operator">=</span> <span class="js-string">"Alice"</span>;
+<span class="js-variable">oldSchoolName</span> <span class="js-operator">=</span> <span class="js-string">"Bob"</span>; <span class="js-comment">// Can be re-assigned</span>
+<span class="js-keyword">var</span> <span class="js-variable">oldSchoolName</span> <span class="js-operator">=</span> <span class="js-string">"Charlie"</span>; <span class="js-comment">// Can be re-declared (potential for bugs)</span>
+
+<span class="js-comment">// Using let (for mutable variables)</span>
+<span class="js-keyword">let</span> <span class="js-variable">score</span> <span class="js-operator">=</span> <span class="js-number">100</span>;
+<span class="js-variable">score</span> <span class="js-operator">=</span> <span class="js-number">150</span>; <span class="js-comment">// Can be re-assigned</span>
+<span class="js-comment">// let score = 200; // ERROR: Cannot re-declare block-scoped variable 'score'</span>
+
+<span class="js-comment">// Using const (for immutable variables/constants)</span>
+<span class="js-keyword">const</span> <span class="js-variable">PI</span> <span class="js-operator">=</span> <span class="js-number">3.14159</span>;
+<span class="js-comment">// PI = 3.14; // ERROR: Assignment to constant variable.</span>
+
+<span class="js-keyword">const</span> <span class="js-variable">user</span> <span class="js-operator">=</span> { <span class="js-property">name</span>: <span class="js-string">"John"</span>, <span class="js-property">age</span>: <span class="js-number">30</span> };
+<span class="js-variable">user</span>.<span class="js-property">age</span> <span class="js-operator">=</span> <span class="js-number">31</span>; <span class="js-comment">// Properties of const objects can be changed, but not the object reference itself</span>
+<span class="js-comment">// user = { name: "Jane", age: 25 }; // ERROR: Cannot re-assign the user object</span>
+
+<span class="js-function-call">console.log</span>(<span class="js-variable">score</span>);
+<span class="js-function-call">console.log</span>(<span class="js-variable">user</span>.<span class="js-property">age</span>);</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">4. JavaScript Data Types: The Kinds of Data</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                JavaScript variables can hold different data types. Data types classify what kind of value a variable has.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Primitive Data Types:</strong>
+                    <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                        <li><strong class="text-blue-200">`String`</strong>: Represents textual data (e.g., `"Hello, World!"`, `'JavaScript'`).
+                            <div class="code-block my-2"><pre><code><span class="js-keyword">let</span> <span class="js-variable">name</span> <span class="js-operator">=</span> <span class="js-string">"Whizmath"</span>;</code></pre></div>
+                        </li>
+                        <li><strong class="text-blue-200">`Number`</strong>: Represents both integer and floating-point numbers (e.g., `10`, `3.14`, `-5`).
+                            <div class="code-block my-2"><pre><code><span class="js-keyword">let</span> <span class="js-variable">age</span> <span class="js-operator">=</span> <span class="js-number">25</span>;</code></pre></div>
+                        </li>
+                        <li><strong class="text-blue-200">`Boolean`</strong>: Represents a logical entity and can have two values: `true` or `false`.
+                            <div class="code-block my-2"><pre><code><span class="js-keyword">let</span> <span class="js-variable">isLearning</span> <span class="js-operator">=</span> <span class="js-boolean">true</span>;</code></pre></div>
+                        </li>
+                        <li><strong class="text-blue-200">`Undefined`</strong>: A variable that has been declared but not assigned a value.
+                            <div class="code-block my-2"><pre><code><span class="js-keyword">let</span> <span class="js-variable">nothingYet</span>; <span class="js-comment">// Value is undefined</span></code></pre></div>
+                        </li>
+                        <li><strong class="text-blue-200">`Null`</strong>: Represents the intentional absence of any object value.
+                            <div class="code-block my-2"><pre><code><span class="js-keyword">let</span> <span class="js-variable">emptyValue</span> <span class="js-operator">=</span> <span class="js-keyword">null</span>;</code></pre></div>
+                        </li>
+                        <li><strong class="text-blue-200">`Symbol` (ES6)</strong>: Represents a unique identifier.
+                            <div class="code-block my-2"><pre><code><span class="js-keyword">const</span> <span class="js-variable">id</span> <span class="js-operator">=</span> <span class="js-function-call">Symbol</span>(<span class="js-string">'id'</span>);</code></pre></div>
+                        </li>
+                        <li><strong class="text-blue-200">`BigInt` (ES2020)</strong>: Represents integers with arbitrary precision.
+                            <div class="code-block my-2"><pre><code><span class="js-keyword">const</span> <span class="js-variable">largeNumber</span> <span class="js-operator">=</span> <span class="js-number">1234567890123456789012345678901234567890n</span>;</code></pre></div>
+                        </li>
+                    </ul>
+                </li>
+                <li><strong class="text-blue-200">Non-Primitive (Object) Data Type:</strong>
+                    <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                        <li><strong class="text-blue-200">`Object`</strong>: A complex data type that allows you to store collections of data. Includes plain objects, arrays, functions, dates, etc.
+                            <div class="code-block my-2"><pre><code><span class="js-keyword">let</span> <span class="js-variable">person</span> <span class="js-operator">=</span> { <span class="js-property">firstName</span>: <span class="js-string">"Jane"</span>, <span class="js-property">lastName</span>: <span class="js-string">"Doe"</span> };</code></pre></div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">5. Operators: Performing Operations</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Operators are symbols that perform operations on values and variables.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. Arithmetic Operators</h3>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`+` (Addition)</li>
+                <li>`-` (Subtraction)</li>
+                <li>`*` (Multiplication)</li>
+                <li>`/` (Division)</li>
+                <li>`%` (Modulus - remainder of division)</li>
+                <li>`**` (Exponentiation - ES2016)</li>
+                <li>`++` (Increment)</li>
+                <li>`--` (Decrement)</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">let</span> <span class="js-variable">x</span> <span class="js-operator">=</span> <span class="js-number">10</span>;
+<span class="js-keyword">let</span> <span class="js-variable">y</span> <span class="js-operator">=</span> <span class="js-number">3</span>;
+<span class="js-function-call">console.log</span>(<span class="js-variable">x</span> <span class="js-operator">+</span> <span class="js-variable">y</span>);  <span class="js-comment">// 13</span>
+<span class="js-function-call">console.log</span>(<span class="js-variable">x</span> <span class="js-operator">%</span> <span class="js-variable">y</span>);  <span class="js-comment">// 1</span>
+<span class="js-function-call">console.log</span>(<span class="js-variable">x</span> <span class="js-operator">**</span> <span class="js-variable">2</span>); <span class="js-comment">// 100</span>
+<span class="js-variable">x</span><span class="js-operator">++</span>;
+<span class="js-function-call">console.log</span>(<span class="js-variable">x</span>);  <span class="js-comment">// 11</span></code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Assignment Operators</h3>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`=` (Assign)</li>
+                <li>`+=` (Add and assign)</li>
+                <li>`-=` (Subtract and assign)</li>
+                <li>`*=` (Multiply and assign)</li>
+                <li>`/=` (Divide and assign)</li>
+                <li>`%=` (Modulus and assign)</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">let</span> <span class="js-variable">a</span> <span class="js-operator">=</span> <span class="js-number">5</span>;
+<span class="js-variable">a</span> <span class="js-operator">+=</span> <span class="js-number">3</span>;  <span class="js-comment">// a is now 8 (a = a + 3)</span>
+<span class="js-function-call">console.log</span>(<span class="js-variable">a</span>);</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">c. Comparison Operators (Return `true` or `false`)</h3>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`==` (Equal to - checks value only, type coercion)</li>
+                <li>`===` (Strict equal to - checks value AND type) - **Recommended**</li>
+                <li>`!=` (Not equal to - checks value only)</li>
+                <li>`!==` (Strict not equal to - checks value AND type) - **Recommended**</li>
+                <li>`>` (Greater than)</li>
+                <li>`<` (Less than)</li>
+                <li>`>=` (Greater than or equal to)</li>
+                <li>`<=` (Less than or equal to)</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-function-call">console.log</span>(<span class="js-number">5</span> <span class="js-operator">==</span> <span class="js-string">'5'</span>);   <span class="js-comment">// true (value is same, type coercion)</span>
+<span class="js-function-call">console.log</span>(<span class="js-number">5</span> <span class="js-operator">===</span> <span class="js-string">'5'</span>);  <span class="js-comment">// false (value is same, but types are different)</span>
+<span class="js-function-call">console.log</span>(<span class="js-number">10</span> <span class="js-operator">></span> <span class="js-number">5</span>);    <span class="js-comment">// true</span></code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">d. Logical Operators</h3>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`&&` (Logical AND) - Returns `true` if both operands are `true`.</li>
+                <li>`||` (Logical OR) - Returns `true` if at least one operand is `true`.</li>
+                <li>`!` (Logical NOT) - Inverts the boolean value.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">let</span> <span class="js-variable">isAdult</span> <span class="js-operator">=</span> <span class="js-boolean">true</span>;
+<span class="js-keyword">let</span> <span class="js-variable">hasLicense</span> <span class="js-operator">=</span> <span class="js-boolean">false</span>;
+<span class="js-function-call">console.log</span>(<span class="js-variable">isAdult</span> <span class="js-operator">&&</span> <span class="js-variable">hasLicense</span>); <span class="js-comment">// false</span>
+<span class="js-function-call">console.log</span>(<span class="js-variable">isAdult</span> <span class="js-operator">||</span> <span class="js-variable">hasLicense</span>); <span class="js-comment">// true</span>
+<span class="js-function-call">console.log</span>(<span class="js-operator">!</span><span class="js-variable">isAdult</span>);         <span class="js-comment">// false</span></code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">6. Control Flow: Conditionals (`if/else`, `switch`)</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Control flow statements allow your JavaScript code to make decisions and execute different blocks of code based on conditions.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. `if`, `else if`, `else` Statement</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Executes a block of code if a specified condition is true. The `else if` and `else` clauses provide alternative paths.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">let</span> <span class="js-variable">temperature</span> <span class="js-operator">=</span> <span class="js-number">25</span>;
+
+<span class="js-keyword">if</span> (<span class="js-variable">temperature</span> <span class="js-operator">></span> <span class="js-number">30</span>) {
+    <span class="js-function-call">console.log</span>(<span class="js-string">"It's hot outside!"</span>);
+} <span class="js-keyword">else if</span> (<span class="js-variable">temperature</span> <span class="js-operator">></span> <span class="js-number">20</span>) {
+    <span class="js-function-call">console.log</span>(<span class="js-string">"It's warm and pleasant."</span>);
+} <span class="js-keyword">else</span> {
+    <span class="js-function-call">console.log</span>(<span class="js-string">"It's a bit chilly."</span>);
+}</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. `switch` Statement</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Used to perform different actions based on different conditions. It's often a cleaner alternative to long `if-else if` chains when checking a single variable against multiple possible values.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">let</span> <span class="js-variable">day</span> <span class="js-operator">=</span> <span class="js-string">"Monday"</span>;
+
+<span class="js-keyword">switch</span> (<span class="js-variable">day</span>) {
+    <span class="js-keyword">case</span> <span class="js-string">"Monday"</span>:
+        <span class="js-function-call">console.log</span>(<span class="js-string">"Start of the week!"</span>);
+        <span class="js-keyword">break</span>;
+    <span class="js-keyword">case</span> <span class="js-string">"Friday"</span>:
+        <span class="js-function-call">console.log</span>(<span class="js-string">"Almost weekend!"</span>);
+        <span class="js-keyword">break</span>;
+    <span class="js-keyword">default</span>:
+        <span class="js-function-call">console.log</span>(<span class="js-string">"It's a regular day."</span>);
+}</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">7. Control Flow: Loops (`for`, `while`, `do/while`, `for...of`, `for...in`)</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Loops are used to execute a block of code repeatedly as long as a certain condition is met.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. `for` Loop</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                The most common loop, used when you know how many times you want to loop.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-comment">// Loop from 0 to 4 (5 times)</span>
+<span class="js-keyword">for</span> (<span class="js-keyword">let</span> <span class="js-variable">i</span> <span class="js-operator">=</span> <span class="js-number">0</span>; <span class="js-variable">i</span> <span class="js-operator">&lt;</span> <span class="js-number">5</span>; <span class="js-variable">i</span><span class="js-operator">++</span>) {
+    <span class="js-function-call">console.log</span>(<span class="js-string">"Count: "</span> <span class="js-operator">+</span> <span class="js-variable">i</span>);
+}</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. `while` Loop</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Repeats a block of code as long as a specified condition is true.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">let</span> <span class="js-variable">count</span> <span class="js-operator">=</span> <span class="js-number">0</span>;
+<span class="js-keyword">while</span> (<span class="js-variable">count</span> <span class="js-operator">&lt;</span> <span class="js-number">3</span>) {
+    <span class="js-function-call">console.log</span>(<span class="js-string">"While count: "</span> <span class="js-operator">+</span> <span class="js-variable">count</span>);
+    <span class="js-variable">count</span><span class="js-operator">++</span>;
+}</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">c. `do...while` Loop</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Similar to `while`, but guarantees the code block executes at least once before checking the condition.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">let</span> <span class="js-variable">i</span> <span class="js-operator">=</span> <span class="js-number">0</span>;
+<span class="js-keyword">do</span> {
+    <span class="js-function-call">console.log</span>(<span class="js-string">"Do-while count: "</span> <span class="js-operator">+</span> <span class="js-variable">i</span>);
+    <span class="js-variable">i</span><span class="js-operator">++</span>;
+} <span class="js-keyword">while</span> (<span class="js-variable">i</span> <span class="js-operator">&lt;</span> <span class="js-number">0</span>); <span class="js-comment">// Condition is false, but runs once</span></code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">d. `for...of` Loop (ES6)</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Iterates over iterable objects (like arrays, strings, Maps, Sets).
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">const</span> <span class="js-variable">fruits</span> <span class="js-operator">=</span> [<span class="js-string">"apple"</span>, <span class="js-string">"banana"</span>, <span class="js-string">"cherry"</span>];
+<span class="js-keyword">for</span> (<span class="js-keyword">const</span> <span class="js-variable">fruit</span> <span class="js-keyword">of</span> <span class="js-variable">fruits</span>) {
+    <span class="js-function-call">console.log</span>(<span class="js-variable">fruit</span>);
+}</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">e. `for...in` Loop</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Iterates over the enumerable properties of an object.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">const</span> <span class="js-variable">car</span> <span class="js-operator">=</span> { <span class="js-property">brand</span>: <span class="js-string">"Toyota"</span>, <span class="js-property">model</span>: <span class="js-string">"Camry"</span>, <span class="js-property">year</span>: <span class="js-number">2020</span> };
+<span class="js-keyword">for</span> (<span class="js-keyword">const</span> <span class="js-variable">key</span> <span class="js-keyword">in</span> <span class="js-variable">car</span>) {
+    <span class="js-function-call">console.log</span>(<span class="js-variable">key</span> <span class="js-operator">+</span> <span class="js-string">": "</span> <span class="js-operator">+</span> <span class="js-variable">car</span>[<span class="js-variable">key</span>]);
+}</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">8. Functions: Reusable Blocks of Code</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Functions are fundamental building blocks in JavaScript. They allow you to encapsulate a block of code that performs a specific task, making your code reusable and organized.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. Function Declaration</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                The traditional way to define a function.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">function</span> <span class="js-function-call">greet</span>(<span class="js-variable">name</span>) {
+    <span class="js-function-call">console.log</span>(<span class="js-string">"Hello, "</span> <span class="js-operator">+</span> <span class="js-variable">name</span> <span class="js-operator">+</span> <span class="js-string">"!"</span>);
+}
+
+<span class="js-function-call">greet</span>(<span class="js-string">"Alice"</span>); <span class="js-comment">// Output: Hello, Alice!</span></code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Function Expression</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Assigning a function to a variable.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">const</span> <span class="js-variable">sayHi</span> <span class="js-operator">=</span> <span class="js-keyword">function</span>(<span class="js-variable">name</span>) {
+    <span class="js-function-call">console.log</span>(<span class="js-string">`Hi, ${name}!`</span>); <span class="js-comment">// Template literals (backticks) for easier string interpolation</span>
+};
+
+<span class="js-function-call">sayHi</span>(<span class="js-string">"Bob"</span>); <span class="js-comment">// Output: Hi, Bob!</span></code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">c. Arrow Functions (ES6)</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                A more concise way to write functions, especially useful for short, anonymous functions.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">const</span> <span class="js-variable">add</span> <span class="js-operator">=</span> (<span class="js-variable">a</span>, <span class="js-variable">b</span>) <span class="js-operator">=></span> <span class="js-variable">a</span> <span class="js-operator">+</span> <span class="js-variable">b</span>;
+<span class="js-function-call">console.log</span>(<span class="js-function-call">add</span>(<span class="js-number">5</span>, <span class="js-number">3</span>)); <span class="js-comment">// Output: 8</span>
+
+<span class="js-keyword">const</span> <span class="js-variable">multiply</span> <span class="js-operator">=</span> (<span class="js-variable">x</span>, <span class="js-variable">y</span>) <span class="js-operator">=></span> {
+    <span class="js-keyword">let</span> <span class="js-variable">result</span> <span class="js-operator">=</span> <span class="js-variable">x</span> <span class="js-operator">*</span> <span class="js-variable">y</span>;
+    <span class="js-keyword">return</span> <span class="js-variable">result</span>;
+};
+<span class="js-function-call">console.log</span>(<span class="js-function-call">multiply</span>(<span class="js-number">4</span>, <span class="js-number">2</span>)); <span class="js-comment">// Output: 8</span></code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">9. Arrays: Ordered Collections of Data</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Arrays are special variables that can hold more than one value, stored in a specific order. They are zero-indexed, meaning the first element is at index `0`.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. Creating Arrays</h3>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-comment">// Array of strings</span>
+<span class="js-keyword">const</span> <span class="js-variable">colors</span> <span class="js-operator">=</span> [<span class="js-string">"red"</span>, <span class="js-string">"green"</span>, <span class="js-string">"blue"</span>];
+
+<span class="js-comment">// Array of numbers</span>
+<span class="js-keyword">const</span> <span class="js-variable">numbers</span> <span class="js-operator">=</span> [<span class="js-number">1</span>, <span class="js-number">2</span>, <span class="js-number">3</span>, <span class="js-number">4</span>, <span class="js-number">5</span>];
+
+<span class="js-comment">// Mixed array (less common, but possible)</span>
+<span class="js-keyword">const</span> <span class="js-variable">mixed</span> <span class="js-operator">=</span> [<span class="js-string">"text"</span>, <span class="js-number">123</span>, <span class="js-boolean">true</span>];</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Accessing Array Elements</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Use square brackets `[]` with the index number.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">const</span> <span class="js-variable">fruits</span> <span class="js-operator">=</span> [<span class="js-string">"apple"</span>, <span class="js-string">"banana"</span>, <span class="js-string">"cherry"</span>];
+<span class="js-function-call">console.log</span>(<span class="js-variable">fruits</span>[<span class="js-number">0</span>]); <span class="js-comment">// Output: "apple"</span>
+<span class="js-function-call">console.log</span>(<span class="js-variable">fruits</span>[<span class="js-number">2</span>]); <span class="js-comment">// Output: "cherry"</span>
+
+<span class="js-comment">// Change an element</span>
+<span class="js-variable">fruits</span>[<span class="js-number">1</span>] <span class="js-operator">=</span> <span class="js-string">"grape"</span>;
+<span class="js-function-call">console.log</span>(<span class="js-variable">fruits</span>); <span class="js-comment">// Output: ["apple", "grape", "cherry"]</span></code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">c. Common Array Methods</h3>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`length`: Property to get the number of elements.</li>
+                <li>`push()`: Adds an element to the end.</li>
+                <li>`pop()`: Removes the last element.</li>
+                <li>`unshift()`: Adds an element to the beginning.</li>
+                <li>`shift()`: Removes the first element.</li>
+                <li>`indexOf()`: Finds the index of an element.</li>
+                <li>`includes()`: Checks if an element exists.</li>
+                <li>`join()`: Joins all elements into a string.</li>
+                <li>`slice()`: Returns a shallow copy of a portion of an array into a new array.</li>
+                <li>`splice()`: Changes the contents of an array by removing or replacing existing elements and/or adding new elements.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">const</span> <span class="js-variable">items</span> <span class="js-operator">=</span> [<span class="js-string">"pen"</span>, <span class="js-string">"book"</span>, <span class="js-string">"eraser"</span>];
+<span class="js-function-call">console.log</span>(<span class="js-variable">items</span>.<span class="js-property">length</span>); <span class="js-comment">// Output: 3</span>
+
+<span class="js-variable">items</span>.<span class="js-function-call">push</span>(<span class="js-string">"pencil"</span>);
+<span class="js-function-call">console.log</span>(<span class="js-variable">items</span>); <span class="js-comment">// Output: ["pen", "book", "eraser", "pencil"]</span>
+
+<span class="js-variable">items</span>.<span class="js-function-call">pop</span>();
+<span class="js-function-call">console.log</span>(<span class="js-variable">items</span>); <span class="js-comment">// Output: ["pen", "book", "eraser"]</span>
+
+<span class="js-function-call">console.log</span>(<span class="js-variable">items</span>.<span class="js-function-call">indexOf</span>(<span class="js-string">"book"</span>)); <span class="js-comment">// Output: 1</span></code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">10. Objects: Unordered Collections of Key-Value Pairs</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Objects are used to store collections of related data and more complex entities. They are unordered collections of key-value pairs (also called properties and methods).
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. Creating Objects</h3>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-comment">// Object Literal Syntax (most common)</span>
+<span class="js-keyword">const</span> <span class="js-variable">person</span> <span class="js-operator">=</span> {
+    <span class="js-property">firstName</span>: <span class="js-string">"John"</span>,
+    <span class="js-property">lastName</span>: <span class="js-string">"Doe"</span>,
+    <span class="js-property">age</span>: <span class="js-number">30</span>,
+    <span class="js-property">isStudent</span>: <span class="js-boolean">false</span>,
+    <span class="js-property">hobbies</span>: [<span class="js-string">"reading"</span>, <span class="js-string">"hiking"</span>],
+    <span class="js-property">greet</span>: <span class="js-keyword">function</span>() { <span class="js-comment">// A method (function as a property)</span>
+        <span class="js-function-call">console.log</span>(<span class="js-string">`Hello, my name is ${this.firstName} ${this.lastName}.`</span>);
+    }
+};</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Accessing Object Properties</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Use dot notation (`.`) or bracket notation (`[]`).
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-function-call">console.log</span>(<span class="js-variable">person</span>.<span class="js-property">firstName</span>); <span class="js-comment">// Output: "John" (Dot notation)</span>
+<span class="js-function-call">console.log</span>(<span class="js-variable">person</span>[<span class="js-string">'age'</span>]); <span class="js-comment">// Output: 30 (Bracket notation - useful for dynamic keys)</span>
+
+<span class="js-comment">// Call an object method</span>
+<span class="js-variable">person</span>.<span class="js-function-call">greet</span>(); <span class="js-comment">// Output: Hello, my name is John Doe.</span>
+
+<span class="js-comment">// Modify a property</span>
+<span class="js-variable">person</span>.<span class="js-property">age</span> <span class="js-operator">=</span> <span class="js-number">31</span>;
+<span class="js-function-call">console.log</span>(<span class="js-variable">person</span>.<span class="js-property">age</span>); <span class="js-comment">// Output: 31</span></code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">11. DOM Manipulation: Making Web Pages Interactive</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                The Document Object Model (DOM) is a programming interface for HTML and XML documents. It represents the page structure as a tree of objects, and JavaScript can interact with this tree to change the content, structure, and style of a web page.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. Selecting Elements</h3>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`document.getElementById('id')`: Selects a single element by its ID.</li>
+                <li>`document.querySelector('selector')`: Selects the first element that matches a CSS selector.</li>
+                <li>`document.querySelectorAll('selector')`: Selects all elements that match a CSS selector (returns a NodeList).</li>
+                <li>`document.getElementsByClassName('class')`: Selects elements by class name.</li>
+                <li>`document.getElementsByTagName('tag')`: Selects elements by tag name.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-comment">&lt;!-- HTML --&gt;</span>
+<span class="html-tag">&lt;div</span> <span class="html-attr">id=</span><span class="html-attr-value">"myDiv"</span><span class="html-tag">&gt;</span>Hello DOM!<span class="html-tag">&lt;/div&gt;</span>
+<span class="html-tag">&lt;p</span> <span class="html-attr">class=</span><span class="html-attr-value">"text-item"</span><span class="html-tag">&gt;</span>Item 1<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;p</span> <span class="html-attr">class=</span><span class="html-attr-value">"text-item"</span><span class="html-tag">&gt;</span>Item 2<span class="html-tag">&lt;/p&gt;</span>
+
+<span class="js-comment">// JavaScript</span>
+<span class="js-keyword">const</span> <span class="js-variable">myDiv</span> <span class="js-operator">=</span> <span class="js-variable">document</span>.<span class="js-function-call">getElementById</span>(<span class="js-string">'myDiv'</span>);
+<span class="js-function-call">console.log</span>(<span class="js-variable">myDiv</span>.<span class="js-property">textContent</span>); <span class="js-comment">// Output: "Hello DOM!"</span>
+
+<span class="js-keyword">const</span> <span class="js-variable">firstP</span> <span class="js-operator">=</span> <span class="js-variable">document</span>.<span class="js-function-call">querySelector</span>(<span class="js-string">'.text-item'</span>);
+<span class="js-function-call">console.log</span>(<span class="js-variable">firstP</span>.<span class="js-property">textContent</span>); <span class="js-comment">// Output: "Item 1"</span>
+
+<span class="js-keyword">const</span> <span class="js-variable">allPs</span> <span class="js-operator">=</span> <span class="js-variable">document</span>.<span class="js-function-call">querySelectorAll</span>(<span class="js-string">'p'</span>);
+<span class="js-function-call">console.log</span>(<span class="js-variable">allPs</span>.<span class="js-property">length</span>); <span class="js-comment">// Output: 2</span></code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Modifying Content and Attributes</h3>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`element.textContent`: Gets or sets the text content.</li>
+                <li>`element.innerHTML`: Gets or sets the HTML content (use with caution to avoid XSS).</li>
+                <li>`element.setAttribute('attribute', 'value')`: Sets an attribute.</li>
+                <li>`element.classList.add('class')`, `remove()`, `toggle()`: Manipulates CSS classes.</li>
+                <li>`element.style.property = 'value'`: Sets inline CSS styles.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">const</span> <span class="js-variable">myDiv</span> <span class="js-operator">=</span> <span class="js-variable">document</span>.<span class="js-function-call">getElementById</span>(<span class="js-string">'myDiv'</span>);
+
+<span class="js-variable">myDiv</span>.<span class="js-property">textContent</span> <span class="js-operator">=</span> <span class="js-string">"New text content!"</span>; <span class="js-comment">// Change text</span>
+<span class="js-variable">myDiv</span>.<span class="js-property">innerHTML</span> <span class="js-operator">=</span> <span class="js-string">"<em>New HTML</em> content!"</span>; <span class="js-comment">// Change HTML</span>
+
+<span class="js-variable">myDiv</span>.<span class="js-function-call">setAttribute</span>(<span class="js-string">'title'</span>, <span class="js-string">'This is a tooltip'</span>); <span class="js-comment">// Add an attribute</span>
+
+<span class="js-variable">myDiv</span>.<span class="js-property">classList</span>.<span class="js-function-call">add</span>(<span class="js-string">'highlight'</span>); <span class="js-comment">// Add a CSS class</span>
+<span class="js-variable">myDiv</span>.<span class="js-property">style</span>.<span class="js-property">backgroundColor</span> <span class="js-operator">=</span> <span class="js-string">'yellow'</span>; <span class="js-comment">// Set inline style</span></code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">12. Event Handling: Responding to User Actions</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Event handling allows JavaScript to react to user actions (like clicks, key presses, form submissions) or browser events (like page load, image load).
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. `addEventListener()` (Recommended)</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                The most flexible and modern way to attach event handlers. It allows multiple handlers for the same event on the same element.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-comment">&lt;!-- HTML --&gt;</span>
+<span class="html-tag">&lt;button</span> <span class="html-attr">id=</span><span class="html-attr-value">"myButton"</span><span class="html-tag">&gt;</span>Click Me!<span class="html-tag">&lt;/button&gt;</span>
+
+<span class="js-comment">// JavaScript</span>
+<span class="js-keyword">const</span> <span class="js-variable">myButton</span> <span class="js-operator">=</span> <span class="js-variable">document</span>.<span class="js-function-call">getElementById</span>(<span class="js-string">'myButton'</span>);
+
+<span class="js-variable">myButton</span>.<span class="js-function-call">addEventListener</span>(<span class="js-string">'click'</span>, <span class="js-keyword">function</span>() {
+    <span class="js-function-call">console.log</span>(<span class="js-string">"Button was clicked!"</span>);
+});
+
+<span class="js-comment">// You can add multiple listeners to the same event</span>
+<span class="js-variable">myButton</span>.<span class="js-function-call">addEventListener</span>(<span class="js-string">'click'</span>, () <span class="js-operator">=></span> {
+    <span class="js-variable">myButton</span>.<span class="js-property">textContent</span> <span class="js-operator">=</span> <span class="js-string">"Clicked!"</span>;
+});</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Common Events</h3>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`click`: When an element is clicked.</li>
+                <li>`mouseover`, `mouseout`: When the mouse pointer enters/leaves an element.</li>
+                <li>`keydown`, `keyup`: When a key is pressed/released.</li>
+                <li>`submit`: When a form is submitted.</li>
+                <li>`load`: When the page or an element (like an image) has finished loading.</li>
+            </ul>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">13. Basic Debugging with `console.log()`</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Debugging is the process of finding and fixing errors in your code. The `console.log()` method is your best friend for basic debugging in JavaScript. It allows you to print messages, variable values, and object states to the browser's developer console.
+            </p>
+            <p class="mb-4 text-lg leading-relaxed">
+                To open the developer console in most browsers:
+                * **Chrome/Firefox/Edge:** Right-click anywhere on the page and select "Inspect" or "Inspect Element", then go to the "Console" tab.
+                * **Safari:** Enable "Develop" menu in preferences, then "Show Web Inspector".
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">let</span> <span class="js-variable">count</span> <span class="js-operator">=</span> <span class="js-number">5</span>;
+<span class="js-function-call">console.log</span>(<span class="js-string">"The value of count is: "</span>, <span class="js-variable">count</span>); <span class="js-comment">// Log a variable's value</span>
+
+<span class="js-keyword">const</span> <span class="js-variable">userProfile</span> <span class="js-operator">=</span> { <span class="js-property">name</span>: <span class="js-string">"Jane"</span>, <span class="js-property">email</span>: <span class="js-string">"jane@example.com"</span> };
+<span class="js-function-call">console.log</span>(<span class="js-string">"User object:"</span>, <span class="js-variable">userProfile</span>); <span class="js-comment">// Log an entire object</span>
+
+<span class="js-function-call">console.warn</span>(<span class="js-string">"Warning: This operation might be slow."</span>); <span class="js-comment">// Log a warning</span>
+<span class="js-function-call">console.error</span>(<span class="js-string">"Error: Something went wrong!"</span>); <span class="js-comment">// Log an error</span></code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">14. Your First Interactive Web Page (Comprehensive Example)</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Let's put everything together to create a simple interactive counter. Click the button to increment the count!
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;!DOCTYPE html&gt;</span>
+<span class="html-tag">&lt;html</span> <span class="html-attr">lang=</span><span class="html-attr-value">"en"</span><span class="html-tag">&gt;</span>
+<span class="html-tag">&lt;head&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">charset=</span><span class="html-attr-value">"UTF-8"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">name=</span><span class="html-attr-value">"viewport"</span> <span class="html-attr">content=</span><span class="html-attr-value">"width=device-width, initial-scale=1.0"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;title&gt;</span>Interactive Counter | Whizmath<span class="html-tag">&lt;/title&gt;</span>
+    <span class="html-tag">&lt;style&gt;</span>
+        <span class="css-comment">/* Basic CSS for the example */</span>
+        <span class="css-selector">body</span> {
+            <span class="css-property">font-family</span>: <span class="css-value">'Inter', sans-serif</span>;
+            <span class="css-property">display</span>: <span class="css-value">flex</span>;
+            <span class="css-property">flex-direction</span>: <span class="css-value">column</span>;
+            <span class="css-property">justify-content</span>: <span class="css-value">center</span>;
+            <span class="css-property">align-items</span>: <span class="css-value">center</span>;
+            <span class="css-property">min-height</span>: <span class="css-value">80vh</span>;
+            <span class="css-property">background-color</span>: <span class="css-value">#1a202c</span>;
+            <span class="css-property">color</span>: <span class="css-value">#e2e8f0</span>;
+        }
+        <span class="css-selector">.counter-container</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#2d3748</span>;
+            <span class="css-property">padding</span>: <span class="css-value">30px</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">15px</span>;
+            <span class="css-property">box-shadow</span>: <span class="css-value">0 10px 20px rgba(0, 0, 0, 0.4)</span>;
+            <span class="css-property">text-align</span>: <span class="css-value">center</span>;
+        }
+        <span class="css-selector">#display-count</span> {
+            <span class="css-property">font-size</span>: <span class="css-value">4em</span>;
+            <span class="css-property">font-weight</span>: <span class="css-value">bold</span>;
+            <span class="css-property">color</span>: <span class="css-value">#63b3ed</span>;
+            <span class="css-property">margin-bottom</span>: <span class="css-value">20px</span>;
+        }
+        <span class="css-selector">button</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#4299e1</span>;
+            <span class="css-property">color</span>: <span class="css-value">white</span>;
+            <span class="css-property">padding</span>: <span class="css-value">12px 25px</span>;
+            <span class="css-property">border</span>: <span class="css-value">none</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">8px</span>;
+            <span class="css-property">font-size</span>: <span class="css-value">1.2em</span>;
+            <span class="css-property">cursor</span>: <span class="css-value">pointer</span>;
+            <span class="css-property">transition</span>: <span class="css-value">background-color 0.3s ease, transform 0.2s ease</span>;
+        }
+        <span class="css-selector">button:hover</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#3182ce</span>;
+            <span class="css-property">transform</span>: <span class="css-value">translateY(-3px)</span>;
+        }
+    <span class="html-tag">&lt;/style&gt;</span>
+<span class="html-tag">&lt;/head&gt;</span>
+<span class="html-tag">&lt;body&gt;</span>
+
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"counter-container"</span><span class="html-tag">&gt;</span>
+        <span class="html-tag">&lt;h2&gt;</span>Simple JavaScript Counter<span class="html-tag">&lt;/h2&gt;</span>
+        <span class="html-tag">&lt;div</span> <span class="html-attr">id=</span><span class="html-attr-value">"display-count"</span><span class="html-tag">&gt;</span>0<span class="html-tag">&lt;/div&gt;</span>
+        <span class="html-tag">&lt;button</span> <span class="html-attr">id=</span><span class="html-attr-value">"incrementButton"</span><span class="html-tag">&gt;</span>Increment Count<span class="html-tag">&lt;/button&gt;</span>
+    <span class="html-tag">&lt;/div&gt;</span>
+
+    <span class="html-tag">&lt;script&gt;</span>
+        <span class="js-comment">// Get references to the HTML elements</span>
+        <span class="js-keyword">const</span> <span class="js-variable">displayElement</span> <span class="js-operator">=</span> <span class="js-variable">document</span>.<span class="js-function-call">getElementById</span>(<span class="js-string">'display-count'</span>);
+        <span class="js-keyword">const</span> <span class="js-variable">incrementButton</span> <span class="js-operator">=</span> <span class="js-variable">document</span>.<span class="js-function-call">getElementById</span>(<span class="js-string">'incrementButton'</span>);
+
+        <span class="js-comment">// Initialize a variable to hold the count</span>
+        <span class="js-keyword">let</span> <span class="js-variable">currentCount</span> <span class="js-operator">=</span> <span class="js-number">0</span>;
+
+        <span class="js-comment">// Function to update the display</span>
+        <span class="js-keyword">function</span> <span class="js-function-call">updateDisplay</span>() {
+            <span class="js-variable">displayElement</span>.<span class="js-property">textContent</span> <span class="js-operator">=</span> <span class="js-variable">currentCount</span>;
+        }
+
+        <span class="js-comment">// Add an event listener to the button</span>
+        <span class="js-variable">incrementButton</span>.<span class="js-function-call">addEventListener</span>(<span class="js-string">'click'</span>, () <span class="js-operator">=></span> {
+            <span class="js-comment">// Increment the count</span>
+            <span class="js-variable">currentCount</span><span class="js-operator">++</span>;
+            <span class="js-comment">// Update the display</span>
+            <span class="js-function-call">updateDisplay</span>();
+            <span class="js-function-call">console.log</span>(<span class="js-string">"Count is now: "</span>, <span class="js-variable">currentCount</span>);
+        });
+
+        <span class="js-comment">// Initial display update when the page loads</span>
+        <span class="js-function-call">updateDisplay</span>();
+    <span class="html-tag">&lt;/script&gt;</span>
+<span class="html-tag">&lt;/body&gt;</span>
+<span class="html-tag">&lt;/html&gt;</span></code></pre>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js Animated Background Setup
+        let scene, camera, renderer, particles;
+        let mouseX = 0, mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('three-canvas');
+            if (!canvas) {
+                console.error("Canvas element not found!");
+                return;
+            }
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            camera.position.z = 20; // Adjusted camera position to compensate for larger particles
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles (simple animated background)
+            const particleCount = 1500; // Increased particle count for more density
+            const geometry = new THREE.BufferGeometry();
+            const positions = [];
+            const colors = [];
+            const color = new THREE.Color();
+
+            for (let i = 0; i < particleCount; i++) {
+                // Position particles randomly in a larger cube
+                positions.push(
+                    (Math.random() * 2 - 1) * 40, // Wider spread for particles
+                    (Math.random() * 2 - 1) * 40,
+                    (Math.random() * 2 - 1) * 40
+                );
+                // Assign a random color
+                color.setHSL(Math.random(), 0.8, 0.7); // Brighter, more saturated colors
+                colors.push(color.r, color.g, color.b);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.5, // Particles 5 times bigger (0.1 * 5 = 0.5)
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.95, // Slightly less transparent for more presence
+                blending: THREE.AdditiveBlending
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // Add mouse interactivity for camera movement
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) * 0.003; // Adjusted sensitivity
+            mouseY = (event.clientY - windowHalfY) * 0.003;
+        }
+
+        function onWindowResize() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            windowHalfX = width / 2;
+            windowHalfY = height / 2;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Animate particles
+            if (particles) {
+                particles.rotation.x += 0.0006; // Slightly slower rotation for larger particles
+                particles.rotation.y += 0.0008;
+                // Add subtle oscillation
+                particles.position.x = Math.sin(Date.now() * 0.00008) * 1; // Increased oscillation range
+                particles.position.y = Math.cos(Date.now() * 0.00012) * 1;
+            }
+
+            // Animate camera based on mouse position
+            camera.position.x += (mouseX - camera.position.x) * 0.03; // Slower camera movement
+            camera.position.y += (-mouseY - camera.position.y) * 0.03;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        // Copy code functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling; // Get the <pre><code> element
+            const code = codeBlock.innerText;
+
+            // Use document.execCommand for broader iframe compatibility
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copied!';
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                button.textContent = 'Error!';
+            }
+            document.body.removeChild(textarea);
+
+            setTimeout(() => {
+                button.textContent = 'Copy Code';
+            }, 2000);
+        }
+
+        // Dark/Light Mode Toggle Logic
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+        const threeCanvas = document.getElementById('three-canvas');
+
+        // Function to set theme
+        function setTheme(theme) {
+            htmlElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            if (theme === 'dark') {
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+                threeCanvas.style.opacity = '0.25'; // Dark mode opacity
+            } else {
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+                threeCanvas.style.opacity = '0.05'; // Light mode opacity
+            }
+        }
+
+        // Check for saved theme preference on load
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Default to dark if no preference is saved
+            setTheme('dark');
+        }
+
+        // Event listener for toggle button
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                setTheme('light');
+            } else {
+                setTheme('dark');
+            }
+        });
+
+        // Home Button Logic
+        const homeButton = document.getElementById('home-button');
+        homeButton.addEventListener('click', () => {
+            window.history.back(); // Navigate back in browser history
+        });
+
+        // Initialize Three.js and start animation on window load
+        window.onload = function() {
+            initThreeJS();
+            animate();
+        };
+    </script>
+</body>
+</html>
