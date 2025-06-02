@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML for Beginners: Your First Steps in Web Development | Whizmath</title>
+    <meta name="description" content="Start your web development journey with Whizmath's comprehensive HTML lesson. Learn basic HTML structure, tags, attributes, semantic HTML, forms, tables, and build your first web page with practical examples.">
+    <meta name="keywords" content="HTML, beginner HTML, web development, learn HTML, HTML tutorial, basic HTML, HTML tags, web page structure, semantic HTML, HTML forms, HTML tables, HTML comments, HTML entities, embedding media, Whizmath, online learning, coding for beginners">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles (Dark Mode) */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll due to animations */
+            background-color: #0d1117; /* Dark background for modern feel */
+            color: #e6edf3; /* Light text color */
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Send canvas to background */
+            opacity: 0.25; /* Subtle background animation */
+            transition: opacity 0.5s ease;
+        }
+
+        .content-section {
+            background-color: rgba(22, 27, 34, 0.88); /* Slightly more opaque dark background for content */
+            backdrop-filter: blur(15px); /* Stronger frosted glass effect */
+            border-radius: 2rem; /* Even more rounded corners */
+            padding: 3rem; /* More padding */
+            margin-bottom: 3rem; /* More margin */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); /* Deeper, softer shadow */
+            transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out, background-color 0.5s ease, border-color 0.5s ease;
+            border: 1px solid rgba(60, 65, 75, 0.6); /* Subtle border */
+        }
+
+        .content-section:hover {
+            transform: translateY(-10px); /* More pronounced lift on hover */
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6); /* Enhanced shadow on hover */
+        }
+
+        .code-block {
+            background-color: #161b22; /* Darker background for code */
+            border-radius: 1.25rem; /* More rounded code blocks */
+            padding: 1.5rem; /* More padding in code blocks */
+            overflow-x: auto; /* Allow horizontal scrolling for long code lines */
+            font-family: 'Fira Code', monospace; /* Monospace font for code */
+            font-size: 1rem; /* Slightly larger code font */
+            line-height: 1.6;
+            position: relative;
+            border: 1px solid rgba(60, 65, 75, 0.8); /* Subtle border for code blocks */
+            transition: background-color 0.5s ease, border-color 0.5s ease;
+        }
+
+        /* Basic syntax highlighting colors (can be expanded) */
+        .code-block .html-tag { color: #569cd6; } /* Blue for tags */
+        .code-block .html-attr { color: #9cdcfe; } /* Light blue for attributes */
+        .code-block .html-attr-value { color: #ce9178; } /* Orange for attribute values */
+        .code-block .html-comment { color: #6a9955; } /* Green for comments */
+        .code-block .css-selector { color: #dcdcaa; } /* Yellow for CSS selectors */
+        .code-block .css-property { color: #4ec9b0; } /* Teal for CSS properties */
+        .code-block .css-value { color: #b5cea8; } /* Light green for CSS values */
+
+        .copy-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: #2a3039;
+            color: #e6edf3;
+            padding: 0.6rem 0.9rem;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color 0.2s ease, transform 0.1s ease-in-out, color 0.5s ease;
+            border: 1px solid #3b424d;
+        }
+
+        .copy-button:hover {
+            background-color: #3b424d;
+            transform: translateY(-3px);
+        }
+
+        /* Floating Buttons Base Style */
+        .floating-button {
+            position: fixed;
+            background-color: #2a3039;
+            color: #e6edf3;
+            border: 1px solid #3b424d;
+            border-radius: 9999px; /* Fully rounded */
+            padding: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            z-index: 50; /* Ensure it floats above content */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-button:hover {
+            background-color: #3b424d;
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .floating-button svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor; /* Use current text color for SVG */
+        }
+
+        /* Specific positioning for toggle and home buttons */
+        #theme-toggle {
+            top: 1.5rem;
+            right: 1.5rem;
+        }
+
+        #home-button {
+            top: 1.5rem;
+            left: 1.5rem;
+        }
+
+        /* Light Mode Styles (controlled by data-theme="light" on html) */
+        html[data-theme="light"] body {
+            background-color: #f0f2f5; /* Very light grey background */
+            color: #333; /* Dark text color for general content */
+        }
+
+        html[data-theme="light"] #three-canvas {
+            opacity: 0.05; /* Much more subtle in light mode */
+        }
+
+        html[data-theme="light"] .content-section {
+            background-color: rgba(255, 255, 255, 0.98); /* Near white, slightly transparent */
+            border-color: rgba(180, 180, 180, 0.7); /* Slightly darker, more defined border */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08); /* Lighter shadow */
+        }
+
+        html[data-theme="light"] .content-section:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12); /* Enhanced shadow on hover */
+        }
+
+        html[data-theme="light"] .code-block {
+            background-color: #f8f9fa; /* Very light grey code background */
+            border-color: rgba(160, 160, 160, 0.8); /* Slightly more defined border */
+        }
+
+        /* Light mode syntax highlighting colors */
+        html[data-theme="light"] .code-block .html-tag { color: #007bff; } /* Vibrant blue */
+        html[data-theme="light"] .code-block .html-attr { color: #6c757d; } /* Standard grey for attributes */
+        html[data-theme="light"] .code-block .html-attr-value { color: #dc3545; } /* Reddish for attribute values */
+        html[data-theme="light"] .code-block .html-comment { color: #28a745; } /* Vibrant green for comments */
+        html[data-theme="light"] .code-block .css-selector { color: #6f42c1; } /* Purple-ish for CSS selectors */
+        html[data-theme="light"] .code-block .css-property { color: #fd7e14; } /* Orange for CSS properties */
+        html[data-theme="light"] .code-block .css-value { color: #17a2b8; } /* Teal for CSS values */
+
+
+        html[data-theme="light"] .copy-button {
+            background-color: #c0c2c5;
+            color: #333;
+            border-color: #b0b2b5;
+        }
+
+        html[data-theme="light"] .copy-button:hover {
+            background-color: #b0b2b5;
+        }
+
+        html[data-theme="light"] .floating-button {
+            background-color: #ffffff; /* Pure white for crisp look */
+            color: #333;
+            border-color: #d0d0d0; /* Lighter border */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Lighter shadow */
+        }
+
+        html[data-theme="light"] .floating-button:hover {
+            background-color: #f0f0f0; /* Slight grey on hover */
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Light mode text colors for headings and branded text */
+        html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3 {
+            color: #1e40af; /* Darker blue for headings */
+        }
+        html[data-theme="light"] .text-blue-400 { color: #1e40af; }
+        html[data-theme="light"] .text-blue-300 { color: #1e40af; }
+        html[data-theme="light"] .text-blue-200 { color: #1e40af; }
+        html[data-theme="light"] .text-purple-400 { color: #6f42c1; } /* Slightly more vibrant purple for Whizmath */
+
+        /* Ensure specific Tailwind text colors are overridden for light mode visibility */
+        html[data-theme="light"] .text-gray-300 {
+            color: #4a5568; /* Darker grey for better contrast in light mode */
+        }
+        html[data-theme="light"] .text-gray-400 {
+            color: #718096; /* Slightly lighter dark grey for footer, still visible */
+        }
+
+
+        /* CSS Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(60px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        .animate-fade-in-delay {
+            animation: fadeIn 1.2s ease-out 0.6s forwards;
+            opacity: 0; /* Hidden initially */
+        }
+
+        .animate-slide-up {
+            opacity: 0; /* Hidden initially */
+            animation: slideUp 1s ease-out forwards;
+        }
+
+        /* Staggered animation for sections */
+        .content-section:nth-of-type(1) { animation-delay: 1s; }
+        .content-section:nth-of-type(2) { animation-delay: 1.3s; }
+        .content-section:nth-of-type(3) { animation-delay: 1.6s; }
+        .content-section:nth-of-type(4) { animation-delay: 1.9s; }
+        .content-section:nth-of-type(5) { animation-delay: 2.2s; }
+        .content-section:nth-of-type(6) { animation-delay: 2.5s; }
+        .content-section:nth-of-type(7) { animation-delay: 2.8s; }
+        .content-section:nth-of-type(8) { animation-delay: 3.1s; } /* New section */
+        .content-section:nth-of-type(9) { animation-delay: 3.4s; } /* New section */
+        .content-section:nth-of-type(10) { animation-delay: 3.7s; }
+        .content-section:nth-of-type(11) { animation-delay: 4.0s; }
+        .content-section:nth-of-type(12) { animation-delay: 4.3s; }
+        .content-section:nth-of-type(13) { animation-delay: 4.6s; }
+        .content-section:nth-of-type(14) { animation-delay: 4.9s; }
+
+
+        /* Responsive adjustments for floating buttons */
+        @media (max-width: 480px) {
+            .floating-button { top: 1rem; padding: 0.6rem; }
+            .floating-button svg { width: 20px; height: 20px; }
+            #theme-toggle { right: 1rem; }
+            #home-button { left: 1rem; }
+        }
+    </style>
+</head>
+<body class="text-gray-200 min-h-screen flex flex-col">
+    <canvas id="three-canvas"></canvas>
+
+    <button id="home-button" class="floating-button" aria-label="Go back to previous page">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clip-rule="evenodd" />
+        </svg>
+    </button>
+
+    <button id="theme-toggle" class="floating-button" aria-label="Toggle dark and light mode">
+        <svg id="moon-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.106a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.06l1.59-1.591ZM12 18a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V18a.75.75 0 0 1 .75-.75ZM5.05 10.95a.75.75 0 1 0-1.06-1.06l-1.59 1.59a.75.75 0 1 0 1.06 1.06l1.59-1.59ZM18.894 17.894a.75.75 0 1 0 1.06-1.06l-1.59-1.59a.75.75 0 0 0-1.06 1.06l1.59 1.59ZM3.25 12a.75.75 0 0 1-.75.75H.25a.75.75 0 0 1 0-1.5H2.5c.414 0 .75.336.75.75ZM6.106 5.05a.75.75 0 1 0-1.06 1.06l1.59 1.59a.75.75 0 1 0 1.06-1.06l-1.59-1.59ZM12 5.25a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM19.75 12a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5H20.5a.75.75 0 0 1-.75-.75Z" />
+        </svg>
+    </button>
+
+    <div class="relative z-10 flex-grow container mx-auto px-4 py-8 md:py-12 lg:py-16">
+
+        <header class="text-center mb-12 md:mb-16 lg:mb-20">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-400 leading-tight mb-4 animate-fade-in">
+                HTML for Beginners: Your First Steps in Web Development at <span class="text-purple-400">Whizmath</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto animate-fade-in-delay">
+                Welcome to the exciting world of web development! HTML (HyperText Markup Language) is the foundational building block of all web pages.
+                Think of it as the skeleton of a website, providing the structure and content. Without HTML, there would be no text, images, or links on the internet.
+                This comprehensive lesson will guide you through the absolute basics and beyond, getting you ready to create your very first web page and understand the core of the web!
+            </p>
+        </header>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">1. What is HTML? The Foundation of the Web</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                HTML is a **markup language**, not a programming language. This means it uses a system of "tags" to define the structure and meaning of web content. These tags tell web browsers how to display the content. It's like writing a document where you highlight different parts to indicate their purpose (e.g., "this is a heading," "this is a paragraph," "this is an image").
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">HyperText</strong>: Refers to the text that contains links (hyperlinks) to other texts, allowing users to navigate between different documents or sections. This is what makes the "web" a web!</li>
+                <li><strong class="text-blue-200">Markup Language</strong>: Uses predefined tags (like `&lt;p&gt;` for paragraph or `&lt;img&gt;` for image) to "mark up" the content, providing instructions to the browser on how to render it.</li>
+            </ul>
+            <p class="text-lg leading-relaxed">
+                Every web page you visit, from a simple blog post to a complex e-commerce site, is built using HTML. It's the universal language for creating web content.
+            </p>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">2. The Essential Structure of an HTML Document</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Every HTML page adheres to a fundamental, non-negotiable structure. Understanding this blueprint is key to building valid and functional web pages.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;!DOCTYPE html&gt;</span>
+<span class="html-tag">&lt;html</span> <span class="html-attr">lang=</span><span class="html-attr-value">"en"</span><span class="html-tag">&gt;</span>
+<span class="html-tag">&lt;head&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">charset=</span><span class="html-attr-value">"UTF-8"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">name=</span><span class="html-attr-value">"viewport"</span> <span class="html-attr">content=</span><span class="html-attr-value">"width=device-width, initial-scale=1.0"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;title&gt;</span>My First Web Page<span class="html-tag">&lt;/title&gt;</span>
+    <span class="html-comment">&lt;!-- You can link CSS files here --&gt;</span>
+    <span class="html-tag">&lt;link</span> <span class="html-attr">rel=</span><span class="html-attr-value">"stylesheet"</span> <span class="html-attr">href=</span><span class="html-attr-value">"styles.css"</span><span class="html-tag">&gt;</span>
+<span class="html-tag">&lt;/head&gt;</span>
+<span class="html-tag">&lt;body&gt;</span>
+    <span class="html-comment">&lt;!-- All visible content goes here! --&gt;</span>
+    <span class="html-tag">&lt;script</span> <span class="html-attr">src=</span><span class="html-attr-value">"script.js"</span><span class="html-tag">&gt;&lt;/script&gt;</span> <span class="html-comment">&lt;!-- JavaScript is often placed at the end of body --&gt;</span>
+<span class="html-tag">&lt;/body&gt;</span>
+<span class="html-tag">&lt;/html&gt;</span></code></pre>
+            </div>
+            <p class="mb-4 text-lg leading-relaxed">Let's break down each part in more detail:</p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200"><code>&lt;!DOCTYPE html&gt;</code></strong>: This is not an HTML tag, but a "document type declaration." It tells the browser which version of HTML the page is written in. For HTML5, it's simply `<!DOCTYPE html>`. Always put this at the very top of your document.</li>
+                <li><strong class="text-blue-200"><code>&lt;html lang="en"&gt;...&lt;/html&gt;</code></strong>: This is the **root element** of every HTML page. All other elements are nested inside it. The `lang` attribute is important for accessibility (screen readers can pronounce content correctly) and SEO (search engines can identify the page's language).</li>
+                <li><strong class="text-blue-200"><code>&lt;head&gt;...&lt;/head&gt;</code></strong>: This section contains **meta-information** about the HTML document. This information is *not* displayed on the web page itself, but it's vital for how the browser renders the page, how search engines index it, and how it interacts with other services.
+                    <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                        <li><strong class="text-blue-200"><code>&lt;meta charset="UTF-8"&gt;</code></strong>: Specifies the character encoding, ensuring that text characters are displayed correctly across different languages and symbols. Always include this!</li>
+                        <li><strong class="text-blue-200"><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code></strong>: Crucial for **responsive web design**. It tells the browser to set the viewport width to the device's width and the initial zoom level to 1.0. Without this, mobile devices might render your page as a desktop version, leading to a poor user experience.</li>
+                        <li><strong class="text-blue-200"><code>&lt;title&gt;My First Web Page&lt;/title&gt;</code></strong>: Sets the title that appears in the browser tab, window title bar, and as the title in search engine results. Make it descriptive and concise!</li>
+                        <li><strong class="text-blue-200"><code>&lt;meta name="description" content="..."&gt;</code></strong>: Provides a brief summary of the page's content, often used by search engines in their results snippets.</li>
+                        <li><strong class="text-blue-200"><code>&lt;link rel="stylesheet" href="styles.css"&gt;</code></strong>: Links an external CSS stylesheet to your HTML document, allowing you to control the visual presentation (colors, fonts, layout).</li>
+                    </ul>
+                </li>
+                <li><strong class="text-blue-200"><code>&lt;body&gt;...&lt;/body&gt;</code></strong>: This is where all the **visible content** of your web page resides. Everything you see on a website – text, images, videos, links, forms, tables, etc. – is placed within the `<body>` tags.
+                    <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                        <li><strong class="text-blue-200"><code>&lt;script src="script.js"&gt;&lt;/script&gt;</code></strong>: Links an external JavaScript file. It's common practice to place script tags just before the closing `&lt;/body&gt;` tag to ensure the HTML content loads before the JavaScript tries to interact with it, preventing potential errors and improving perceived load time.</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">3. Common HTML Tags (Elements) - Building Blocks of Content</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                HTML uses elements, which are typically composed of an opening tag, content, and a closing tag. For example, `&lt;p&gt;This is a paragraph.&lt;/p&gt;`. Some tags are self-closing (also called void elements), meaning they don't have a closing tag and don't contain content (e.g., `&lt;img&gt;`, `&lt;br&gt;`, `&lt;hr&gt;`).
+            </p>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. Headings (`&lt;h1&gt;` to `&lt;h6&gt;`)</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                Headings are used to define titles and subtitles on your web page. They are crucial for outlining the document's structure and improving readability for both users and search engines. `&lt;h1&gt;` is the most important (main title, usually one per page), and `&lt;h6&gt;` is the least important.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;h1&gt;</span>Main Title of the Page<span class="html-tag">&lt;/h1&gt;</span>
+<span class="html-tag">&lt;h2&gt;</span>A Major Section<span class="html-tag">&lt;/h2&gt;</span>
+<span class="html-tag">&lt;h3&gt;</span>A Subsection<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;h4&gt;</span>A Smaller Heading<span class="html-tag">&lt;/h4&gt;</span>
+<span class="html-tag">&lt;h5&gt;</span>Even Smaller<span class="html-tag">&lt;/h5&gt;</span>
+<span class="html-tag">&lt;h6&gt;</span>The Smallest Heading<span class="html-tag">&lt;/h6&gt;</span></code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Paragraphs (`&lt;p&gt;`)</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                The `&lt;p&gt;` tag is used for blocks of text, typically paragraphs. It's the most common tag for regular text content.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;p&gt;</span>This is the first paragraph of my amazing web page. It contains some introductory text about the topic.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;p&gt;</span>And this is a second paragraph, providing more details and expanding on the ideas presented earlier.<span class="html-tag">&lt;/p&gt;</span></code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">c. Links (`&lt;a&gt;`)</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                Links (or hyperlinks) connect your page to other web pages, external websites, or even different sections within the same page. The `href` attribute specifies the destination URL.
+            </p>
+            <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                <li><strong class="text-blue-200">External Link:</strong>
+                    `&lt;a href="https://www.google.com"&gt;Google&lt;/a&gt;`
+                </li>
+                <li><strong class="text-blue-200">Opening in New Tab:</strong> Use `target="_blank"` to open the link in a new browser tab.
+                    `&lt;a href="https://www.w3schools.com/html/" target="_blank"&gt;HTML Tutorial&lt;/a&gt;`
+                </li>
+                <li><strong class="text-blue-200">Anchor Link (within same page):</strong> Link to an element with a specific `id` on the same page.
+                    `&lt;a href="#section-id"&gt;Go to Section&lt;/a&gt;`
+                </li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;p&gt;</span>Visit <span class="html-tag">&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"https://www.google.com"</span> <span class="html-attr">target=</span><span class="html-attr-value">"_blank"</span><span class="html-tag">&gt;</span>Google (opens in new tab)<span class="html-tag">&lt;/a&gt;</span> for more information.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;p&gt;</span>Learn more about Whizmath on our <span class="html-tag">&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"index.html"</span><span class="html-tag">&gt;</span>Home Page<span class="html-tag">&lt;/a&gt;</span>.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;p&gt;</span>Jump to <span class="html-tag">&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"#attributes-section"</span><span class="html-tag">&gt;</span>Attributes Section<span class="html-tag">&lt;/a&gt;</span>.<span class="html-tag">&lt;/p&gt;</span>
+</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">d. Images (`&lt;img&gt;`)</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                The `&lt;img&gt;` tag is used to embed images. It's a self-closing tag and requires at least two crucial attributes:
+            </p>
+            <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                <li><strong class="text-blue-200">`src`</strong>: Specifies the **source** (path) to the image file. This can be a relative path (e.g., `images/my-pic.jpg`) or an absolute URL (e.g., `https://example.com/images/my-pic.png`).</li>
+                <li><strong class="text-blue-200">`alt`</strong>: Provides **alternative text** for the image. This text is displayed if the image fails to load, and it's read by screen readers for visually impaired users. It's vital for accessibility and SEO.</li>
+                <li><strong class="text-blue-200">`width` and `height` (optional, but recommended):</strong> These attributes specify the dimensions of the image in pixels. While CSS is generally preferred for styling, including these can help prevent Cumulative Layout Shift (CLS) by reserving space for the image before it fully loads.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;img</span> <span class="html-attr">src=</span><span class="html-attr-value">"https://placehold.co/600x400/000000/FFFFFF?text=Placeholder+Image"</span> <span class="html-attr">alt=</span><span class="html-attr-value">"A black placeholder image with white text saying Placeholder Image"</span> <span class="html-attr">width=</span><span class="html-attr-value">"600"</span> <span class="html-attr">height=</span><span class="html-attr-value">"400"</span><span class="html-tag">&gt;</span>
+<span class="html-tag">&lt;img</span> <span class="html-attr">src=</span><span class="html-attr-value">"https://placehold.co/300x200/ADD8E6/000000?text=Small+Image"</span> <span class="html-attr">alt=</span><span class="html-attr-value">"A small light blue placeholder image"</span> <span class="html-attr">width=</span><span class="html-attr-value">"300"</span> <span class="html-attr">height=</span><span class="html-attr-value">"200"</span><span class="html-tag">&gt;</span>
+</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">e. Lists (`&lt;ul&gt;`, `&lt;ol&gt;`, `&lt;li&gt;`, `&lt;dl&gt;`, `&lt;dt&gt;`, `&lt;dd&gt;`)</h3>
+            <p class="mb-4 text-lg leading-relaxed">
+                HTML supports three main types of lists to organize information effectively:
+            </p>
+            <h4 class="text-xl md:text-2xl font-medium text-blue-200 mb-2">Unordered Lists (`&lt;ul&gt;`)</h4>
+            <p class="mb-2 text-lg leading-relaxed">
+                Used for items where the order doesn't matter (typically displayed with bullet points). Each item in the list is defined by an `&lt;li&gt;` (list item) tag.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;h3&gt;</span>My Favorite Fruits:<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;ul&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Apple<span class="html-tag">&lt;/li&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Banana<span class="html-tag">&lt;/li&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Cherry<span class="html-tag">&lt;/li&gt;</span>
+<span class="html-tag">&lt;/ul&gt;</span>
+
+<span class="html-comment">&lt;!-- Nested Unordered List --&gt;</span>
+<span class="html-tag">&lt;h3&gt;</span>Shopping List:<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;ul&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Groceries
+        <span class="html-tag">&lt;ul&gt;</span>
+            <span class="html-tag">&lt;li&gt;</span>Milk<span class="html-tag">&lt;/li&gt;</span>
+            <span class="html-tag">&lt;li&gt;</span>Eggs<span class="html-tag">&lt;/li&gt;</span>
+        <span class="html-tag">&lt;/ul&gt;</span>
+    <span class="html-tag">&lt;/li&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Hardware
+        <span class="html-tag">&lt;ul&gt;</span>
+            <span class="html-tag">&lt;li&gt;</span>Hammer<span class="html-tag">&lt;/li&gt;</span>
+            <span class="html-tag">&lt;li&gt;</span>Nails<span class="html-tag">&lt;/li&gt;</span>
+        <span class="html-tag">&lt;/ul&gt;</span>
+    <span class="html-tag">&lt;/li&gt;</span>
+<span class="html-tag">&lt;/ul&gt;</span>
+</code></pre>
+            </div>
+
+            <h4 class="text-xl md:text-2xl font-medium text-blue-200 mb-2">Ordered Lists (`&lt;ol&gt;`)</h4>
+            <p class="mb-2 text-lg leading-relaxed">
+                Used for items where the order does matter (typically displayed with numbers, letters, or Roman numerals). Each item is also an `&lt;li&gt;`.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;h3&gt;</span>Steps to Bake a Cake:<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;ol&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Preheat oven.<span class="html-tag">&lt;/li&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Mix ingredients.<span class="html-tag">&lt;/li&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Pour into pan.<span class="html-tag">&lt;/li&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Bake until golden.<span class="html-tag">&lt;/li&gt;</span>
+<span class="html-tag">&lt;/ol&gt;</span>
+
+<span class="html-comment">&lt;!-- Ordered List with Roman Numerals --&gt;</span>
+<span class="html-tag">&lt;ol</span> <span class="html-attr">type=</span><span class="html-attr-value">"I"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Introduction<span class="html-tag">&lt;/li&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Main Body<span class="html-tag">&lt;/li&gt;</span>
+    <span class="html-tag">&lt;li&gt;</span>Conclusion<span class="html-tag">&lt;/li&gt;</span>
+<span class="html-tag">&lt;/ol&gt;</span>
+</code></pre>
+            </div>
+
+            <h4 class="text-xl md:text-2xl font-medium text-blue-200 mb-2">Definition Lists (`&lt;dl&gt;`)</h4>
+            <p class="mb-2 text-lg leading-relaxed">
+                Used for terms and their definitions.
+                * `&lt;dt&gt;`: Definition Term
+                * `&lt;dd&gt;`: Definition Description
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;h3&gt;</span>Web Terms Glossary:<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;dl&gt;</span>
+    <span class="html-tag">&lt;dt&gt;</span>HTML<span class="html-tag">&lt;/dt&gt;</span>
+    <span class="html-tag">&lt;dd&gt;</span>HyperText Markup Language, the standard markup language for documents designed to be displayed in a web browser.<span class="html-tag">&lt;/dd&gt;</span>
+
+    <span class="html-tag">&lt;dt&gt;</span>CSS<span class="html-tag">&lt;/dt&gt;</span>
+    <span class="html-tag">&lt;dd&gt;</span>Cascading Style Sheets, used for describing the presentation of a document written in a markup language.<span class="html-tag">&lt;/dd&gt;</span>
+<span class="html-tag">&lt;/dl&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up" id="attributes-section">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">4. Attributes: Adding More Information to Elements</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Attributes provide additional information about HTML elements. They are always specified in the opening tag, usually in `name="value"` pairs. Attributes modify the behavior or appearance of an element.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`class`</strong>: Used to assign one or more class names to an element. Elements with the same class can be targeted together for styling with CSS or manipulation with JavaScript. It's common to have multiple elements share the same class.</li>
+                <li><strong class="text-blue-200">`id`</strong>: Provides a **unique identifier** for an element within the entire HTML document. An `id` *must* be unique on a page. It's useful for specific styling (like linking to a section of a page) or for JavaScript to target a single element.</li>
+                <li><strong class="text-blue-200">`style`</strong>: Allows for **inline CSS styling** directly on an element. While convenient for quick tests, it's generally less recommended for large projects because it mixes content with presentation and makes maintenance difficult. Prefer external CSS files.</li>
+                <li><strong class="text-blue-200">`href`</strong>: (Hypertext Reference) Used with `&lt;a&gt;` tags to specify the URL of the linked resource.</li>
+                <li><strong class="text-blue-200">`src`</strong>: (Source) Used with `&lt;img&gt;`, `&lt;script&gt;`, `&lt;video&gt;`, `&lt;audio&gt;` tags to specify the path to the external resource.</li>
+                <li><strong class="text-blue-200">`alt`</strong>: (Alternative Text) Used with `&lt;img&gt;` for accessibility.</li>
+                <li><strong class="text-blue-200">`target`</strong>: Used with `&lt;a&gt;` tags to specify where to open the linked document (e.g., `_blank` for a new tab).</li>
+            </ul>
+            <p class="mb-4 text-lg leading-relaxed">Example:</p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;p</span> <span class="html-attr">class=</span><span class="html-attr-value">"introduction highlight"</span> <span class="html-attr">id=</span><span class="html-attr-value">"first-paragraph"</span> <span class="html-attr">style=</span><span class="html-attr-value">"font-weight: bold;"</span><span class="html-tag">&gt;</span>This paragraph has multiple classes, a unique ID, and inline styling.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"about.html"</span> <span class="html-attr">target=</span><span class="html-attr-value">"_self"</span><span class="html-tag">&gt;</span>Learn About Us (in same tab)<span class="html-tag">&lt;/a&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">5. Text Formatting and Structure Elements</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Beyond paragraphs and headings, HTML offers several tags to format text and control its flow.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`&lt;strong&gt;`</strong>: Indicates strong importance or urgency. Browsers typically render this as **bold text**.</li>
+                <li><strong class="text-blue-200">`&lt;em&gt;`</strong>: Indicates emphasis. Browsers typically render this as *italic text*.</li>
+                <li><strong class="text-blue-200">`&lt;u&gt;`</strong>: Represents a span of text with an unarticulated, non-textual annotation, such as labeling the text as being a proper name in Chinese text (often rendered as <u>underline</u>). While it provides an underline, it's generally better to use CSS for purely visual underlines.</li>
+                <li><strong class="text-blue-200">`&lt;br&gt;`</strong>: (Break Rule) Creates a single line break. It's a self-closing tag.</li>
+                <li><strong class="text-blue-200">`&lt;hr&gt;`</strong>: (Horizontal Rule) Creates a thematic break, typically rendered as a horizontal line. It's a self-closing tag.</li>
+                <li><strong class="text-blue-200">`&lt;span&gt;`</strong>: An **inline container** used to group small pieces of text or other inline elements. It has no inherent visual meaning and is primarily used with `class` or `id` attributes for styling or scripting.</li>
+                <li><strong class="text-blue-200">`&lt;div&gt;`</strong>: A **block-level container** used to group larger sections of content. Like `&lt;span&gt;`, it has no inherent visual meaning and is primarily used with `class` or `id` attributes for layout and structuring with CSS.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;p&gt;</span>This is a <span class="html-tag">&lt;strong&gt;</span>very important<span class="html-tag">&lt;/strong&gt;</span> point.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;p&gt;</span>I <span class="html-tag">&lt;em&gt;</span>really<span class="html-tag">&lt;/em&gt;</span> enjoyed learning HTML.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;p&gt;</span>This is one line.<span class="html-tag">&lt;br&gt;</span>This is a new line.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;hr&gt;</span> <span class="html-comment">&lt;!-- A horizontal line --&gt;</span>
+<span class="html-tag">&lt;p&gt;</span>This sentence has a <span class="html-tag">&lt;span</span> <span class="html-attr">style=</span><span class="html-attr-value">"color: red;"</span><span class="html-tag">&gt;</span>red word<span class="html-tag">&lt;/span&gt;</span> in it.<span class="html-tag">&lt;/p&gt;</span>
+
+<span class="html-comment">&lt;!-- A div used for grouping content --&gt;</span>
+<span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"card"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;h3&gt;</span>Card Title<span class="html-tag">&lt;/h3&gt;</span>
+    <span class="html-tag">&lt;p&gt;</span>Some content inside a div container.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;/div&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">6. Semantic HTML: Giving Meaning to Your Structure</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                While `&lt;div&gt;` and `&lt;span&gt;` are generic containers, HTML5 introduced **semantic tags** that clearly describe the purpose of the content they contain. Using semantic HTML is crucial for:
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Accessibility:</strong> Screen readers can better understand the page structure and convey it to users.</li>
+                <li><strong class="text-blue-200">SEO (Search Engine Optimization):</strong> Search engines can more effectively crawl and index your content.</li>
+                <li><strong class="text-blue-200">Readability:</strong> Your code becomes easier for other developers (and your future self!) to understand and maintain.</li>
+            </ul>
+            <p class="mb-4 text-lg leading-relaxed">Key Semantic Tags:</p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`&lt;header&gt;`</strong>: Represents introductory content, typically containing navigation, logos, and headings.</li>
+                <li><strong class="text-blue-200">`&lt;nav&gt;`</strong>: Contains navigation links.</li>
+                <li><strong class="text-blue-200">`&lt;main&gt;`</strong>: Represents the dominant content of the `&lt;body&gt;`. There should only be one `&lt;main&gt;` per page.</li>
+                <li><strong class="text-blue-200">`&lt;article&gt;`</strong>: Represents self-contained content that could be distributed independently (e.g., a blog post, a news story).</li>
+                <li><strong class="text-blue-200">`&lt;section&gt;`</strong>: Represents a standalone section of content, often with its own heading. It's a generic sectioning element, but it should have a logical grouping of content.</li>
+                <li><strong class="text-blue-200">`&lt;aside&gt;`</strong>: Represents content that is tangentially related to the content around it, like a sidebar or a pull-quote.</li>
+                <li><strong class="text-blue-200">`&lt;footer&gt;`</strong>: Represents the footer of a document or a section, typically containing copyright information, contact details, or related links.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;header&gt;</span>
+    <span class="html-tag">&lt;h1&gt;</span>My Awesome Website<span class="html-tag">&lt;/h1&gt;</span>
+    <span class="html-tag">&lt;nav&gt;</span>
+        <span class="html-tag">&lt;ul&gt;</span>
+            <span class="html-tag">&lt;li&gt;&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"#"</span><span class="html-tag">&gt;</span>Home<span class="html-tag">&lt;/a&gt;&lt;/li&gt;</span>
+            <span class="html-tag">&lt;li&gt;&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"#"</span><span class="html-tag">&gt;</span>About<span class="html-tag">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="html-tag">&lt;/ul&gt;</span>
+    <span class="html-tag">&lt;/nav&gt;</span>
+<span class="html-tag">&lt;/header&gt;</span>
+
+<span class="html-tag">&lt;main&gt;</span>
+    <span class="html-tag">&lt;article&gt;</span>
+        <span class="html-tag">&lt;h2&gt;</span>Blog Post Title<span class="html-tag">&lt;/h2&gt;</span>
+        <span class="html-tag">&lt;p&gt;</span>This is the content of my blog post.<span class="html-tag">&lt;/p&gt;</span>
+    <span class="html-tag">&lt;/article&gt;</span>
+
+    <span class="html-tag">&lt;section&gt;</span>
+        <span class="html-tag">&lt;h2&gt;</span>Related Content<span class="html-tag">&lt;/h2&gt;</span>
+        <span class="html-tag">&lt;p&gt;</span>More articles you might like.<span class="html-tag">&lt;/p&gt;</span>
+    <span class="html-tag">&lt;/section&gt;</span>
+
+    <span class="html-tag">&lt;aside&gt;</span>
+        <span class="html-tag">&lt;h3&gt;</span>Sidebar Ad<span class="html-tag">&lt;/h3&gt;</span>
+        <span class="html-tag">&lt;p&gt;</span>Buy our amazing product!<span class="html-tag">&lt;/p&gt;</span>
+    <span class="html-tag">&lt;/aside&gt;</span>
+<span class="html-tag">&lt;/main&gt;</span>
+
+<span class="html-tag">&lt;footer&gt;</span>
+    <span class="html-tag">&lt;p&gt;</span>&copy; 2025 My Website<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;/footer&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">7. Tables: Organizing Tabular Data</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                HTML tables are used to display data in a structured, tabular format (rows and columns).
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`&lt;table&gt;`</strong>: The container for the entire table.</li>
+                <li><strong class="text-blue-200">`&lt;thead&gt;`</strong>: Groups the header content in a table.</li>
+                <li><strong class="text-blue-200">`&lt;tbody&gt;`</strong>: Groups the body content in a table.</li>
+                <li><strong class="text-blue-200">`&lt;tr&gt;`</strong>: (Table Row) Defines a row in the table.</li>
+                <li><strong class="text-blue-200">`&lt;th&gt;`</strong>: (Table Header) Defines a header cell in a table (content is usually bold and centered).</li>
+                <li><strong class="text-blue-200">`&lt;td&gt;`</strong>: (Table Data) Defines a standard data cell in a table.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;h3&gt;</span>Student Grades:<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;table</span> <span class="html-attr">style=</span><span class="html-attr-value">"width:100%; border-collapse: collapse;"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;thead&gt;</span>
+        <span class="html-tag">&lt;tr&gt;</span>
+            <span class="html-tag">&lt;th</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px; text-align: left;"</span><span class="html-tag">&gt;</span>Name<span class="html-tag">&lt;/th&gt;</span>
+            <span class="html-tag">&lt;th</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px; text-align: left;"</span><span class="html-tag">&gt;</span>Subject<span class="html-tag">&lt;/th&gt;</span>
+            <span class="html-tag">&lt;th</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px; text-align: left;"</span><span class="html-tag">&gt;</span>Grade<span class="html-tag">&lt;/th&gt;</span>
+        <span class="html-tag">&lt;/tr&gt;</span>
+    <span class="html-tag">&lt;/thead&gt;</span>
+    <span class="html-tag">&lt;tbody&gt;</span>
+        <span class="html-tag">&lt;tr&gt;</span>
+            <span class="html-tag">&lt;td</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px;"</span><span class="html-tag">&gt;</span>Alice<span class="html-tag">&lt;/td&gt;</span>
+            <span class="html-tag">&lt;td</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px;"</span><span class="html-tag">&gt;</span>Math<span class="html-tag">&lt;/td&gt;</span>
+            <span class="html-tag">&lt;td</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px;"</span><span class="html-tag">&gt;</span>A<span class="html-tag">&lt;/td&gt;</span>
+        <span class="html-tag">&lt;/tr&gt;</span>
+        <span class="html-tag">&lt;tr&gt;</span>
+            <span class="html-tag">&lt;td</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px;"</span><span class="html-tag">&gt;</span>Bob<span class="html-tag">&lt;/td&gt;</span>
+            <span class="html-tag">&lt;td</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px;"</span><span class="html-tag">&gt;</span>Science<span class="html-tag">&lt;/td&gt;</span>
+            <span class="html-tag">&lt;td</span> <span class="html-attr">style=</span><span class="html-attr-value">"border: 1px solid #ddd; padding: 8px;"</span><span class="html-tag">&gt;</span>B+<span class="html-tag">&lt;/td&gt;</span>
+        <span class="html-tag">&lt;/tr&gt;</span>
+    <span class="html-tag">&lt;/tbody&gt;</span>
+<span class="html-tag">&lt;/table&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">8. Forms: Collecting User Input</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                HTML forms are essential for collecting data from users (e.g., login forms, contact forms, search bars).
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`&lt;form&gt;`</strong>: The container for all form elements. The `action` attribute specifies where to send the form data, and `method` specifies the HTTP method (e.g., `GET` or `POST`).</li>
+                <li><strong class="text-blue-200">`&lt;label&gt;`</strong>: Provides a label for an input element. Using the `for` attribute (matching the input's `id`) is crucial for accessibility.</li>
+                <li><strong class="text-blue-200">`&lt;input&gt;`</strong>: A versatile self-closing tag used for various input types (text, password, email, checkbox, radio, submit, etc.) specified by the `type` attribute.</li>
+                <li><strong class="text-blue-200">`&lt;textarea&gt;`</strong>: Used for multi-line text input (e.g., comments).</li>
+                <li><strong class="text-blue-200">`&lt;select&gt;` and `&lt;option&gt;`</strong>: Used to create dropdown lists.</li>
+                <li><strong class="text-blue-200">`&lt;button&gt;`</strong>: A clickable button. Can be `type="submit"` to submit the form, `type="reset"` to clear, or `type="button"` for JavaScript actions.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;h3&gt;</span>Contact Us:<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;form</span> <span class="html-attr">action=</span><span class="html-attr-value">"/submit-form"</span> <span class="html-attr">method=</span><span class="html-attr-value">"post"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">style=</span><span class="html-attr-value">"margin-bottom: 15px;"</span><span class="html-tag">&gt;</span>
+        <span class="html-tag">&lt;label</span> <span class="html-attr">for=</span><span class="html-attr-value">"name"</span> <span class="html-attr">style=</span><span class="html-attr-value">"display: block; margin-bottom: 5px;"</span><span class="html-tag">&gt;</span>Name:<span class="html-tag">&lt;/label&gt;</span>
+        <span class="html-tag">&lt;input</span> <span class="html-attr">type=</span><span class="html-attr-value">"text"</span> <span class="html-attr">id=</span><span class="html-attr-value">"name"</span> <span class="html-attr">name=</span><span class="html-attr-value">"user_name"</span> <span class="html-attr">required</span> <span class="html-attr">style=</span><span class="html-attr-value">"width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;/div&gt;</span>
+
+    <span class="html-tag">&lt;div</span> <span class="html-attr">style=</span><span class="html-attr-value">"margin-bottom: 15px;"</span><span class="html-tag">&gt;</span>
+        <span class="html-tag">&lt;label</span> <span class="html-attr">for=</span><span class="html-attr-value">"email"</span> <span class="html-attr">style=</span><span class="html-attr-value">"display: block; margin-bottom: 5px;"</span><span class="html-tag">&gt;</span>Email:<span class="html-tag">&lt;/label&gt;</span>
+        <span class="html-tag">&lt;input</span> <span class="html-attr">type=</span><span class="html-attr-value">"email"</span> <span class="html-attr">id=</span><span class="html-attr-value">"email"</span> <span class="html-attr">name=</span><span class="html-attr-value">"user_email"</span> <span class="html-attr">style=</span><span class="html-attr-value">"width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;/div&gt;</span>
+
+    <span class="html-tag">&lt;div</span> <span class="html-attr">style=</span><span class="html-attr-value">"margin-bottom: 15px;"</span><span class="html-tag">&gt;</span>
+        <span class="html-tag">&lt;label</span> <span class="html-attr">for=</span><span class="html-attr-value">"message"</span> <span class="html-attr">style=</span><span class="html-attr-value">"display: block; margin-bottom: 5px;"</span><span class="html-tag">&gt;</span>Message:<span class="html-tag">&lt;/label&gt;</span>
+        <span class="html-tag">&lt;textarea</span> <span class="html-attr">id=</span><span class="html-attr-value">"message"</span> <span class="html-attr">name=</span><span class="html-attr-value">"user_message"</span> <span class="html-attr">rows=</span><span class="html-attr-value">"4"</span> <span class="html-attr">style=</span><span class="html-attr-value">"width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"</span><span class="html-tag">&gt;&lt;/textarea&gt;</span>
+    <span class="html-tag">&lt;/div&gt;</span>
+
+    <span class="html-tag">&lt;div</span> <span class="html-attr">style=</span><span class="html-attr-value">"margin-bottom: 15px;"</span><span class="html-tag">&gt;</span>
+        <span class="html-tag">&lt;label</span> <span class="html-attr">for=</span><span class="html-attr-value">"subject"</span> <span class="html-attr">style=</span><span class="html-attr-value">"display: block; margin-bottom: 5px;"</span><span class="html-tag">&gt;</span>Subject:<span class="html-tag">&lt;/label&gt;</span>
+        <span class="html-tag">&lt;select</span> <span class="html-attr">id=</span><span class="html-attr-value">"subject"</span> <span class="html-attr">name=</span><span class="html-attr-value">"user_subject"</span> <span class="html-attr">style=</span><span class="html-attr-value">"width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"</span><span class="html-tag">&gt;</span>
+            <span class="html-tag">&lt;option</span> <span class="html-attr">value=</span><span class="html-attr-value">""</span><span class="html-tag">&gt;</span>--Please choose an option--<span class="html-tag">&lt;/option&gt;</span>
+            <span class="html-tag">&lt;option</span> <span class="html-attr">value=</span><span class="html-attr-value">"feedback"</span><span class="html-tag">&gt;</span>Feedback<span class="html-tag">&lt;/option&gt;</span>
+            <span class="html-tag">&lt;option</span> <span class="html-attr">value=</span><span class="html-attr-value">"support"</span><span class="html-tag">&gt;</span>Support<span class="html-tag">&lt;/option&gt;</span>
+            <span class="html-tag">&lt;option</span> <span class="html-attr">value=</span><span class="html-attr-value">"other"</span><span class="html-tag">&gt;</span>Other<span class="html-tag">&lt;/option&gt;</span>
+        <span class="html-tag">&lt;/select&gt;</span>
+    <span class="html-tag">&lt;/div&gt;</span>
+
+    <span class="html-tag">&lt;button</span> <span class="html-attr">type=</span><span class="html-attr-value">"submit"</span> <span class="html-attr">style=</span><span class="html-attr-value">"background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;"</span><span class="html-tag">&gt;</span>Submit<span class="html-tag">&lt;/button&gt;</span>
+<span class="html-tag">&lt;/form&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">9. HTML Comments: Explaining Your Code</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Comments are notes that you add to your code to make it more understandable for yourself and other developers. They are ignored by the browser and are not displayed on the web page.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-comment">&lt;!-- This is an HTML comment. It will not be visible in the browser. --&gt;</span>
+<span class="html-tag">&lt;p&gt;</span>This paragraph is visible.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-comment">&lt;!-- &lt;p&gt;This paragraph is commented out and will not render.&lt;/p&gt; --&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">10. HTML Entities: Displaying Special Characters</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Some characters are reserved in HTML (like `&lt;` and `&gt;` which are used for tags), or are not present on a standard keyboard (like copyright symbols). HTML entities are used to display these special characters. They start with an ampersand (`&`) and end with a semicolon (`;`).
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`&lt;` for `<` (less than)</li>
+                <li>`&gt;` for `>` (greater than)</li>
+                <li>`&amp;` for `&` (ampersand)</li>
+                <li>`&copy;` for `©` (copyright symbol)</li>
+                <li>`&nbsp;` for a non-breaking space (useful for adding extra spaces that won't collapse)</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;p&gt;</span>This is how you write a tag: <span class="html-attr-value">&amp;lt;p&amp;gt;</span><span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;p&gt;</span>Copyright <span class="html-attr-value">&amp;copy;</span> 2025 Whizmath.<span class="html-tag">&lt;/p&gt;</span>
+<span class="html-tag">&lt;p&gt;</span>This text has extra&nbsp;&nbsp;&nbsp;spaces.<span class="html-tag">&lt;/p&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">11. Embedding Media: Audio and Video</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                HTML5 introduced native support for embedding audio and video directly into web pages without needing third-party plugins.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`&lt;video&gt;`</strong>: Embeds a video player.
+                    * `src`: Path to the video file.
+                    * `controls`: Adds default video controls (play/pause, volume, fullscreen).
+                    * `autoplay`: Starts playing automatically (often blocked by browsers for user experience).
+                    * `loop`: Plays the video repeatedly.
+                    * `muted`: Mutes the audio by default.
+                    * `poster`: An image to display before the video loads.
+                </li>
+                <li><strong class="text-blue-200">`&lt;audio&gt;`</strong>: Embeds an audio player.
+                    * `src`: Path to the audio file.
+                    * `controls`: Adds default audio controls.
+                    * `autoplay`, `loop`, `muted`: Similar to video.
+                </li>
+                <li><strong class="text-blue-200">`&lt;source&gt;`</strong>: Used inside `&lt;video&gt;` or `&lt;audio&gt;` to specify multiple media sources, allowing the browser to choose the best format it supports.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;h3&gt;</span>Example Video:<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;video</span> <span class="html-attr">width=</span><span class="html-attr-value">"320"</span> <span class="html-attr">height=</span><span class="html-attr-value">"240"</span> <span class="html-attr">controls</span> <span class="html-attr">poster=</span><span class="html-attr-value">"https://placehold.co/320x240/FF0000/FFFFFF?text=Video+Placeholder"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;source</span> <span class="html-attr">src=</span><span class="html-attr-value">"video.mp4"</span> <span class="html-attr">type=</span><span class="html-attr-value">"video/mp4"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;source</span> <span class="html-attr">src=</span><span class="html-attr-value">"video.webm"</span> <span class="html-attr">type=</span><span class="html-attr-value">"video/webm"</span><span class="html-tag">&gt;</span>
+    Your browser does not support the video tag.
+<span class="html-tag">&lt;/video&gt;</span>
+
+<span class="html-tag">&lt;h3&gt;</span>Example Audio:<span class="html-tag">&lt;/h3&gt;</span>
+<span class="html-tag">&lt;audio</span> <span class="html-attr">controls</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;source</span> <span class="html-attr">src=</span><span class="html-attr-value">"audio.mp3"</span> <span class="html-attr">type=</span><span class="html-attr-value">"audio/mpeg"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;source</span> <span class="html-attr">src=</span><span class="html-attr-value">"audio.ogg"</span> <span class="html-attr">type=</span><span class="html-attr-value">"audio/ogg"</span><span class="html-tag">&gt;</span>
+    Your browser does not support the audio element.
+<span class="html-tag">&lt;/audio&gt;</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">12. Your First Complete HTML Page (Enhanced)</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Let's integrate some of these new concepts into a more complete example of a simple HTML page.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;!DOCTYPE html&gt;</span>
+<span class="html-tag">&lt;html</span> <span class="html-attr">lang=</span><span class="html-attr-value">"en"</span><span class="html-tag">&gt;</span>
+<span class="html-tag">&lt;head&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">charset=</span><span class="html-attr-value">"UTF-8"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">name=</span><span class="html-attr-value">"viewport"</span> <span class="html-attr">content=</span><span class="html-attr-value">"width=device-width, initial-scale=1.0"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;title&gt;</span>My Enhanced Whizmath Page<span class="html-tag">&lt;/title&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">name=</span><span class="html-attr-value">"description"</span> <span class="html-attr">content=</span><span class="html-attr-value">"An enhanced example of a beginner HTML page for Whizmath."</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;style&gt;</span>
+        <span class="html-comment">/* Basic CSS for a touch of style - for demonstration purposes */</span>
+        <span class="css-selector">body</span> {
+            <span class="css-property">font-family</span>: <span class="css-value">Verdana, sans-serif</span>;
+            <span class="css-property">margin</span>: <span class="css-value">25px</span>;
+            <span class="css-property">background-color</span>: <span class="css-value">#f9f9f9</span>;
+            <span class="css-property">color</span>: <span class="css-value">#333</span>;
+            <span class="css-property">line-height</span>: <span class="css-value">1.6</span>;
+        }
+        <span class="css-selector">header</span>, <span class="css-selector">footer</span>, <span class="css-selector">section</span>, <span class="css-selector">article</span>, <span class="css-selector">aside</span>, <span class="css-selector">nav</span> {
+            <span class="css-property">margin-bottom</span>: <span class="css-value">20px</span>;
+            <span class="css-property">padding</span>: <span class="css-value">15px</span>;
+            <span class="css-property">border</span>: <span class="css-value">1px solid #eee</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">8px</span>;
+            <span class="css-property">background-color</span>: <span class="css-value">#fff</span>;
+        }
+        <span class="css-selector">h1</span>, <span class="css-selector">h2</span>, <span class="css-selector">h3</span> {
+            <span class="css-property">color</span>: <span class="css-value">#0056b3</span>;
+        }
+        <span class="css-selector">a</span> {
+            <span class="css-property">color</span>: <span class="css-value">#007bff</span>;
+            <span class="css-property">text-decoration</span>: <span class="css-value">none</span>;
+        }
+        <span class="css-selector">a:hover</span> {
+            <span class="css-property">text-decoration</span>: <span class="css-value">underline</span>;
+        }
+        <span class="css-selector">img</span> {
+            <span class="css-property">max-width</span>: <span class="css-value">100%</span>;
+            <span class="css-property">height</span>: <span class="css-value">auto</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">8px</span>;
+            <span class="css-property">margin-top</span>: <span class="css-value">15px</span>;
+        }
+        <span class="css-selector">ul</span>, <span class="css-selector">ol</span>, <span class="css-selector">dl</span> {
+            <span class="css-property">margin-bottom</span>: <span class="css-value">15px</span>;
+            <span class="css-property">padding-left</span>: <span class="css-value">20px</span>;
+        }
+        <span class="css-selector">table</span> {
+            <span class="css-property">width</span>: <span class="css-value">100%</span>;
+            <span class="css-property">border-collapse</span>: <span class="css-value">collapse</span>;
+            <span class="css-property">margin-top</span>: <span class="css-value">15px</span>;
+        }
+        <span class="css-selector">th</span>, <span class="css-selector">td</span> {
+            <span class="css-property">border</span>: <span class="css-value">1px solid #ddd</span>;
+            <span class="css-property">padding</span>: <span class="css-value">10px</span>;
+            <span class="css-property">text-align</span>: <span class="css-value">left</span>;
+        }
+        <span class="css-selector">th</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#f2f2f2</span>;
+        }
+        <span class="css-selector">form div</span> {
+            <span class="css-property">margin-bottom</span>: <span class="css-value">15px</span>;
+        }
+        <span class="css-selector">label</span> {
+            <span class="css-property">display</span>: <span class="css-value">block</span>;
+            <span class="css-property">margin-bottom</span>: <span class="css-value">5px</span>;
+            <span class="css-property">font-weight</span>: <span class="css-value">bold</span>;
+        }
+        <span class="css-selector">input[type="text"]</span>, <span class="css-selector">input[type="email"]</span>, <span class="css-selector">textarea</span>, <span class="css-selector">select</span> {
+            <span class="css-property">width</span>: <span class="css-value">100%</span>;
+            <span class="css-property">padding</span>: <span class="css-value">10px</span>;
+            <span class="css-property">border</span>: <span class="css-value">1px solid #ccc</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">4px</span>;
+            <span class="css-property">box-sizing</span>: <span class="css-value">border-box</span>; <span class="html-comment">&lt;!-- Ensures padding doesn't add to total width --&gt;</span>
+        }
+        <span class="css-selector">button[type="submit"]</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#007bff</span>;
+            <span class="css-property">color</span>: <span class="css-value">white</span>;
+            <span class="css-property">padding</span>: <span class="css-value">10px 20px</span>;
+            <span class="css-property">border</span>: <span class="css-value">none</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">5px</span>;
+            <span class="css-property">cursor</span>: <span class="css-value">pointer</span>;
+            <span class="css-property">font-size</span>: <span class="css-value">16px</span>;
+            <span class="css-property">transition</span>: <span class="css-value">background-color 0.3s ease</span>;
+        }
+        <span class="css-selector">button[type="submit"]:hover</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#0056b3</span>;
+        }
+    <span class="html-tag">&lt;/style&gt;</span>
+<span class="html-tag">&lt;/head&gt;</span>
+<span class="html-tag">&lt;body&gt;</span>
+
+    <span class="html-tag">&lt;header&gt;</span>
+        <span class="html-tag">&lt;h1&gt;</span>Welcome to My Whizmath Journey!<span class="html-tag">&lt;/h1&gt;</span>
+        <span class="html-tag">&lt;nav&gt;</span>
+            <span class="html-tag">&lt;ul&gt;</span>
+                <span class="html-tag">&lt;li&gt;&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"#"</span><span class="html-tag">&gt;</span>Home<span class="html-tag">&lt;/a&gt;&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"#attributes-section"</span><span class="html-tag">&gt;</span>Attributes<span class="html-tag">&lt;/a&gt;&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"#forms-section"</span><span class="html-tag">&gt;</span>Forms<span class="html-tag">&lt;/a&gt;&lt;/li&gt;</span>
+            <span class="html-tag">&lt;/ul&gt;</span>
+        <span class="html-tag">&lt;/nav&gt;</span>
+    <span class="html-tag">&lt;/header&gt;</span>
+
+    <span class="html-tag">&lt;main&gt;</span>
+        <span class="html-tag">&lt;section&gt;</span>
+            <span class="html-tag">&lt;h2&gt;</span>What I'm Learning:<span class="html-tag">&lt;/h2&gt;</span>
+            <span class="html-tag">&lt;p&gt;</span>Hello there! This is my very first web page, created with the power of HTML. I'm excited to learn more about web development and how to build amazing things for the internet.<span class="html-tag">&lt;/p&gt;</span>
+            <span class="html-tag">&lt;ul&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>HTML Structure<span class="html-tag">&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>Headings and Paragraphs<span class="html-tag">&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>Creating <span class="html-tag">&lt;a</span> <span class="html-attr">href=</span><span class="html-attr-value">"https://www.w3schools.com/html/"</span> <span class="html-attr">target=</span><span class="html-attr-value">"_blank"</span><span class="html-tag">&gt;</span>Links<span class="html-tag">&lt;/a&gt;</span><span class="html-tag">&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>Adding Images<span class="html-tag">&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>Making Lists (Ordered, Unordered, Definition)<span class="html-tag">&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>Understanding HTML Attributes<span class="html-tag">&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>Using Semantic HTML for better structure<span class="html-tag">&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>Building basic Forms<span class="html-tag">&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>Creating Tables for data presentation<span class="html-tag">&lt;/li&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>Embedding Audio and Video<span class="html-tag">&lt;/li&gt;</span>
+            <span class="html-tag">&lt;/ul&gt;</span>
+        <span class="html-tag">&lt;/section&gt;</span>
+
+        <span class="html-tag">&lt;section&gt;</span>
+            <span class="html-tag">&lt;h2&gt;</span>My Favorite Quote:<span class="html-tag">&lt;/h2&gt;</span>
+            <span class="html-tag">&lt;blockquote&gt;</span>
+                <span class="html-tag">&lt;p&gt;</span>"<span class="html-tag">&lt;em&gt;</span>The only way to do great work is to love what you do.<span class="html-tag">&lt;/em&gt;</span>" <span class="html-tag">&lt;br&gt;</span> - <span class="html-tag">&lt;strong&gt;</span>Steve Jobs<span class="html-tag">&lt;/strong&gt;</span>
+                <span class="html-tag">&lt;/p&gt;</span>
+            <span class="html-tag">&lt;/blockquote&gt;</span>
+        <span class="html-tag">&lt;/section&gt;</span>
+
+        <span class="html-tag">&lt;section&gt;</span>
+            <span class="html-tag">&lt;h2&gt;</span>A Glimpse of Web Dev:<span class="html-tag">&lt;/h2&gt;</span>
+            <span class="html-tag">&lt;img</span> <span class="html-attr">src=</span><span class="html-attr-value">"https://placehold.co/600x350/ADD8E6/000000?text=Web+Development+Journey"</span> <span class="html-attr">alt=</span><span class="html-attr-value">"A light blue placeholder image with black text saying Web Development Journey"</span> <span class="html-attr">width=</span><span class="html-attr-value">"600"</span> <span class="html-attr">height=</span><span class="html-attr-value">"350"</span><span class="html-tag">&gt;</span>
+        <span class="html-tag">&lt;/section&gt;</span>
+
+        <span class="html-tag">&lt;section&gt;</span>
+            <span class="html-tag">&lt;h2&gt;</span>Next Steps in My Learning:<span class="html-tag">&lt;/h2&gt;</span>
+            <span class="html-tag">&lt;ol&gt;</span>
+                <span class="html-tag">&lt;li&gt;</span>Master more advanced HTML techniques.</li>
+                <span class="html-tag">&lt;li&gt;</span>Dive deep into CSS for beautiful styling and responsive design.</li>
+                <span class="html-tag">&lt;li&gt;</span>Learn JavaScript for dynamic and interactive web pages.</li>
+                <span class="html-tag">&lt;li&gt;</span>Explore web frameworks and libraries.</li>
+            <span class="html-tag">&lt;/ol&gt;</span>
+        <span class="html-tag">&lt;/section&gt;</span>
+    <span class="html-tag">&lt;/main&gt;</span>
+
+    <span class="html-tag">&lt;footer&gt;</span>
+        <span class="html-tag">&lt;p&gt;</span>Thanks for visiting my page! Stay tuned for more updates from my Whizmath learning adventure. &copy; 2025 Whizmath. All rights reserved.<span class="html-tag">&lt;/p&gt;</span>
+    <span class="html-tag">&lt;/footer&gt;</span>
+
+    <script>
+        // Three.js Animated Background Setup
+        let scene, camera, renderer, particles;
+        let mouseX = 0, mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('three-canvas');
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            camera.position.z = 20; // Adjusted camera position to compensate for larger particles
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles (simple animated background)
+            const particleCount = 1500; // Increased particle count for more density
+            const geometry = new THREE.BufferGeometry();
+            const positions = [];
+            const colors = [];
+            const color = new THREE.Color();
+
+            for (let i = 0; i < particleCount; i++) {
+                // Position particles randomly in a larger cube
+                positions.push(
+                    (Math.random() * 2 - 1) * 40, // Wider spread for particles
+                    (Math.random() * 2 - 1) * 40,
+                    (Math.random() * 2 - 1) * 40
+                );
+                // Assign a random color
+                color.setHSL(Math.random(), 0.8, 0.7); // Brighter, more saturated colors
+                colors.push(color.r, color.g, color.b);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.5, // Particles 5 times bigger (0.1 * 5 = 0.5)
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.95, // Slightly less transparent for more presence
+                blending: THREE.AdditiveBlending
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // Add mouse interactivity for camera movement
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) * 0.003; // Adjusted sensitivity
+            mouseY = (event.clientY - windowHalfY) * 0.003;
+        }
+
+        function onWindowResize() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            windowHalfX = width / 2;
+            windowHalfY = height / 2;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Animate particles
+            if (particles) {
+                particles.rotation.x += 0.0006; // Slightly slower rotation for larger particles
+                particles.rotation.y += 0.0008;
+                // Add subtle oscillation
+                particles.position.x = Math.sin(Date.now() * 0.00008) * 1; // Increased oscillation range
+                particles.position.y = Math.cos(Date.now() * 0.00012) * 1;
+            }
+
+            // Animate camera based on mouse position
+            camera.position.x += (mouseX - camera.position.x) * 0.03; // Slower camera movement
+            camera.position.y += (-mouseY - camera.position.y) * 0.03;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        // Copy code functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling; // Get the <pre><code> element
+            const code = codeBlock.innerText;
+
+            // Use document.execCommand for broader iframe compatibility
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copied!';
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                button.textContent = 'Error!';
+            }
+            document.body.removeChild(textarea);
+
+            setTimeout(() => {
+                button.textContent = 'Copy Code';
+            }, 2000);
+        }
+
+        // Dark/Light Mode Toggle Logic
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+        const threeCanvas = document.getElementById('three-canvas');
+
+        // Function to set theme
+        function setTheme(theme) {
+            htmlElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            if (theme === 'dark') {
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+                threeCanvas.style.opacity = '0.25'; // Dark mode opacity
+            } else {
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+                threeCanvas.style.opacity = '0.05'; // Light mode opacity
+            }
+        }
+
+        // Check for saved theme preference on load
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Default to dark if no preference is saved
+            setTheme('dark');
+        }
+
+        // Event listener for toggle button
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                setTheme('light');
+            } else {
+                setTheme('dark');
+            }
+        });
+
+        // Home Button Logic
+        const homeButton = document.getElementById('home-button');
+        homeButton.addEventListener('click', () => {
+            window.history.back(); // Navigate back in browser history
+        });
+
+        // Initialize Three.js and start animation on window load
+        window.onload = function() {
+            initThreeJS();
+            animate();
+        };
+    </script>
+</body>
+</html>
