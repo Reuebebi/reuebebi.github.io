@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced CSS (CSS3): Crafting Dynamic Web Experiences | Whizmath</title>
+    <meta name="description" content="Dive deep into advanced CSS and CSS3 features with Whizmath. Learn complex selectors, transitions, animations, transforms, Flexbox, CSS Grid, custom properties, responsive strategies, and more.">
+    <meta name="keywords" content="Advanced CSS, CSS3, web design, modern CSS, CSS animations, CSS transitions, CSS transforms, Flexbox advanced, CSS Grid advanced, custom properties, CSS variables, responsive web design, media queries, CSS filters, Whizmath, online learning, coding for advanced users">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles (Dark Mode) */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll due to animations */
+            background-color: #0d1117; /* Dark background for modern feel */
+            color: #e6edf3; /* Light text color */
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Send canvas to background */
+            opacity: 0.25; /* Subtle background animation */
+            transition: opacity 0.5s ease;
+        }
+
+        .content-section {
+            background-color: rgba(22, 27, 34, 0.88); /* Slightly more opaque dark background for content */
+            backdrop-filter: blur(15px); /* Stronger frosted glass effect */
+            border-radius: 2rem; /* Even more rounded corners */
+            padding: 3rem; /* More padding */
+            margin-bottom: 3rem; /* More margin */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); /* Deeper, softer shadow */
+            transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out, background-color 0.5s ease, border-color 0.5s ease;
+            border: 1px solid rgba(60, 65, 75, 0.6); /* Subtle border */
+        }
+
+        .content-section:hover {
+            transform: translateY(-10px); /* More pronounced lift on hover */
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6); /* Enhanced shadow on hover */
+        }
+
+        .code-block {
+            background-color: #161b22; /* Darker background for code */
+            border-radius: 1.25rem; /* More rounded code blocks */
+            padding: 1.5rem; /* More padding in code blocks */
+            overflow-x: auto; /* Allow horizontal scrolling for long code lines */
+            font-family: 'Fira Code', monospace; /* Monospace font for code */
+            font-size: 1rem; /* Slightly larger code font */
+            line-height: 1.6;
+            position: relative;
+            border: 1px solid rgba(60, 65, 75, 0.8); /* Subtle border for code blocks */
+            transition: background-color 0.5s ease, border-color 0.5s ease;
+        }
+
+        /* Basic syntax highlighting colors (can be expanded) */
+        .code-block .html-tag { color: #569cd6; } /* Blue for tags */
+        .code-block .html-attr { color: #9cdcfe; } /* Light blue for attributes */
+        .code-block .html-attr-value { color: #ce9178; } /* Orange for attribute values */
+        .code-block .html-comment { color: #6a9955; } /* Green for comments */
+        .code-block .css-selector { color: #dcdcaa; } /* Yellow for CSS selectors */
+        .code-block .css-property { color: #4ec9b0; } /* Teal for CSS properties */
+        .code-block .css-value { color: #b5cea8; } /* Light green for CSS values */
+        .code-block .css-comment { color: #6a9955; } /* Green for CSS comments */
+
+        .copy-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: #2a3039;
+            color: #e6edf3;
+            padding: 0.6rem 0.9rem;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color 0.2s ease, transform 0.1s ease-in-out, color 0.5s ease;
+            border: 1px solid #3b424d;
+        }
+
+        .copy-button:hover {
+            background-color: #3b424d;
+            transform: translateY(-3px);
+        }
+
+        /* Floating Buttons Base Style */
+        .floating-button {
+            position: fixed;
+            background-color: #2a3039;
+            color: #e6edf3;
+            border: 1px solid #3b424d;
+            border-radius: 9999px; /* Fully rounded */
+            padding: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            z-index: 50; /* Ensure it floats above content */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-button:hover {
+            background-color: #3b424d;
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .floating-button svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor; /* Use current text color for SVG */
+        }
+
+        /* Specific positioning for toggle and home buttons */
+        #theme-toggle {
+            top: 1.5rem;
+            right: 1.5rem;
+        }
+
+        #home-button {
+            top: 1.5rem;
+            left: 1.5rem;
+        }
+
+        /* Light Mode Styles (controlled by data-theme="light" on html) */
+        html[data-theme="light"] body {
+            background-color: #f0f2f5; /* Very light grey background */
+            color: #333; /* Dark text color for general content */
+        }
+
+        html[data-theme="light"] #three-canvas {
+            opacity: 0.05; /* Much more subtle in light mode */
+        }
+
+        html[data-theme="light"] .content-section {
+            background-color: rgba(255, 255, 255, 0.98); /* Near white, slightly transparent */
+            border-color: rgba(180, 180, 180, 0.7); /* Slightly darker, more defined border */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08); /* Lighter shadow */
+        }
+
+        html[data-theme="light"] .content-section:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12); /* Enhanced shadow on hover */
+        }
+
+        html[data-theme="light"] .code-block {
+            background-color: #f8f9fa; /* Very light grey code background */
+            border-color: rgba(160, 160, 160, 0.8); /* Slightly more defined border */
+        }
+
+        /* Light mode syntax highlighting colors */
+        html[data-theme="light"] .code-block .html-tag { color: #007bff; } /* Vibrant blue */
+        html[data-theme="light"] .code-block .html-attr { color: #6c757d; } /* Standard grey for attributes */
+        html[data-theme="light"] .code-block .html-attr-value { color: #dc3545; } /* Reddish for attribute values */
+        html[data-theme="light"] .code-block .html-comment { color: #28a745; } /* Vibrant green for comments */
+        html[data-theme="light"] .code-block .css-selector { color: #6f42c1; } /* Purple-ish for CSS selectors */
+        html[data-theme="light"] .code-block .css-property { color: #fd7e14; } /* Orange for CSS properties */
+        html[data-theme="light"] .code-block .css-value { color: #17a2b8; } /* Teal for CSS values */
+        html[data-theme="light"] .code-block .css-comment { color: #28a745; } /* Vibrant green for CSS comments */
+
+
+        html[data-theme="light"] .copy-button {
+            background-color: #c0c2c5;
+            color: #333;
+            border-color: #b0b2b5;
+        }
+
+        html[data-theme="light"] .copy-button:hover {
+            background-color: #b0b2b5;
+        }
+
+        html[data-theme="light"] .floating-button {
+            background-color: #ffffff; /* Pure white for crisp look */
+            color: #333;
+            border-color: #d0d0d0; /* Lighter border */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Lighter shadow */
+        }
+
+        html[data-theme="light"] .floating-button:hover {
+            background-color: #f0f0f0; /* Slight grey on hover */
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Light mode text colors for headings and branded text */
+        html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3 {
+            color: #1e40af; /* Darker blue for headings */
+        }
+        html[data-theme="light"] .text-blue-400 { color: #1e40af; }
+        html[data-theme="light"] .text-blue-300 { color: #1e40af; }
+        html[data-theme="light"] .text-blue-200 { color: #1e40af; }
+        html[data-theme="light"] .text-purple-400 { color: #6f42c1; } /* Slightly more vibrant purple for Whizmath */
+
+        /* Ensure specific Tailwind text colors are overridden for light mode visibility */
+        html[data-theme="light"] .text-gray-300 {
+            color: #4a5568; /* Darker grey for better contrast in light mode */
+        }
+        html[data-theme="light"] .text-gray-400 {
+            color: #718096; /* Slightly lighter dark grey for footer, still visible */
+        }
+
+
+        /* CSS Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(60px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        .animate-fade-in-delay {
+            animation: fadeIn 1.2s ease-out 0.6s forwards;
+            opacity: 0; /* Hidden initially */
+        }
+
+        .animate-slide-up {
+            opacity: 0; /* Hidden initially */
+            animation: slideUp 1s ease-out forwards;
+        }
+
+        /* Staggered animation for sections */
+        .content-section:nth-of-type(1) { animation-delay: 1s; }
+        .content-section:nth-of-type(2) { animation-delay: 1.3s; }
+        .content-section:nth-of-type(3) { animation-delay: 1.6s; }
+        .content-section:nth-of-type(4) { animation-delay: 1.9s; }
+        .content-section:nth-of-type(5) { animation-delay: 2.2s; }
+        .content-section:nth-of-type(6) { animation-delay: 2.5s; }
+        .content-section:nth-of-type(7) { animation-delay: 2.8s; }
+        .content-section:nth-of-type(8) { animation-delay: 3.1s; }
+        .content-section:nth-of-type(9) { animation-delay: 3.4s; }
+        .content-section:nth-of-type(10) { animation-delay: 3.7s; }
+        .content-section:nth-of-type(11) { animation-delay: 4.0s; }
+        .content-section:nth-of-type(12) { animation-delay: 4.3s; }
+        .content-section:nth-of-type(13) { animation-delay: 4.6s; }
+        .content-section:nth-of-type(14) { animation-delay: 4.9s; }
+        .content-section:nth-of-type(15) { animation-delay: 5.2s; }
+        .content-section:nth-of-type(16) { animation-delay: 5.5s; }
+        .content-section:nth-of-type(17) { animation-delay: 5.8s; }
+        .content-section:nth-of-type(18) { animation-delay: 6.1s; }
+        .content-section:nth-of-type(19) { animation-delay: 6.4s; }
+
+
+        /* Responsive adjustments for floating buttons */
+        @media (max-width: 480px) {
+            .floating-button { top: 1rem; padding: 0.6rem; }
+            .floating-button svg { width: 20px; height: 20px; }
+            #theme-toggle { right: 1rem; }
+            #home-button { left: 1rem; }
+        }
+
+        /* Specific styles for demonstration of CSS3 features */
+        .box-shadow-example {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            margin: 20px auto;
+            width: 200px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5); /* Offset-x | offset-y | blur-radius | spread-radius | color */
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        .box-shadow-example:hover {
+            box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.7);
+        }
+
+        .border-radius-example {
+            background-color: #e74c3c;
+            color: white;
+            padding: 20px;
+            margin: 20px auto;
+            width: 200px;
+            height: 100px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50px / 20px; /* Horizontal radius / Vertical radius */
+        }
+
+        .transition-example {
+            background-color: #2ecc71;
+            color: white;
+            padding: 20px;
+            margin: 20px auto;
+            width: 150px;
+            text-align: center;
+            border-radius: 8px;
+            transition: background-color 0.5s ease, transform 0.5s ease;
+        }
+        .transition-example:hover {
+            background-color: #27ae60;
+            transform: scale(1.1);
+        }
+
+        .animation-example {
+            background-color: #f1c40f;
+            color: #333;
+            padding: 20px;
+            margin: 20px auto;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite alternate; /* Name | Duration | Iteration Count | Direction */
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(1.1); opacity: 0.7; }
+        }
+
+        .transform-2d-example {
+            background-color: #9b59b6;
+            color: white;
+            padding: 20px;
+            margin: 20px auto;
+            width: 150px;
+            text-align: center;
+            border-radius: 8px;
+            transition: transform 0.5s ease;
+        }
+        .transform-2d-example:hover {
+            transform: rotate(15deg) scale(1.2) translateX(20px);
+        }
+
+        .transform-3d-example {
+            background-color: #1abc9c;
+            color: white;
+            padding: 20px;
+            margin: 50px auto; /* More margin for 3D effect */
+            width: 150px;
+            height: 100px;
+            text-align: center;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 800px; /* Define perspective for 3D transforms */
+        }
+        .transform-3d-example div {
+            background-color: #16a085;
+            padding: 15px;
+            border-radius: 5px;
+            transition: transform 0.6s ease;
+        }
+        .transform-3d-example:hover div {
+            transform: rotateY(45deg) rotateX(20deg) translateZ(50px);
+        }
+
+        .gradient-linear-example {
+            height: 100px;
+            width: 80%;
+            margin: 20px auto;
+            border-radius: 10px;
+            background-image: linear-gradient(to right, #ff7e5f, #feb47b); /* Left to right, orange to peach */
+        }
+
+        .gradient-radial-example {
+            height: 150px;
+            width: 150px;
+            margin: 20px auto;
+            border-radius: 50%;
+            background-image: radial-gradient(circle at center, #6dd5ed, #2193b0); /* Center outwards, light blue to dark blue */
+        }
+
+        .filter-example {
+            background-color: #f39c12;
+            color: white;
+            padding: 20px;
+            margin: 20px auto;
+            width: 200px;
+            text-align: center;
+            border-radius: 10px;
+            filter: grayscale(0%); /* Initial state */
+            transition: filter 0.5s ease;
+        }
+        .filter-example:hover {
+            filter: grayscale(100%) blur(2px); /* Grayscale and blur on hover */
+        }
+
+        .custom-properties-example {
+            --primary-color: #3498db;
+            --spacing-unit: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: var(--spacing-unit);
+            margin: var(--spacing-unit) auto;
+            width: 250px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .custom-properties-example:hover {
+            --primary-color: #2980b9; /* Change variable value on hover */
+        }
+
+        .flex-advanced-container {
+            display: flex;
+            flex-wrap: wrap; /* Allow items to wrap to next line */
+            gap: 15px; /* Space between items */
+            padding: 20px;
+            background-color: #f8f8f8;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+        }
+        .flex-advanced-item {
+            background-color: #8e44ad;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            flex: 1 1 200px; /* flex-grow | flex-shrink | flex-basis */
+            text-align: center;
+            min-width: 150px; /* Ensure items don't get too small */
+        }
+        .flex-advanced-item:nth-child(even) {
+            background-color: #9b59b6;
+        }
+
+
+        .grid-advanced-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive columns */
+            gap: 20px;
+            padding: 20px;
+            background-color: #f8f8f8;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+        }
+        .grid-advanced-item {
+            background-color: #27ae60;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .grid-advanced-item:nth-child(odd) {
+            background-color: #2ecc71;
+        }
+
+    </style>
+</head>
+<body class="text-gray-200 min-h-screen flex flex-col">
+    <canvas id="three-canvas"></canvas>
+
+    <button id="home-button" class="floating-button" aria-label="Go back to previous page">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clip-rule="evenodd" />
+        </svg>
+    </button>
+
+    <button id="theme-toggle" class="floating-button" aria-label="Toggle dark and light mode">
+        <svg id="moon-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.106a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.06l1.59-1.591ZM12 18a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V18a.75.75 0 0 1 .75-.75ZM5.05 10.95a.75.75 0 1 0-1.06-1.06l-1.59 1.59a.75.75 0 1 0 1.06 1.06l1.59-1.59ZM18.894 17.894a.75.75 0 1 0 1.06-1.06l-1.59-1.59a.75.75 0 0 0-1.06 1.06l1.59 1.59ZM3.25 12a.75.75 0 0 1-.75.75H.25a.75.75 0 0 1 0-1.5H2.5c.414 0 .75.336.75.75ZM6.106 5.05a.75.75 0 1 0-1.06 1.06l1.59 1.59a.75.75 0 1 0 1.06-1.06l-1.59-1.59ZM12 5.25a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM19.75 12a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5H20.5a.75.75 0 0 1-.75-.75Z" />
+        </svg>
+    </button>
+
+    <div class="relative z-10 flex-grow container mx-auto px-4 py-8 md:py-12 lg:py-16">
+
+        <header class="text-center mb-12 md:mb-16 lg:mb-20">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-400 leading-tight mb-4 animate-fade-in">
+                Advanced CSS (CSS3): Crafting Dynamic Web Experiences at <span class="text-purple-400">Whizmath</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto animate-fade-in-delay">
+                Ready to elevate your web designs? This lesson dives deep into the advanced features of CSS, particularly those introduced in CSS3, which revolutionized web styling.
+                From intricate selectors and stunning visual effects to powerful layout systems and responsive strategies, you'll learn how to create truly dynamic and interactive web experiences that stand out!
+            </p>
+        </header>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">1. Introduction to Advanced CSS & CSS3</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                CSS3 is not a single, monolithic specification, but rather a collection of modular specifications. This modularity allows for faster development and adoption of new features. It brought a wealth of new capabilities, moving CSS beyond basic styling to enable complex graphics, animations, and highly adaptable layouts directly in the browser.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Enhanced Visual Effects:</strong> `border-radius`, `box-shadow`, `text-shadow`, gradients, filters.</li>
+                <li><strong class="text-blue-200">Animations & Transitions:</strong> Smooth property changes and complex keyframe animations.</li>
+                <li><strong class="text-blue-200">2D/3D Transforms:</strong> Manipulating elements in space (`rotate`, `scale`, `translate`, `skew`, `perspective`).</li>
+                <li><strong class="text-blue-200">Flexible Layouts:</strong> Flexbox and CSS Grid for robust and responsive structural design.</li>
+                <li><strong class="text-blue-200">Custom Properties (Variables):</strong> Reusable values for better maintainability.</li>
+                <li><strong class="text-blue-200">Advanced Selectors:</strong> More precise targeting of elements.</li>
+            </ul>
+            <p class="text-lg leading-relaxed">
+                Mastering these advanced features is essential for building modern, high-performance, and visually rich websites.
+            </p>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">2. Advanced CSS Selectors: Precision Targeting</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Beyond basic type, class, and ID selectors, CSS offers powerful ways to target elements based on their position, state, or attributes.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Structural Pseudo-classes:</strong> Select elements based on their position within the document tree.
+                    <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                        <li>`element:first-child`: Selects the first child of its parent.</li>
+                        <li>`element:last-child`: Selects the last child of its parent.</li>
+                        <li>`element:nth-child(n)`: Selects children based on a formula (e.g., `odd`, `even`, `3n+1`).</li>
+                        <li>`element:nth-of-type(n)`: Similar to `nth-child`, but considers only elements of the same type.</li>
+                        <li>`element:only-child`: Selects an element that is the only child of its parent.</li>
+                    </ul>
+                    <div class="code-block my-2">
+                        <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                        <pre><code><span class="css-selector">li:nth-child(odd)</span> { <span class="css-property">background-color</span>: <span class="css-value">#f0f0f0</span>; } <span class="css-comment">/* Every odd list item */</span>
+<span class="css-selector">p:first-of-type</span> { <span class="css-property">font-weight</span>: <span class="css-value">bold</span>; } <span class="css-comment">/* First paragraph of its type */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">Negation Pseudo-class (`:not()`):</strong> Selects elements that do NOT match the specified selector.
+                    <div class="code-block my-2">
+                        <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                        <pre><code><span class="css-selector">button:not(.primary)</span> { <span class="css-property">background-color</span>: <span class="css-value">gray</span>; } <span class="css-comment">/* All buttons except those with class 'primary' */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">Attribute Selectors with Wildcards:</strong>
+                    <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                        <li>`[attribute^="value"]`: Starts with a specific value.</li>
+                        <li>`[attribute$="value"]`: Ends with a specific value.</li>
+                        <li>`[attribute*="value"]`: Contains a specific value.</li>
+                    </ul>
+                    <div class="code-block my-2">
+                        <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                        <pre><code><span class="css-selector">a[href^="https"]</span> { <span class="css-property">color</span>: <span class="css-value">green</span>; } <span class="css-comment">/* Links starting with https */</span>
+<span class="css-selector">img[alt$="logo"]</span> { <span class="css-property">border</span>: <span class="css-value">2px solid blue</span>; } <span class="css-comment">/* Images whose alt text ends with 'logo' */</span></code></pre>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">3. Visual Enhancements: Shadows, Borders, and Gradients</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                CSS3 introduced powerful properties to add depth and visual flair to your elements.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. Box Shadows (`box-shadow`)</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Adds shadow effects around an element's frame.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`offset-x`: Horizontal position of the shadow.</li>
+                <li>`offset-y`: Vertical position of the shadow.</li>
+                <li>`blur-radius`: The blur effect on the shadow.</li>
+                <li>`spread-radius`: Expands or shrinks the shadow.</li>
+                <li>`color`: Color of the shadow.</li>
+                <li>`inset`: (Optional) Makes the shadow an inner shadow.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="css-selector">.box-shadow-example</span> {
+    <span class="css-property">box-shadow</span>: <span class="css-value">5px 5px 15px rgba(0, 0, 0, 0.5)</span>; <span class="css-comment">/* Common drop shadow */</span>
+    <span class="css-property">box-shadow</span>: <span class="css-value">inset 0 0 10px red</span>; <span class="css-comment">/* Inner shadow */</span>
+}</code></pre>
+            </div>
+            <div class="box-shadow-example">Hover for deeper shadow</div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Border Radius (`border-radius`)</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Adds rounded corners to elements. Can be applied uniformly or to individual corners.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>Single value: Applies to all four corners.</li>
+                <li>Multiple values: `top-left top-right bottom-right bottom-left`.</li>
+                <li>Elliptical corners: `horizontal-radius / vertical-radius`.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="css-selector">.rounded-box</span> {
+    <span class="css-property">border-radius</span>: <span class="css-value">15px</span>; <span class="css-comment">/* All corners 15px */</span>
+    <span class="css-property">border-radius</span>: <span class="css-value">50%</span>; <span class="css-comment">/* Perfect circle/ellipse */</span>
+    <span class="css-property">border-radius</span>: <span class="css-value">20px 0 20px 0</span>; <span class="css-comment">/* Alternating corners */</span>
+    <span class="css-property">border-radius</span>: <span class="css-value">50px / 20px</span>; <span class="css-comment">/* Elliptical corners */</span>
+}</code></pre>
+            </div>
+            <div class="border-radius-example">Elliptical Corners</div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">c. Text Shadows (`text-shadow`)</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Adds shadow effects to text. Similar syntax to `box-shadow` but without spread-radius.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="css-selector">h1</span> {
+    <span class="css-property">text-shadow</span>: <span class="css-value">2px 2px 4px rgba(0, 0, 0, 0.6)</span>;
+}</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">d. Gradients (`linear-gradient()`, `radial-gradient()`)</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Creates smooth transitions between two or more specified colors.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`linear-gradient()`: Colors transition along a straight line.
+                    * Syntax: `linear-gradient(direction, color-stop1, color-stop2, ...)`
+                </li>
+                <li>`radial-gradient()`: Colors transition from a center point outwards.
+                    * Syntax: `radial-gradient(shape size at position, color-stop1, color-stop2, ...)`
+                </li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="css-selector">.linear-gradient</span> {
+    <span class="css-property">background-image</span>: <span class="css-value">linear-gradient(to right, red, yellow)</span>;
+    <span class="css-property">background-image</span>: <span class="css-value">linear-gradient(45deg, #3498db, #8e44ad)</span>;
+}
+<span class="css-selector">.radial-gradient</span> {
+    <span class="css-property">background-image</span>: <span class="css-value">radial-gradient(circle, white, blue)</span>;
+    <span class="css-property">background-image</span>: <span class="css-value">radial-gradient(at top left, #ff0000, #0000ff)</span>;
+}</code></pre>
+            </div>
+            <div class="gradient-linear-example"></div>
+            <div class="gradient-radial-example"></div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">4. Transitions: Smooth State Changes</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                CSS transitions allow you to animate changes to CSS properties smoothly over a specified duration, rather than instantly.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`transition-property`: The CSS property to animate (e.g., `color`, `opacity`, `transform`). Use `all` for all properties.</li>
+                <li>`transition-duration`: How long the transition takes (e.g., `0.5s`, `500ms`).</li>
+                <li>`transition-timing-function`: The speed curve of the transition (e.g., `ease`, `linear`, `ease-in`, `ease-out`, `ease-in-out`, `cubic-bezier()`).</li>
+                <li>`transition-delay`: When the transition will start.</li>
+                <li>`transition` (Shorthand): Combines all transition properties.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="css-selector">.element</span> {
+    <span class="css-property">background-color</span>: <span class="css-value">blue</span>;
+    <span class="css-property">width</span>: <span class="css-value">100px</span>;
+    <span class="css-property">transition</span>: <span class="css-value">background-color 0.5s ease-in-out, width 0.3s linear</span>;
+}
+<span class="css-selector">.element:hover</span> {
+    <span class="css-property">background-color</span>: <span class="css-value">red</span>;
+    <span class="css-property">width</span>: <span class="css-value">200px</span>;
+}</code></pre>
+            </div>
+            <div class="transition-example">Hover Me!</div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">5. Animations: Complex, Multi-step Effects</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                CSS animations allow you to create more complex, multi-step animations using `@keyframes` rules.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`@keyframes`: Defines the animation's sequence of styles.
+                    * Use `from`/`to` or percentages (`0%` to `100%`) for different stages.
+                </li>
+                <li>`animation-name`: Links the element to a `@keyframes` rule.</li>
+                <li>`animation-duration`: How long one cycle of the animation takes.</li>
+                <li>`animation-timing-function`: Speed curve.</li>
+                <li>`animation-delay`: When the animation will start.</li>
+                <li>`animation-iteration-count`: How many times the animation plays (`infinite` for continuous).</li>
+                <li>`animation-direction`: Whether the animation plays forwards, backwards, or alternates (`normal`, `reverse`, `alternate`, `alternate-reverse`).</li>
+                <li>`animation-fill-mode`: What styles are applied before/after the animation (`none`, `forwards`, `backwards`, `both`).</li>
+                <li>`animation-play-state`: `running` or `paused`.</li>
+                <li>`animation` (Shorthand): Combines all animation properties.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="css-selector">.animated-box</span> {
+    <span class="css-property">width</span>: <span class="css-value">100px</span>;
+    <span class="css-property">height</span>: <span class="css-value">100px</span>;
+    <span class="css-property">background-color</span>: <span class="css-value">orange</span>;
+    <span class="css-property">position</span>: <span class="css-value">relative</span>;
+    <span class="css-property">animation-name</span>: <span class="css-value">slide-and-fade</span>;
+    <span class="css-property">animation-duration</span>: <span class="css-value">4s</span>;
+    <span class="css-property">animation-iteration-count</span>: <span class="css-value">infinite</span>;
+    <span class="css-property">animation-direction</span>: <span class="css-value">alternate</span>;
+}
+
+<span class="css-selector">@keyframes slide-and-fade</span> {
+    <span class="css-selector">0%</span> { <span class="css-property">left</span>: <span class="css-value">0</span>; <span class="css-property">opacity</span>: <span class="css-value">1</span>; }
+    <span class="css-selector">50%</span> { <span class="css-property">left</span>: <span class="css-value">calc(100% - 100px)</span>; <span class="css-property">opacity</span>: <span class="css-value">0.5</span>; }
+    <span class="css-selector">100%</span> { <span class="css-property">left</span>: <span class="css-value">0</span>; <span class="css-property">opacity</span>: <span class="css-value">1</span>; }
+}</code></pre>
+            </div>
+            <div class="animation-example">Pulse</div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">6. Transforms (2D and 3D): Manipulating Elements in Space</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                The `transform` property allows you to move, rotate, scale, and skew elements in 2D or 3D space.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. 2D Transforms</h3>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`translate(x, y)`: Moves an element.</li>
+                <li>`rotate(angle)`: Rotates an element around its center.</li>
+                <li>`scale(x, y)`: Changes the size of an element.</li>
+                <li>`skew(x-angle, y-angle)`: Skews an element.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="css-selector">.element-2d</span> {
+    <span class="css-property">transform</span>: <span class="css-value">translate(50px, 20px) rotate(10deg) scale(1.1)</span>;
+}</code></pre>
+            </div>
+            <div class="transform-2d-example">Hover for 2D Transform</div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. 3D Transforms</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                For 3D transforms, you need to set a `perspective` on the parent element to create a 3D viewing context.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`perspective`: Defines how far the user is from the z-plane.</li>
+                <li>`rotateX(angle)`, `rotateY(angle)`, `rotateZ(angle)`: Rotates around X, Y, or Z axis.</li>
+                <li>`translateX(x)`, `translateY(y)`, `translateZ(z)`: Moves along X, Y, or Z axis.</li>
+                <li>`scaleZ(z)`: Scales along Z axis.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="css-selector">.parent-3d</span> {
+    <span class="css-property">perspective</span>: <span class="css-value">1000px</span>;
+}
+<span class="css-selector">.element-3d</span> {
+    <span class="css-property">transform</span>: <span class="css-value">rotateY(45deg) translateZ(100px)</span>;
+}</code></pre>
+            </div>
+            <div class="transform-3d-example"><div>Hover for 3D Transform</div></div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">7. Advanced Layouts: Deep Dive into Flexbox and CSS Grid</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Flexbox and CSS Grid are indispensable for modern web layouts. Let's explore more advanced use cases.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. Flexbox (Advanced)</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Beyond basic alignment, Flexbox offers robust control over item sizing and wrapping.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`flex-direction`: `row`, `row-reverse`, `column`, `column-reverse`.</li>
+                <li>`flex-wrap`: `nowrap`, `wrap`, `wrap-reverse`.</li>
+                <li>`flex-flow`: Shorthand for `flex-direction` and `flex-wrap`.</li>
+                <li>`align-content`: Aligns flex lines when there is extra space in the cross-axis and `flex-wrap` is `wrap`.</li>
+                <li>`flex-grow`, `flex-shrink`, `flex-basis` (Shorthand `flex`): Control how items grow, shrink, and their initial size.
+                    * `flex: 1;` is common shorthand for `flex-grow: 1; flex-shrink: 1; flex-basis: 0%;` (flexible item).
+                    * `flex: 0 0 auto;` (item won't grow or shrink, size based on content).
+                </li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-comment">&lt;!-- HTML example for Flexbox advanced --&gt;</span>
+<span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"flex-advanced-container"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"flex-advanced-item"</span><span class="html-tag">&gt;</span>Nav Item 1<span class="html-tag">&lt;/div&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"flex-advanced-item"</span><span class="html-tag">&gt;</span>Nav Item 2<span class="html-tag">&lt;/div&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"flex-advanced-item"</span><span class="html-tag">&gt;</span>Nav Item 3<span class="html-tag">&lt;/div&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"flex-advanced-item"</span><span class="html-tag">&gt;</span>Nav Item 4<span class="html-tag">&lt;/div&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"flex-advanced-item"</span><span class="html-tag">&gt;</span>Nav Item 5<span class="html-tag">&lt;/div&gt;</span>
+<span class="html-tag">&lt;/div&gt;</span>
+
+<span class="html-comment">&lt;!-- CSS for Flexbox advanced --&gt;</span>
+<span class="css-selector">.flex-advanced-container</span> {
+    <span class="css-property">display</span>: <span class="css-value">flex</span>;
+    <span class="css-property">flex-wrap</span>: <span class="css-value">wrap</span>;
+    <span class="css-property">justify-content</span>: <span class="css-value">center</span>;
+    <span class="css-property">gap</span>: <span class="css-value">15px</span>;
+}
+<span class="css-selector">.flex-advanced-item</span> {
+    <span class="css-property">flex</span>: <span class="css-value">1 1 180px</span>; <span class="css-comment">/* Grow, Shrink, Base width of 180px */</span>
+    <span class="css-property">background-color</span>: <span class="css-value">#3498db</span>;
+    <span class="css-property">padding</span>: <span class="css-value">15px</span>;
+    <span class="css-property">border-radius</span>: <span class="css-value">8px</span>;
+    <span class="css-property">text-align</span>: <span class="css-value">center</span>;
+}</code></pre>
+            </div>
+            <div class="flex-advanced-container">
+                <div class="flex-advanced-item">Nav Item 1</div>
+                <div class="flex-advanced-item">Nav Item 2</div>
+                <div class="flex-advanced-item">Nav Item 3</div>
+                <div class="flex-advanced-item">Nav Item 4</div>
+                <div class="flex-advanced-item">Nav Item 5</div>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. CSS Grid (Advanced)</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                CSS Grid excels at creating complex, two-dimensional page layouts.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`grid-template-areas`: Define named areas in your grid for easier placement.</li>
+                <li>`grid-auto-rows`, `grid-auto-columns`: Control implicitly created rows/columns.</li>
+                <li>`minmax(min, max)`: A function for flexible track sizing (e.g., `minmax(100px, 1fr)`).</li>
+                <li>`repeat()`: A function to create multiple columns/rows with a pattern (e.g., `repeat(3, 1fr)`).</li>
+                <li>`auto-fit`, `auto-fill`: Keywords for responsive grid tracks within `repeat()`.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-comment">&lt;!-- HTML example for Grid advanced --&gt;</span>
+<span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"grid-advanced-container"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"grid-item header"</span><span class="html-tag">&gt;</span>Header<span class="html-tag">&lt;/div&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"grid-item sidebar"</span><span class="html-tag">&gt;</span>Sidebar<span class="html-tag">&lt;/div&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"grid-item content"</span><span class="html-tag">&gt;</span>Main Content<span class="html-tag">&lt;/div&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"grid-item footer"</span><span class="html-tag">&gt;</span>Footer<span class="html-tag">&lt;/div&gt;</span>
+<span class="html-tag">&lt;/div&gt;</span>
+
+<span class="html-comment">&lt;!-- CSS for Grid advanced --&gt;</span>
+<span class="css-selector">.grid-advanced-container</span> {
+    <span class="css-property">display</span>: <span class="css-value">grid</span>;
+    <span class="css-property">grid-template-columns</span>: <span class="css-value">repeat(auto-fit, minmax(200px, 1fr))</span>; <span class="css-comment">/* Responsive columns */</span>
+    <span class="css-property">grid-template-rows</span>: <span class="css-value">auto 1fr auto</span>;
+    <span class="css-property">grid-template-areas</span>:
+        <span class="css-value">"header header"</span>
+        <span class="css-value">"sidebar content"</span>
+        <span class="css-value">"footer footer"</span>;
+    <span class="css-property">gap</span>: <span class="css-value">15px</span>;
+    <span class="css-property">min-height</span>: <span class="css-value">400px</span>;
+    <span class="css-property">border</span>: <span class="css-value">2px solid #27ae60</span>;
+    <span class="css-property">background-color</span>: <span class="css-value">#ecf0f1</span>;
+}
+<span class="css-selector">.grid-item.header</span> { <span class="css-property">grid-area</span>: <span class="css-value">header</span>; <span class="css-property">background-color</span>: <span class="css-value">#2980b9</span>; }
+<span class="css-selector">.grid-item.sidebar</span> { <span class="css-property">grid-area</span>: <span class="css-value">sidebar</span>; <span class="css-property">background-color</span>: <span class="css-value">#8e44ad</span>; }
+<span class="css-selector">.grid-item.content</span> { <span class="css-property">grid-area</span>: <span class="css-value">content</span>; <span class="css-property">background-color</span>: <span class="css-value">#f39c12</span>; }
+<span class="css-selector">.grid-item.footer</span> { <span class="css-property">grid-area</span>: <span class="css-value">footer</span>; <span class="css-property">background-color</span>: <span class="css-value">#c0392b</span>; }
+
+<span class="css-selector">.grid-item</span> {
+    <span class="css-property">color</span>: <span class="css-value">white</span>;
+    <span class="css-property">padding</span>: <span class="css-value">20px</span>;
+    <span class="css-property">border-radius</span>: <span class="css-value">8px</span>;
+    <span class="css-property">text-align</span>: <span class="css-value">center</span>;
+}
+<span class="css-selector">@media</span> <span class="css-value">(max-width: 768px)</span> {
+    <span class="css-selector">.grid-advanced-container</span> {
+        <span class="css-property">grid-template-columns</span>: <span class="css-value">1fr</span>; <span class="css-comment">/* Single column layout on small screens */</span>
+        <span class="css-property">grid-template-areas</span>:
+            <span class="css-value">"header"</span>
+            <span class="css-value">"sidebar"</span>
+            <span class="css-value">"content"</span>
+            <span class="css-value">"footer"</span>;
+    }
+}</code></pre>
+            </div>
+            <div class="grid-advanced-container">
+                <div class="grid-item header">Header</div>
+                <div class="grid-item sidebar">Sidebar</div>
+                <div class="grid-item content">Main Content</div>
+                <div class="grid-item footer">Footer</div>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">8. Custom Properties (CSS Variables)</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Custom properties (often called CSS variables) allow you to define reusable values throughout your stylesheets. This makes your CSS more maintainable, flexible, and easier to update.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>Define variables using `--` prefix (e.g., `--primary-color: #3498db;`).</li>
+                <li>Variables are typically defined on the `:root` pseudo-class to make them globally available.</li>
+                <li>Access variables using the `var()` function (e.g., `color: var(--primary-color);`).</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="css-selector">:root</span> {
+    <span class="css-property">--main-bg-color</span>: <span class="css-value">#f0f0f0</span>;
+    <span class="css-property">--text-color</span>: <span class="css-value">#333</span>;
+    <span class="css-property">--border-style</span>: <span class="css-value">1px solid lightgray</span>;
+}
+
+<span class="css-selector">body</span> {
+    <span class="css-property">background-color</span>: <span class="css-value">var(--main-bg-color)</span>;
+    <span class="css-property">color</span>: <span class="css-value">var(--text-color)</span>;
+}
+
+<span class="css-selector">.card</span> {
+    <span class="css-property">border</span>: <span class="css-value">var(--border-style)</span>;
+    <span class="css-property">background-color</span>: <span class="css-value">white</span>;
+    <span class="css-property">padding</span>: <span class="css-value">20px</span>;
+}
+
+<span class="css-selector">.dark-mode</span> {
+    <span class="css-property">--main-bg-color</span>: <span class="css-value">#222</span>; <span class="css-comment">/* Override variable for dark mode */</span>
+    <span class="css-property">--text-color</span>: <span class="css-value">#eee</span>;
+}</code></pre>
+            </div>
+            <div class="custom-properties-example">
+                This box uses custom properties.
+                <br>Hover to see a variable change!
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">9. Filters: Instant Visual Effects</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                The `filter` property applies visual effects (like blur, grayscale, sepia, brightness, contrast, etc.) to an element. It's commonly used for images but can apply to any HTML element.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`blur(px)`: Applies a Gaussian blur.</li>
+                <li>`brightness(%)`: Adjusts brightness.</li>
+                <li>`contrast(%)`: Adjusts contrast.</li>
+                <li>`grayscale(%)`: Converts to grayscale.</li>
+                <li>`hue-rotate(deg)`: Rotates the hue.</li>
+                <li>`invert(%)`: Inverts colors.</li>
+                <li>`opacity(%)`: Adjusts transparency.</li>
+                <li>`saturate(%)`: Adjusts saturation.</li>
+                <li>`sepia(%)`: Converts to sepia.</li>
+                <li>`drop-shadow(offset-x offset-y blur-radius color)`: Applies a drop shadow (different from `box-shadow`).</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="css-selector">img.filtered</span> {
+    <span class="css-property">filter</span>: <span class="css-value">grayscale(100%) blur(3px)</span>;
+    <span class="css-property">transition</span>: <span class="css-value">filter 0.5s ease</span>;
+}
+<span class="css-selector">img.filtered:hover</span> {
+    <span class="css-property">filter</span>: <span class="css-value">grayscale(0%) blur(0)</span>; <span class="css-comment">/* Remove filters on hover */</span>
+}</code></pre>
+            </div>
+            <div class="filter-example">Hover to remove filter</div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">10. Advanced Responsive Design Techniques</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Beyond basic media queries, modern responsive design involves more nuanced approaches to ensure optimal user experience across countless devices.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Complex Media Queries:</strong> Combine conditions using `and`, `or` (comma-separated), and `not`.
+                    <div class="code-block my-2">
+                        <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                        <pre><code><span class="css-selector">@media</span> <span class="css-value">screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape)</span> {
+    <span class="css-selector">.sidebar</span> { <span class="css-property">display</span>: <span class="css-value">flex</span>; }
+}</code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">Viewport Units (`vw`, `vh`, `vmin`, `vmax`):</strong> Dynamically size elements relative to the viewport.
+                    <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                        <li>`vmin`: 1% of the smaller dimension (width or height).</li>
+                        <li>`vmax`: 1% of the larger dimension (width or height).</li>
+                    </ul>
+                    <div class="code-block my-2">
+                        <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                        <pre><code><span class="css-selector">h1</span> { <span class="css-property">font-size</span>: <span class="css-value">calc(2rem + 2vw)</span>; } <span class="css-comment">/* Scales with viewport, with a minimum */</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">`picture` Element for Responsive Images:</strong> Allows you to serve different image files based on screen size or resolution, optimizing performance.
+                    <div class="code-block my-2">
+                        <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                        <pre><code><span class="html-tag">&lt;picture&gt;</span>
+    <span class="html-tag">&lt;source</span> <span class="html-attr">srcset=</span><span class="html-attr-value">"large.jpg"</span> <span class="html-attr">media=</span><span class="html-attr-value">"(min-width: 1024px)"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;source</span> <span class="html-attr">srcset=</span><span class="html-attr-value">"medium.jpg"</span> <span class="html-attr">media=</span><span class="html-attr-value">"(min-width: 768px)"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;img</span> <span class="html-attr">src=</span><span class="html-attr-value">"small.jpg"</span> <span class="html-attr">alt=</span><span class="html-attr-value">"Responsive image example"</span><span class="html-tag">&gt;</span>
+<span class="html-tag">&lt;/picture&gt;</span></code></pre>
+                    </div>
+                </li>
+                <li><strong class="text-blue-200">`min()`, `max()`, `clamp()` Functions:</strong> Provide more dynamic control over values.
+                    <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                        <li>`min(val1, val2)`: Uses the smaller of the two values.</li>
+                        <li>`max(val1, val2)`: Uses the larger of the two values.</li>
+                        <li>`clamp(min, preferred, max)`: Clamps a value between a minimum and maximum.</li>
+                    </ul>
+                    <div class="code-block my-2">
+                        <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                        <pre><code><span class="css-selector">.element</span> {
+    <span class="css-property">width</span>: <span class="css-value">min(90vw, 500px)</span>; <span class="css-comment">/* Max width of 500px, but responsive */</span>
+    <span class="css-property">font-size</span>: <span class="css-value">clamp(1rem, 2vw + 1rem, 2.5rem)</span>; <span class="css-comment">/* Min 1rem, scales, max 2.5rem */</span>
+}</code></pre>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">11. CSS Performance Considerations</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Writing efficient CSS is crucial for fast-loading and smooth-performing websites.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Minimize CSS File Size:</strong> Remove unused CSS, minify your CSS files (remove whitespace, comments).</li>
+                <li><strong class="text-blue-200">Optimize Selectors:</strong> Avoid overly complex or inefficient selectors (e.g., `*`, descendant selectors that are too broad). Browsers read selectors from right to left.</li>
+                <li><strong class="text-blue-200">Avoid `!important` (mostly):</strong> It makes CSS harder to override and debug, leading to larger, less maintainable stylesheets.</li>
+                <li><strong class="text-blue-200">Use CSS Transforms and Opacity for Animations:</strong> These properties are often handled directly by the GPU, leading to smoother animations compared to animating `width`, `height`, `margin`, `top`, `left`, etc., which trigger layout recalculations.</li>
+                <li><strong class="text-blue-200">Lazy Load CSS:</strong> For non-critical CSS, consider loading it asynchronously or deferring it until after the initial page render.</li>
+                <li><strong class="text-blue-200">Vendor Prefixes:</strong> While less common now, older CSS3 properties sometimes required vendor prefixes (e.g., `-webkit-`, `-moz-`). Use tools like Autoprefixer to handle these automatically during your build process.</li>
+            </ul>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">12. Comprehensive Advanced CSS Example</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                This example combines several advanced CSS3 features to create a dynamic and responsive card component.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;!DOCTYPE html&gt;</span>
+<span class="html-tag">&lt;html</span> <span class="html-attr">lang=</span><span class="html-attr-value">"en"</span><span class="html-tag">&gt;</span>
+<span class="html-tag">&lt;head&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">charset=</span><span class="html-attr-value">"UTF-8"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">name=</span><span class="html-attr-value">"viewport"</span> <span class="html-attr">content=</span><span class="html-attr-value">"width=device-width, initial-scale=1.0"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;title&gt;</span>Advanced CSS Example | Whizmath<span class="html-tag">&lt;/title&gt;</span>
+    <span class="html-tag">&lt;style&gt;</span>
+        <span class="css-selector">:root</span> {
+            <span class="css-property">--card-bg</span>: <span class="css-value">#ffffff</span>;
+            <span class="css-property">--card-shadow</span>: <span class="css-value">0 10px 20px rgba(0, 0, 0, 0.15)</span>;
+            <span class="css-property">--primary-color</span>: <span class="css-value">#3498db</span>;
+            <span class="css-property">--secondary-color</span>: <span class="css-value">#2ecc71</span>;
+        }
+
+        <span class="css-selector">body</span> {
+            <span class="css-property">font-family</span>: <span class="css-value">'Inter', sans-serif</span>;
+            <span class="css-property">margin</span>: <span class="css-value">0</span>;
+            <span class="css-property">padding</span>: <span class="css-value">50px 20px</span>;
+            <span class="css-property">background-color</span>: <span class="css-value">#f4f7f6</span>;
+            <span class="css-property">display</span>: <span class="css-value">flex</span>;
+            <span class="css-property">justify-content</span>: <span class="css-value">center</span>;
+            <span class="css-property">align-items</span>: <span class="css-value">center</span>;
+            <span class="css-property">min-height</span>: <span class="css-value">100vh</span>;
+            <span class="css-property">color</span>: <span class="css-value">#333</span>;
+        }
+
+        <span class="css-selector">.card-container</span> {
+            <span class="css-property">display</span>: <span class="css-value">grid</span>;
+            <span class="css-property">grid-template-columns</span>: <span class="css-value">repeat(auto-fit, minmax(300px, 1fr))</span>;
+            <span class="css-property">gap</span>: <span class="css-value">30px</span>;
+            <span class="css-property">max-width</span>: <span class="css-value">1200px</span>;
+            <span class="css-property">width</span>: <span class="css-value">100%</span>;
+        }
+
+        <span class="css-selector">.css-card</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">var(--card-bg)</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">15px</span>;
+            <span class="css-property">box-shadow</span>: <span class="css-value">var(--card-shadow)</span>;
+            <span class="css-property">overflow</span>: <span class="css-value">hidden</span>;
+            <span class="css-property">transition</span>: <span class="css-value">transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out</span>;
+            <span class="css-property">perspective</span>: <span class="css-value">1000px</span>;
+        }
+
+        <span class="css-selector">.css-card:hover</span> {
+            <span class="css-property">transform</span>: <span class="css-value">translateY(-10px)</span>;
+            <span class="css-property">box-shadow</span>: <span class="css-value">0 15px 30px rgba(0, 0, 0, 0.25)</span>;
+        }
+
+        <span class="css-selector">.card-header</span> {
+            <span class="css-property">background-image</span>: <span class="css-value">linear-gradient(45deg, var(--primary-color), var(--secondary-color))</span>;
+            <span class="css-property">color</span>: <span class="css-value">white</span>;
+            <span class="css-property">padding</span>: <span class="css-value">25px</span>;
+            <span class="css-property">text-align</span>: <span class="css-value">center</span>;
+            <span class="css-property">font-size</span>: <span class="css-value">1.8em</span>;
+            <span class="css-property">font-weight</span>: <span class="css-value">bold</span>;
+            <span class="css-property">text-shadow</span>: <span class="css-value">2px 2px 5px rgba(0, 0, 0, 0.3)</span>;
+            <span class="css-property">transform-origin</span>: <span class="css-value">bottom</span>;
+            <span class="css-property">transition</span>: <span class="css-value">transform 0.5s ease-out</span>;
+        }
+
+        <span class="css-selector">.css-card:hover .card-header</span> {
+            <span class="css-property">transform</span>: <span class="css-value">rotateX(10deg)</span>;
+        }
+
+        <span class="css-selector">.card-body</span> {
+            <span class="css-property">padding</span>: <span class="css-value">25px</span>;
+        }
+
+        <span class="css-selector">.card-body p</span> {
+            <span class="css-property">margin-bottom</span>: <span class="css-value">15px</span>;
+            <span class="css-property">line-height</span>: <span class="css-value">1.7</span>;
+        }
+
+        <span class="css-selector">.card-feature-list</span> {
+            <span class="css-property">list-style</span>: <span class="css-value">none</span>;
+            <span class="css-property">padding</span>: <span class="css-value">0</span>;
+            <span class="css-property">margin-top</span>: <span class="css-value">20px</span>;
+        }
+
+        <span class="css-selector">.card-feature-list li</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#ecf0f1</span>;
+            <span class="css-property">padding</span>: <span class="css-value">10px 15px</span>;
+            <span class="css-property">margin-bottom</span>: <span class="css-value">8px</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">8px</span>;
+            <span class="css-property">display</span>: <span class="css-value">flex</span>;
+            <span class="css-property">align-items</span>: <span class="css-value">center</span>;
+            <span class="css-property">gap</span>: <span class="css-value">10px</span>;
+            <span class="css-property">transition</span>: <span class="css-value">background-color 0.3s ease</span>;
+        }
+
+        <span class="css-selector">.card-feature-list li:hover</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#dce4e6</span>;
+        }
+
+        <span class="css-selector">.card-feature-list li::before</span> {
+            <span class="css-property">content</span>: <span class="css-value">'✔️'</span>; <span class="css-comment">/* Pseudo-element for checkmark */</span>
+            <span class="css-property">font-size</span>: <span class="css-value">1.2em</span>;
+            <span class="css-property">color</span>: <span class="css-value">var(--secondary-color)</span>;
+        }
+
+        <span class="css-selector">.card-footer</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#f8f8f8</span>;
+            <span class="css-property">padding</span>: <span class="css-value">20px</span>;
+            <span class="css-property">text-align</span>: <span class="css-value">center</span>;
+            <span class="css-property">border-top</span>: <span class="css-value">1px solid #eee</span>;
+        }
+
+        <span class="css-selector">.card-button</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">var(--primary-color)</span>;
+            <span class="css-property">color</span>: <span class="css-value">white</span>;
+            <span class="css-property">padding</span>: <span class="css-value">12px 25px</span>;
+            <span class="css-property">border</span>: <span class="css-value">none</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">8px</span>;
+            <span class="css-property">cursor</span>: <span class="css-value">pointer</span>;
+            <span class="css-property">font-size</span>: <span class="css-value">1.1em</span>;
+            <span class="css-property">font-weight</span>: <span class="css-value">bold</span>;
+            <span class="css-property">transition</span>: <span class="css-value">background-color 0.3s ease, transform 0.2s ease</span>;
+            <span class="css-property">box-shadow</span>: <span class="css-value">0 4px 8px rgba(0, 0, 0, 0.2)</span>;
+        }
+
+        <span class="css-selector">.card-button:hover</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#2980b9</span>;
+            <span class="css-property">transform</span>: <span class="css-value">translateY(-3px)</span>;
+        }
+
+        <span class="css-selector">@media</span> <span class="css-value">(max-width: 768px)</span> {
+            <span class="css-selector">body</span> {
+                <span class="css-property">padding</span>: <span class="css-value">20px 10px</span>;
+            }
+            <span class="css-selector">.css-card</span> {
+                <span class="css-property">margin-bottom</span>: <span class="css-value">20px</span>;
+            }
+            <span class="css-selector">.card-header</span> {
+                <span class="css-property">font-size</span>: <span class="css-value">1.5em</span>;
+                <span class="css-property">padding</span>: <span class="css-value">20px</span>;
+            }
+            <span class="css-selector">.card-body</span> {
+                <span class="css-property">padding</span>: <span class="css-value">20px</span>;
+            }
+        }
+    <span class="html-tag">&lt;/style&gt;</span>
+<span class="html-tag">&lt;/head&gt;</span>
+<span class="html-tag">&lt;body&gt;</span>
+
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"card-container"</span><span class="html-tag">&gt;</span>
+        <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"css-card"</span><span class="html-tag">&gt;</span>
+            <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"card-header"</span><span class="html-tag">&gt;</span>
+                Pro Styling Plan
+            <span class="html-tag">&lt;/div&gt;</span>
+            <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"card-body"</span><span class="html-tag">&gt;</span>
+                <span class="html-tag">&lt;p&gt;</span>Unlock the full potential of your web designs with our advanced CSS techniques. Perfect for aspiring web masters! This plan includes:<span class="html-tag">&lt;/p&gt;</span>
+                <span class="html-tag">&lt;ul</span> <span class="html-attr">class=</span><span class="html-attr-value">"card-feature-list"</span><span class="html-tag">&gt;</span>
+                    <span class="html-tag">&lt;li&gt;</span>Advanced Selectors Mastery<span class="html-tag">&lt;/li&gt;</span>
+                    <span class="html-tag">&lt;li&gt;</span>Smooth Transitions & Animations<span class="html-tag">&lt;/li&gt;</span>
+                    <span class="html-tag">&lt;li&gt;</span>2D & 3D Transforms<span class="html-tag">&lt;/li&gt;</span>
+                    <span class="html-tag">&lt;li&gt;</span>Flexbox & Grid Layouts (Expert)<span class="html-tag">&lt;/li&gt;</span>
+                    <span class="html-tag">&lt;li&gt;</span>Custom Properties & Variables<span class="html-tag">&lt;/li&gt;</span>
+                    <span class="html-tag">&lt;li&gt;</span>Responsive Design Strategies<span class="html-tag">&lt;/li&gt;</span>
+                <span class="html-tag">&lt;/ul&gt;</span>
+            <span class="html-tag">&lt;/div&gt;</span>
+            <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"card-footer"</span><span class="html-tag">&gt;</span>
+                <span class="html-tag">&lt;button</span> <span class="html-attr">class=</span><span class="html-attr-value">"card-button"</span><span class="html-tag">&gt;</span>Get Started Now<span class="html-tag">&lt;/button&gt;</span>
+            <span class="html-tag">&lt;/div&gt;</span>
+        <span class="html-tag">&lt;/div&gt;</span>
+
+        <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"css-card"</span><span class="html-tag">&gt;</span>
+            <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"card-header"</span><span class="html-tag">&gt;</span>
+                Ultimate Design Toolkit
+            <span class="html-tag">&lt;/div&gt;</span>
+            <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"card-body"</span><span class="html-tag">&gt;</span>
+                <span class="html-tag">&lt;p&gt;</span>For designers and developers who demand the best. This toolkit provides all the advanced CSS knowledge you need to build cutting-edge interfaces.<span class="html-tag">&lt;/p&gt;</span>
+                <span class="html-tag">&lt;ul</span> <span class="html-attr">class=</span><span class="html-attr-value">"card-feature-list"</span><span class="html-tag">&gt;</span>
+                    <span class="html-tag">&lt;li&gt;</span>All Pro Styling Plan Features<span class="html-tag">&lt;/li&gt;</span>
+                    <span class="html-tag">&lt;li&gt;</span>CSS Filters & Blending Modes<span class="html-tag">&lt;/li&gt;</span>
+                    <span class="html-tag">&lt;li&gt;</span>Performance Optimization Tips<span class="html-tag">&lt;/li&gt;</span>
+                    <span class="html-tag">&lt;li&gt;</span>Advanced Typography & Fonts<span class="html-tag">&lt;/li&gt;</span>
+                    <span class="html-tag">&lt;li&gt;</span>SVG Integration with CSS<span class="html-tag">&lt;/li&gt;</span>
+                    <span class="html-tag">&lt;li&gt;</span>Cross-Browser Compatibility<span class="html-tag">&lt;/li&gt;</span>
+                <span class="html-tag">&lt;/ul&gt;</span>
+            <span class="html-tag">&lt;/div&gt;</span>
+            <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"card-footer"</span><span class="html-tag">&gt;</span>
+                <span class="html-tag">&lt;button</span> <span class="html-attr">class=</span><span class="html-attr-value">"card-button"</span><span class="html-tag">&gt;</span>Unlock Toolkit<span class="html-tag">&lt;/button&gt;</span>
+            <span class="html-tag">&lt;/div&gt;</span>
+        <span class="html-tag">&lt;/div&gt;</span>
+    <span class="html-tag">&lt;/div&gt;</span>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js Animated Background Setup
+        let scene, camera, renderer, particles;
+        let mouseX = 0, mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('three-canvas');
+            if (!canvas) {
+                console.error("Canvas element not found!");
+                return;
+            }
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            camera.position.z = 20; // Adjusted camera position to compensate for larger particles
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles (simple animated background)
+            const particleCount = 1500; // Increased particle count for more density
+            const geometry = new THREE.BufferGeometry();
+            const positions = [];
+            const colors = [];
+            const color = new THREE.Color();
+
+            for (let i = 0; i < particleCount; i++) {
+                // Position particles randomly in a larger cube
+                positions.push(
+                    (Math.random() * 2 - 1) * 40, // Wider spread for particles
+                    (Math.random() * 2 - 1) * 40,
+                    (Math.random() * 2 - 1) * 40
+                );
+                // Assign a random color
+                color.setHSL(Math.random(), 0.8, 0.7); // Brighter, more saturated colors
+                colors.push(color.r, color.g, color.b);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.5, // Particles 5 times bigger (0.1 * 5 = 0.5)
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.95, // Slightly less transparent for more presence
+                blending: THREE.AdditiveBlending
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // Add mouse interactivity for camera movement
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) * 0.003; // Adjusted sensitivity
+            mouseY = (event.clientY - windowHalfY) * 0.003;
+        }
+
+        function onWindowResize() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            windowHalfX = width / 2;
+            windowHalfY = height / 2;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Animate particles
+            if (particles) {
+                particles.rotation.x += 0.0006; // Slightly slower rotation for larger particles
+                particles.rotation.y += 0.0008;
+                // Add subtle oscillation
+                particles.position.x = Math.sin(Date.now() * 0.00008) * 1; // Increased oscillation range
+                particles.position.y = Math.cos(Date.now() * 0.00012) * 1;
+            }
+
+            // Animate camera based on mouse position
+            camera.position.x += (mouseX - camera.position.x) * 0.03; // Slower camera movement
+            camera.position.y += (-mouseY - camera.position.y) * 0.03;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        // Copy code functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling; // Get the <pre><code> element
+            const code = codeBlock.innerText;
+
+            // Use document.execCommand for broader iframe compatibility
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copied!';
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                button.textContent = 'Error!';
+            }
+            document.body.removeChild(textarea);
+
+            setTimeout(() => {
+                button.textContent = 'Copy Code';
+            }, 2000);
+        }
+
+        // Dark/Light Mode Toggle Logic
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+        const threeCanvas = document.getElementById('three-canvas');
+
+        // Function to set theme
+        function setTheme(theme) {
+            htmlElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            if (theme === 'dark') {
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+                threeCanvas.style.opacity = '0.25'; // Dark mode opacity
+            } else {
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+                threeCanvas.style.opacity = '0.05'; // Light mode opacity
+            }
+        }
+
+        // Check for saved theme preference on load
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Default to dark if no preference is saved
+            setTheme('dark');
+        }
+
+        // Event listener for toggle button
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                setTheme('light');
+            } else {
+                setTheme('dark');
+            }
+        });
+
+        // Home Button Logic
+        const homeButton = document.getElementById('home-button');
+        homeButton.addEventListener('click', () => {
+            window.history.back(); // Navigate back in browser history
+        });
+
+        // Initialize Three.js and start animation on window load
+        window.onload = function() {
+            initThreeJS();
+            animate();
+        };
+    </script>
+</body>
+</html>
