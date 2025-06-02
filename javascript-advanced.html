@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced JavaScript: Mastering Modern Web Development | Whizmath</title>
+    <meta name="description" content="Master advanced JavaScript concepts with Whizmath. Explore asynchronous programming (Promises, Async/Await), ES6+ features, error handling, modules, advanced array methods, closures, and performance optimization.">
+    <meta name="keywords" content="Advanced JavaScript, JS advanced, ES6, ES2015, Promises, Async/Await, Error Handling, JavaScript Modules, Fetch API, map, filter, reduce, Closures, Scope, Prototypes, Inheritance, Webpack, Babel, Performance JavaScript, Whizmath, online learning, coding for advanced users">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles (Dark Mode) */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll due to animations */
+            background-color: #0d1117; /* Dark background for modern feel */
+            color: #e6edf3; /* Light text color */
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Send canvas to background */
+            opacity: 0.25; /* Subtle background animation */
+            transition: opacity 0.5s ease;
+        }
+
+        .content-section {
+            background-color: rgba(22, 27, 34, 0.88); /* Slightly more opaque dark background for content */
+            backdrop-filter: blur(15px); /* Stronger frosted glass effect */
+            border-radius: 2rem; /* Even more rounded corners */
+            padding: 3rem; /* More padding */
+            margin-bottom: 3rem; /* More margin */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); /* Deeper, softer shadow */
+            transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out, background-color 0.5s ease, border-color 0.5s ease;
+            border: 1px solid rgba(60, 65, 75, 0.6); /* Subtle border */
+        }
+
+        .content-section:hover {
+            transform: translateY(-10px); /* More pronounced lift on hover */
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6); /* Enhanced shadow on hover */
+        }
+
+        .code-block {
+            background-color: #161b22; /* Darker background for code */
+            border-radius: 1.25rem; /* More rounded code blocks */
+            padding: 1.5rem; /* More padding in code blocks */
+            overflow-x: auto; /* Allow horizontal scrolling for long code lines */
+            font-family: 'Fira Code', monospace; /* Monospace font for code */
+            font-size: 1rem; /* Slightly larger code font */
+            line-height: 1.6;
+            position: relative;
+            border: 1px solid rgba(60, 65, 75, 0.8); /* Subtle border for code blocks */
+            transition: background-color 0.5s ease, border-color 0.5s ease;
+        }
+
+        /* Basic syntax highlighting colors (can be expanded) */
+        .code-block .js-keyword { color: #569cd6; } /* Blue for keywords like const, let, function */
+        .code-block .js-string { color: #ce9178; } /* Orange for strings */
+        .code-block .js-number { color: #b5cea8; } /* Light green for numbers */
+        .code-block .js-comment { color: #6a9955; } /* Green for comments */
+        .code-block .js-operator { color: #d4d4d4; } /* White/light gray for operators */
+        .code-block .js-function-call { color: #dcdcaa; } /* Yellow for function calls */
+        .code-block .js-variable { color: #9cdcfe; } /* Light blue for variables */
+        .code-block .js-property { color: #4ec9b0; } /* Teal for object properties */
+        .code-block .js-boolean { color: #569cd6; } /* Blue for booleans */
+        .code-block .js-class { color: #ffcb6b; } /* Yellow for class names */
+        .code-block .js-method { color: #c3e88d; } /* Light green for methods */
+
+
+        .copy-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: #2a3039;
+            color: #e6edf3;
+            padding: 0.6rem 0.9rem;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color 0.2s ease, transform 0.1s ease-in-out, color 0.5s ease;
+            border: 1px solid #3b424d;
+        }
+
+        .copy-button:hover {
+            background-color: #3b424d;
+            transform: translateY(-3px);
+        }
+
+        /* Floating Buttons Base Style */
+        .floating-button {
+            position: fixed;
+            background-color: #2a3039;
+            color: #e6edf3;
+            border: 1px solid #3b424d;
+            border-radius: 9999px; /* Fully rounded */
+            padding: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            z-index: 50; /* Ensure it floats above content */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-button:hover {
+            background-color: #3b424d;
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .floating-button svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor; /* Use current text color for SVG */
+        }
+
+        /* Specific positioning for toggle and home buttons */
+        #theme-toggle {
+            top: 1.5rem;
+            right: 1.5rem;
+        }
+
+        #home-button {
+            top: 1.5rem;
+            left: 1.5rem;
+        }
+
+        /* Light Mode Styles (controlled by data-theme="light" on html) */
+        html[data-theme="light"] body {
+            background-color: #f0f2f5; /* Very light grey background */
+            color: #333; /* Dark text color for general content */
+        }
+
+        html[data-theme="light"] #three-canvas {
+            opacity: 0.05; /* Much more subtle in light mode */
+        }
+
+        html[data-theme="light"] .content-section {
+            background-color: rgba(255, 255, 255, 0.98); /* Near white, slightly transparent */
+            border-color: rgba(180, 180, 180, 0.7); /* Slightly darker, more defined border */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08); /* Lighter shadow */
+        }
+
+        html[data-theme="light"] .content-section:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12); /* Enhanced shadow on hover */
+        }
+
+        html[data-theme="light"] .code-block {
+            background-color: #f8f9fa; /* Very light grey code background */
+            border-color: rgba(160, 160, 160, 0.8); /* Slightly more defined border */
+        }
+
+        /* Light mode syntax highlighting colors */
+        html[data-theme="light"] .code-block .js-keyword { color: #007bff; }
+        html[data-theme="light"] .code-block .js-string { color: #dc3545; }
+        html[data-theme="light"] .code-block .js-number { color: #17a2b8; }
+        html[data-theme="light"] .code-block .js-comment { color: #28a745; }
+        html[data-theme="light"] .code-block .js-operator { color: #333; }
+        html[data-theme="light"] .code-block .js-function-call { color: #6f42c1; }
+        html[data-theme="light"] .code-block .js-variable { color: #6c757d; }
+        html[data-theme="light"] .code-block .js-property { color: #fd7e14; }
+        html[data-theme="light"] .code-block .js-boolean { color: #007bff; }
+        html[data-theme="light"] .code-block .js-class { color: #8a2be2; } /* BlueViolet */
+        html[data-theme="light"] .code-block .js-method { color: #008080; } /* Teal */
+
+
+        html[data-theme="light"] .copy-button {
+            background-color: #c0c2c5;
+            color: #333;
+            border-color: #b0b2b5;
+        }
+
+        html[data-theme="light"] .copy-button:hover {
+            background-color: #b0b2b5;
+        }
+
+        html[data-theme="light"] .floating-button {
+            background-color: #ffffff; /* Pure white for crisp look */
+            color: #333;
+            border-color: #d0d0d0; /* Lighter border */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Lighter shadow */
+        }
+
+        html[data-theme="light"] .floating-button:hover {
+            background-color: #f0f0f0; /* Slight grey on hover */
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Light mode text colors for headings and branded text */
+        html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3 {
+            color: #1e40af; /* Darker blue for headings */
+        }
+        html[data-theme="light"] .text-blue-400 { color: #1e40af; }
+        html[data-theme="light"] .text-blue-300 { color: #1e40af; }
+        html[data-theme="light"] .text-blue-200 { color: #1e40af; }
+        html[data-theme="light"] .text-purple-400 { color: #6f42c1; } /* Slightly more vibrant purple for Whizmath */
+
+        /* Ensure specific Tailwind text colors are overridden for light mode visibility */
+        html[data-theme="light"] .text-gray-300 {
+            color: #4a5568; /* Darker grey for better contrast in light mode */
+        }
+        html[data-theme="light"] .text-gray-400 {
+            color: #718096; /* Slightly lighter dark grey for footer, still visible */
+        }
+
+
+        /* CSS Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(60px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        .animate-fade-in-delay {
+            animation: fadeIn 1.2s ease-out 0.6s forwards;
+            opacity: 0; /* Hidden initially */
+        }
+
+        .animate-slide-up {
+            opacity: 0; /* Hidden initially */
+            animation: slideUp 1s ease-out forwards;
+        }
+
+        /* Staggered animation for sections */
+        .content-section:nth-of-type(1) { animation-delay: 1s; }
+        .content-section:nth-of-type(2) { animation-delay: 1.3s; }
+        .content-section:nth-of-type(3) { animation-delay: 1.6s; }
+        .content-section:nth-of-type(4) { animation-delay: 1.9s; }
+        .content-section:nth-of-type(5) { animation-delay: 2.2s; }
+        .content-section:nth-of-type(6) { animation-delay: 2.5s; }
+        .content-section:nth-of-type(7) { animation-delay: 2.8s; }
+        .content-section:nth-of-type(8) { animation-delay: 3.1s; }
+        .content-section:nth-of-type(9) { animation-delay: 3.4s; }
+        .content-section:nth-of-type(10) { animation-delay: 3.7s; }
+        .content-section:nth-of-type(11) { animation-delay: 4.0s; }
+        .content-section:nth-of-type(12) { animation-delay: 4.3s; }
+        .content-section:nth-of-type(13) { animation-delay: 4.6s; }
+        .content-section:nth-of-type(14) { animation-delay: 4.9s; }
+        .content-section:nth-of-type(15) { animation-delay: 5.2s; }
+        .content-section:nth-of-type(16) { animation-delay: 5.5s; }
+
+
+        /* Responsive adjustments for floating buttons */
+        @media (max-width: 480px) {
+            .floating-button { top: 1rem; padding: 0.6rem; }
+            .floating-button svg { width: 20px; height: 20px; }
+            #theme-toggle { right: 1rem; }
+            #home-button { left: 1rem; }
+        }
+
+        /* Specific styles for JavaScript examples */
+        .interactive-example {
+            background-color: #1a202c;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(60, 65, 75, 0.8);
+        }
+        .interactive-example button {
+            background-color: #4299e1; /* Blue-500 */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 1rem;
+        }
+        .interactive-example button:hover {
+            background-color: #3182ce; /* Blue-600 */
+            transform: translateY(-2px);
+        }
+        .interactive-example #output-display {
+            margin-top: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #a0aec0; /* Gray-400 */
+        }
+
+        /* Styles for API example */
+        #api-data-container {
+            background-color: #2d3748;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-top: 1.5rem;
+            text-align: left;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #cbd5e0;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        #api-data-container.loading {
+            color: #63b3ed;
+        }
+        #api-data-container.error {
+            color: #fc8181;
+        }
+        #api-data-container p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="text-gray-200 min-h-screen flex flex-col">
+    <canvas id="three-canvas"></canvas>
+
+    <button id="home-button" class="floating-button" aria-label="Go back to previous page">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clip-rule="evenodd" />
+        </svg>
+    </button>
+
+    <button id="theme-toggle" class="floating-button" aria-label="Toggle dark and light mode">
+        <svg id="moon-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.106a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.06l1.59-1.591ZM12 18a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V18a.75.75 0 0 1 .75-.75ZM5.05 10.95a.75.75 0 1 0-1.06-1.06l-1.59 1.59a.75.75 0 1 0 1.06 1.06l1.59-1.59ZM18.894 17.894a.75.75 0 1 0 1.06-1.06l-1.59-1.59a.75.75 0 0 0-1.06 1.06l1.59 1.59ZM3.25 12a.75.75 0 0 1-.75.75H.25a.75.75 0 0 1 0-1.5H2.5c.414 0 .75.336.75.75ZM6.106 5.05a.75.75 0 1 0-1.06 1.06l1.59 1.59a.75.75 0 1 0 1.06-1.06l-1.59-1.59ZM12 5.25a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM19.75 12a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5H20.5a.75.75 0 0 1-.75-.75Z" />
+        </svg>
+    </button>
+
+    <div class="relative z-10 flex-grow container mx-auto px-4 py-8 md:py-12 lg:py-16">
+
+        <header class="text-center mb-12 md:mb-16 lg:mb-20">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-400 leading-tight mb-4 animate-fade-in">
+                Advanced JavaScript: Mastering Modern Web Development at <span class="text-purple-400">Whizmath</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto animate-fade-in-delay">
+                Welcome to the next level of JavaScript mastery! This lesson delves into advanced concepts and modern features (ES6+ and beyond) that are essential for building complex, efficient, and maintainable web applications.
+                From handling asynchronous operations to understanding intricate design patterns, get ready to unlock the full power of JavaScript!
+            </p>
+        </header>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">1. Introduction to Advanced JavaScript (ES6+)</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Modern JavaScript, largely defined by the ECMAScript 2015 (ES6) standard and subsequent annual updates, introduced a plethora of features that fundamentally changed how we write JavaScript. These enhancements make the language more powerful, readable, and suitable for large-scale applications.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Asynchronous Programming:</strong> Handling operations that take time (e.g., network requests) without blocking the main thread.</li>
+                <li><strong class="text-blue-200">ES6+ Features:</strong> New syntax for variables (`let`, `const`), arrow functions, template literals, destructuring, spread/rest operators, classes, modules.</li>
+                <li><strong class="text-blue-200">Error Handling:</strong> Robust strategies for managing and recovering from errors.</li>
+                <li><strong class="text-blue-200">Modularization:</strong> Organizing code into reusable, independent units.</li>
+                <li><strong class="text-blue-200">Advanced Array Methods:</strong> Powerful built-in methods for array manipulation.</li>
+                <li><strong class="text-blue-200">Closures and Scope:</strong> Deep understanding of how variables are accessed and retained.</li>
+                <li><strong class="text-blue-200">Prototypes and Inheritance:</strong> The core mechanism behind JavaScript's object-oriented nature.</li>
+            </ul>
+            <p class="text-lg leading-relaxed">
+                Embracing these advanced concepts is crucial for becoming a proficient JavaScript developer and building high-quality web applications.
+            </p>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">2. Asynchronous JavaScript: Promises and Async/Await</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                JavaScript is single-threaded, meaning it executes one command at a time. Asynchronous programming allows operations like fetching data from a server to run in the background without freezing the user interface.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. Callbacks (Traditional)</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Functions passed as arguments to other functions, to be executed later. Can lead to "callback hell" for complex sequences.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-comment">// Callback example (simplified)</span>
+<span class="js-function-call">setTimeout</span>(() <span class="js-operator">=></span> {
+    <span class="js-function-call">console.log</span>(<span class="js-string">"First operation complete!"</span>);
+    <span class="js-function-call">setTimeout</span>(() <span class="js-operator">=></span> {
+        <span class="js-function-call">console.log</span>(<span class="js-string">"Second operation complete!"</span>);
+    }, <span class="js-number">1000</span>);
+}, <span class="js-number">2000</span>);</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Promises (ES6)</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                An object representing the eventual completion or failure of an asynchronous operation and its resulting value.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`Pending`: Initial state, neither fulfilled nor rejected.</li>
+                <li>`Fulfilled`: Operation completed successfully.</li>
+                <li>`Rejected`: Operation failed.</li>
+                <li>`.then()`: Handles successful completion.</li>
+                <li>`.catch()`: Handles errors.</li>
+                <li>`.finally()`: Executes regardless of success or failure.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">const</span> <span class="js-variable">fetchData</span> <span class="js-operator">=</span> <span class="js-keyword">new</span> <span class="js-class">Promise</span>((<span class="js-variable">resolve</span>, <span class="js-variable">reject</span>) <span class="js-operator">=></span> {
+    <span class="js-function-call">setTimeout</span>(() <span class="js-operator">=></span> {
+        <span class="js-keyword">const</span> <span class="js-variable">success</span> <span class="js-operator">=</span> <span class="js-boolean">true</span>;
+        <span class="js-keyword">if</span> (<span class="js-variable">success</span>) {
+            <span class="js-function-call">resolve</span>(<span class="js-string">"Data fetched successfully!"</span>);
+        } <span class="js-keyword">else</span> {
+            <span class="js-function-call">reject</span>(<span class="js-string">"Failed to fetch data."</span>);
+        }
+    }, <span class="js-number">2000</span>);
+});
+
+<span class="js-variable">fetchData</span>
+    .<span class="js-method">then</span>(<span class="js-variable">data</span> <span class="js-operator">=></span> <span class="js-function-call">console.log</span>(<span class="js-variable">data</span>)) <span class="js-comment">// Logs "Data fetched successfully!"</span>
+    .<span class="js-method">catch</span>(<span class="js-variable">error</span> <span class="js-operator">=></span> <span class="js-function-call">console.error</span>(<span class="js-variable">error</span>))
+    .<span class="js-method">finally</span>(() <span class="js-operator">=></span> <span class="js-function-call">console.log</span>(<span class="js-string">"Promise settled."</span>));</code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">c. Async/Await (ES2017)</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Syntactic sugar built on top of Promises, making asynchronous code look and behave more like synchronous code.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`async`: Keyword used before a function declaration to denote it's an asynchronous function.</li>
+                <li>`await`: Keyword used inside an `async` function to pause execution until a Promise settles.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">async</span> <span class="js-keyword">function</span> <span class="js-function-call">getGreeting</span>() {
+    <span class="js-keyword">try</span> {
+        <span class="js-keyword">const</span> <span class="js-variable">response</span> <span class="js-operator">=</span> <span class="js-keyword">await</span> <span class="js-keyword">new</span> <span class="js-class">Promise</span>(<span class="js-variable">resolve</span> <span class="js-operator">=></span> <span class="js-function-call">setTimeout</span>(() <span class="js-operator">=></span> <span class="js-function-call">resolve</span>(<span class="js-string">"Hello from async!"</span>), <span class="js-number">1500</span>));
+        <span class="js-function-call">console.log</span>(<span class="js-variable">response</span>);
+    } <span class="js-keyword">catch</span> (<span class="js-variable">error</span>) {
+        <span class="js-function-call">console.error</span>(<span class="js-string">"Error: "</span>, <span class="js-variable">error</span>);
+    }
+}
+
+<span class="js-function-call">getGreeting</span>();</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">3. Error Handling: `try...catch` and `throw`</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Proper error handling is crucial for creating robust applications. JavaScript provides mechanisms to catch and handle errors gracefully.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`try`: Defines a block of code to be tested for errors.</li>
+                <li>`catch`: Defines a block of code to be executed if an error occurs in the `try` block.</li>
+                <li>`finally`: Defines a block of code that will execute regardless of the `try...catch` result.</li>
+                <li>`throw`: Creates a custom error.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">function</span> <span class="js-function-call">divide</span>(<span class="js-variable">a</span>, <span class="js-variable">b</span>) {
+    <span class="js-keyword">if</span> (<span class="js-variable">b</span> <span class="js-operator">===</span> <span class="js-number">0</span>) {
+        <span class="js-keyword">throw</span> <span class="js-keyword">new</span> <span class="js-class">Error</span>(<span class="js-string">"Cannot divide by zero!"</span>);
+    }
+    <span class="js-keyword">return</span> <span class="js-variable">a</span> <span class="js-operator">/</span> <span class="js-variable">b</span>;
+}
+
+<span class="js-keyword">try</span> {
+    <span class="js-keyword">let</span> <span class="js-variable">result1</span> <span class="js-operator">=</span> <span class="js-function-call">divide</span>(<span class="js-number">10</span>, <span class="js-number">2</span>);
+    <span class="js-function-call">console.log</span>(<span class="js-string">"Result 1: "</span>, <span class="js-variable">result1</span>); <span class="js-comment">// Output: Result 1: 5</span>
+
+    <span class="js-keyword">let</span> <span class="js-variable">result2</span> <span class="js-operator">=</span> <span class="js-function-call">divide</span>(<span class="js-number">10</span>, <span class="js-number">0</span>); <span class="js-comment">// This will throw an error</span>
+    <span class="js-function-call">console.log</span>(<span class="js-string">"Result 2: "</span>, <span class="js-variable">result2</span>);
+} <span class="js-keyword">catch</span> (<span class="js-variable">error</span>) {
+    <span class="js-function-call">console.error</span>(<span class="js-string">"Caught an error: "</span>, <span class="js-variable">error</span>.<span class="js-property">message</span>); <span class="js-comment">// Output: Caught an error: Cannot divide by zero!</span>
+} <span class="js-keyword">finally</span> {
+    <span class="js-function-call">console.log</span>(<span class="js-string">"Division attempt finished."</span>);
+}</code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">4. ES6+ Features: Modern JavaScript Syntax</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                ES6 (ECMAScript 2015) introduced many new features that are now standard in modern JavaScript development.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. Destructuring Assignment</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Allows you to unpack values from arrays or properties from objects into distinct variables.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-comment">// Array Destructuring</span>
+<span class="js-keyword">const</span> [<span class="js-variable">first</span>, <span class="js-variable">second</span>, <span class="js-operator">...</span><span class="js-variable">rest</span>] <span class="js-operator">=</span> [<span class="js-string">"apple"</span>, <span class="js-string">"banana"</span>, <span class="js-string">"cherry"</span>, <span class="js-string">"date"</span>];
+<span class="js-function-call">console.log</span>(<span class="js-variable">first</span>);  <span class="js-comment">// "apple"</span>
+<span class="js-function-call">console.log</span>(<span class="js-variable">rest</span>);   <span class="js-comment">// ["cherry", "date"]</span>
+
+<span class="js-comment">// Object Destructuring</span>
+<span class="js-keyword">const</span> <span class="js-variable">person</span> <span class="js-operator">=</span> { <span class="js-property">name</span>: <span class="js-string">"Alice"</span>, <span class="js-property">age</span>: <span class="js-number">30</span>, <span class="js-property">city</span>: <span class="js-string">"New York"</span> };
+<span class="js-keyword">const</span> { <span class="js-variable">name</span>, <span class="js-variable">age</span> } <span class="js-operator">=</span> <span class="js-variable">person</span>;
+<span class="js-function-call">console.log</span>(<span class="js-variable">name</span>); <span class="js-comment">// "Alice"</span>
+<span class="js-function-call">console.log</span>(<span class="js-variable">age</span>);  <span class="js-comment">// 30</span></code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Spread (`...`) and Rest (`...`) Operators</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                * **Spread operator:** Expands an iterable (like an array or string) into individual elements.
+                * **Rest parameter:** Collects an indefinite number of arguments into an array.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-comment">// Spread for arrays</span>
+<span class="js-keyword">const</span> <span class="js-variable">arr1</span> <span class="js-operator">=</span> [<span class="js-number">1</span>, <span class="js-number">2</span>];
+<span class="js-keyword">const</span> <span class="js-variable">arr2</span> <span class="js-operator">=</span> [<span class="js-operator">...</span><span class="js-variable">arr1</span>, <span class="js-number">3</span>, <span class="js-number">4</span>]; <span class="js-comment">// [1, 2, 3, 4]</span>
+<span class="js-function-call">console.log</span>(<span class="js-variable">arr2</span>);
+
+<span class="js-comment">// Spread for objects (ES2018)</span>
+<span class="js-keyword">const</span> <span class="js-variable">obj1</span> <span class="js-operator">=</span> { <span class="js-property">a</span>: <span class="js-number">1</span>, <span class="js-property">b</span>: <span class="js-number">2</span> };
+<span class="js-keyword">const</span> <span class="js-variable">obj2</span> <span class="js-operator">=</span> { <span class="js-operator">...</span><span class="js-variable">obj1</span>, <span class="js-property">c</span>: <span class="js-number">3</span> }; <span class="js-comment">// { a: 1, b: 2, c: 3 }</span>
+<span class="js-function-call">console.log</span>(<span class="js-variable">obj2</span>);
+
+<span class="js-comment">// Rest parameter in functions</span>
+<span class="js-keyword">function</span> <span class="js-function-call">sumAll</span>(<span class="js-operator">...</span><span class="js-variable">numbers</span>) {
+    <span class="js-keyword">return</span> <span class="js-variable">numbers</span>.<span class="js-method">reduce</span>((<span class="js-variable">total</span>, <span class="js-variable">num</span>) <span class="js-operator">=></span> <span class="js-variable">total</span> <span class="js-operator">+</span> <span class="js-variable">num</span>, <span class="js-number">0</span>);
+}
+<span class="js-function-call">console.log</span>(<span class="js-function-call">sumAll</span>(<span class="js-number">1</span>, <span class="js-number">2</span>, <span class="js-number">3</span>, <span class="js-number">4</span>)); <span class="js-comment">// 10</span></code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">c. Classes (ES6)</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                Syntactic sugar over JavaScript's prototype-based inheritance, providing a cleaner way to create objects and handle inheritance.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">class</span> <span class="js-class">Person</span> {
+    <span class="js-keyword">constructor</span>(<span class="js-variable">name</span>, <span class="js-variable">age</span>) {
+        <span class="js-keyword">this</span>.<span class="js-property">name</span> <span class="js-operator">=</span> <span class="js-variable">name</span>;
+        <span class="js-keyword">this</span>.<span class="js-property">age</span> <span class="js-operator">=</span> <span class="js-variable">age</span>;
+    }
+
+    <span class="js-method">greet</span>() {
+        <span class="js-function-call">console.log</span>(<span class="js-string">`Hello, my name is ${this.name} and I am ${this.age} years old.`</span>);
+    }
+}
+
+<span class="js-keyword">class</span> <span class="js-class">Student</span> <span class="js-keyword">extends</span> <span class="js-class">Person</span> {
+    <span class="js-keyword">constructor</span>(<span class="js-variable">name</span>, <span class="js-variable">age</span>, <span class="js-variable">studentId</span>) {
+        <span class="js-function-call">super</span>(<span class="js-variable">name</span>, <span class="js-variable">age</span>); <span class="js-comment">// Call parent constructor</span>
+        <span class="js-keyword">this</span>.<span class="js-property">studentId</span> <span class="js-operator">=</span> <span class="js-variable">studentId</span>;
+    }
+
+    <span class="js-method">study</span>() {
+        <span class="js-function-call">console.log</span>(<span class="js-string">`${this.name} (ID: ${this.studentId}) is studying.`</span>);
+    }
+}
+
+<span class="js-keyword">const</span> <span class="js-variable">john</span> <span class="js-operator">=</span> <span class="js-keyword">new</span> <span class="js-class">Person</span>(<span class="js-string">"John"</span>, <span class="js-number">30</span>);
+<span class="js-variable">john</span>.<span class="js-method">greet</span>(); <span class="js-comment">// "Hello, my name is John and I am 30 years old."</span>
+
+<span class="js-keyword">const</span> <span class="js-variable">jane</span> <span class="js-operator">=</span> <span class="js-keyword">new</span> <span class="js-class">Student</span>(<span class="js-string">"Jane"</span>, <span class="js-number">22</span>, <span class="js-string">"S12345"</span>);
+<span class="js-variable">jane</span>.<span class="js-method">greet</span>(); <span class="js-comment">// "Hello, my name is Jane and I am 22 years old."</span>
+<span class="js-variable">jane</span>.<span class="js-method">study</span>(); <span class="js-comment">// "Jane (ID: S12345) is studying."</span></code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">5. Working with APIs: Fetch API</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                The Fetch API provides a modern, Promise-based interface for making network requests (e.g., to retrieve data from a server). It's the successor to XMLHttpRequest (XHR).
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`fetch(url, options)`: Initiates a network request. Returns a Promise that resolves to the `Response` object.</li>
+                <li>`response.json()`: Parses the response body as JSON. Returns a Promise.</li>
+                <li>`response.text()`: Parses the response body as plain text.</li>
+                <li>`response.ok`: Boolean indicating if the response was successful (status in the 200-299 range).</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-comment">&lt;!-- HTML for example --&gt;</span>
+<span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"interactive-example"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;h3&gt;</span>Fetch Random User Data<span class="html-tag">&lt;/h3&gt;</span>
+    <span class="html-tag">&lt;button</span> <span class="html-attr">id=</span><span class="html-attr-value">"fetchUserButton"</span><span class="html-tag">&gt;</span>Get Random User<span class="html-tag">&lt;/button&gt;</span>
+    <span class="html-tag">&lt;div</span> <span class="html-attr">id=</span><span class="html-attr-value">"api-data-container"</span><span class="html-tag">&gt;</span>Click the button to load user data...<span class="html-tag">&lt;/div&gt;</span>
+<span class="html-tag">&lt;/div&gt;</span>
+
+<span class="js-comment">// JavaScript for example</span>
+<span class="js-keyword">const</span> <span class="js-variable">fetchUserButton</span> <span class="js-operator">=</span> <span class="js-variable">document</span>.<span class="js-function-call">getElementById</span>(<span class="js-string">'fetchUserButton'</span>);
+<span class="js-keyword">const</span> <span class="js-variable">apiDataContainer</span> <span class="js-operator">=</span> <span class="js-variable">document</span>.<span class="js-function-call">getElementById</span>(<span class="js-string">'api-data-container'</span>);
+
+<span class="js-variable">fetchUserButton</span>.<span class="js-method">addEventListener</span>(<span class="js-string">'click'</span>, <span class="js-keyword">async</span> () <span class="js-operator">=></span> {
+    <span class="js-variable">apiDataContainer</span>.<span class="js-property">textContent</span> <span class="js-operator">=</span> <span class="js-string">'Loading user data...'</span>;
+    <span class="js-variable">apiDataContainer</span>.<span class="js-property">classList</span>.<span class="js-method">remove</span>(<span class="js-string">'error'</span>);
+    <span class="js-variable">apiDataContainer</span>.<span class="js-property">classList</span>.<span class="js-method">add</span>(<span class="js-string">'loading'</span>);
+
+    <span class="js-keyword">try</span> {
+        <span class="js-keyword">const</span> <span class="js-variable">response</span> <span class="js-operator">=</span> <span class="js-keyword">await</span> <span class="js-function-call">fetch</span>(<span class="js-string">'https://randomuser.me/api/'</span>);
+        <span class="js-keyword">if</span> (<span class="js-operator">!</span><span class="js-variable">response</span>.<span class="js-property">ok</span>) {
+            <span class="js-keyword">throw</span> <span class="js-keyword">new</span> <span class="js-class">Error</span>(<span class="js-string">`HTTP error! status: ${response.status}`</span>);
+        }
+        <span class="js-keyword">const</span> <span class="js-variable">data</span> <span class="js-operator">=</span> <span class="js-keyword">await</span> <span class="js-variable">response</span>.<span class="js-method">json</span>();
+        <span class="js-keyword">const</span> <span class="js-variable">user</span> <span class="js-operator">=</span> <span class="js-variable">data</span>.<span class="js-property">results</span>[<span class="js-number">0</span>];
+
+        <span class="js-variable">apiDataContainer</span>.<span class="js-property">classList</span>.<span class="js-method">remove</span>(<span class="js-string">'loading'</span>);
+        <span class="js-variable">apiDataContainer</span>.<span class="js-property">innerHTML</span> <span class="js-operator">=</span> <span class="js-string">`
+            &lt;p&gt;&lt;strong&gt;Name:&lt;/strong&gt; ${user.name.first} ${user.name.last}&lt;/p&gt;
+            &lt;p&gt;&lt;strong&gt;Email:&lt;/strong&gt; ${user.email}&lt;/p&gt;
+            &lt;p&gt;&lt;strong&gt;Country:&lt;/strong&gt; ${user.location.country}&lt;/p&gt;
+        `</span>;
+    } <span class="js-keyword">catch</span> (<span class="js-variable">error</span>) {
+        <span class="js-function-call">console.error</span>(<span class="js-string">'Fetch error: '</span>, <span class="js-variable">error</span>);
+        <span class="js-variable">apiDataContainer</span>.<span class="js-property">classList</span>.<span class="js-method">remove</span>(<span class="js-string">'loading'</span>);
+        <span class="js-variable">apiDataContainer</span>.<span class="js-property">classList</span>.<span class="js-method">add</span>(<span class="js-string">'error'</span>);
+        <span class="js-variable">apiDataContainer</span>.<span class="js-property">textContent</span> <span class="js-operator">=</span> <span class="js-string">`Error loading data: ${error.message}. Please try again.`</span>;
+    }
+});</code></pre>
+            </div>
+            <div class="interactive-example">
+                <h3>Fetch Random User Data</h3>
+                <button id="fetchUserButton">Get Random User</button>
+                <div id="api-data-container">Click the button to load user data...</div>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">6. Advanced Array Methods</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                JavaScript arrays come with powerful built-in methods for iteration, transformation, and aggregation. These are essential for functional programming paradigms.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">`forEach()`:</strong> Executes a provided function once for each array element. (No return value).</li>
+                <li><strong class="text-blue-200">`map()`:</strong> Creates a new array populated with the results of calling a provided function on every element in the calling array.</li>
+                <li><strong class="text-blue-200">`filter()`:</strong> Creates a new array with all elements that pass the test implemented by the provided function.</li>
+                <li><strong class="text-blue-200">`reduce()`:</strong> Executes a reducer function (that you provide) on each element of the array, resulting in a single output value.</li>
+                <li><strong class="text-blue-200">`find()`:</strong> Returns the value of the first element in the provided array that satisfies the provided testing function.</li>
+                <li><strong class="text-blue-200">`some()`:</strong> Tests whether at least one element in the array passes the test implemented by the provided function.</li>
+                <li><strong class="text-blue-200">`every()`:</strong> Tests whether all elements in the array pass the test implemented by the provided function.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">const</span> <span class="js-variable">numbers</span> <span class="js-operator">=</span> [<span class="js-number">1</span>, <span class="js-number">2</span>, <span class="js-number">3</span>, <span class="js-number">4</span>, <span class="js-number">5</span>];
+
+<span class="js-comment">// map: Double each number</span>
+<span class="js-keyword">const</span> <span class="js-variable">doubled</span> <span class="js-operator">=</span> <span class="js-variable">numbers</span>.<span class="js-method">map</span>(<span class="js-variable">num</span> <span class="js-operator">=></span> <span class="js-variable">num</span> <span class="js-operator">*</span> <span class="js-number">2</span>);
+<span class="js-function-call">console.log</span>(<span class="js-variable">doubled</span>); <span class="js-comment">// [2, 4, 6, 8, 10]</span>
+
+<span class="js-comment">// filter: Get even numbers</span>
+<span class="js-keyword">const</span> <span class="js-variable">evens</span> <span class="js-operator">=</span> <span class="js-variable">numbers</span>.<span class="js-method">filter</span>(<span class="js-variable">num</span> <span class="js-operator">=></span> <span class="js-variable">num</span> <span class="js-operator">%</span> <span class="js-number">2</span> <span class="js-operator">===</span> <span class="js-number">0</span>);
+<span class="js-function-call">console.log</span>(<span class="js-variable">evens</span>); <span class="js-comment">// [2, 4]</span>
+
+<span class="js-comment">// reduce: Sum all numbers</span>
+<span class="js-keyword">const</span> <span class="js-variable">sum</span> <span class="js-operator">=</span> <span class="js-variable">numbers</span>.<span class="js-method">reduce</span>((<span class="js-variable">accumulator</span>, <span class="js-variable">currentValue</span>) <span class="js-operator">=></span> <span class="js-variable">accumulator</span> <span class="js-operator">+</span> <span class="js-variable">currentValue</span>, <span class="js-number">0</span>);
+<span class="js-function-call">console.log</span>(<span class="js-variable">sum</span>); <span class="js-comment">// 15</span>
+
+<span class="js-comment">// find: Find the first number greater than 3</span>
+<span class="js-keyword">const</span> <span class="js-variable">found</span> <span class="js-operator">=</span> <span class="js-variable">numbers</span>.<span class="js-method">find</span>(<span class="js-variable">num</span> <span class="js-operator">=></span> <span class="js-variable">num</span> <span class="js-operator">></span> <span class="js-number">3</span>);
+<span class="js-function-call">console.log</span>(<span class="js-variable">found</span>); <span class="js-comment">// 4</span></code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">7. Closures and Scope</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Understanding scope and closures is fundamental to writing correct and efficient JavaScript.
+            </p>
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">a. Scope (Global, Function, Block)</h3>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Global Scope:</strong> Variables declared outside any function or block. Accessible anywhere.</li>
+                <li><strong class="text-blue-200">Function Scope:</strong> Variables declared with `var` inside a function. Accessible within that function.</li>
+                <li><strong class="text-blue-200">Block Scope (ES6 `let`/`const`):</strong> Variables declared with `let` or `const` inside any block (`{}`). Accessible only within that block.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">let</span> <span class="js-variable">globalVar</span> <span class="js-operator">=</span> <span class="js-string">"I am global"</span>;
+
+<span class="js-keyword">function</span> <span class="js-function-call">functionScopeExample</span>() {
+    <span class="js-keyword">var</span> <span class="js-variable">functionVar</span> <span class="js-operator">=</span> <span class="js-string">"I am function-scoped"</span>;
+    <span class="js-function-call">console.log</span>(<span class="js-variable">globalVar</span>);
+    <span class="js-function-call">console.log</span>(<span class="js-variable">functionVar</span>);
+}
+
+<span class="js-function-call">functionScopeExample</span>();
+<span class="js-comment">// console.log(functionVar); // ReferenceError: functionVar is not defined</span>
+
+<span class="js-keyword">if</span> (<span class="js-boolean">true</span>) {
+    <span class="js-keyword">let</span> <span class="js-variable">blockVar</span> <span class="js-operator">=</span> <span class="js-string">"I am block-scoped"</span>;
+    <span class="js-function-call">console.log</span>(<span class="js-variable">blockVar</span>);
+}
+<span class="js-comment">// console.log(blockVar); // ReferenceError: blockVar is not defined</span></code></pre>
+            </div>
+
+            <h3 class="text-2xl md:text-3xl font-semibold text-blue-200 mb-4">b. Closures</h3>
+            <p class="mb-2 text-lg leading-relaxed">
+                A closure is the combination of a function bundled together (enclosed) with references to its surrounding state (the lexical environment). In simpler terms, a closure gives you access to an outer function's scope from an inner function, even after the outer function has finished executing.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">function</span> <span class="js-function-call">makeCounter</span>() {
+    <span class="js-keyword">let</span> <span class="js-variable">count</span> <span class="js-operator">=</span> <span class="js-number">0</span>; <span class="js-comment">// 'count' is in the lexical environment of makeCounter</span>
+
+    <span class="js-keyword">return</span> <span class="js-keyword">function</span>() { <span class="js-comment">// This is the inner function (closure)</span>
+        <span class="js-variable">count</span><span class="js-operator">++</span>;
+        <span class="js-function-call">console.log</span>(<span class="js-variable">count</span>);
+    };
+}
+
+<span class="js-keyword">const</span> <span class="js-variable">counter1</span> <span class="js-operator">=</span> <span class="js-function-call">makeCounter</span>();
+<span class="js-variable">counter1</span>(); <span class="js-comment">// Output: 1</span>
+<span class="js-variable">counter1</span>(); <span class="js-comment">// Output: 2</span>
+
+<span class="js-keyword">const</span> <span class="js-variable">counter2</span> <span class="js-operator">=</span> <span class="js-function-call">makeCounter</span>(); <span class="js-comment">// Creates a new, independent closure</span>
+<span class="js-variable">counter2</span>(); <span class="js-comment">// Output: 1</span></code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">8. Prototypes and Inheritance</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                JavaScript is a prototype-based language. Every object has a prototype, which is another object it inherits properties and methods from.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Prototype Chain:</strong> When you try to access a property or method on an object, JavaScript first looks on the object itself. If not found, it looks on its prototype, then its prototype's prototype, and so on, until it reaches `null`.</li>
+                <li><strong class="text-blue-200">`__proto__` and `Object.getPrototypeOf()`:</strong> Ways to access an object's prototype.</li>
+                <li><strong class="text-blue-200">`Object.create()`:</strong> Creates a new object with the specified prototype object and properties.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-keyword">const</span> <span class="js-variable">animal</span> <span class="js-operator">=</span> {
+    <span class="js-method">eat</span>() {
+        <span class="js-function-call">console.log</span>(<span class="js-string">"I am eating."</span>);
+    }
+};
+
+<span class="js-keyword">const</span> <span class="js-variable">dog</span> <span class="js-operator">=</span> <span class="js-function-call">Object</span>.<span class="js-method">create</span>(<span class="js-variable">animal</span>); <span class="js-comment">// dog inherits from animal</span>
+<span class="js-variable">dog</span>.<span class="js-property">name</span> <span class="js-operator">=</span> <span class="js-string">"Buddy"</span>;
+<span class="js-variable">dog</span>.<span class="js-method">bark</span> <span class="js-operator">=</span> () <span class="js-operator">=></span> <span class="js-function-call">console.log</span>(<span class="js-string">"Woof!"</span>);
+
+<span class="js-variable">dog</span>.<span class="js-method">eat</span>(); <span class="js-comment">// I am eating. (Inherited from animal)</span>
+<span class="js-variable">dog</span>.<span class="js-method">bark</span>(); <span class="js-comment">// Woof! (Own property)</span>
+
+<span class="js-function-call">console.log</span>(<span class="js-function-call">Object</span>.<span class="js-method">getPrototypeOf</span>(<span class="js-variable">dog</span>) <span class="js-operator">===</span> <span class="js-variable">animal</span>); <span class="js-comment">// true</span></code></pre>
+            </div>
+            <p class="text-lg leading-relaxed">
+                While classes (introduced in ES6) provide a more familiar syntax for object-oriented programming, it's important to remember that they are ultimately syntactic sugar over JavaScript's underlying prototype-based inheritance.
+            </p>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">9. JavaScript Modules (`import`/`export`)</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Modules allow you to break down your JavaScript code into smaller, reusable files. This improves maintainability, readability, and prevents global namespace pollution.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li>`export`: Used to export functions, objects, or primitive values from a module.</li>
+                <li>`import`: Used to import exported members from another module.</li>
+                <li>Requires `type="module"` in the `&lt;script&gt;` tag for browser support.</li>
+            </ul>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="js-comment">// In math.js</span>
+<span class="js-keyword">export</span> <span class="js-keyword">const</span> <span class="js-variable">PI</span> <span class="js-operator">=</span> <span class="js-number">3.14159</span>;
+
+<span class="js-keyword">export</span> <span class="js-keyword">function</span> <span class="js-function-call">add</span>(<span class="js-variable">a</span>, <span class="js-variable">b</span>) {
+    <span class="js-keyword">return</span> <span class="js-variable">a</span> <span class="js-operator">+</span> <span class="js-variable">b</span>;
+}
+
+<span class="js-keyword">export</span> <span class="js-keyword">default</span> <span class="js-keyword">class</span> <span class="js-class">Calculator</span> {
+    <span class="js-method">multiply</span>(<span class="js-variable">a</span>, <span class="js-variable">b</span>) {
+        <span class="js-keyword">return</span> <span class="js-variable">a</span> <span class="js-operator">*</span> <span class="js-variable">b</span>;
+    }
+}
+
+<span class="js-comment">// In main.js (or your main script file)</span>
+<span class="js-keyword">import</span> { <span class="js-variable">PI</span>, <span class="js-variable">add</span> } <span class="js-keyword">from</span> <span class="js-string">'./math.js'</span>;
+<span class="js-keyword">import</span> <span class="js-variable">MyCalculator</span> <span class="js-keyword">from</span> <span class="js-string">'./math.js'</span>; <span class="js-comment">// For default export</span>
+
+<span class="js-function-call">console.log</span>(<span class="js-variable">PI</span>); <span class="js-comment">// 3.14159</span>
+<span class="js-function-call">console.log</span>(<span class="js-function-call">add</span>(<span class="js-number">5</span>, <span class="js-number">2</span>)); <span class="js-comment">// 7</span>
+
+<span class="js-keyword">const</span> <span class="js-variable">calc</span> <span class="js-operator">=</span> <span class="js-keyword">new</span> <span class="js-variable">MyCalculator</span>();
+<span class="js-function-call">console.log</span>(<span class="js-variable">calc</span>.<span class="js-method">multiply</span>(<span class="js-number">4</span>, <span class="js-number">3</span>)); <span class="js-comment">// 12</span>
+
+<span class="html-comment">&lt;!-- In your HTML file --&gt;</span>
+<span class="html-tag">&lt;script</span> <span class="html-attr">type=</span><span class="html-attr-value">"module"</span> <span class="html-attr">src=</span><span class="html-attr-value">"main.js"</span><span class="html-tag">&gt;&lt;/script&gt;</span></code></pre>
+            </div>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">10. JavaScript Performance and Optimization</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Writing performant JavaScript is crucial for a smooth user experience, especially in complex applications.
+            </p>
+            <ul class="list-disc list-inside mb-4 text-lg space-y-2">
+                <li><strong class="text-blue-200">Minimize DOM Manipulation:</strong> Batch DOM updates, use document fragments, or leverage modern frameworks (React, Vue) that optimize DOM updates.</li>
+                <li><strong class="text-blue-200">Avoid Global Variables:</strong> They can lead to naming conflicts and make code harder to maintain. Use modules or IIFEs (Immediately Invoked Function Expressions).</li>
+                <li><strong class="text-blue-200">Optimize Loops and Iterations:</strong> Use efficient array methods (`map`, `filter`, `reduce`) where appropriate. Avoid unnecessary computations inside loops.</li>
+                <li><strong class="text-blue-200">Debouncing and Throttling:</strong> Control how often a function is executed, especially for events that fire rapidly (e.g., `scroll`, `resize`, `mousemove`).</li>
+                <li><strong class="text-blue-200">Lazy Loading:</strong> Load JavaScript, images, or other assets only when they are needed (e.g., when they enter the viewport).</li>
+                <li><strong class="text-blue-200">Web Workers:</strong> Perform CPU-intensive tasks in a separate thread to avoid blocking the main UI thread.</li>
+                <li><strong class="text-blue-200">Code Splitting:</strong> Divide your JavaScript bundle into smaller chunks that can be loaded on demand, improving initial page load times.</li>
+                <li><strong class="text-blue-200">Browser Developer Tools:</strong> Use the Performance and Memory tabs in your browser's developer tools to identify bottlenecks.</li>
+            </ul>
+        </section>
+
+        <section class="content-section animate-slide-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-300 mb-6">11. Comprehensive Advanced JavaScript Example: A Simple Todo App</h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Let's combine several advanced concepts to build a basic interactive Todo application. This example will demonstrate DOM manipulation, event handling, ES6+ features, and basic data management.
+            </p>
+            <div class="code-block mb-8">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                <pre><code><span class="html-tag">&lt;!DOCTYPE html&gt;</span>
+<span class="html-tag">&lt;html</span> <span class="html-attr">lang=</span><span class="html-attr-value">"en"</span><span class="html-tag">&gt;</span>
+<span class="html-tag">&lt;head&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">charset=</span><span class="html-attr-value">"UTF-8"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;meta</span> <span class="html-attr">name=</span><span class="html-attr-value">"viewport"</span> <span class="html-attr">content=</span><span class="html-attr-value">"width=device-width, initial-scale=1.0"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;title&gt;</span>Advanced JS Todo App | Whizmath<span class="html-tag">&lt;/title&gt;</span>
+    <span class="html-tag">&lt;link</span> <span class="html-attr">href=</span><span class="html-attr-value">"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"</span> <span class="html-attr">rel=</span><span class="html-attr-value">"stylesheet"</span><span class="html-tag">&gt;</span>
+    <span class="html-tag">&lt;style&gt;</span>
+        <span class="css-selector">body</span> {
+            <span class="css-property">font-family</span>: <span class="css-value">'Inter', sans-serif</span>;
+            <span class="css-property">background-color</span>: <span class="css-value">#1a202c</span>;
+            <span class="css-property">color</span>: <span class="css-value">#e2e8f0</span>;
+            <span class="css-property">display</span>: <span class="css-value">flex</span>;
+            <span class="css-property">justify-content</span>: <span class="css-value">center</span>;
+            <span class="css-property">align-items</span>: <span class="css-value">flex-start</span>;
+            <span class="css-property">min-height</span>: <span class="css-value">100vh</span>;
+            <span class="css-property">padding</span>: <span class="css-value">2rem</span>;
+        }
+        <span class="css-selector">.todo-container</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#2d3748</span>;
+            <span class="css-property">padding</span>: <span class="css-value">2.5rem</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">1.5rem</span>;
+            <span class="css-property">box-shadow</span>: <span class="css-value">0 15px 30px rgba(0, 0, 0, 0.5)</span>;
+            <span class="css-property">width</span>: <span class="css-value">100%</span>;
+            <span class="css-property">max-width</span>: <span class="css-value">500px</span>;
+        }
+        <span class="css-selector">h1</span> {
+            <span class="css-property">font-size</span>: <span class="css-value">2.5rem</span>;
+            <span class="css-property">font-weight</span>: <span class="css-value">bold</span>;
+            <span class="css-property">text-align</span>: <span class="css-value">center</span>;
+            <span class="css-property">color</span>: <span class="css-value">#63b3ed</span>;
+            <span class="css-property">margin-bottom</span>: <span class="css-value">2rem</span>;
+        }
+        <span class="css-selector">.input-group</span> {
+            <span class="css-property">display</span>: <span class="css-value">flex</span>;
+            <span class="css-property">gap</span>: <span class="css-value">1rem</span>;
+            <span class="css-property">margin-bottom</span>: <span class="css-value">1.5rem</span>;
+        }
+        <span class="css-selector">#newTodoInput</span> {
+            <span class="css-property">flex-grow</span>: <span class="css-value">1</span>;
+            <span class="css-property">padding</span>: <span class="css-value">0.75rem</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">0.75rem</span>;
+            <span class="css-property">border</span>: <span class="css-value">1px solid #4a5568</span>;
+            <span class="css-property">background-color</span>: <span class="css-value">#4a5568</span>;
+            <span class="css-property">color</span>: <span class="css-value">#e2e8f0</span>;
+        }
+        <span class="css-selector">#newTodoInput::placeholder</span> {
+            <span class="css-property">color</span>: <span class="css-value">#a0aec0</span>;
+        }
+        <span class="css-selector">#addTodoButton</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#48bb78</span>; <span class="css-comment">/* Green-500 */</span>
+            <span class="css-property">color</span>: <span class="css-value">white</span>;
+            <span class="css-property">padding</span>: <span class="css-value">0.75rem 1.5rem</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">0.75rem</span>;
+            <span class="css-property">font-weight</span>: <span class="css-value">bold</span>;
+            <span class="css-property">cursor</span>: <span class="css-value">pointer</span>;
+            <span class="css-property">transition</span>: <span class="css-value">background-color 0.3s ease, transform 0.2s ease</span>;
+        }
+        <span class="css-selector">#addTodoButton:hover</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#38a169</span>; <span class="css-comment">/* Green-600 */</span>
+            <span class="css-property">transform</span>: <span class="css-value">translateY(-2px)</span>;
+        }
+        <span class="css-selector">#todoList</span> {
+            <span class="css-property">list-style</span>: <span class="css-value">none</span>;
+            <span class="css-property">padding</span>: <span class="css-value">0</span>;
+        }
+        <span class="css-selector">#todoList li</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#4a5568</span>;
+            <span class="css-property">padding</span>: <span class="css-value">0.75rem 1rem</span>;
+            <span class="css-property">margin-bottom</span>: <span class="css-value">0.75rem</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">0.75rem</span>;
+            <span class="css-property">display</span>: <span class="css-value">flex</span>;
+            <span class="css-property">justify-content</span>: <span class="css-value">space-between</span>;
+            <span class="css-property">align-items</span>: <span class="css-value">center</span>;
+            <span class="css-property">transition</span>: <span class="css-value">background-color 0.3s ease</span>;
+        }
+        <span class="css-selector">#todoList li.completed</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#2f855a</span>; <span class="css-comment">/* Darker green for completed */</span>
+            <span class="css-property">text-decoration</span>: <span class="css-value">line-through</span>;
+            <span class="css-property">opacity</span>: <span class="css-value">0.7</span>;
+        }
+        <span class="css-selector">#todoList li span</span> {
+            <span class="css-property">flex-grow</span>: <span class="css-value">1</span>;
+            <span class="css-property">cursor</span>: <span class="css-value">pointer</span>;
+        }
+        <span class="css-selector">#todoList li button</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#e53e3e</span>; <span class="css-comment">/* Red-500 */</span>
+            <span class="css-property">color</span>: <span class="css-value">white</span>;
+            <span class="css-property">padding</span>: <span class="css-value">0.5rem 0.75rem</span>;
+            <span class="css-property">border-radius</span>: <span class="css-value">0.5rem</span>;
+            <span class="css-property">font-size</span>: <span class="css-value">0.875rem</span>;
+            <span class="css-property">font-weight</span>: <span class="css-value">bold</span>;
+            <span class="css-property">cursor</span>: <span class="css-value">pointer</span>;
+            <span class="css-property">transition</span>: <span class="css-value">background-color 0.3s ease, transform 0.2s ease</span>;
+            <span class="css-property">margin-left</span>: <span class="css-value">1rem</span>;
+        }
+        <span class="css-selector">#todoList li button:hover</span> {
+            <span class="css-property">background-color</span>: <span class="css-value">#c53030</span>; <span class="css-comment">/* Red-600 */</span>
+            <span class="css-property">transform</span>: <span class="css-value">translateY(-2px)</span>;
+        }
+    <span class="html-tag">&lt;/style&gt;</span>
+<span class="html-tag">&lt;/head&gt;</span>
+<span class="html-tag">&lt;body&gt;</span>
+
+    <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"todo-container"</span><span class="html-tag">&gt;</span>
+        <span class="html-tag">&lt;h1&gt;</span>My Advanced Todo App<span class="html-tag">&lt;/h1&gt;</span>
+
+        <span class="html-tag">&lt;div</span> <span class="html-attr">class=</span><span class="html-attr-value">"input-group"</span><span class="html-tag">&gt;</span>
+            <span class="html-tag">&lt;input</span> <span class="html-attr">type=</span><span class="html-attr-value">"text"</span> <span class="html-attr">id=</span><span class="html-attr-value">"newTodoInput"</span> <span class="html-attr">placeholder=</span><span class="html-attr-value">"Add a new task..."</span><span class="html-tag">&gt;</span>
+            <span class="html-tag">&lt;button</span> <span class="html-attr">id=</span><span class="html-attr-value">"addTodoButton"</span><span class="html-tag">&gt;</span>Add Task<span class="html-tag">&lt;/button&gt;</span>
+        <span class="html-tag">&lt;/div&gt;</span>
+
+        <span class="html-tag">&lt;ul</span> <span class="html-attr">id=</span><span class="html-attr-value">"todoList"</span><span class="html-tag">&gt;</span>
+            <span class="html-comment">&lt;!-- Todo items will be dynamically added here --&gt;</span>
+        <span class="html-tag">&lt;/ul&gt;</span>
+    <span class="html-tag">&lt;/div&gt;</span>
+
+    <span class="html-tag">&lt;script&gt;</span>
+        <span class="js-comment">// DOM Elements</span>
+        <span class="js-keyword">const</span> <span class="js-variable">newTodoInput</span> <span class="js-operator">=</span> <span class="js-variable">document</span>.<span class="js-function-call">getElementById</span>(<span class="js-string">'newTodoInput'</span>);
+        <span class="js-keyword">const</span> <span class="js-variable">addTodoButton</span> <span class="js-operator">=</span> <span class="js-variable">document</span>.<span class="js-function-call">getElementById</span>(<span class="js-string">'addTodoButton'</span>);
+        <span class="js-keyword">const</span> <span class="js-variable">todoList</span> <span class="js-operator">=</span> <span class="js-variable">document</span>.<span class="js-function-call">getElementById</span>(<span class="js-string">'todoList'</span>);
+
+        <span class="js-comment">// Array to store todo items (in-memory for this example)</span>
+        <span class="js-keyword">let</span> <span class="js-variable">todos</span> <span class="js-operator">=</span> [];
+
+        <span class="js-comment">// Function to render todos to the DOM</span>
+        <span class="js-keyword">function</span> <span class="js-function-call">renderTodos</span>() {
+            <span class="js-variable">todoList</span>.<span class="js-property">innerHTML</span> <span class="js-operator">=</span> <span class="js-string">''</span>; <span class="js-comment">// Clear existing list</span>
+
+            <span class="js-variable">todos</span>.<span class="js-method">forEach</span>((<span class="js-variable">todo</span>, <span class="js-variable">index</span>) <span class="js-operator">=></span> {
+                <span class="js-keyword">const</span> <span class="js-variable">listItem</span> <span class="js-operator">=</span> <span class="js-variable">document</span>.<span class="js-function-call">createElement</span>(<span class="js-string">'li'</span>);
+                <span class="js-variable">listItem</span>.<span class="js-property">dataset</span>.<span class="js-property">index</span> <span class="js-operator">=</span> <span class="js-variable">index</span>; <span class="js-comment">// Store index for easy access</span>
+
+                <span class="js-keyword">if</span> (<span class="js-variable">todo</span>.<span class="js-property">completed</span>) {
+                    <span class="js-variable">listItem</span>.<span class="js-property">classList</span>.<span class="js-function-call">add</span>(<span class="js-string">'completed'</span>);
+                }
+
+                <span class="js-keyword">const</span> <span class="js-variable">todoText</span> <span class="js-operator">=</span> <span class="js-variable">document</span>.<span class="js-function-call">createElement</span>(<span class="js-string">'span'</span>);
+                <span class="js-variable">todoText</span>.<span class="js-property">textContent</span> <span class="js-operator">=</span> <span class="js-variable">todo</span>.<span class="js-property">text</span>;
+                <span class="js-variable">todoText</span>.<span class="js-method">addEventListener</span>(<span class="js-string">'click'</span>, () <span class="js-operator">=></span> <span class="js-function-call">toggleTodoComplete</span>(<span class="js-variable">index</span>));
+
+                <span class="js-keyword">const</span> <span class="js-variable">deleteButton</span> <span class="js-operator">=</span> <span class="js-variable">document</span>.<span class="js-function-call">createElement</span>(<span class="js-string">'button'</span>);
+                <span class="js-variable">deleteButton</span>.<span class="js-property">textContent</span> <span class="js-operator">=</span> <span class="js-string">'Delete'</span>;
+                <span class="js-variable">deleteButton</span>.<span class="js-method">addEventListener</span>(<span class="js-string">'click'</span>, () <span class="js-operator">=></span> <span class="js-function-call">deleteTodo</span>(<span class="js-variable">index</span>));
+
+                <span class="js-variable">listItem</span>.<span class="js-method">append</span>(<span class="js-variable">todoText</span>, <span class="js-variable">deleteButton</span>);
+                <span class="js-variable">todoList</span>.<span class="js-method">appendChild</span>(<span class="js-variable">listItem</span>);
+            });
+        }
+
+        <span class="js-comment">// Function to add a new todo</span>
+        <span class="js-keyword">function</span> <span class="js-function-call">addTodo</span>() {
+            <span class="js-keyword">const</span> <span class="js-variable">todoText</span> <span class="js-operator">=</span> <span class="js-variable">newTodoInput</span>.<span class="js-property">value</span>.<span class="js-method">trim</span>();
+            <span class="js-keyword">if</span> (<span class="js-variable">todoText</span>) {
+                <span class="js-variable">todos</span>.<span class="js-method">push</span>({ <span class="js-property">text</span>: <span class="js-variable">todoText</span>, <span class="js-property">completed</span>: <span class="js-boolean">false</span> });
+                <span class="js-variable">newTodoInput</span>.<span class="js-property">value</span> <span class="js-operator">=</span> <span class="js-string">''</span>; <span class="js-comment">// Clear input</span>
+                <span class="js-variable">newTodoInput</span>.<span class="js-method">focus</span>(); <span class="js-comment">// Keep focus on input for quick entry</span>
+                <span class="js-function-call">renderTodos</span>();
+            }
+        }
+
+        <span class="js-comment">// Function to toggle todo completion status</span>
+        <span class="js-keyword">function</span> <span class="js-function-call">toggleTodoComplete</span>(<span class="js-variable">index</span>) {
+            <span class="js-comment">// Check if the index is valid to prevent errors</span>
+            <span class="js-keyword">if</span> (<span class="js-variable">index</span> <span class="js-operator">>=</span> <span class="js-number">0</span> <span class="js-operator">&&</span> <span class="js-variable">index</span> <span class="js-operator">&lt;</span> <span class="js-variable">todos</span>.<span class="js-property">length</span>) {
+                <span class="js-variable">todos</span>[<span class="js-variable">index</span>].<span class="js-property">completed</span> <span class="js-operator">=</span> <span class="js-operator">!</span><span class="js-variable">todos</span>[<span class="js-variable">index</span>].<span class="js-property">completed</span>;
+                <span class="js-function-call">renderTodos</span>();
+            }
+        }
+
+        <span class="js-comment">// Function to delete a todo</span>
+        <span class="js-keyword">function</span> <span class="js-function-call">deleteTodo</span>(<span class="js-variable">index</span>) {
+            <span class="js-comment">// Check if the index is valid before deleting</span>
+            <span class="js-keyword">if</span> (<span class="js-variable">index</span> <span class="js-operator">>=</span> <span class="js-number">0</span> <span class="js-operator">&&</span> <span class="js-variable">index</span> <span class="js-operator">&lt;</span> <span class="js-variable">todos</span>.<span class="js-property">length</span>) {
+                <span class="js-variable">todos</span>.<span class="js-method">splice</span>(<span class="js-variable">index</span>, <span class="js-number">1</span>); <span class="js-comment">// Remove 1 element at 'index'</span>
+                <span class="js-function-call">renderTodos</span>();
+            }
+        }
+
+        <span class="js-comment">// Event Listeners</span>
+        <span class="js-variable">addTodoButton</span>.<span class="js-method">addEventListener</span>(<span class="js-string">'click'</span>, <span class="js-function-call">addTodo</span>);
+        <span class="js-variable">newTodoInput</span>.<span class="js-method">addEventListener</span>(<span class="js-string">'keypress'</span>, (<span class="js-variable">event</span>) <span class="js-operator">=></span> {
+            <span class="js-keyword">if</span> (<span class="js-variable">event</span>.<span class="js-property">key</span> <span class="js-operator">===</span> <span class="js-string">'Enter'</span>) {
+                <span class="js-function-call">addTodo</span>();
+            }
+        });
+
+        <span class="js-comment">// Initial render on page load</span>
+        <span class="js-function-call">renderTodos</span>();
+    <span class="html-tag">&lt;/script&gt;</span>
+<span class="html-tag">&lt;/body&gt;</span>
+<span class="html-tag">&lt;/html&gt;</span></code></pre>
+            </div>
+            <div class="interactive-example">
+                <h3>Try the Todo App!</h3>
+                <div class="input-group">
+                    <input type="text" id="newTodoInput" placeholder="Add a new task..." class="text-gray-900">
+                    <button id="addTodoButton">Add Task</button>
+                </div>
+                <ul id="todoList">
+                    </ul>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js Animated Background Setup
+        let scene, camera, renderer, particles;
+        let mouseX = 0, mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('three-canvas');
+            if (!canvas) {
+                console.error("Canvas element not found!");
+                return;
+            }
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            camera.position.z = 20; // Adjusted camera position to compensate for larger particles
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Particles (simple animated background)
+            const particleCount = 1500; // Increased particle count for more density
+            const geometry = new THREE.BufferGeometry();
+            const positions = [];
+            const colors = [];
+            const color = new THREE.Color();
+
+            for (let i = 0; i < particleCount; i++) {
+                // Position particles randomly in a larger cube
+                positions.push(
+                    (Math.random() * 2 - 1) * 40, // Wider spread for particles
+                    (Math.random() * 2 - 1) * 40,
+                    (Math.random() * 2 - 1) * 40
+                );
+                // Assign a random color
+                color.setHSL(Math.random(), 0.8, 0.7); // Brighter, more saturated colors
+                colors.push(color.r, color.g, color.b);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.5, // Particles 5 times bigger (0.1 * 5 = 0.5)
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.95, // Slightly less transparent for more presence
+                blending: THREE.AdditiveBlending
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // Add mouse interactivity for camera movement
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) * 0.003; // Adjusted sensitivity
+            mouseY = (event.clientY - windowHalfY) * 0.003;
+        }
+
+        function onWindowResize() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            windowHalfX = width / 2;
+            windowHalfY = height / 2;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Animate particles
+            if (particles) {
+                particles.rotation.x += 0.0006; // Slightly slower rotation for larger particles
+                particles.rotation.y += 0.0008;
+                // Add subtle oscillation
+                particles.position.x = Math.sin(Date.now() * 0.00008) * 1; // Increased oscillation range
+                particles.position.y = Math.cos(Date.now() * 0.00012) * 1;
+            }
+
+            // Animate camera based on mouse position
+            camera.position.x += (mouseX - camera.position.x) * 0.03; // Slower camera movement
+            camera.position.y += (-mouseY - camera.position.y) * 0.03;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        // Copy code functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling; // Get the <pre><code> element
+            const code = codeBlock.innerText;
+
+            // Use document.execCommand for broader iframe compatibility
+            const textarea = document.createElement('textarea');
+            textarea.value = code;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copied!';
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                button.textContent = 'Error!';
+            }
+            document.body.removeChild(textarea);
+
+            setTimeout(() => {
+                button.textContent = 'Copy Code';
+            }, 2000);
+        }
+
+        // Dark/Light Mode Toggle Logic
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const moonIcon = document.getElementById('moon-icon');
+        const sunIcon = document.getElementById('sun-icon');
+        const threeCanvas = document.getElementById('three-canvas');
+
+        // Function to set theme
+        function setTheme(theme) {
+            htmlElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            if (theme === 'dark') {
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+                threeCanvas.style.opacity = '0.25'; // Dark mode opacity
+            } else {
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+                threeCanvas.style.opacity = '0.05'; // Light mode opacity
+            }
+        }
+
+        // Check for saved theme preference on load
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Default to dark if no preference is saved
+            setTheme('dark');
+        }
+
+        // Event listener for toggle button
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                setTheme('light');
+            } else {
+                setTheme('dark');
+            }
+        });
+
+        // Home Button Logic
+        const homeButton = document.getElementById('home-button');
+        homeButton.addEventListener('click', () => {
+            window.history.back(); // Navigate back in browser history
+        });
+
+        // Initialize Three.js and start animation on window load
+        window.onload = function() {
+            initThreeJS();
+            animate();
+        };
+    </script>
+</body>
+</html>
