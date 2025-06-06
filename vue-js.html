@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue.js for Beginners to Advanced: The Ultimate Whizmath Guide</title>
+    <meta name="description" content="A comprehensive guide to Vue.js for the Whizmath community, covering everything from fundamental concepts like declarative rendering and components to advanced reactivity, state management, and routing, with interactive code examples and a stunning design.">
+    <meta name="keywords" content="Vue.js, Vue, JavaScript, front-end, web development, beginners, advanced, reactivity, components, data, methods, computed, watch, Whizmath, tutorial, guide, learn Vue, UI/UX">
+    
+    <!-- Google Fonts - Inter for clean typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Vue.js CDN - Full build for in-browser compilation -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+    <style>
+        /* Custom CSS for Three.js Canvas and overall page styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            background-color: #1a202c; /* Dark background as a fallback */
+            color: #e2e8f0;
+            line-height: 1.6;
+            scroll-behavior: smooth; /* Smooth scrolling */
+        }
+
+        #three-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send to back */
+            opacity: 0.8; /* Slightly transparent */
+        }
+
+        #vue-app { /* Changed from #react-root to #vue-app */
+            position: relative;
+            z-index: 1; /* Keep content above Three.js background */
+            background-color: rgba(26, 32, 44, 0.8); /* Semi-transparent dark background for readability */
+            backdrop-filter: blur(8px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(8px); /* For Safari */
+            padding: 2rem;
+            border-radius: 1.5rem;
+            margin: 2rem auto;
+            max-width: 90vw; /* Adjust for responsiveness */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3, h4 {
+            color: #63b3ed; /* A vibrant blue for headings */
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        h1 { font-size: 3.5rem; }
+        h2 { font-size: 2.5rem; }
+        h3 { font-size: 1.875rem; }
+        h4 { font-size: 1.5rem; }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        a {
+            color: #9f7aea; /* A soft purple for links */
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #b794f4;
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        ul li { list-style-type: disc; margin-bottom: 0.5rem; }
+        ol li { list-style-type: decimal; margin-bottom: 0.5rem; }
+
+        .code-container {
+            position: relative;
+            background-color: #2d3748; /* Darker background for code blocks */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            overflow-x: auto; /* Allow horizontal scrolling for wide code */
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+
+        .code-content {
+            font-family: 'Fira Code', 'JetBrains Mono', monospace; /* Monospace font for code */
+            font-size: 0.95rem;
+            white-space: pre-wrap; /* Preserve whitespace and wrap long lines */
+            word-break: break-all;
+            color: #cbd5e0;
+        }
+
+        .copy-button {
+            background-color: #4299e1; /* Blue button */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            outline: none;
+            border: none;
+        }
+
+        .copy-button:hover {
+            background-color: #3182ce;
+            transform: translateY(-1px);
+        }
+
+        .copy-button:active {
+            transform: translateY(0);
+        }
+
+        .copied-feedback {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background-color: #48bb78; /* Green for success */
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.3rem;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .copied-feedback.show {
+            opacity: 1;
+        }
+
+        .back-button {
+            position: fixed;
+            background-color: #63b3ed;
+            color: white;
+            border-radius: 9999px; /* Fully rounded */
+            padding: 1rem;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+            z-index: 100;
+            top: 2rem; 
+            left: 2rem; 
+            font-size: 2rem; 
+        }
+
+        .back-button:hover {
+            background-color: #4299e1;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            #vue-app {
+                padding: 1.5rem;
+                margin: 1rem auto;
+                max-width: 95vw;
+            }
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            h3 { font-size: 1.5rem; }
+            h4 { font-size: 1.25rem; }
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.75rem;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <!-- Three.js Background Canvas -->
+    <canvas id="three-bg"></canvas>
+
+    <!-- Back to Index Button -->
+    <button id="backToIndex" class="back-button">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+    </button>
+
+    <!-- Vue.js Root Element -->
+    <div id="vue-app">
+        <!-- Vue.js app will be mounted here -->
+        <header class="text-center mb-12">
+            <h1 class="text-6xl md:text-7xl lg:text-8xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-blue-500 to-indigo-500">
+                Whizmath: Mastering Vue.js
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400 mb-8">
+                Building Progressive, Performant & Maintainable User Interfaces
+            </p>
+            <hr class="border-t-2 border-blue-600 w-1/4 mx-auto mb-12" />
+        </header>
+
+        <section id="introduction" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-purple-400">✨</span> Welcome to the World of Vue.js!
+            </h2>
+            <p>
+                Hello, future Vue developers! Welcome to this comprehensive guide on Vue.js, powered by Whizmath. Vue.js is a progressive JavaScript framework used for building user interfaces. What does "progressive" mean? It means you can adopt Vue incrementally. You can use it just for a small interactive part of your page, or scale it up to build complex single-page applications.
+            </p>
+            <p>
+                Vue is designed to be approachable and easy to learn for beginners, while also powerful enough for advanced applications. It focuses on reactivity, components, and a clear separation of concerns (HTML templates, JavaScript logic, CSS styling). This lesson will take you from the fundamental concepts to some advanced patterns, providing clear explanations and practical examples. Let's start building amazing UIs with Vue!
+            </p>
+        </section>
+
+        <section id="what-is-vue" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-green-400">💡</span> What Exactly is Vue.js?
+            </h2>
+            <p>
+                Vue.js is a JavaScript framework for building user interfaces. It builds on standard HTML, CSS, and JavaScript and provides a declarative and component-based programming model that helps you efficiently develop user interfaces, whether they are simple or complex.
+            </p>
+            <ul>
+                <li>**Progressive Framework:** Can be integrated into an existing project incrementally or used for a full-scale single-page application.</li>
+                <li>**Approachable:** Easy to pick up for developers coming from HTML, CSS, or basic JavaScript.</li>
+                <li>**Performant:** Offers a lightweight Virtual DOM and optimized rendering.</li>
+                <li>**Versatile:** Suitable for small components, medium-sized applications, and large-scale enterprise solutions.</li>
+                <li>**Reactive:** Vue's reactivity system automatically tracks changes to your data and efficiently updates the DOM when data changes.</li>
+            </ul>
+            <p>
+                Vue provides a clear and organized way to manage your application's data and how it interacts with the UI, making it a joy to work with.
+            </p>
+        </section>
+
+        <section id="setup-and-basics" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-yellow-400">🛠️</span> Getting Started: Setup & The Vue Instance
+            </h2>
+            <h3>Basic Setup (CDN for Learning)</h3>
+            <p>
+                For quick prototyping and learning, including Vue.js via its CDN is the simplest approach. For larger projects, you would typically use Vue CLI or Vite for a more robust development environment.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Vue.js CDN Link</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- Include this in your &lt;head&gt; section --&gt;
+&lt;script defer src="https://unpkg.com/vue@3/dist/vue.global.prod.js"&gt;&lt;/script&gt;
+
+&lt;!-- Your Vue app script (placed just before &lt;/body&gt; is common) --&gt;
+&lt;script&gt;
+    // Your Vue.js application code here
+&lt;/script&gt;
+</pre>
+            </div>
+
+            <h3>The Vue Application Instance</h3>
+            <p>
+                Every Vue application starts by creating a new **application instance** using `createApp()`. This instance acts as the root of your Vue application and mounts to a specific DOM element.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Basic Vue App Instance</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- In your HTML, an element for Vue to mount to --&gt;
+&lt;div id="my-app"&gt;
+    &lt;p&gt;{{ message }}&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    const { createApp } = Vue; // Destructure createApp from the global Vue object
+
+    createApp({
+        // data option to define reactive data
+        data() {
+            return {
+                message: 'Hello from Vue.js!'
+            };
+        }
+    }).mount('#my-app'); // Mount the app to the #my-app element
+&lt;/script&gt;
+</pre>
+            </div>
+            <p>
+                The `{{ message }}` syntax is Vue's text interpolation, which allows you to display reactive data from your Vue instance directly in the template.
+            </p>
+        </section>
+
+        <section id="declarative-rendering" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-red-400">📝</span> Declarative Rendering & Directives
+            </h2>
+            <p>
+                Vue uses a simple template syntax that allows you to declaratively render data to the DOM.
+            </p>
+            <h3>Text Interpolation `{{ }}`</h3>
+            <p>
+                The most basic form of data binding is text interpolation using the "Mustache" syntax (`{{ }}`).
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Text Interpolation Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- In HTML --&gt;
+&lt;div id="app-interpolation"&gt;
+    &lt;p&gt;Current count: &lt;span class="font-bold"&gt;{{ counter }}&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    createApp({
+        data() {
+            return {
+                counter: 0
+            };
+        }
+    }).mount('#app-interpolation');
+&lt;/script&gt;
+</pre>
+            </div>
+
+            <h3>Directives (`v-`)</h3>
+            <p>
+                Vue directives are special attributes with the `v-` prefix. They apply special reactive behavior to the rendered DOM.
+            </p>
+            <h4>`v-bind`: Binding Attributes</h4>
+            <p>
+                Dynamically bind one or more attributes, or a component prop to an expression. Shorthand: `:attribute`.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>v-bind Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- In HTML --&gt;
+&lt;div id="app-vbind"&gt;
+    &lt;img :src="imageUrl" :alt="imageAlt" class="rounded-lg shadow-md w-32 h-32 object-cover"&gt;
+    &lt;a :href="linkUrl" class="text-blue-400 hover:underline"&gt;Visit Whizmath!&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    createApp({
+        data() {
+            return {
+                imageUrl: 'https://placehold.co/128x128/63b3ed/ffffff?text=Vue',
+                imageAlt: 'Vue.js Placeholder Image',
+                linkUrl: 'https://whizmath.com'
+            };
+        }
+    }).mount('#app-vbind');
+&lt;/script&gt;
+</pre>
+            </div>
+
+            <h4>`v-on`: Handling Events</h4>
+            <p>
+                Attach event listeners to DOM elements. Shorthand: `@event`.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>v-on Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- In HTML --&gt;
+&lt;div id="app-von"&gt;
+    &lt;button @click="increment" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"&gt;
+        Increment
+    &lt;/button&gt;
+    &lt;p class="mt-2"&gt;Count: {{ count }}&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    createApp({
+        data() {
+            return {
+                count: 0
+            };
+        },
+        methods: {
+            increment() {
+                this.count++;
+            }
+        }
+    }).mount('#app-von');
+&lt;/script&gt;
+</pre>
+            </div>
+            <p>
+                You can try the button above.
+            </p>
+
+            <h4>`v-model`: Two-Way Data Binding</h4>
+            <p>
+                Used for form input elements, `v-model` creates a two-way binding between an input or textarea value and a piece of data.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>v-model Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- In HTML --&gt;
+&lt;div id="app-vmodel" class="flex flex-col gap-2"&gt;
+    &lt;input type="text" v-model="textInput" placeholder="Type here..." 
+           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"&gt;
+    &lt;p&gt;You typed: &lt;span class="font-semibold"&gt;{{ textInput }}&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    createApp({
+        data() {
+            return {
+                textInput: ''
+            };
+        }
+    }).mount('#app-vmodel');
+&lt;/script&gt;
+</pre>
+            </div>
+            <p>
+                Type into the input field above to see `v-model` in action.
+            </p>
+        </section>
+
+        <section id="components-and-props" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-teal-400">📦</span> Components & Props: Building Blocks
+            </h2>
+            <p>
+                Components are reusable Vue instances with a pre-defined set of options. They allow you to encapsulate reusable functionality and UI.
+            </p>
+            <h3>Defining a Component</h3>
+            <p>
+                In Vue, you can define a component using the `component` method or by directly defining it as an object within your `createApp` call. For single-file components (SFCs), you'd use `.vue` files and a build setup, but for CDN, we define them directly.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Defining a Global Component</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- In HTML, use the component name as a custom tag --&gt;
+&lt;div id="app-components"&gt;
+    &lt;my-button&gt;&lt;/my-button&gt;
+    &lt;my-button&gt;&lt;/my-button&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    const app = createApp({}); // Create app instance
+
+    // Define a component
+    app.component('my-button', {
+        data() {
+            return {
+                count: 0
+            };
+        },
+        template: `
+            &lt;button @click="count++" 
+                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg m-2"&gt;
+                Count: {{ count }}
+            &lt;/button&gt;
+        `
+    });
+
+    app.mount('#app-components');
+&lt;/script&gt;
+</pre>
+            </div>
+
+            <h3>Props: Passing Data to Components</h3>
+            <p>
+                Props are custom attributes you can register on a component. When a value is passed to a prop, it becomes a property on that component instance.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Component with Props</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- In HTML --&gt;
+&lt;div id="app-props"&gt;
+    &lt;greeting-message name="Whizmath Learner"&gt;&lt;/greeting-message&gt;
+    &lt;greeting-message name="Vue Enthusiast"&gt;&lt;/greeting-message&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    const appProps = createApp({});
+
+    appProps.component('greeting-message', {
+        props: ['name'], // Declare the 'name' prop
+        template: `
+            &lt;p class="text-xl text-yellow-300"&gt;
+                Hello, &lt;span class="font-bold"&gt;{{ name }}&lt;/span&gt;! Welcome to Vue.js.
+            &lt;/p&gt;
+        `
+    });
+
+    appProps.mount('#app-props');
+&lt;/script&gt;
+</pre>
+            </div>
+        </section>
+
+        <section id="computed-properties-watchers" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-indigo-400">⚡</span> Computed Properties & Watchers
+            </h2>
+            <h3>Computed Properties</h3>
+            <p>
+                Computed properties allow you to define properties that are derived from existing data. They are cached based on their reactive dependencies, meaning they only re-evaluate when their dependencies change. This makes them efficient for complex calculations or data transformations.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Computed Property Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- In HTML --&gt;
+&lt;div id="app-computed" class="flex flex-col gap-2"&gt;
+    &lt;input type="number" v-model="price" placeholder="Price" 
+           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"&gt;
+    &lt;input type="number" v-model="quantity" placeholder="Quantity" 
+           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"&gt;
+    &lt;p&gt;Total: &lt;span class="font-bold text-green-400"&gt;${{ totalPrice.toFixed(2) }}&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    createApp({
+        data() {
+            return {
+                price: 10,
+                quantity: 1
+            };
+        },
+        computed: {
+            totalPrice() {
+                // This will re-evaluate only when price or quantity changes
+                return this.price * this.quantity;
+            }
+        }
+    }).mount('#app-computed');
+&lt;/script&gt;
+</pre>
+            </div>
+            <p>
+                Adjust the price and quantity above to see the computed `totalPrice` update automatically.
+            </p>
+
+            <h3>Watchers (`watch`)</h3>
+            <p>
+                While computed properties are for derived values, watchers are useful when you need to perform "side effects" in response to reactive data changes. For example, fetching data when a prop changes, or performing complex DOM manipulations.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Watcher Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- In HTML --&gt;
+&lt;div id="app-watcher"&gt;
+    &lt;input type="text" v-model="question" placeholder="Ask a yes/no question..." 
+           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"&gt;
+    &lt;p class="mt-2"&gt;Answer: &lt;span class="font-bold text-orange-400"&gt;{{ answer }}&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    const { createApp, watch } = Vue;
+    createApp({
+        data() {
+            return {
+                question: '',
+                answer: 'I cannot give you an answer until you ask a question!'
+            };
+        },
+        watch: {
+            // whenever question changes, this function will run
+            question(newQuestion, oldQuestion) {
+                if (newQuestion.includes('?')) {
+                    this.answer = 'Thinking...';
+                    setTimeout(() => {
+                        this.answer = Math.random() > 0.5 ? 'Yes!' : 'No!';
+                    }, 1000);
+                } else {
+                    this.answer = 'I cannot give you an answer until you ask a question!';
+                }
+            }
+        }
+    }).mount('#app-watcher');
+&lt;/script&gt;
+</pre>
+            </div>
+            <p>
+                Type a question ending with '?' into the input above and see the watcher provide an answer.
+            </p>
+        </section>
+
+        <section id="conditional-list-rendering" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-orange-400">🚦</span> Conditional & List Rendering
+            </h2>
+            <h3>Conditional Rendering (`v-if`, `v-else-if`, `v-else`, `v-show`)</h3>
+            <p>
+                Vue provides directives to conditionally render elements based on data.
+            </p>
+            <ul>
+                <li>`v-if`: Renders the element and its components conditionally. If the condition is false, the element is completely removed from the DOM.</li>
+                <li>`v-show`: Conditionally displays the element. The element is always rendered in the DOM, but its CSS `display` property is toggled.</li>
+            </ul>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Conditional Rendering Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- In HTML --&gt;
+&lt;div id="app-conditional" class="flex flex-col gap-4"&gt;
+    &lt;button @click="isLoggedIn = !isLoggedIn" 
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"&gt;
+        Toggle Login Status
+    &lt;/button&gt;
+    
+    &lt;p v-if="isLoggedIn" class="text-green-400 font-semibold"&gt;Welcome, logged in user!&lt;/p&gt;
+    &lt;p v-else class="text-red-400 font-semibold"&gt;Please log in.&lt;/p&gt;
+
+    &lt;div v-show="isLoggedIn" class="bg-gray-700 p-3 rounded-md"&gt;
+        &lt;p class="text-gray-300"&gt;This content is shown/hidden with v-show.&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    createApp({
+        data() {
+            return {
+                isLoggedIn: false
+            };
+        }
+    }).mount('#app-conditional');
+&lt;/script&gt;
+</pre>
+            </div>
+            <p>
+                Click the "Toggle Login Status" button to see `v-if` and `v-show` in action.
+            </p>
+
+            <h3>List Rendering (`v-for`)</h3>
+            <p>
+                The `v-for` directive is used to render a list of items based on an array. It requires a unique `key` attribute to help Vue track each node's identity, which is crucial for performance and state consistency.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>List Rendering Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- In HTML --&gt;
+&lt;div id="app-list"&gt;
+    &lt;h3&gt;Whizmath Learning Path:&lt;/h3&gt;
+    &lt;ul class="list-disc list-inside bg-gray-700 p-4 rounded-lg"&gt;
+        &lt;li v-for="lesson in lessons" :key="lesson.id" class="mb-2 text-gray-300"&gt;
+            {{ lesson.name }}
+        &lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    createApp({
+        data() {
+            return {
+                lessons: [
+                    { id: 1, name: 'Basic Arithmetic' },
+                    { id: 2, name: 'Introduction to Algebra' },
+                    { id: 3, name: 'Geometry Fundamentals' },
+                    { id: 4, name: 'Calculus Basics' }
+                ]
+            };
+        }
+    }).mount('#app-list');
+&lt;/script&gt;
+</pre>
+            </div>
+        </section>
+
+        <section id="event-handling" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-purple-400">👆</span> Event Handling
+            </h2>
+            <p>
+                Vue provides the `v-on` directive (shorthand `@`) to listen to DOM events and run JavaScript when they are triggered.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Event Handling with Methods</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- In HTML --&gt;
+&lt;div id="app-event" class="flex flex-col gap-4"&gt;
+    &lt;button @click="showAlert" 
+            class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded-lg"&gt;
+        Show Alert
+    &lt;/button&gt;
+    &lt;input type="text" @input="logInput" placeholder="Type to see console log..."
+           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    createApp({
+        methods: {
+            showAlert() {
+                alert('Button clicked in Vue!'); // Using alert for demo
+            },
+            logInput(event) {
+                console.log('Input value:', event.target.value);
+            }
+        }
+    }).mount('#app-event');
+&lt;/script&gt;
+</pre>
+            </div>
+            <p>
+                *Note: For the purpose of this lesson, we use `alert()`. In a real application, you should use a custom modal or message display for a better user experience.*
+            </p>
+        </section>
+
+        <section id="component-communication" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-fuchsia-400">💬</span> Component Communication
+            </h2>
+            <p>
+                In a component-based architecture, components often need to communicate with each other.
+            </p>
+            <h3>Props Down, Events Up (`emit`)</h3>
+            <p>
+                This is the most common pattern:
+                <ul>
+                    <li>Parent passes data to child via `props`.</li>
+                    <li>Child communicates back to parent via custom `events` using `$emit`.</li>
+                </ul>
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Parent-Child Communication Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- Parent Component (e.g., in your main app instance template) --&gt;
+&lt;div id="app-comm" class="bg-gray-700 p-6 rounded-lg"&gt;
+    &lt;h3&gt;Parent Component&lt;/h3&gt;
+    &lt;p&gt;Child counter value: &lt;span class="font-bold"&gt;{{ childCount }}&lt;/span&gt;&lt;/p&gt;
+    &lt;!-- Listen for 'increment' event from child and update childCount --&gt;
+    &lt;child-counter @increment="childCount++"&gt;&lt;/child-counter&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    const appComm = createApp({
+        data() {
+            return {
+                childCount: 0
+            };
+        }
+    });
+
+    // Child Component
+    appComm.component('child-counter', {
+        data() {
+            return {
+                localCount: 0
+            };
+        },
+        template: `
+            &lt;div class="bg-gray-800 p-4 rounded-md mt-4"&gt;
+                &lt;h4&gt;Child Counter&lt;/h4&gt;
+                &lt;p&gt;Local count: {{ localCount }}&lt;/p&gt;
+                &lt;button @click="incrementLocal" 
+                        class="bg-teal-500 hover:bg-teal-700 text-white py-1 px-3 rounded-md mt-2"&gt;
+                    Increment Child
+                &lt;/button&gt;
+            &lt;/div&gt;
+        `,
+        methods: {
+            incrementLocal() {
+                this.localCount++;
+                this.$emit('increment'); // Emit custom 'increment' event
+            }
+        }
+    });
+
+    appComm.mount('#app-comm');
+&lt;/script&gt;
+</pre>
+            </div>
+            <p>
+                Click the "Increment Child" button to see both the child's local count and the parent's `childCount` update.
+            </p>
+
+            <h3>Provide / Inject (for deeper trees)</h3>
+            <p>
+                For scenarios where you need to pass data down through many levels of nested components, `provide` and `inject` offer a more convenient alternative to prop-drilling. A parent component can `provide` data, and any descendant component can `inject` that data, regardless of how deep it is in the component tree.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Provide/Inject Example (Theme)</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- Main App instance (Parent providing theme) --&gt;
+&lt;div id="app-theme-context" class="bg-gray-700 p-6 rounded-lg"&gt;
+    &lt;h3&gt;App (Provider)&lt;/h3&gt;
+    &lt;button @click="toggleTheme" 
+            class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg"&gt;
+        Toggle Theme
+    &lt;/button&gt;
+    &lt;deep-nested-component&gt;&lt;/deep-nested-component&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    const appTheme = createApp({
+        data() {
+            return {
+                currentTheme: 'dark'
+            };
+        },
+        // Provide the theme and a method to toggle it
+        provide() {
+            return {
+                theme: Vue.computed(() => this.currentTheme), // Make theme reactive
+                toggleTheme: this.toggleTheme
+            };
+        },
+        methods: {
+            toggleTheme() {
+                this.currentTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+            }
+        }
+    });
+
+    appTheme.component('deep-nested-component', {
+        template: `
+            &lt;div class="bg-gray-800 p-4 rounded-md mt-4"&gt;
+                &lt;h4&gt;Deep Nested Component&lt;/h4&gt;
+                &lt;another-nested-component&gt;&lt;/another-nested-component&gt;
+            &lt;/div&gt;
+        `
+    });
+
+    appTheme.component('another-nested-component', {
+        // Inject the provided theme and toggle function
+        inject: ['theme', 'toggleTheme'],
+        template: `
+            &lt;div class="bg-gray-900 p-3 rounded-md mt-2"&gt;
+                &lt;p&gt;Current theme in deeply nested component: 
+                    &lt;span :class="{'text-gray-200': theme.value === 'dark', 'text-yellow-400': theme.value === 'light'}" class="font-semibold capitalize"&gt;
+                        {{ theme.value }}
+                    &lt;/span&gt;
+                &lt;/p&gt;
+                &lt;button @click="toggleTheme" 
+                        class="bg-purple-600 hover:bg-purple-800 text-white py-1 px-3 rounded-md mt-2"&gt;
+                    Toggle Theme from Nested
+                &lt;/button&gt;
+            &lt;/div&gt;
+        `
+    });
+
+    appTheme.mount('#app-theme-context');
+&lt;/script&gt;
+</pre>
+            </div>
+            <p>
+                Click the "Toggle Theme" buttons (both parent and nested) to see how theme data is shared reactively across component levels.
+            </p>
+        </section>
+
+        <section id="advanced-reactivity" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-cyan-400">⚙️</span> Advanced Reactivity
+            </h2>
+            <p>
+                Vue 3 introduced the Composition API, which provides a more flexible way to organize and reuse reactive logic, especially in larger components. This contrasts with the Options API (which uses `data`, `methods`, `computed`, `watch` objects) that we've seen so far.
+            </p>
+            <h3>Composition API (`setup`, `ref`, `reactive`)</h3>
+            <p>
+                The Composition API allows you to group related logic together, making it easier to read and maintain large components. It uses `setup()` function and reactivity primitives like `ref()` and `reactive()`.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Composition API Counter Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- In HTML --&gt;
+&lt;div id="app-composition-api" class="bg-gray-700 p-6 rounded-lg"&gt;
+    &lt;composition-counter&gt;&lt;/composition-counter&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    const { createApp, ref } = Vue;
+
+    const appComposition = createApp({});
+
+    appComposition.component('composition-counter', {
+        setup() { // The entry point for Composition API
+            const count = ref(0); // Create a reactive reference
+
+            const increment = () => {
+                count.value++; // Access ref value with .value
+            };
+
+            // Expose properties and methods to the template
+            return {
+                count,
+                increment
+            };
+        },
+        template: `
+            &lt;div&gt;
+                &lt;h4&gt;Composition API Counter&lt;/h4&gt;
+                &lt;p&gt;Count: &lt;span class="font-bold text-yellow-300"&gt;{{ count }}&lt;/span&gt;&lt;/p&gt;
+                &lt;button @click="increment" 
+                        class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-lg mt-2"&gt;
+                    Increment (Composition)
+                &lt;/button&gt;
+            &lt;/div&gt;
+        `
+    });
+
+    appComposition.mount('#app-composition-api');
+&lt;/script&gt;
+</pre>
+            </div>
+            <p>
+                Click the "Increment (Composition)" button to see the counter built with the Composition API.
+            </p>
+
+            <h3>Custom Directives</h3>
+            <p>
+                While `v-` directives handle most common use cases, Vue also allows you to register your own custom directives to encapsulate DOM manipulation logic.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Custom Directive Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+&lt;!-- In HTML --&gt;
+&lt;div id="app-custom-directive" class="bg-gray-700 p-6 rounded-lg"&gt;
+    &lt;p v-highlight="highlightColor"&gt;This text will be highlighted!&lt;/p&gt;
+    &lt;input type="color" v-model="highlightColor" class="mt-2"&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    const appDirective = createApp({
+        data() {
+            return {
+                highlightColor: '#48bb78' // Green by default
+            };
+        }
+    });
+
+    // Register a custom directive named 'highlight'
+    appDirective.directive('highlight', {
+        // Called when the bound element's attributes are updated.
+        // Also called before the element's parent component and its children's VNodes are updated.
+        updated(el, binding) {
+            el.style.backgroundColor = binding.value;
+            el.style.padding = '0.5rem';
+            el.style.borderRadius = '0.5rem';
+        }
+    });
+
+    appDirective.mount('#app-custom-directive');
+&lt;/script&gt;
+</pre>
+            </div>
+            <p>
+                Change the color in the input field above to see the custom `v-highlight` directive in action.
+            </p>
+        </section>
+
+        <section id="conclusion" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-blue-400">🚀</span> Your Vue.js Journey Continues!
+            </h2>
+            <p>
+                Congratulations! You've completed a comprehensive tour of Vue.js, moving from fundamental concepts like declarative rendering and components to advanced reactivity with the Composition API and custom directives. You now have a solid foundation to start building sophisticated and interactive web applications with Vue.
+            </p>
+            <p>
+                Vue.js offers a fantastic development experience, and its ecosystem is rich with tools like Vue Router for routing, Pinia (or Vuex) for global state management, and Nuxt.js for server-side rendering. Continuous learning and practice are key to mastering it. Keep building small projects, experimenting with different features, and exploring the vast Vue ecosystem.
+            </p>
+            <p>
+                We at Whizmath are excited to see what you'll create. Keep exploring, keep coding, and keep innovating!
+            </p>
+            <div class="text-center mt-12">
+                <a href="programming.html" class="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-4 px-8 rounded-full text-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300 ease-in-out">
+                    Explore More Whizmath Lessons
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Three.js Background Animation - Kept separate for clarity
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            if (typeof THREE === 'undefined') {
+                console.error("THREE.js is not loaded. Skipping Three.js initialization.");
+                return;
+            }
+
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-bg'), antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setClearColor(0x1a202c, 1); // Match body background
+
+            camera.position.z = 5;
+
+            const particleCount = 1000;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            const color1 = new THREE.Color(0x63b3ed); // Blue
+            const color2 = new THREE.Color(0x9f7aea); // Purple
+
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                positions[i] = (Math.random() - 0.5) * 20; // x
+                positions[i + 1] = (Math.random() - 0.5) * 20; // y
+                positions[i + 2] = (Math.random() - 0.5) * 20; // z
+
+                const mixFactor = Math.random();
+                const mixedColor = new THREE.Color().copy(color1).lerp(color2, mixFactor);
+                colors[i] = mixedColor.r;
+                colors[i + 1] = mixedColor.g;
+                colors[i + 2] = mixedColor.b;
+            }
+
+            const particleGeometry = new THREE.BufferGeometry();
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.05,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.7,
+                blending: THREE.AdditiveBlending
+            });
+
+            particles = new THREE.Points(particleGeometry, particleMaterial);
+            scene.add(particles);
+
+            const ambientLight = new THREE.AmbientLight(0x404040); 
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            directionalLight.position.set(0, 1, 0);
+            scene.add(directionalLight);
+
+            animateThreeJS();
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0008;
+
+                const positions = particles.geometry.attributes.position.array;
+                for (let i = 0; i < positions.length; i += 3) {
+                    positions[i + 2] += 0.001; 
+                    if (positions[i + 2] > camera.position.z + 5) {
+                        positions[i + 2] = (Math.random() - 0.5) * 20; 
+                    }
+                }
+                particles.geometry.attributes.position.needsUpdate = true;
+            }
+            if (renderer && scene && camera) { // Check if all are defined before rendering
+                renderer.render(scene, camera);
+            }
+        }
+
+        function onWindowResizeThreeJS() {
+            if (camera && renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        }
+
+        // Common JS functions for code copying
+        const copyCode = (button) => {
+            const codeBlock = button.parentNode.nextElementSibling;
+            const codeText = codeBlock.innerText;
+
+            const textarea = document.createElement('textarea');
+            textarea.value = codeText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            const feedbackSpan = document.createElement('span');
+            feedbackSpan.className = 'copied-feedback';
+            feedbackSpan.innerText = 'Copied!';
+            button.parentNode.appendChild(feedbackSpan);
+
+            setTimeout(() => {
+                feedbackSpan.classList.add('show');
+            }, 10);
+
+            setTimeout(() => {
+                feedbackSpan.classList.remove('show');
+                feedbackSpan.addEventListener('transitionend', () => {
+                    feedbackSpan.remove();
+                }, { once: true });
+            }, 1500);
+        };
+
+        // Initialize Three.js and other non-Vue DOM listeners when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Three.js initialization with a small delay
+            setTimeout(() => { 
+                initThreeJS();
+                window.addEventListener('resize', onWindowResizeThreeJS);
+            }, 100); 
+            
+            // Back to Index Button Functionality
+            const backToIndexBtn = document.getElementById('backToIndex');
+            if (backToIndexBtn) { 
+                backToIndexBtn.addEventListener('click', () => {
+                    window.location.href = 'index.html'; 
+                });
+            } else {
+                console.error("Back to Index button not found.");
+            }
+        });
+    </script>
+</body>
+</html>
