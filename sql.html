@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL & Databases: Design & Querying - The Ultimate Whizmath Guide</title>
+    <meta name="description" content="A comprehensive guide to SQL and Database Design for the Whizmath community, covering database types, relational concepts, normalization, basic to advanced SQL querying, and performance optimization.">
+    <meta name="keywords" content="SQL, Databases, Database Design, Querying, Relational Databases, NoSQL, Normalization, ER Diagrams, SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, ORDER BY, Indexes, Whizmath, tutorial, guide, learn SQL">
+    
+    <!-- Google Fonts - Inter for clean typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        /* Custom CSS for Three.js Canvas and overall page styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            background-color: #1a202c; /* Dark background as a fallback */
+            color: #e2e8f0;
+            line-height: 1.6;
+            scroll-behavior: smooth; /* Smooth scrolling */
+        }
+
+        #three-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send to back */
+            opacity: 0.8; /* Slightly transparent */
+        }
+
+        .lesson-container {
+            position: relative;
+            z-index: 1; /* Keep content above Three.js background */
+            background-color: rgba(26, 32, 44, 0.8); /* Semi-transparent dark background for readability */
+            backdrop-filter: blur(8px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(8px); /* For Safari */
+            padding: 2rem;
+            border-radius: 1.5rem;
+            margin: 2rem auto;
+            max-width: 90vw; /* Adjust for responsiveness */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3, h4 {
+            color: #63b3ed; /* A vibrant blue for headings */
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        h1 { font-size: 3.5rem; }
+        h2 { font-size: 2.5rem; }
+        h3 { font-size: 1.875rem; }
+        h4 { font-size: 1.5rem; }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        a {
+            color: #9f7aea; /* A soft purple for links */
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #b794f4;
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        ul li { list-style-type: disc; margin-bottom: 0.5rem; }
+        ol li { list-style-type: decimal; margin-bottom: 0.5rem; }
+
+        .code-container {
+            position: relative;
+            background-color: #2d3748; /* Darker background for code blocks */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            overflow-x: auto; /* Allow horizontal scrolling for wide code */
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+
+        .code-content {
+            font-family: 'Fira Code', 'JetBrains Mono', monospace; /* Monospace font for code */
+            font-size: 0.95rem;
+            white-space: pre-wrap; /* Preserve whitespace and wrap long lines */
+            word-break: break-all;
+            color: #cbd5e0;
+        }
+
+        .copy-button {
+            background-color: #4299e1; /* Blue button */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            outline: none;
+            border: none;
+        }
+
+        .copy-button:hover {
+            background-color: #3182ce;
+            transform: translateY(-1px);
+        }
+
+        .copy-button:active {
+            transform: translateY(0);
+        }
+
+        .copied-feedback {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background-color: #48bb78; /* Green for success */
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.3rem;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .copied-feedback.show {
+            opacity: 1;
+        }
+
+        .back-button {
+            position: fixed;
+            background-color: #63b3ed;
+            color: white;
+            border-radius: 9999px; /* Fully rounded */
+            padding: 1rem;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+            z-index: 100;
+            top: 2rem; 
+            left: 2rem; 
+            font-size: 2rem; 
+        }
+
+        .back-button:hover {
+            background-color: #4299e1;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .lesson-container {
+                padding: 1.5rem;
+                margin: 1rem auto;
+                max-width: 95vw;
+            }
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            h3 { font-size: 1.5rem; }
+            h4 { font-size: 1.25rem; }
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.75rem;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <!-- Three.js Background Canvas -->
+    <canvas id="three-bg"></canvas>
+
+    <!-- Back to Index Button -->
+    <button id="backToIndex" class="back-button">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+    </button>
+
+    <!-- Lesson Content Container -->
+    <div class="lesson-container">
+        <header class="text-center mb-12">
+            <h1 class="text-6xl md:text-7xl lg:text-8xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-blue-500 to-indigo-500">
+                Whizmath: Mastering SQL & Databases
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400 mb-8">
+                Designing, Querying, and Managing Data Efficiently
+            </p>
+            <hr class="border-t-2 border-blue-600 w-1/4 mx-auto mb-12" />
+        </header>
+
+        <section id="introduction" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-purple-400">✨</span> Welcome to SQL & Databases!
+            </h2>
+            <p>
+                Hello, data enthusiasts! Welcome to this comprehensive guide on SQL (Structured Query Language) and Database Design, powered by Whizmath. In the modern digital world, data is king, and databases are the organized repositories where this valuable asset resides. SQL is the standard language used to communicate with and manipulate these databases.
+            </p>
+            <p>
+                Understanding database design principles is crucial for building robust, scalable, and efficient applications. Mastering SQL allows you to retrieve, insert, update, and delete data effectively. This lesson will take you from the fundamental concepts of databases and SQL to advanced querying techniques and design considerations. Let's dive into the world of data!
+            </p>
+        </section>
+
+        <section id="what-is-database" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-green-400">💡</span> What is a Database? What is SQL?
+            </h2>
+            <h3>What is a Database?</h3>
+            <p>
+                A **database** is an organized collection of structured information, or data, typically stored electronically in a computer system. It is usually controlled by a database management system (DBMS). Common types of databases include:
+            </p>
+            <ul class="list-disc list-inside mb-4">
+                <li>
+                    <strong>Relational Databases (RDBMS):</strong> Organize data into one or more tables (or "relations") of rows and columns. Each row has a unique ID (the primary key), and columns contain attributes of the data. Relationships between tables are established through foreign keys. Examples: MySQL, PostgreSQL, Oracle, SQL Server, SQLite.
+                </li>
+                <li>
+                    <strong>NoSQL Databases (Non-relational):</strong> Provide a mechanism for storage and retrieval of data that is modeled in means other than the tabular relations used in relational databases. They are designed for specific data models and have flexible schemas. Examples: MongoDB (Document), Cassandra (Column-Family), Redis (Key-Value), Neo4j (Graph).
+                </li>
+            </ul>
+            <p>This lesson will primarily focus on **Relational Databases** and SQL.</p>
+
+            <h3>What is SQL?</h3>
+            <p>
+                **SQL (Structured Query Language)** is a standard programming language used to manage relational databases and perform various operations on the data in them. It's used for:
+            </p>
+            <ul class="list-disc list-inside mb-4">
+                <li>Creating, modifying, and dropping database structures (DDL - Data Definition Language).</li>
+                <li>Retrieving data from a database (DQL - Data Query Language).</li>
+                <li>Inserting, updating, and deleting data within a database (DML - Data Manipulation Language).</li>
+                <li>Controlling access to data and managing transactions (DCL/TCL - Data Control/Transaction Control Language).</li>
+            </ul>
+            <p>SQL is declarative: you tell the database *what* you want, not *how* to get it.</p>
+        </section>
+
+        <section id="relational-concepts" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-yellow-400">📊</span> Relational Database Concepts
+            </h2>
+            <p>Understanding the fundamental building blocks of relational databases is key:</p>
+            <ul class="list-disc list-inside mb-4">
+                <li>
+                    <strong>Table (Relation):</strong> A collection of related data held in a structured format within a database. It consists of rows and columns.
+                </li>
+                <li>
+                    <strong>Row (Record/Tuple):</strong> A single entry in a table, representing a single, complete set of related data.
+                </li>
+                <li>
+                    <strong>Column (Field/Attribute):</strong> A set of data values of a particular simple type, one for each row of the table.
+                </li>
+                <li>
+                    <strong>Primary Key (PK):</strong> A column ( or a set of columns) in a table that uniquely identifies each row in that table. It must contain unique values and cannot contain NULL values.
+                </li>
+                <li>
+                    <strong>Foreign Key (FK):</strong> A column (or a set of columns) in one table that refers to the primary key in another table. It establishes a link between two tables, enforcing referential integrity.
+                </li>
+            </ul>
+
+            <h3>Example Table: `Students`</h3>
+            <p>
+                Imagine a table named `Students` to store information about students:
+            </p>
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full text-left table-auto border-collapse">
+                    <thead>
+                        <tr class="bg-gray-700">
+                            <th class="p-3 border-b-2 border-gray-600"><code>student_id</code> (PK)</th>
+                            <th class="p-3 border-b-2 border-gray-600"><code>first_name</code></th>
+                            <th class="p-3 border-b-2 border-gray-600"><code>last_name</code></th>
+                            <th class="p-3 border-b-2 border-gray-600"><code>email</code></th>
+                            <th class="p-3 border-b-2 border-gray-600"><code>enrollment_date</code></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-gray-800">
+                            <td class="p-3 border-b border-gray-700">1</td>
+                            <td class="p-3 border-b border-gray-700">Alice</td>
+                            <td class="p-3 border-b border-gray-700">Smith</td>
+                            <td class="p-3 border-b border-gray-700">alice@example.com</td>
+                            <td class="p-3 border-b border-gray-700">2023-09-01</td>
+                        </tr>
+                        <tr class="bg-gray-700">
+                            <td class="p-3 border-b border-gray-600">2</td>
+                            <td class="p-3 border-b border-gray-600">Bob</td>
+                            <td class="p-3 border-b border-gray-600">Johnson</td>
+                            <td class="p-3 border-b border-gray-600">bob@example.com</td>
+                            <td class="p-3 border-b border-gray-600">2023-09-01</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Example Table: `Courses` and `Enrollments` (with Foreign Key)</h3>
+            <p>
+                A `Courses` table might have `course_id` (PK). An `Enrollments` table would link `student_id` (FK to `Students`) and `course_id` (FK to `Courses`).
+            </p>
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full text-left table-auto border-collapse mb-4">
+                    <thead>
+                        <tr class="bg-gray-700">
+                            <th class="p-3 border-b-2 border-gray-600"><code>course_id</code> (PK)</th>
+                            <th class="p-3 border-b-2 border-gray-600"><code>course_name</code></th>
+                            <th class="p-3 border-b-2 border-gray-600"><code>credits</code></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-gray-800">
+                            <td class="p-3 border-b border-gray-700">101</td>
+                            <td class="p-3 border-b border-gray-700">Math Basics</td>
+                            <td class="p-3 border-b border-gray-700">3</td>
+                        </tr>
+                        <tr class="bg-gray-700">
+                            <td class="p-3 border-b border-gray-600">102</td>
+                            <td class="p-3 border-b border-gray-600">History Intro</td>
+                            <td class="p-3 border-b border-gray-600">3</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="w-full text-left table-auto border-collapse">
+                    <thead>
+                        <tr class="bg-gray-700">
+                            <th class="p-3 border-b-2 border-gray-600"><code>enrollment_id</code> (PK)</th>
+                            <th class="p-3 border-b-2 border-gray-600"><code>student_id</code> (FK)</th>
+                            <th class="p-3 border-b-2 border-gray-600"><code>course_id</code> (FK)</th>
+                            <th class="p-3 border-b-2 border-gray-600"><code>grade</code></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-gray-800">
+                            <td class="p-3 border-b border-gray-700">1</td>
+                            <td class="p-3 border-b border-gray-700">1</td>
+                            <td class="p-3 border-b border-gray-700">101</td>
+                            <td class="p-3 border-b border-gray-700">A</td>
+                        </tr>
+                        <tr class="bg-gray-700">
+                            <td class="p-3 border-b border-gray-600">2</td>
+                            <td class="p-3 border-b border-gray-600">2</td>
+                            <td class="p-3 border-b border-gray-600">101</td>
+                            <td class="p-3 border-b border-gray-600">B</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="database-design" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-teal-400">🎨</span> Database Design Principles
+            </h2>
+            <p>
+                Good database design is crucial for data integrity, efficiency, and scalability.
+            </p>
+            <h3>Normalization (Normal Forms)</h3>
+            <p>
+                Normalization is the process of organizing the columns and tables of a relational database to minimize data redundancy and improve data integrity. It's often broken down into "Normal Forms":
+            </p>
+            <ul class="list-disc list-inside mb-4">
+                <li>
+                    <strong>First Normal Form (1NF):</strong> Each column contains atomic (indivisible) values, and there are no repeating groups of columns.
+                </li>
+                <li>
+                    <strong>Second Normal Form (2NF):</strong> Must be in 1NF, and all non-key attributes are fully dependent on the primary key. (Applies to tables with composite primary keys).
+                </li>
+                <li>
+                    <strong>Third Normal Form (3NF):</strong> Must be in 2NF, and all non-key attributes are non-transitively dependent on the primary key (i.e., no transitive dependencies).
+                </li>
+                <li>
+                    Higher Normal Forms (BCNF, 4NF, 5NF) exist for more complex scenarios.
+                </li>
+            </ul>
+            <p>
+                **Goal:** Reduce data duplication and ensure data consistency.
+            </p>
+
+            <h3>Entity-Relationship (ER) Diagrams</h3>
+            <p>
+                ER diagrams are visual tools used to represent the relationships between entities (tables) in a database. They help in designing a database structure before implementation.
+            </p>
+            <p>Key components:</p>
+            <ul class="list-disc list-inside mb-4">
+                <li><strong>Entities:</strong> Represented as rectangles (e.g., Student, Course).</li>
+                <li><strong>Attributes:</strong> Represented as ovals attached to entities (e.g., student_id, student_name).</li>
+                <li><strong>Relationships:</strong> Represented as diamonds (e.g., "enrolls in" between Student and Course).</li>
+                <li><strong>Cardinality:</strong> Indicates the number of instances of one entity that can be associated with the number of instances of another entity (e.g., one-to-one, one-to-many, many-to-many).</li>
+            </ul>
+            <p class="text-sm text-gray-400">
+                *While we can't draw ER diagrams interactively here, understanding their purpose is key for visual database design.*
+            </p>
+        </section>
+
+        <section id="basic-sql-queries" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-red-400">🔍</span> Basic SQL Queries: SELECT & WHERE
+            </h2>
+            <p>The `SELECT` statement is the most frequently used SQL command. It's used to retrieve data from one or more tables.</p>
+
+            <h3>`SELECT` Statement</h3>
+            <h4>Selecting All Columns</h4>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: Select All</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+SELECT *
+FROM Students;
+</pre>
+            </div>
+            <p>Retrieves all columns and all rows from the `Students` table.</p>
+
+            <h4>Selecting Specific Columns</h4>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: Select Specific Columns</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+SELECT first_name, last_name, email
+FROM Students;
+</pre>
+            </div>
+            <p>Retrieves only the `first_name`, `last_name`, and `email` columns from the `Students` table.</p>
+
+            <h4>Using `AS` for Aliases</h4>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: Column Aliases</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+SELECT first_name AS "First Name", last_name AS "Last Name"
+FROM Students;
+</pre>
+            </div>
+            <p>Renames columns in the result set for readability.</p>
+
+            <h3>`WHERE` Clause (Filtering Data)</h3>
+            <p>The `WHERE` clause is used to filter records based on a specified condition.</p>
+            <h4>Filtering with Equality (`=`)</h4>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: WHERE Clause</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+SELECT *
+FROM Students
+WHERE student_id = 1;
+</pre>
+            </div>
+            <p>Retrieves the student with `student_id` equal to 1.</p>
+
+            <h4>Filtering with String Matching (`LIKE`)</h4>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: LIKE Operator</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+SELECT first_name, last_name
+FROM Students
+WHERE first_name LIKE 'A%'; -- Starts with 'A'
+</pre>
+            </div>
+            <p>Retrieves students whose `first_name` starts with 'A'. (`%` is a wildcard for zero or more characters, `_` for a single character).</p>
+
+            <h4>Combining Conditions (`AND`, `OR`, `NOT`)</h4>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: AND, OR, NOT</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+SELECT *
+FROM Students
+WHERE enrollment_date >= '2023-09-01' AND student_id <= 10;
+
+SELECT *
+FROM Courses
+WHERE credits = 3 OR course_name LIKE '%Math%';
+</pre>
+            </div>
+
+            <h4>`IN` Operator</h4>
+            <p>Used to specify multiple possible values for a column.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: IN Operator</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+SELECT *
+FROM Students
+WHERE student_id IN (1, 3, 5);
+</pre>
+            </div>
+
+            <h4>`BETWEEN` Operator</h4>
+            <p>Used to select values within a given range.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: BETWEEN Operator</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+SELECT *
+FROM Enrollments
+WHERE grade BETWEEN 'A' AND 'B'; -- Includes A and B
+</pre>
+            </div>
+        </section>
+
+        <section id="data-manipulation" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-indigo-400">📝</span> Data Manipulation: INSERT, UPDATE, DELETE
+            </h2>
+            <p>These commands are used to modify data within existing tables.</p>
+
+            <h3>`INSERT` Statement</h3>
+            <p>Used to add new rows of data into a table.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: INSERT</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+-- Inserting into Students table (assuming student_id is auto-incrementing)
+INSERT INTO Students (first_name, last_name, email, enrollment_date)
+VALUES ('Charlie', 'Brown', 'charlie@example.com', '2023-09-15');
+
+-- Inserting all columns (order must match table's column order)
+INSERT INTO Courses VALUES (103, 'Art History', 2);
+</pre>
+            </div>
+
+            <h3>`UPDATE` Statement</h3>
+            <p>Used to modify existing data in a table.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: UPDATE</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+-- Update a student's email
+UPDATE Students
+SET email = 'alice.smith@example.com'
+WHERE student_id = 1;
+
+-- Update multiple columns
+UPDATE Enrollments
+SET grade = 'A+', enrollment_date = '2024-01-10'
+WHERE student_id = 1 AND course_id = 101;
+</pre>
+            </div>
+            <p><strong>Caution:</strong> Always use a `WHERE` clause with `UPDATE` to avoid updating all rows in the table!</p>
+
+            <h3>`DELETE` Statement</h3>
+            <p>Used to remove existing rows from a table.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: DELETE</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+-- Delete a specific student
+DELETE FROM Students
+WHERE student_id = 2;
+
+-- Delete all enrollments with a grade of 'F'
+DELETE FROM Enrollments
+WHERE grade = 'F';
+</pre>
+            </div>
+            <p><strong>Caution:</strong> Always use a `WHERE` clause with `DELETE` to avoid deleting all rows in the table!</p>
+        </section>
+
+        <section id="advanced-sql" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-cyan-400">📈</span> Advanced SQL: JOINs, Aggregates & Subqueries
+            </h2>
+
+            <h3>`JOIN` Operations (Combining Tables)</h3>
+            <p>
+                `JOIN` clauses are used to combine rows from two or more tables, based on a related column between them.
+            </p>
+            <ul class="list-disc list-inside mb-4">
+                <li>
+                    <strong>`INNER JOIN` (or just `JOIN`):</strong> Returns rows when there is a match in both tables.
+                </li>
+                <li>
+                    <strong>`LEFT JOIN` (or `LEFT OUTER JOIN`):</strong> Returns all rows from the left table, and the matching rows from the right table. If no match, NULLs for right table columns.
+                </li>
+                <li>
+                    <strong>`RIGHT JOIN` (or `RIGHT OUTER JOIN`):</strong> Returns all rows from the right table, and the matching rows from the left table. If no match, NULLs for left table columns.
+                </li>
+                <li>
+                    <strong>`FULL OUTER JOIN` (or `FULL JOIN`):</strong> Returns all rows when there is a match in one of the tables.
+                </li>
+            </ul>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: INNER JOIN Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+-- Get student names and the courses they are enrolled in
+SELECT
+    S.first_name,
+    S.last_name,
+    C.course_name,
+    E.grade
+FROM
+    Students AS S
+INNER JOIN
+    Enrollments AS E ON S.student_id = E.student_id
+INNER JOIN
+    Courses AS C ON E.course_id = C.course_id
+WHERE
+    E.grade = 'A';
+</pre>
+            </div>
+
+            <h3>Aggregate Functions (`COUNT`, `SUM`, `AVG`, `MIN`, `MAX`)</h3>
+            <p>
+                Used to perform calculations on a set of rows and return a single summary value.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: Aggregate Functions</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+-- Total number of students
+SELECT COUNT(student_id) FROM Students;
+
+-- Average credits of all courses
+SELECT AVG(credits) FROM Courses;
+
+-- Find the highest grade given
+SELECT MAX(grade) FROM Enrollments;
+</pre>
+            </div>
+
+            <h3>`GROUP BY` Clause</h3>
+            <p>
+                Used with aggregate functions to group rows that have the same values in specified columns into a set of summary rows.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: GROUP BY</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+-- Count students per enrollment date
+SELECT enrollment_date, COUNT(student_id) AS "Number of Students"
+FROM Students
+GROUP BY enrollment_date;
+
+-- Average grade per course
+SELECT C.course_name, AVG(E.grade) AS "Average Grade"
+FROM Enrollments AS E
+INNER JOIN Courses AS C ON E.course_id = C.course_id
+GROUP BY C.course_name;
+</pre>
+            </div>
+
+            <h3>`HAVING` Clause</h3>
+            <p>
+                Used to filter groups created by the `GROUP BY` clause. It's like `WHERE`, but for groups.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: HAVING</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+-- Courses with more than 1 enrollment
+SELECT C.course_name, COUNT(E.enrollment_id) AS "Total Enrollments"
+FROM Enrollments AS E
+INNER JOIN Courses AS C ON E.course_id = C.course_id
+GROUP BY C.course_name
+HAVING COUNT(E.enrollment_id) > 1;
+</pre>
+            </div>
+
+            <h3>`ORDER BY` Clause</h3>
+            <p>
+                Used to sort the result set of a query in ascending (`ASC`) or descending (`DESC`) order.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: ORDER BY</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+-- Order students by last name ascending
+SELECT *
+FROM Students
+ORDER BY last_name ASC;
+
+-- Order enrollments by grade descending, then student_id ascending
+SELECT *
+FROM Enrollments
+ORDER BY grade DESC, student_id ASC;
+</pre>
+            </div>
+
+            <h3>Subqueries (Nested Queries)</h3>
+            <p>
+                A subquery (or inner query) is a query nested inside another SQL query. It executes first, and its result is used by the outer query.
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Query: Subquery Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+-- Find students enrolled in 'Math Basics'
+SELECT first_name, last_name
+FROM Students
+WHERE student_id IN (
+    SELECT student_id
+    FROM Enrollments
+    WHERE course_id = (SELECT course_id FROM Courses WHERE course_name = 'Math Basics')
+);
+</pre>
+            </div>
+        </section>
+
+        <section id="indexes-performance" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-orange-400">🚀</span> Indexes & Performance Optimization
+            </h2>
+            <p>
+                Indexes are special lookup tables that the database search engine can use to speed up data retrieval. Think of them like the index in a book.
+            </p>
+            <h3>How Indexes Work</h3>
+            <p>
+                Indexes are created on columns that are frequently used in `WHERE` clauses, `JOIN` conditions, or `ORDER BY` clauses. They allow the database to quickly find the data without scanning the entire table (full table scan).
+            </p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>SQL Command: CREATE INDEX</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+CREATE INDEX idx_student_lastname ON Students (last_name);
+
+CREATE INDEX idx_enrollment_student_course ON Enrollments (student_id, course_id);
+</pre>
+            </div>
+            <p>
+                **Trade-off:** Indexes speed up read operations (SELECT) but can slow down write operations (INSERT, UPDATE, DELETE) because the index itself needs to be updated. Use them judiciously.
+            </p>
+        </section>
+
+        <section id="best-practices" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-lime-400">🌟</span> Best Practices for SQL & Databases
+            </h2>
+            <p>To design efficient databases and write effective SQL queries:</p>
+            <ul class="list-disc list-inside mb-4">
+                <li><strong>Normalize Your Database:</strong> Aim for 3NF to reduce redundancy and improve data integrity.</li>
+                <li><strong>Use Meaningful Names:</strong> Name tables, columns, and constraints clearly and consistently.</li>
+                <li><strong>Define Primary and Foreign Keys:</strong> Essential for maintaining relationships and data integrity.</li>
+                <li><strong>Choose Appropriate Data Types:</strong> Select data types that fit the data to optimize storage and performance.</li>
+                <li><strong>Index Judiciously:</strong> Create indexes on columns used in `WHERE`, `JOIN`, and `ORDER BY` clauses, but avoid over-indexing.</li>
+                <li><strong>Avoid `SELECT *`:</strong> Explicitly list columns you need to retrieve. This improves performance and clarity.</li>
+                <li><strong>Use `WHERE` Clauses Effectively:</strong> Filter data as early as possible in your queries.</li>
+                <li><strong>Understand `JOIN` Types:</strong> Choose the correct `JOIN` type for your data retrieval needs.</li>
+                <li><strong>Minimize Subqueries:</strong> While useful, complex subqueries can sometimes be less efficient than `JOIN`s.</li>
+                <li><strong>Test Your Queries:</strong> Always test your SQL queries on representative data to ensure they return the correct results and perform well.</li>
+                <li><strong>Secure Your Database:</strong> Implement strong access controls, encryption, and regular backups.</li>
+            </ul>
+        </section>
+
+        <section id="conclusion" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-blue-400">🚀</span> Your SQL & Database Journey Continues!
+            </h2>
+            <p>
+                Congratulations! You've gained a comprehensive understanding of SQL and database design, from fundamental concepts like tables and keys to advanced querying with JOINs and the principles of normalization. These skills are foundational for any aspiring developer, data analyst, or data scientist.
+            </p>
+            <p>
+                The world of databases is vast, with many different DBMS platforms (MySQL, PostgreSQL, SQL Server, Oracle, etc.), each with its nuances. Continue practicing with different datasets, experiment with more complex queries, and explore specific database systems to deepen your expertise.
+            </p>
+            <p>
+                We at Whizmath are excited to see how you'll leverage data to build insightful and powerful applications. Keep exploring, keep querying, and keep innovating!
+            </p>
+            <h3>Further Learning Resources:</h3>
+            <ul class="list-disc list-inside mb-4">
+                <li><strong>W3Schools SQL Tutorial:</strong> <a href="https://www.w3schools.com/sql/" target="_blank" rel="noopener noreferrer">w3schools.com/sql</a></li>
+                <li><strong>SQLZoo:</strong> <a href="https://sqlzoo.net/" target="_blank" rel="noopener noreferrer">sqlzoo.net</a> (Interactive SQL Tutorials)</li>
+                <li><strong>Books:</strong> "SQL for Dummies" by Allen G. Taylor, "SQL Cookbook" by Anthony Molinaro.</li>
+                <li><strong>Online Courses:</strong> Look for courses on specific DBMS (e.g., "PostgreSQL Fundamentals", "MySQL for Developers").</li>
+            </ul>
+            <div class="text-center mt-12">
+                <a href="programming.html" class="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-4 px-8 rounded-full text-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300 ease-in-out">
+                    Explore More Whizmath Lessons
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Three.js Background Animation - Kept separate for clarity
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            if (typeof THREE === 'undefined') {
+                console.error("THREE.js is not loaded. Skipping Three.js initialization.");
+                return;
+            }
+
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-bg'), antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setClearColor(0x1a202c, 1); // Match body background
+
+            camera.position.z = 5;
+
+            const particleCount = 1000;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            const color1 = new THREE.Color(0x63b3ed); // Blue
+            const color2 = new THREE.Color(0x9f7aea); // Purple
+
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                positions[i] = (Math.random() - 0.5) * 20; // x
+                positions[i + 1] = (Math.random() - 0.5) * 20; // y
+                positions[i + 2] = (Math.random() - 0.5) * 20; // z
+
+                const mixFactor = Math.random();
+                const mixedColor = new THREE.Color().copy(color1).lerp(color2, mixFactor);
+                colors[i] = mixedColor.r;
+                colors[i + 1] = mixedColor.g;
+                colors[i + 2] = mixedColor.b;
+            }
+
+            const particleGeometry = new THREE.BufferGeometry();
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.05,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.7,
+                blending: THREE.AdditiveBlending
+            });
+
+            particles = new THREE.Points(particleGeometry, particleMaterial);
+            scene.add(particles);
+
+            const ambientLight = new THREE.AmbientLight(0x404040); 
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            directionalLight.position.set(0, 1, 0);
+            scene.add(directionalLight);
+
+            animateThreeJS();
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0008;
+
+                const positions = particles.geometry.attributes.position.array;
+                for (let i = 0; i < positions.length; i += 3) {
+                    positions[i + 2] += 0.001; 
+                    if (positions[i + 2] > camera.position.z + 5) {
+                        positions[i + 2] = (Math.random() - 0.5) * 20; 
+                    }
+                }
+                particles.geometry.attributes.position.needsUpdate = true;
+            }
+            if (renderer && scene && camera) { // Check if all are defined before rendering
+                renderer.render(scene, camera);
+            }
+        }
+
+        function onWindowResizeThreeJS() {
+            if (camera && renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        }
+
+        // Common JS function for code copying
+        window.copyCode = (button) => {
+            const codeBlock = button.parentNode.nextElementSibling;
+            const codeText = codeBlock.innerText;
+
+            const textarea = document.createElement('textarea');
+            textarea.value = codeText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            const feedbackSpan = document.createElement('span');
+            feedbackSpan.className = 'copied-feedback';
+            feedbackSpan.innerText = 'Copied!';
+            button.parentNode.appendChild(feedbackSpan);
+
+            setTimeout(() => {
+                feedbackSpan.classList.add('show');
+            }, 10);
+
+            setTimeout(() => {
+                feedbackSpan.classList.remove('show');
+                feedbackSpan.addEventListener('transitionend', () => {
+                    feedbackSpan.remove();
+                }, { once: true });
+            }, 1500);
+        };
+
+        // Initialize Three.js and other non-React DOM listeners when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Three.js initialization with a small delay
+            setTimeout(() => { 
+                initThreeJS();
+                window.addEventListener('resize', onWindowResizeThreeJS);
+            }, 100); 
+            
+            // Back to Index Button Functionality
+            const backToIndexBtn = document.getElementById('backToIndex');
+            if (backToIndexBtn) { 
+                backToIndexBtn.addEventListener('click', () => {
+                    window.location.href = 'index.html'; 
+                });
+            } else {
+                console.error("Back to Index button not found.");
+            }
+        });
+    </script>
+</body>
+</html>
