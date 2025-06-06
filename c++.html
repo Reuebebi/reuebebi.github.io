@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++: From Beginner to Advanced - The Ultimate Whizmath Guide</title>
+    <meta name="description" content="A comprehensive guide to C++ for the Whizmath community, covering everything from fundamental syntax to advanced OOP, templates, STL, and modern C++ features, presented in a sleek, interactive layout.">
+    <meta name="keywords" content="C++, programming, tutorial, guide, beginners, advanced, OOP, templates, STL, memory management, smart pointers, Whizmath, learn C++, compiler, syntax">
+    
+    <!-- Google Fonts - Inter for clean typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        /* Custom CSS for Three.js Canvas and overall page styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            background-color: #1a202c; /* Dark background as a fallback */
+            color: #e2e8f0;
+            line-height: 1.6;
+            scroll-behavior: smooth; /* Smooth scrolling */
+        }
+
+        #three-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send to back */
+            opacity: 0.8; /* Slightly transparent */
+        }
+
+        .lesson-container { /* Renamed from #vue-app to a generic class */
+            position: relative;
+            z-index: 1; /* Keep content above Three.js background */
+            background-color: rgba(26, 32, 44, 0.8); /* Semi-transparent dark background for readability */
+            backdrop-filter: blur(8px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(8px); /* For Safari */
+            padding: 2rem;
+            border-radius: 1.5rem;
+            margin: 2rem auto;
+            max-width: 90vw; /* Adjust for responsiveness */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3, h4 {
+            color: #63b3ed; /* A vibrant blue for headings */
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        h1 { font-size: 3.5rem; }
+        h2 { font-size: 2.5rem; }
+        h3 { font-size: 1.875rem; }
+        h4 { font-size: 1.5rem; }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        a {
+            color: #9f7aea; /* A soft purple for links */
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #b794f4;
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        ul li { list-style-type: disc; margin-bottom: 0.5rem; }
+        ol li { list-style-type: decimal; margin-bottom: 0.5rem; }
+
+        .code-container {
+            position: relative;
+            background-color: #2d3748; /* Darker background for code blocks */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            overflow-x: auto; /* Allow horizontal scrolling for wide code */
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+
+        .code-content {
+            font-family: 'Fira Code', 'JetBrains Mono', monospace; /* Monospace font for code */
+            font-size: 0.95rem;
+            white-space: pre-wrap; /* Preserve whitespace and wrap long lines */
+            word-break: break-all;
+            color: #cbd5e0;
+        }
+
+        .copy-button {
+            background-color: #4299e1; /* Blue button */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            outline: none;
+            border: none;
+        }
+
+        .copy-button:hover {
+            background-color: #3182ce;
+            transform: translateY(-1px);
+        }
+
+        .copy-button:active {
+            transform: translateY(0);
+        }
+
+        .copied-feedback {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background-color: #48bb78; /* Green for success */
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.3rem;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .copied-feedback.show {
+            opacity: 1;
+        }
+
+        .back-button {
+            position: fixed;
+            background-color: #63b3ed;
+            color: white;
+            border-radius: 9999px; /* Fully rounded */
+            padding: 1rem;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+            z-index: 100;
+            top: 2rem; 
+            left: 2rem; 
+            font-size: 2rem; 
+        }
+
+        .back-button:hover {
+            background-color: #4299e1;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .lesson-container {
+                padding: 1.5rem;
+                margin: 1rem auto;
+                max-width: 95vw;
+            }
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            h3 { font-size: 1.5rem; }
+            h4 { font-size: 1.25rem; }
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.75rem;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <!-- Three.js Background Canvas -->
+    <canvas id="three-bg"></canvas>
+
+    <!-- Back to Index Button -->
+    <button id="backToIndex" class="back-button">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+    </button>
+
+    <!-- Lesson Content Container -->
+    <div class="lesson-container">
+        <header class="text-center mb-12">
+            <h1 class="text-6xl md:text-7xl lg:text-8xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-blue-500 to-indigo-500">
+                Whizmath: Mastering C++
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400 mb-8">
+                Unlocking Performance and Control in Programming
+            </p>
+            <hr class="border-t-2 border-blue-600 w-1/4 mx-auto mb-12" />
+        </header>
+
+        <section id="introduction" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-purple-400">✨</span> Welcome to the World of C++!
+            </h2>
+            <p>
+                Hello, aspiring programmers! Welcome to this in-depth guide on C++, brought to you by Whizmath. C++ is a general-purpose programming language created by Bjarne Stroustrup as an extension of the C language. It is designed to provide maximum control over system resources and memory.
+            </p>
+            <p>
+                C++ is highly efficient and flexible, making it suitable for a wide range of applications, including:
+            </p>
+            <ul class="list-disc list-inside mb-4">
+                <li>Operating systems (e.g., Windows, macOS, Linux kernels)</li>
+                <li>Game development (e.g., Unreal Engine, Unity backend)</li>
+                <li>High-performance computing (e.g., scientific simulations, financial trading)</li>
+                <li>Embedded systems and IoT devices</li>
+                <li>Database systems</li>
+                <li>Web browsers (rendering engines)</li>
+                <li>Compilers and developer tools</li>
+            </ul>
+            <p>
+                This lesson is designed to take you from the very basics of C++ to advanced topics, equipping you with the knowledge to write robust, efficient, and well-structured programs. Let's begin our journey into the powerful world of C++!
+            </p>
+        </section>
+
+        <section id="what-is-cpp" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-green-400">💡</span> What Exactly is C++?
+            </h2>
+            <p>
+                C++ is a compiled, statically-typed, general-purpose, case-sensitive, free-form programming language that supports object-oriented, procedural, and generic programming.
+            </p>
+            <p>Here are some key characteristics:</p>
+            <ul class="list-disc list-inside mb-4">
+                <li><strong>Compiled Language:</strong> C++ code is translated directly into machine code by a compiler, resulting in high performance.</li>
+                <li><strong>Statically-Typed:</strong> Variable types are checked at compile time, reducing runtime errors.</li>
+                <li><strong>General-Purpose:</strong> Can be used for diverse applications.</li>
+                <li><strong>Case-Sensitive:</strong> <code>myVariable</code> is different from <code>myvariable</code>.</li>
+                <li><strong>Free-Form:</strong> Not constrained by specific indentation rules (though good indentation is crucial for readability).</li>
+                <li><strong>Multi-Paradigm:</strong> Supports:
+                    <ul class="list-circle list-inside ml-4">
+                        <li><strong>Procedural Programming:</strong> Like C, focusing on functions and sequential execution.</li>
+                        <li><strong>Object-Oriented Programming (OOP):</strong> Using objects and classes to structure code, emphasizing encapsulation, inheritance, and polymorphism.</li>
+                        <li><strong>Generic Programming:</strong> Writing code that works with different data types using templates.</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section id="setup-and-basics" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-yellow-400">🛠️</span> Getting Started: Basic Program Structure
+            </h2>
+            <p>Let's start with the classic "Hello, World!" program in C++.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Hello, World! Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt; // Include the iostream library for input/output operations
+
+int main() {          // The main function, where program execution begins
+    std::cout &lt;&lt; "Hello, Whizmath C++!" &lt;&lt; std::endl; // Print "Hello, Whizmath C++!" to the console
+    return 0;         // Indicate successful program termination
+}
+</pre>
+            </div>
+
+            <h3>Explanation:</h3>
+            <ul class="list-disc list-inside mb-4">
+                <li><code>#include &lt;iostream&gt;</code>: This line is a preprocessor directive. It tells the compiler to include the <code>iostream</code> (input/output stream) library, which provides functionalities like <code>cout</code> (for output) and <code>cin</code> (for input).</li>
+                <li><code>int main()</code>: This is the main function, the entry point of every C++ program. <code>int</code> indicates that it returns an integer value, typically <code>0</code> for successful execution.</li>
+                <li><code>std::cout</code>: This is the standard output stream object. <code>cout</code> is used to print data to the console. <code>std::</code> indicates that <code>cout</code> belongs to the <code>std</code> (standard) namespace.</li>
+                <li><code>&lt;&lt;</code>: This is the insertion operator, used to send data to the <code>cout</code> stream.</li>
+                <li><code>"Hello, Whizmath C++!"</code>: This is the string literal that will be printed.</li>
+                <li><code>std::endl</code>: This inserts a newline character and flushes the output buffer.</li>
+                <li><code>return 0;</code>: This statement indicates that the program executed successfully.</li>
+            </ul>
+
+            <h3>Using <code>using namespace std;</code> (Common Practice):</h3>
+            <p>To avoid typing <code>std::</code> repeatedly, you can use <code>using namespace std;</code>. While convenient for small programs, it's generally discouraged in large projects to prevent naming conflicts.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Using `namespace std` Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+
+using namespace std; // Use the standard namespace
+
+int main() {
+    cout &lt;&lt; "Hello again, C++!" &lt;&lt; endl; // No need for std::
+    return 0;
+}
+</pre>
+            </div>
+        </section>
+
+        <section id="core-concepts" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-red-400">⚙️</span> Core Concepts: Variables, Data Types & Operators
+            </h2>
+            <h3>Variables and Data Types</h3>
+            <p>Variables are containers for storing data. C++ is statically typed, meaning you must declare the type of a variable before using it.</p>
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full text-left table-auto border-collapse">
+                    <thead>
+                        <tr class="bg-gray-700">
+                            <th class="p-3 border-b-2 border-gray-600">Data Type</th>
+                            <th class="p-3 border-b-2 border-gray-600">Description</th>
+                            <th class="p-3 border-b-2 border-gray-600">Size (typical)</th>
+                            <th class="p-3 border-b-2 border-gray-600">Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-gray-800">
+                            <td class="p-3 border-b border-gray-700"><code>int</code></td>
+                            <td class="p-3 border-b border-gray-700">Integers (whole numbers)</td>
+                            <td class="p-3 border-b border-gray-700">4 bytes</td>
+                            <td class="p-3 border-b border-gray-700"><code>int age = 30;</code></td>
+                        </tr>
+                        <tr class="bg-gray-700">
+                            <td class="p-3 border-b border-gray-600"><code>float</code></td>
+                            <td class="p-3 border-b border-gray-600">Single-precision floating-point numbers</td>
+                            <td class="p-3 border-b border-gray-600">4 bytes</td>
+                            <td class="p-3 border-b border-gray-600"><code>float pi = 3.14f;</code></td>
+                        </tr>
+                        <tr class="bg-gray-800">
+                            <td class="p-3 border-b border-gray-700"><code>double</code></td>
+                            <td class="p-3 border-b border-gray-700">Double-precision floating-point numbers</td>
+                            <td class="p-3 border-b border-gray-700">8 bytes</td>
+                            <td class="p-3 border-b border-gray-700"><code>double gpa = 3.85;</code></td>
+                        </tr>
+                        <tr class="bg-gray-700">
+                            <td class="p-3 border-b border-gray-600"><code>char</code></td>
+                            <td class="p-3 border-b border-gray-600">Single character</td>
+                            <td class="p-3 border-b border-gray-600">1 byte</td>
+                            <td class="p-3 border-b border-gray-600"><code>char grade = 'A';</code></td>
+                        </tr>
+                        <tr class="bg-gray-800">
+                            <td class="p-3 border-b border-gray-700"><code>bool</code></td>
+                            <td class="p-3 border-b border-gray-700">Boolean (true or false)</td>
+                            <td class="p-3 border-b border-gray-700">1 byte</td>
+                            <td class="p-3 border-b border-gray-700"><code>bool isActive = true;</code></td>
+                        </tr>
+                        <tr class="bg-gray-700">
+                            <td class="p-3 border-b border-gray-600"><code>std::string</code></td>
+                            <td class="p-3 border-b border-gray-600">Sequence of characters (requires <code>&lt;string&gt;</code> header)</td>
+                            <td class="p-3 border-b border-gray-600">Varies</td>
+                            <td class="p-3 border-b border-gray-600"><code>std::string name = "Alice";</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Variables and Data Types Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;string&gt; // Required for std::string
+
+int main() {
+    int numberOfStudents = 25;
+    double averageScore = 92.5;
+    char initial = 'J';
+    bool courseCompleted = true;
+    std::string greeting = "Welcome to C++!";
+
+    std::cout &lt;&lt; "Students: " &lt;&lt; numberOfStudents &lt;&lt; std::endl;
+    std::cout &lt;&lt; "Average Score: " &lt;&lt; averageScore &lt;&lt; std::endl;
+    std::cout &lt;&lt; "Initial: " &lt;&lt; initial &lt;&lt; std::endl;
+    std::cout &lt;&lt; "Course Completed: " &lt;&lt; courseCompleted &lt;&lt; std::endl; // Prints 1 for true, 0 for false
+    std::cout &lt;&lt; "Message: " &lt;&lt; greeting &lt;&lt; std::endl;
+
+    return 0;
+}
+</pre>
+            </div>
+
+            <h3>Operators</h3>
+            <p>Operators perform operations on variables and values.</p>
+            <ul class="list-disc list-inside mb-4">
+                <li><strong>Arithmetic Operators:</strong> <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code> (modulo)</li>
+                <li><strong>Relational Operators:</strong> <code>==</code> (equal to), <code>!=</code> (not equal to), <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code></li>
+                <li><strong>Logical Operators:</strong> <code>&&</code> (AND), <code>||</code> (OR), <code>!</code> (NOT)</li>
+                <li><strong>Assignment Operators:</strong> <code>=</code>, <code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>, <code>%=</code></li>
+                <li><strong>Increment/Decrement Operators:</strong> <code>++</code> (increment), <code>--</code> (decrement)</li>
+            </ul>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Operators Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+
+int main() {
+    int a = 10, b = 5;
+    
+    // Arithmetic
+    std::cout &lt;&lt; "a + b = " &lt;&lt; a + b &lt;&lt; std::endl; // 15
+    std::cout &lt;&lt; "a / b = " &lt;&lt; a / b &lt;&lt; std::endl; // 2
+
+    // Relational
+    std::cout &lt;&lt; "(a == b) is " &lt;&lt; (a == b) &lt;&lt; std::endl; // 0 (false)
+    std::cout &lt;&lt; "(a > b) is " &lt;&lt; (a > b) &lt;&lt; std::endl;   // 1 (true)
+
+    // Logical
+    bool x = true, y = false;
+    std::cout &lt;&lt; "(x && y) is " &lt;&lt; (x && y) &lt;&lt; std::endl; // 0 (false)
+    std::cout &lt;&lt; "(x || y) is " &lt;&lt; (x || y) &lt;&lt; std::endl; // 1 (true)
+
+    // Assignment
+    a += 2; // a is now 12
+    std::cout &lt;&lt; "a after a += 2: " &lt;&lt; a &lt;&lt; std::endl;
+
+    // Increment/Decrement
+    b++; // b is now 6
+    std::cout &lt;&lt; "b after b++: " &lt;&lt; b &lt;&lt; std::endl;
+
+    return 0;
+}
+</pre>
+            </div>
+        </section>
+
+        <section id="control-flow" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-orange-400">📝</span> Control Flow: Decisions & Loops
+            </h2>
+            <p>Control flow statements determine the order in which instructions are executed.</p>
+
+            <h3>`if-else` Statements</h3>
+            <p>Used for conditional execution.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>if-else Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+
+int main() {
+    int score = 75;
+
+    if (score >= 90) {
+        std::cout &lt;&lt; "Grade: A" &lt;&lt; std::endl;
+    } else if (score >= 80) {
+        std::cout &lt;&lt; "Grade: B" &lt;&lt; std::endl;
+    } else if (score >= 70) {
+        std::cout &lt;&lt; "Grade: C" &lt;&lt; std::endl;
+    } else {
+        std::cout &lt;&lt; "Grade: F" &lt;&lt; std::endl;
+    }
+    return 0;
+}
+</pre>
+            </div>
+
+            <h3>`switch` Statement</h3>
+            <p>Used for multi-way branching based on a single variable's value.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>switch Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+
+int main() {
+    char grade = 'B';
+
+    switch (grade) {
+        case 'A':
+            std::cout &lt;&lt; "Excellent!" &lt;&lt; std::endl;
+            break; // Exit switch after executing this case
+        case 'B':
+            std::cout &lt;&lt; "Very Good!" &lt;&lt; std::endl;
+            break;
+        case 'C':
+            std::cout &lt;&lt; "Good!" &lt;&lt; std::endl;
+            break;
+        default: // Executed if no case matches
+            std::cout &lt;&lt; "Needs improvement." &lt;&lt; std::endl;
+    }
+    return 0;
+}
+</pre>
+            </div>
+
+            <h3>Loops (`for`, `while`, `do-while`)</h3>
+            <p>Used to execute a block of code repeatedly.</p>
+            <h4>`for` loop:</h4>
+            <p>Best when you know the number of iterations beforehand.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>for loop Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+
+int main() {
+    for (int i = 0; i &lt; 5; ++i) { // Initialize i, condition, increment i
+        std::cout &lt;&lt; "For loop iteration: " &lt;&lt; i &lt;&lt; std::endl;
+    }
+    return 0;
+}
+</pre>
+            </div>
+
+            <h4>`while` loop:</h4>
+            <p>Best when the number of iterations is unknown, and the loop continues as long as a condition is true.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>while loop Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+
+int main() {
+    int count = 0;
+    while (count &lt; 3) {
+        std::cout &lt;&lt; "While loop iteration: " &lt;&lt; count &lt;&lt; std::endl;
+        count++;
+    }
+    return 0;
+}
+</pre>
+            </div>
+
+            <h4>`do-while` loop:</h4>
+            <p>Similar to `while`, but the block is executed at least once before the condition is checked.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>do-while loop Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+
+int main() {
+    int i = 0;
+    do {
+        std::cout &lt;&lt; "Do-While loop iteration: " &lt;&lt; i &lt;&lt; std::endl;
+        i++;
+    } while (i &lt; 0); // Condition is false, but runs once
+    return 0;
+}
+</pre>
+            </div>
+        </section>
+
+        <section id="functions-arrays" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-purple-400">📦</span> Functions & Arrays
+            </h2>
+            <h3>Functions</h3>
+            <p>Functions are blocks of code that perform a specific task. They promote code reusability and modularity.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Functions Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;string&gt; // Required for std::string
+
+// Function Declaration (Prototype)
+// Tells the compiler about the function's name, return type, and parameters
+void greet(std::string name);
+
+// Function Definition
+int add(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    greet("Alice"); // Function call
+    int sum = add(10, 20);
+    std::cout &lt;&lt; "Sum: " &lt;&lt; sum &lt;&lt; std::endl;
+    return 0;
+}
+
+// Function Definition (if declared before main, no prototype needed)
+void greet(std::string name) {
+    std::cout &lt;&lt; "Hello, " &lt;&lt; name &lt;&lt; "!" &lt;&lt; std::endl;
+}
+</pre>
+            </div>
+
+            <h3>Arrays</h3>
+            <p>Arrays are collections of elements of the same data type, stored in contiguous memory locations.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Arrays Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+
+int main() {
+    // Declare and initialize an integer array
+    int numbers[5] = {10, 20, 30, 40, 50};
+
+    // Access elements using index (0-based)
+    std::cout &lt;&lt; "First element: " &lt;&lt; numbers[0] &lt;&lt; std::endl; // 10
+    std::cout &lt;&lt; "Third element: " &lt;&lt; numbers[2] &lt;&lt; std::endl; // 30
+
+    // Modify an element
+    numbers[1] = 25;
+    std::cout &lt;&lt; "Modified second element: " &lt;&lt; numbers[1] &lt;&lt; std::endl; // 25
+
+    // Iterate through an array
+    std::cout &lt;&lt; "All elements: ";
+    for (int i = 0; i &lt; 5; ++i) {
+        std::cout &lt;&lt; numbers[i] &lt;&lt; " ";
+    }
+    std::cout &lt;&lt; std::endl;
+
+    // Range-based for loop (C++11 and later)
+    std::cout &lt;&lt; "All elements (range-based): ";
+    for (int num : numbers) {
+        std::cout &lt;&lt; num &lt;&lt; " ";
+    }
+    std::cout &lt;&lt; std::endl;
+
+    return 0;
+}
+</pre>
+            </div>
+        </section>
+
+        <section id="intermediate-concepts" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-indigo-400">⚡</span> Intermediate Concepts: Pointers, References & OOP Fundamentals
+            </h2>
+            <h3>Pointers</h3>
+            <p>Pointers are variables that store memory addresses. They are powerful but require careful handling.</p>
+            <ul class="list-disc list-inside mb-4">
+                <li><code>&amp;</code> (Address-of operator): Returns the memory address of a variable.</li>
+                <li><code>*</code> (Dereference operator): Accesses the value at the memory address stored in a pointer.</li>
+            </ul>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Pointers Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+
+int main() {
+    int value = 42;
+    int *ptr; // Declare a pointer to an integer
+
+    ptr = &amp;value; // Assign the address of 'value' to 'ptr'
+
+    std::cout &lt;&lt; "Value: " &lt;&lt; value &lt;&lt; std::endl;          // 42
+    std::cout &lt;&lt; "Address of value: " &lt;&lt; &amp;value &lt;&lt; std::endl; // Memory address (e.g., 0x7ffee...)
+    std::cout &lt;&lt; "Value of ptr (address): " &lt;&lt; ptr &lt;&lt; std::endl;    // Same memory address
+    std::cout &lt;&lt; "Value pointed to by ptr: " &lt;&lt; *ptr &lt;&lt; std::endl;  // 42 (dereferenced)
+
+    *ptr = 100; // Change value through pointer
+    std::cout &lt;&lt; "New value: " &lt;&lt; value &lt;&lt; std::endl;       // 100
+
+    return 0;
+}
+</pre>
+            </div>
+
+            <h3>References</h3>
+            <p>References are aliases (alternative names) for existing variables. Once initialized, a reference cannot be changed to refer to another variable.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>References Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+
+int main() {
+    int score = 95;
+    int &amp;refScore = score; // Declare refScore as a reference to score
+
+    std::cout &lt;&lt; "Score: " &lt;&lt; score &lt;&lt; std::endl;      // 95
+    std::cout &lt;&lt; "RefScore: " &lt;&lt; refScore &lt;&lt; std::endl; // 95
+
+    refScore = 88; // Modifying refScore also modifies score
+    std::cout &lt;&lt; "Score after refScore change: " &lt;&lt; score &lt;&lt; std::endl; // 88
+
+    return 0;
+}
+</pre>
+            </div>
+            <p><strong>Key Difference (Pointers vs. References):</strong></p>
+            <ul class="list-disc list-inside mb-4">
+                <li>Pointers can be <code>nullptr</code>, can be reassigned, and can perform pointer arithmetic.</li>
+                <li>References must be initialized at declaration, cannot be reassigned, and cannot be <code>nullptr</code>. They are generally safer and easier to use when you just need an alias.</li>
+            </ul>
+
+            <h3>Memory Management (`new` and `delete`)</h3>
+            <p>C++ allows explicit memory management using <code>new</code> (allocate memory on the heap) and <code>delete</code> (deallocate memory). This is crucial for dynamic data structures.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Memory Management Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+
+int main() {
+    int *dynamicInt = new int; // Allocate memory for an int on the heap
+    *dynamicInt = 50;
+    std::cout &lt;&lt; "Dynamically allocated int: " &lt;&lt; *dynamicInt &lt;&lt; std::endl;
+    delete dynamicInt; // Deallocate the memory
+    dynamicInt = nullptr; // Good practice to set to nullptr after deleting
+
+    // Allocate memory for an array dynamically
+    int *dynamicArray = new int[3];
+    dynamicArray[0] = 1;
+    dynamicArray[1] = 2;
+    dynamicArray[2] = 3;
+    std::cout &lt;&lt; "Dynamic array elements: " &lt;&lt; dynamicArray[0] &lt;&lt; ", " 
+              &lt;&lt; dynamicArray[1] &lt;&lt; ", " &lt;&lt; dynamicArray[2] &lt;&lt; std::endl;
+    delete[] dynamicArray; // Use delete[] for arrays
+    dynamicArray = nullptr;
+
+    return 0;
+}
+</pre>
+            </div>
+            <p><strong>Caution:</strong> Failing to <code>delete</code> allocated memory leads to <strong>memory leaks</strong>. Modern C++ prefers <strong>smart pointers</strong> (discussed later) to automate this.</p>
+
+            <h3>Structures (`struct`)</h3>
+            <p>Structures are user-defined data types that group related data members under one name.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Struct Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+struct Person {
+    std::string name;
+    int age;
+    double height;
+};
+
+int main() {
+    Person p1; // Declare a variable of type Person
+    p1.name = "John Doe";
+    p1.age = 30;
+    p1.height = 1.80;
+
+    std::cout &lt;&lt; "Person Name: " &lt;&lt; p1.name &lt;&lt; std::endl;
+    std::cout &lt;&lt; "Person Age: " &lt;&lt; p1.age &lt;&lt; std::endl;
+    std::cout &lt;&lt; "Person Height: " &lt;&lt; p1.height &lt;&lt; "m" &lt;&lt; std::endl;
+
+    return 0;
+}
+</pre>
+            </div>
+
+            <h3>Object-Oriented Programming (OOP) Fundamentals</h3>
+            <p>OOP is a programming paradigm based on the concept of "objects", which can contain data (attributes) and code (methods).</p>
+
+            <h4>Classes and Objects</h4>
+            <ul class="list-disc list-inside mb-4">
+                <li><strong>Class:</strong> A blueprint or template for creating objects. It defines the structure and behavior that objects of that class will have.</li>
+                <li><strong>Object:</strong> An instance of a class.</li>
+            </ul>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Classes and Objects Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+// Define a class named 'Car'
+class Car {
+public: // Access specifier: members are accessible from outside the class
+    std::string brand;
+    std::string model;
+    int year;
+
+    // Method (function inside a class)
+    void displayCarInfo() {
+        std::cout &lt;&lt; "Brand: " &lt;&lt; brand &lt;&lt; ", Model: " &lt;&lt; model 
+                  &lt;&lt; ", Year: " &lt;&lt; year &lt;&lt; std::endl;
+    }
+};
+
+int main() {
+    Car myCar; // Create an object (instance) of the Car class
+    myCar.brand = "Toyota";
+    myCar.model = "Camry";
+    myCar.year = 2022;
+    myCar.displayCarInfo(); // Call a method on the object
+
+    Car anotherCar;
+    anotherCar.brand = "Honda";
+    anotherCar.model = "Civic";
+    anotherCar.year = 2020;
+    anotherCar.displayCarInfo();
+
+    return 0;
+}
+</pre>
+            </div>
+
+            <h4>Constructors and Destructors</h4>
+            <ul class="list-disc list-inside mb-4">
+                <li><strong>Constructor:</strong> A special member function that is automatically called when an object of a class is created. It's used to initialize object properties. It has the same name as the class and no return type.</li>
+                <li><strong>Destructor:</strong> A special member function that is automatically called when an object is destroyed (goes out of scope or is <code>delete</code>d). It's used to release resources (like dynamically allocated memory). It has the same name as the class, prefixed with a tilde (<code>~</code>).</li>
+            </ul>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Constructors and Destructors Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+class Dog {
+public:
+    std::string name;
+    int age;
+
+    // Constructor with parameters
+    Dog(std::string dogName, int dogAge) {
+        name = dogName;
+        age = dogAge;
+        std::cout &lt;&lt; name &lt;&lt; " the dog created!" &lt;&lt; std::endl;
+    }
+
+    // Destructor
+    ~Dog() {
+        std::cout &lt;&lt; name &lt;&lt; " the dog destroyed!" &lt;&lt; std::endl;
+    }
+
+    void bark() {
+        std::cout &lt;&lt; name &lt;&lt; " says Woof! I am " &lt;&lt; age &lt;&lt; " years old." &lt;&lt; std::endl;
+    }
+};
+
+int main() {
+    Dog myDog("Buddy", 3); // Calls the constructor
+    myDog.bark();
+
+    // The destructor for myDog will be called automatically when main ends.
+
+    // Dynamic object creation (requires manual deletion)
+    Dog *anotherDog = new Dog("Max", 5); // Constructor called
+    anotherDog-&gt;bark();
+    delete anotherDog; // Destructor called
+    anotherDog = nullptr;
+
+    return 0;
+} // myDog's destructor is called here
+</pre>
+            </div>
+
+            <h4>Access Specifiers (`public`, `private`, `protected`)</h4>
+            <p>These keywords control the visibility and accessibility of class members.</p>
+            <ul class="list-disc list-inside mb-4">
+                <li><code>public</code>: Members are accessible from anywhere.</li>
+                <li><code>private</code>: Members are accessible only from within the same class. (Default for <code>class</code>).</li>
+                <li><code>protected</code>: Members are accessible from within the same class and by derived classes (inheritance).</li>
+            </ul>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Access Specifiers Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+class BankAccount {
+private: // Private members
+    std::string accountNumber;
+    double balance;
+
+public: // Public members
+    BankAccount(std::string accNum, double initialBalance) {
+        accountNumber = accNum;
+        balance = initialBalance;
+        std::cout &lt;&lt; "Account " &lt;&lt; accountNumber &lt;&lt; " created with balance " &lt;&lt; balance &lt;&lt; std::endl;
+    }
+
+    void deposit(double amount) {
+        if (amount &gt; 0) {
+            balance += amount;
+            std::cout &lt;&lt; "Deposited " &lt;&lt; amount &lt;&lt; ". New balance: " &lt;&lt; balance &lt;&lt; std::endl;
+        } else {
+            std::cout &lt;&lt; "Deposit amount must be positive." &lt;&lt; std::endl;
+        }
+    }
+
+    void withdraw(double amount) {
+        if (amount &gt; 0 &amp;&amp; amount &lt;= balance) {
+            balance -= amount;
+            std::cout &lt;&lt; "Withdrew " &lt;&lt; amount &lt;&lt; ". New balance: " &lt;&lt; balance &lt;&lt; std::endl;
+        } else {
+            std::cout &lt;&lt; "Invalid withdrawal amount or insufficient funds." &lt;&lt; std::endl;
+        }
+    }
+
+    double getBalance() { // Public method to access private balance
+        return balance;
+    }
+
+    // You cannot directly access accountNumber from outside: myAccount.accountNumber = "XYZ"; // Error!
+};
+
+int main() {
+    BankAccount myAccount("12345", 1000.0);
+    myAccount.deposit(500.0);
+    myAccount.withdraw(200.0);
+    std::cout &lt;&lt; "Current balance: " &lt;&lt; myAccount.getBalance() &lt;&lt; std::endl;
+    // myAccount.balance = 0; // Error! 'balance' is private
+    return 0;
+}
+</pre>
+            </div>
+
+            <h3>Function Overloading</h3>
+            <p>Allows multiple functions to have the same name but different parameters (number, type, or order of parameters). The compiler decides which function to call based on the arguments passed.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Function Overloading Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+// Function to add two integers
+int add(int a, int b) {
+    return a + b;
+}
+
+// Overloaded function to add three integers
+int add(int a, int b, int c) {
+    return a + b + c;
+}
+
+// Overloaded function to concatenate two strings
+std::string add(std::string s1, std::string s2) {
+    return s1 + s2;
+}
+
+int main() {
+    std::cout &lt;&lt; "Add (int, int): " &lt;&lt; add(5, 10) &lt;&lt; std::endl;           // Calls first add
+    std::cout &lt;&lt; "Add (int, int, int): " &lt;&lt; add(1, 2, 3) &lt;&lt; std::endl;   // Calls second add
+    std::cout &lt;&lt; "Add (string, string): " &lt;&lt; add("Hello, ", "World!") &lt;&lt; std::endl; // Calls third add
+    return 0;
+}
+</pre>
+            </div>
+
+            <h3>Default Arguments</h3>
+            <p>You can specify default values for function parameters. If an argument is omitted during a function call, the default value is used.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Default Arguments Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+void displayMessage(std::string message, std::string sender = "System") {
+    std::cout &lt;&lt; "[" &lt;&lt; sender &lt;&lt; "]: " &lt;&lt; message &lt;&lt; std::endl;
+}
+
+int main() {
+    displayMessage("Welcome to Whizmath!"); // Uses default sender "System"
+    displayMessage("New user joined.", "Admin"); // Overrides default sender
+    return 0;
+}
+</pre>
+            </div>
+
+            <h3>Namespaces</h3>
+            <p>Namespaces are used to organize code into logical groups and to prevent name collisions, especially in large projects with multiple libraries.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Namespaces Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+
+// Define a namespace
+namespace MyMath {
+    int add(int a, int b) {
+        return a + b;
+    }
+    double PI = 3.14159;
+}
+
+namespace AnotherLib {
+    int add(int a, int b) {
+        return a * b; // Different add function
+    }
+}
+
+int main() {
+    // Access members using scope resolution operator (::)
+    std::cout &lt;&lt; "MyMath::add(5, 3): " &lt;&lt; MyMath::add(5, 3) &lt;&lt; std::endl;     // 8
+    std::cout &lt;&lt; "AnotherLib::add(5, 3): " &lt;&lt; AnotherLib::add(5, 3) &lt;&lt; std::endl; // 15
+    std::cout &lt;&lt; "MyMath::PI: " &lt;&lt; MyMath::PI &lt;&lt; std::endl;
+
+    // You can also use 'using' declarations for convenience (similar to using namespace std)
+    using AnotherLib::add;
+    std::cout &lt;&lt; "add(10, 2) from AnotherLib (using declaration): " &lt;&lt; add(10, 2) &lt;&lt; std::endl; // 20
+
+    return 0;
+}
+</pre>
+            </div>
+        </section>
+
+        <section id="advanced-concepts" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-cyan-400">🚀</span> Advanced Concepts: OOP Principles, Templates & STL
+            </h2>
+            <h3>Inheritance</h3>
+            <p>Inheritance is an OOP mechanism where a new class (derived/child class) is created from an existing class (base/parent class). The derived class inherits properties and behaviors of the base class.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Inheritance Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+// Base class
+class Animal {
+public:
+    std::string name;
+
+    Animal(std::string n) : name(n) {
+        std::cout &lt;&lt; "Animal " &lt;&lt; name &lt;&lt; " created." &lt;&lt; std::endl;
+    }
+
+    void eat() {
+        std::cout &lt;&lt; name &lt;&lt; " is eating." &lt;&lt; std::endl;
+    }
+};
+
+// Derived class 'Dog' inherits from 'Animal'
+class Dog : public Animal { // 'public' inheritance means public members of Animal remain public in Dog
+public:
+    std::string breed;
+
+    Dog(std::string n, std::string b) : Animal(n), breed(b) { // Call base class constructor
+        std::cout &lt;&lt; "Dog " &lt;&lt; name &lt;&lt; " of breed " &lt;&lt; breed &lt;&lt; " created." &lt;&lt; std::endl;
+    }
+
+    void bark() {
+        std::cout &lt;&lt; name &lt;&lt; " says Woof! Woof!" &lt;&lt; std::endl;
+    }
+};
+
+int main() {
+    Dog myDog("Buddy", "Golden Retriever");
+    myDog.eat();  // Inherited method
+    myDog.bark(); // Dog-specific method
+    return 0;
+}
+</pre>
+            </div>
+
+            <h3>Polymorphism</h3>
+            <p>Polymorphism means "many forms". In C++, it allows objects of different classes to be treated as objects of a common base class. It's often achieved through virtual functions and pointers/references.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Polymorphism Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+// Base class
+class Shape {
+public:
+    virtual void draw() { // Virtual function: enables runtime polymorphism
+        std::cout &lt;&lt; "Drawing a generic shape." &lt;&lt; std::endl;
+    }
+    // Pure virtual function makes Shape an Abstract Class
+    // virtual void calculateArea() = 0; 
+};
+
+// Derived class
+class Circle : public Shape {
+public:
+    void draw() override { // 'override' keyword (C++11) is good practice
+        std::cout &lt;&lt; "Drawing a circle." &lt;&lt; std::endl;
+    }
+};
+
+// Derived class
+class Rectangle : public Shape {
+public:
+    void draw() override {
+        std::cout &lt;&lt; "Drawing a rectangle." &lt;&lt; std::endl;
+    }
+};
+
+void renderShape(Shape *s) { // Function taking a base class pointer
+    s-&gt;draw(); // Calls the appropriate derived class's draw() method at runtime
+}
+
+int main() {
+    Circle c;
+    Rectangle r;
+
+    renderShape(&amp;c); // Outputs: Drawing a circle.
+    renderShape(&amp;r); // Outputs: Drawing a rectangle.
+
+    // Using base class pointer to derived object
+    Shape *s1 = new Circle();
+    Shape *s2 = new Rectangle();
+    s1-&gt;draw(); // Drawing a circle.
+    s2-&gt;draw(); // Drawing a rectangle.
+    
+    delete s1;
+    delete s2;
+    s1 = nullptr;
+    s2 = nullptr;
+
+    return 0;
+}
+</pre>
+            </div>
+            <ul class="list-disc list-inside mb-4">
+                <li><strong>Abstract Classes:</strong> A class that has at least one pure virtual function (e.g., <code>virtual void calculateArea() = 0;</code>). You cannot create objects of an abstract class. Derived classes <em>must</em> implement all pure virtual functions or they too become abstract.</li>
+            </ul>
+
+            <h3>Operator Overloading</h3>
+            <p>Allows you to redefine how operators (<code>+</code>, <code>-</code>, <code>*</code>, <code>&lt;&lt;</code>, <code>&gt;&gt;</code>, etc.) work for user-defined types (classes/structs).</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Operator Overloading Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+
+class Point {
+public:
+    int x, y;
+    Point(int _x = 0, int _y = 0) : x(_x), y(_y) {}
+
+    // Overload the '+' operator
+    Point operator+(const Point&amp; other) {
+        Point result;
+        result.x = this-&gt;x + other.x;
+        result.y = this-&gt;y + other.y;
+        return result;
+    }
+
+    // Overload the '&lt;&lt;' operator for easy printing (non-member function)
+    friend std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const Point&amp; p) {
+        os &lt;&lt; "(" &lt;&lt; p.x &lt;&lt; ", " &lt;&lt; p.y &lt;&lt; ")";
+        return os;
+    }
+};
+
+int main() {
+    Point p1(10, 20);
+    Point p2(5, 7);
+    Point p3 = p1 + p2; // Calls p1.operator+(p2)
+
+    std::cout &lt;&lt; "P1: " &lt;&lt; p1 &lt;&lt; std::endl;
+    std::cout &lt;&lt; "P2: " &lt;&lt; p2 &lt;&lt; std::endl;
+    std::cout &lt;&lt; "P1 + P2: " &lt;&lt; p3 &lt;&lt; std::endl; // Output: (15, 27)
+    return 0;
+}
+</pre>
+            </div>
+
+            <h3>Templates (Generic Programming)</h3>
+            <p>Templates allow you to write generic code that works with different data types without rewriting the entire code for each type.</p>
+
+            <h4>Function Templates</h4>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Function Templates Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+// Function template to find the maximum of two values of any type
+template &lt;typename T&gt; // 'typename' or 'class' can be used
+T maximum(T a, T b) {
+    return (a &gt; b) ? a : b;
+}
+
+int main() {
+    std::cout &lt;&lt; "Max (int): " &lt;&lt; maximum(5, 10) &lt;&lt; std::endl;           // T becomes int
+    std::cout &lt;&lt; "Max (double): " &lt;&lt; maximum(3.14, 2.71) &lt;&lt; std::endl;    // T becomes double
+    std::cout &lt;&lt; "Max (char): " &lt;&lt; maximum('A', 'Z') &lt;&lt; std::endl;       // T becomes char
+    std::cout &lt;&lt; "Max (string): " &lt;&lt; maximum(std::string("apple"), std::string("banana")) &lt;&lt; std::endl; // T becomes std::string
+    return 0;
+}
+</pre>
+            </div>
+
+            <h4>Class Templates</h4>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Class Templates Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+// Class template for a generic Pair
+template &lt;typename T1, typename T2&gt;
+class Pair {
+public:
+    T1 first;
+    T2 second;
+
+    Pair(T1 f, T2 s) : first(f), second(s) {}
+
+    void display() {
+        std::cout &lt;&lt; "First: " &lt;&lt; first &lt;&lt; ", Second: " &lt;&lt; second &lt;&lt; std::endl;
+    }
+};
+
+int main() {
+    Pair&lt;int, double&gt; p1(10, 3.14); // Pair of int and double
+    p1.display(); // Output: First: 10, Second: 3.14
+
+    Pair&lt;std::string, bool&gt; p2("Is Active", true); // Pair of string and bool
+    p2.display(); // Output: First: Is Active, Second: 1
+
+    return 0;
+}
+</pre>
+            </div>
+
+            <h3>Standard Template Library (STL)</h3>
+            <p>The STL is a powerful set of template classes and functions that provide common data structures and algorithms. It saves immense development time and promotes efficient, reusable code.</p>
+
+            <h4>Containers (Examples)</h4>
+            <ul class="list-disc list-inside mb-4">
+                <li><code>std::vector</code> (Dynamic Array): Resizable array.</li>
+                <li><code>std::list</code> (Doubly Linked List): Efficient insertions/deletions anywhere.</li>
+                <li><code>std::map</code> (Associative Array/Dictionary): Stores key-value pairs, sorted by key.</li>
+                <li><code>std::set</code> (Unique Sorted Collection): Stores unique elements, sorted.</li>
+                <li><code>std::queue</code> (FIFO): First-In, First-Out data structure.</li>
+                <li><code>std::stack</code> (LIFO): Last-In, First-Out data structure.</li>
+            </ul>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>STL Containers Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;vector&gt;   // For std::vector
+#include &lt;map&gt;      // For std::map
+#include &lt;string&gt;
+#include &lt;algorithm&gt; // For std::sort
+
+int main() {
+    // std::vector
+    std::vector&lt;int&gt; numbers = {5, 2, 8, 1, 9};
+    numbers.push_back(7); // Add element to end
+    std::cout &lt;&lt; "Vector elements: ";
+    for (int num : numbers) {
+        std::cout &lt;&lt; num &lt;&lt; " ";
+    }
+    std::cout &lt;&lt; std::endl; // Output: 5 2 8 1 9 7 
+
+    std::sort(numbers.begin(), numbers.end()); // Sort the vector
+    std::cout &lt;&lt; "Sorted vector: ";
+    for (int num : numbers) {
+        std::cout &lt;&lt; num &lt;&lt; " ";
+    }
+    std::cout &lt;&lt; std::endl; // Output: 1 2 5 7 8 9 
+
+    // std::map
+    std::map&lt;std::string, int&gt; ages;
+    ages["Alice"] = 30;
+    ages["Bob"] = 25;
+    ages["Charlie"] = 35;
+    std::cout &lt;&lt; "Bob's age: " &lt;&lt; ages["Bob"] &lt;&lt; std::endl;
+
+    std::cout &lt;&lt; "Map elements: " &lt;&lt; std::endl;
+    for (const auto&amp; pair : ages) { // Iterate through map
+        std::cout &lt;&lt; pair.first &lt;&lt; ": " &lt;&lt; pair.second &lt;&lt; std::endl;
+    }
+
+    return 0;
+}
+</pre>
+            </div>
+
+            <h3>Exception Handling</h3>
+            <p>A mechanism to deal with runtime errors (exceptions) gracefully, preventing program crashes.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Exception Handling Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;stdexcept&gt; // For standard exception types like std::runtime_error
+
+double divide(double numerator, double denominator) {
+    if (denominator == 0) {
+        throw std::runtime_error("Division by zero is not allowed!"); // Throw an exception
+    }
+    return numerator / denominator;
+}
+
+int main() {
+    try {
+        double result1 = divide(10.0, 2.0);
+        std::cout &lt;&lt; "Result 1: " &lt;&lt; result1 &lt;&lt; std::endl;
+
+        double result2 = divide(10.0, 0.0); // This will throw an exception
+        std::cout &lt;&lt; "Result 2: " &lt;&lt; result2 &lt;&lt; std::endl; // This line will not be reached
+    } catch (const std::runtime_error&amp; e) { // Catch a specific type of exception
+        std::cerr &lt;&lt; "Error caught: " &lt;&lt; e.what() &lt;&lt; std::endl; // Print error message
+    } catch (const std::exception&amp; e) { // Catch any standard exception
+        std::cerr &lt;&lt; "Another error caught: " &lt;&lt; e.what() &lt;&lt; std::endl;
+    } catch (...) { // Catch any other type of exception (generic catch)
+        std::cerr &lt;&lt; "Unknown error caught!" &lt;&lt; std::endl;
+    }
+
+    std::cout &lt;&lt; "Program continues after exception handling." &lt;&lt; std::endl;
+    return 0;
+}
+</pre>
+            </div>
+
+            <h3>File I/O (`fstream`)</h3>
+            <p>Allows reading from and writing to files.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>File I/O Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;fstream&gt; // For ifstream (input file stream) and ofstream (output file stream)
+#include &lt;string&gt;
+
+int main() {
+    // Writing to a file
+    std::ofstream outFile("output.txt"); // Create or open file for writing
+    if (outFile.is_open()) {
+        outFile &lt;&lt; "Hello, Whizmath!" &lt;&lt; std::endl;
+        outFile &lt;&lt; "This is a C++ file I/O example." &lt;&lt; std::endl;
+        outFile.close(); // Close the file
+        std::cout &lt;&lt; "Data written to output.txt" &lt;&lt; std::endl;
+    } else {
+        std::cerr &lt;&lt; "Unable to open file for writing." &lt;&lt; std::endl;
+    }
+
+    // Reading from a file
+    std::ifstream inFile("output.txt"); // Open file for reading
+    std::string line;
+    if (inFile.is_open()) {
+        std::cout &lt;&lt; "\nReading from output.txt:" &lt;&lt; std::endl;
+        while (std::getline(inFile, line)) { // Read line by line
+            std::cout &lt;&lt; line &lt;&lt; std::endl;
+        }
+        inFile.close();
+    } else {
+        std::cerr &lt;&lt; "Unable to open file for reading." &lt;&lt; std::endl;
+    }
+
+    return 0;
+}
+</pre>
+            </div>
+
+            <h3>Smart Pointers (`unique_ptr`, `shared_ptr`, `weak_ptr`)</h3>
+            <p>Modern C++ (C++11 and later) provides smart pointers to manage dynamically allocated memory automatically, preventing memory leaks and simplifying resource management.</p>
+            <ul class="list-disc list-inside mb-4">
+                <li><code>std::unique_ptr</code>: Owns the pointed-to object exclusively. Cannot be copied, only moved. Automatically deletes the object when it goes out of scope.</li>
+                <li><code>std::shared_ptr</code>: Shares ownership of the pointed-to object. Uses a reference count; the object is deleted when the last <code>shared_ptr</code> pointing to it is destroyed.</li>
+                <li><code>std::weak_ptr</code>: A non-owning pointer that can observe a <code>shared_ptr</code> without affecting its reference count. Used to break circular references.</li>
+            </ul>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Smart Pointers Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;memory&gt; // For unique_ptr, shared_ptr, weak_ptr
+
+class Resource {
+public:
+    Resource() { std::cout &lt;&lt; "Resource acquired." &lt;&lt; std::endl; }
+    ~Resource() { std::cout &lt;&lt; "Resource released." &lt;&lt; std::endl; }
+    void doSomething() { std::cout &lt;&lt; "Resource doing something." &lt;&lt; std::endl; }
+};
+
+void useUniquePtr() {
+    // unique_ptr: exclusive ownership
+    std::unique_ptr&lt;Resource&gt; res1(new Resource()); // C++11 way
+    // std::unique_ptr&lt;Resource&gt; res1 = std::make_unique&lt;Resource&gt;(); // C++14 preferred way
+    res1-&gt;doSomething();
+    // std::unique_ptr&lt;Resource&gt; res2 = res1; // Error: unique_ptr cannot be copied
+    std::unique_ptr&lt;Resource&gt; res2 = std::move(res1); // Ownership moved
+    res2-&gt;doSomething();
+    // res1 is now null
+    if (!res1) {
+        std::cout &lt;&lt; "res1 is null after move." &lt;&lt; std::endl;
+    }
+} // res2 goes out of scope, Resource is released
+
+void useSharedPtr() {
+    // shared_ptr: shared ownership
+    std::shared_ptr&lt;Resource&gt; s_res1 = std::make_shared&lt;Resource&gt;(); // Preferred way
+    std::cout &lt;&lt; "Ref count (s_res1 only): " &lt;&lt; s_res1.use_count() &lt;&lt; std::endl; // 1
+
+    std::shared_ptr&lt;Resource&gt; s_res2 = s_res1; // s_res2 now shares ownership
+    std::cout &lt;&lt; "Ref count (s_res1 and s_res2): " &lt;&lt; s_res1.use_count() &lt;&lt; std::endl; // 2
+
+    {
+        std::shared_ptr&lt;Resource&gt; s_res3 = s_res1; // s_res3 also shares ownership
+        std::cout &lt;&lt; "Ref count (s_res1, s_res2, s_res3): " &lt;&lt; s_res1.use_count() &lt;&lt; std::endl; // 3
+    } // s_res3 goes out of scope, ref count becomes 2
+
+    std::cout &lt;&lt; "Ref count (s_res1 and s_res2 remain): " &lt;&lt; s_res1.use_count() &lt;&lt; std::endl; // 2
+
+} // s_res1 and s_res2 go out of scope. When the last one is destroyed, Resource is released.
+
+int main() {
+    std::cout &lt;&lt; "--- Unique Ptr Example ---" &lt;&lt; std::endl;
+    useUniquePtr();
+    std::cout &lt;&lt; "\n--- Shared Ptr Example ---" &lt;&lt; std::endl;
+    useSharedPtr();
+    return 0;
+}
+</pre>
+            </div>
+
+            <h3>Lambda Expressions (C++11)</h3>
+            <p>Lambda expressions allow you to define anonymous (unnamed) functions directly within the code where they are used. They are often used with algorithms from the STL.</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Lambda Expressions Example</span>
+                    <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+                </div>
+<pre class="code-content">
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt; // For std::for_each, std::sort
+
+int main() {
+    std::vector&lt;int&gt; numbers = {1, 5, 2, 8, 3};
+
+    // Lambda to print each element
+    std::for_each(numbers.begin(), numbers.end(), [](int n) {
+        std::cout &lt;&lt; n &lt;&lt; " ";
+    });
+    std::cout &lt;&lt; std::endl; // Output: 1 5 2 8 3 
+
+    int factor = 10;
+    // Lambda with capture list (captures 'factor' by value)
+    std::for_each(numbers.begin(), numbers.end(), [factor](int n) {
+        std::cout &lt;&lt; n * factor &lt;&lt; " ";
+    });
+    std::cout &lt;&lt; std::endl; // Output: 10 50 20 80 30 
+
+    // Lambda used for custom sort criterion
+    std::sort(numbers.begin(), numbers.end(), [](int a, int b) {
+        return a &gt; b; // Sort in descending order
+    });
+    std::cout &lt;&lt; "Sorted descending: ";
+    std::for_each(numbers.begin(), numbers.end(), [](int n) {
+        std::cout &lt;&lt; n &lt;&lt; " ";
+    });
+    std::cout &lt;&lt; std::endl; // Output: 8 5 3 2 1 
+
+    return 0;
+}
+</pre>
+            </div>
+        </section>
+
+        <section id="best-practices" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-lime-400">🌟</span> Best Practices & Tips for C++
+            </h2>
+            <p>To become a proficient C++ developer, consider these practices:</p>
+            <ul class="list-disc list-inside mb-4">
+                <li><strong>Readability is Key:</strong> Use consistent indentation, meaningful variable names, and comments where necessary.</li>
+                <li><strong>Resource Management (RAII):</strong> "Resource Acquisition Is Initialization." Use smart pointers (<code>std::unique_ptr</code>, <code>std::shared_ptr</code>) to manage dynamic memory. Use RAII for other resources like file handles or network connections too.</li>
+                <li><strong>Error Handling:</strong> Use exceptions for exceptional circumstances that cannot be handled locally. For expected errors, return error codes or use <code>std::optional</code> (C++17).</li>
+                <li><strong><code>const</code> Correctness:</strong> Use <code>const</code> whenever a variable or parameter should not be modified. This helps the compiler catch errors and makes your code safer and more readable.</li>
+                <li><strong>Prefer <code>std::vector</code> and <code>std::string</code>:</strong> Use these over raw arrays and C-style strings unless there's a strong reason not to.</li>
+                <li><strong>Leverage the STL:</strong> Familiarize yourself with STL containers and algorithms. They are highly optimized and widely used.</li>
+                <li><strong>Modern C++ Features:</strong> Embrace features from C++11, C++14, C++17, and C++20 (<code>auto</code>, range-based for loops, lambda expressions, smart pointers, etc.). They make code safer, more concise, and more expressive.</li>
+                <li><strong>Avoid Global Variables:</strong> Minimize the use of global variables. Pass data as function arguments or manage it within classes.</li>
+                <li><strong>Include Headers Wisely:</strong> Only include the headers you actually need.</li>
+                <li><strong>Build System:</strong> For larger projects, learn to use build systems like CMake or Makefiles.</li>
+                <li><strong>Debugging:</strong> Learn to use a debugger (GDB, VS Code debugger, etc.) effectively. It's an indispensable skill.</li>
+                <li><strong>Practice, Practice, Practice:</strong> The best way to learn C++ is by writing code. Start with small problems and gradually work your way up to more complex projects.</li>
+            </ul>
+        </section>
+
+        <section id="conclusion" class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-blue-400">
+                <span class="mr-2 text-blue-400">🚀</span> Your C++ Journey Continues!
+            </h2>
+            <p>
+                Congratulations! You've navigated through a vast landscape of C++ concepts, from the basics of variables and control flow to the intricacies of Object-Oriented Programming, templates, the Standard Template Library, and modern C++ features.
+            </p>
+            <p>
+                C++ is a deep and powerful language, and this lesson serves as a robust foundation. The journey to mastering C++ is continuous, involving delving deeper into specific topics like concurrent programming, performance optimization, low-level system interaction, and exploring various libraries and frameworks.
+            </p>
+            <p>
+                Keep experimenting, keep building, and keep creating! The skills you gain from C++ are highly valuable and transferable across many areas of software development.
+            </p>
+            <h3>Further Learning Resources:</h3>
+            <ul class="list-disc list-inside mb-4">
+                <li><strong>Official C++ Documentation:</strong> <a href="https://cppreference.com" target="_blank" rel="noopener noreferrer">cppreference.com</a></li>
+                <li><strong>Books:</strong> "Programming: Principles and Practice Using C++" by Bjarne Stroustrup, "Effective C++" by Scott Meyers.</li>
+                <li><strong>Online Courses:</strong> Platforms like Coursera, Udemy, edX offer excellent C++ courses.</li>
+                <li><strong>Practice Platforms:</strong> LeetCode, HackerRank, Exercism.</li>
+            </ul>
+            <div class="text-center mt-12">
+                <a href="programming.html" class="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-4 px-8 rounded-full text-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300 ease-in-out">
+                    Explore More Whizmath Lessons
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Three.js Background Animation - Kept separate for clarity
+        let scene, camera, renderer, particles, particleMaterial;
+
+        function initThreeJS() {
+            if (typeof THREE === 'undefined') {
+                console.error("THREE.js is not loaded. Skipping Three.js initialization.");
+                return;
+            }
+
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-bg'), antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setClearColor(0x1a202c, 1); // Match body background
+
+            camera.position.z = 5;
+
+            const particleCount = 1000;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            const color1 = new THREE.Color(0x63b3ed); // Blue
+            const color2 = new THREE.Color(0x9f7aea); // Purple
+
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                positions[i] = (Math.random() - 0.5) * 20; // x
+                positions[i + 1] = (Math.random() - 0.5) * 20; // y
+                positions[i + 2] = (Math.random() - 0.5) * 20; // z
+
+                const mixFactor = Math.random();
+                const mixedColor = new THREE.Color().copy(color1).lerp(color2, mixFactor);
+                colors[i] = mixedColor.r;
+                colors[i + 1] = mixedColor.g;
+                colors[i + 2] = mixedColor.b;
+            }
+
+            const particleGeometry = new THREE.BufferGeometry();
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.05,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.7,
+                blending: THREE.AdditiveBlending
+            });
+
+            particles = new THREE.Points(particleGeometry, particleMaterial);
+            scene.add(particles);
+
+            const ambientLight = new THREE.AmbientLight(0x404040); 
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            directionalLight.position.set(0, 1, 0);
+            scene.add(directionalLight);
+
+            animateThreeJS();
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0008;
+
+                const positions = particles.geometry.attributes.position.array;
+                for (let i = 0; i < positions.length; i += 3) {
+                    positions[i + 2] += 0.001; 
+                    if (positions[i + 2] > camera.position.z + 5) {
+                        positions[i + 2] = (Math.random() - 0.5) * 20; 
+                    }
+                }
+                particles.geometry.attributes.position.needsUpdate = true;
+            }
+            if (renderer && scene && camera) { // Check if all are defined before rendering
+                renderer.render(scene, camera);
+            }
+        }
+
+        function onWindowResizeThreeJS() {
+            if (camera && renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        }
+
+        // Common JS function for code copying
+        window.copyCode = (button) => {
+            const codeBlock = button.parentNode.nextElementSibling;
+            const codeText = codeBlock.innerText;
+
+            const textarea = document.createElement('textarea');
+            textarea.value = codeText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            const feedbackSpan = document.createElement('span');
+            feedbackSpan.className = 'copied-feedback';
+            feedbackSpan.innerText = 'Copied!';
+            button.parentNode.appendChild(feedbackSpan);
+
+            setTimeout(() => {
+                feedbackSpan.classList.add('show');
+            }, 10);
+
+            setTimeout(() => {
+                feedbackSpan.classList.remove('show');
+                feedbackSpan.addEventListener('transitionend', () => {
+                    feedbackSpan.remove();
+                }, { once: true });
+            }, 1500);
+        };
+
+        // Initialize Three.js and other non-React DOM listeners when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Three.js initialization with a small delay
+            setTimeout(() => { 
+                initThreeJS();
+                window.addEventListener('resize', onWindowResizeThreeJS);
+            }, 100); 
+            
+            // Back to Index Button Functionality
+            const backToIndexBtn = document.getElementById('backToIndex');
+            if (backToIndexBtn) { 
+                backToIndexBtn.addEventListener('click', () => {
+                    window.location.href = 'index.html'; 
+                });
+            } else {
+                console.error("Back to Index button not found.");
+            }
+        });
+    </script>
+</body>
+</html>
