@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO & Metadata -->
+    <title>Mobile App Development with React Native - Whizmath | Build Cross-Platform Apps</title>
+    <meta name="description" content="Learn Mobile App Development with React Native at Whizmath. Build cross-platform iOS and Android applications using JavaScript, understand components, state, props, navigation, and debugging for beginners.">
+    <meta name="keywords" content="Mobile App Development, React Native, Cross-Platform, iOS Development, Android Development, JavaScript, React, Components, State, Props, Mobile UI, Mobile UX, Expo, Native Modules, Whizmath, Learn React Native, Mobile Programming">
+    <link rel="canonical" href="https://yourdomain.com/mobile_app_dev_lesson.html"> <!-- Replace with your actual URL -->
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://yourdomain.com/mobile_app_dev_lesson.html"> <!-- Replace with your actual URL -->
+    <meta property="og:title" content="Mobile App Development with React Native - Whizmath | Build Cross-Platform Apps">
+    <meta property="og:description" content="Learn Mobile App Development with React Native at Whizmath. Build cross-platform iOS and Android applications using JavaScript, understand components, state, props, navigation, and debugging for beginners.">
+    <meta property="og:image" content="https://placehold.co/1200x630/a78bfa/ffffff?text=Whizmath+MobileDev"> <!-- Placeholder image for social share -->
+    <meta property="og:site_name" content="Whizmath">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yourdomain.com/mobile_app_dev_lesson.html"> <!-- Replace with your actual URL -->
+    <meta property="twitter:title" content="Mobile App Development with React Native - Whizmath | Build Cross-Platform Apps">
+    <meta property="twitter:description" content="Learn Mobile App Development with React Native at Whizmath. Build cross-platform iOS and Android applications using JavaScript, understand components, state, props, navigation, and debugging for beginners.">
+    <meta property="twitter:image" content="https://placehold.co/1200x630/a78bfa/ffffff?text=Whizmath+MobileDev"> <!-- Placeholder image for social share -->
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://yourdomain.com/mobile_app_dev_lesson.html"
+      },
+      "headline": "Mobile App Development with React Native: Build Cross-Platform Apps",
+      "description": "A beginner-friendly guide to cross-platform mobile app development using React Native. Covers core concepts like components, state, props, styling, navigation, and debugging for building iOS and Android applications.",
+      "image": "https://placehold.co/1200x630/a78bfa/ffffff?text=Whizmath+MobileDev",
+      "author": {
+        "@type": "Organization",
+        "name": "Whizmath"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Whizmath",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://placehold.co/600x60/63b3ed/ffffff?text=Whizmath+Logo" <!-- Placeholder logo for publisher -->
+        }
+      },
+      "datePublished": "2025-06-07T09:00:00+01:00", <!-- Update with actual publish date/time -->
+      "dateModified": "2025-06-07T09:00:00+01:00",  <!-- Update with actual modify date/time -->
+      "keywords": "Mobile App Development, React Native, Cross-Platform, iOS Development, Android Development, JavaScript, React, Components, State, Props, Mobile UI, Mobile UX, Expo, Native Modules, Whizmath, Learn React Native, Mobile Programming"
+    }
+    </script>
+
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Dark background for professional look */
+            color: #e6e6e6; /* Light text for contrast */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            position: relative; /* For scroll-to-top positioning */
+        }
+        #three-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send it to the back */
+            overflow: hidden;
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 1; /* Keep content above background */
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            background-color: rgba(17, 24, 39, 0.9); /* Slightly transparent dark background for content */
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px); /* Subtle blur effect */
+            -webkit-backdrop-filter: blur(8px);
+        }
+        h1, h2, h3, h4 {
+            color: #63b3ed; /* Consistent vibrant blue for headings */
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.5rem; }
+        p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        a {
+            color: #a78bfa; /* Consistent subtle purple for links */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .code-block {
+            position: relative;
+            background-color: #1f2937; /* Darker background for code */
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto; /* Enable horizontal scrolling for long lines of code */
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+            color: #e6e6e6; /* White/Light gray for code text for readability */
+        }
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #4a5568; /* Grayish background for button */
+            color: #e6e6e6;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease-in-out;
+            border: none;
+            outline: none;
+        }
+        .copy-button:hover {
+            background-color: #646b7a;
+        }
+        .back-button {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 100;
+            background-color: #63b3ed; /* Consistent vibrant blue for back button */
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px; /* Fully rounded */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-button:hover {
+            background-color: #4299e1;
+            transform: translateY(-2px);
+        }
+        .back-button svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #a78bfa; /* Consistent subtle purple for scroll button */
+            color: white;
+            padding: 1rem;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: none; /* Hidden by default */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+            z-index: 100;
+        }
+        .scroll-to-top:hover {
+            background-color: #8b5cf6;
+            transform: translateY(-2px);
+        }
+        .scroll-to-top svg {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 1.5rem 1rem;
+                margin: 0 0.5rem;
+            }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.75rem; }
+            h3 { font-size: 1.5rem; }
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            .back-button svg {
+                width: 1rem;
+                height: 1rem;
+            }
+            .scroll-to-top {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                padding: 0.75rem;
+            }
+            .scroll-to-top svg {
+                width: 1.25rem;
+                height: 1.25rem;
+            }
+            .copy-button {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Three.js Background Canvas -->
+    <canvas id="three-bg"></canvas>
+
+    <!-- Back Button -->
+    <a href="index.html" class="back-button">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Home
+    </a>
+
+    <div class="content-wrapper">
+        <header class="text-center mb-10">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4 animate-pulse">
+                Whizmath
+            </h1>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
+                Mobile App Development
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400">
+                Build cross-platform mobile apps with React Native. <br class="hidden md:block">
+                React Native - Beginner Essentials.
+            </p>
+        </header>
+
+        <section class="intro mb-12">
+            <h2 class="text-3xl font-bold mb-6">Introduction to Mobile App Development & React Native</h2>
+            <p>
+                In an increasingly mobile-first world, having a strong presence on smartphones and tablets is crucial for businesses, innovators, and content creators. Mobile app development involves creating software applications that run on mobile devices. Traditionally, this meant building separate applications for iOS (using Swift/Objective-C) and Android (using Java/Kotlin), a process that is often time-consuming, resource-intensive, and requires specialized knowledge for each platform.
+            </p>
+            <p>
+                This is where **React Native** revolutionizes mobile app development. Created by Facebook, React Native is an open-source framework that allows developers to build truly native mobile applications using JavaScript and React. Instead of building web applications that run in a browser, React Native compiles your JavaScript code into native UI components, delivering performance and user experience on par with native apps, all from a single codebase.
+            </p>
+            <p>
+                For those who love the efficiency of writing once and deploying everywhere, React Native is a game-changer. It leverages your existing JavaScript and React knowledge, making the leap into mobile development significantly smoother. This comprehensive lesson will serve as your beginner's guide to mobile app development with React Native, covering its core concepts, fundamental components, and the workflow to get your first cross-platform applications up and running. Get ready to build exciting mobile experiences!
+            </p>
+        </section>
+
+        <section class="why-react-native mb-12">
+            <h2 class="text-3xl font-bold mb-6">Why Choose React Native for Mobile App Development?</h2>
+            <p>
+                React Native has gained immense popularity for several compelling reasons:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Cross-Platform Development:</strong> Write code once and deploy it on both iOS and Android. This drastically reduces development time and cost, and ensures consistent features across platforms.</li>
+                <li><strong>Native Performance:</strong> Unlike hybrid frameworks that often render web views, React Native components render as actual native UI components, providing a truly native look, feel, and performance.</li>
+                <li><strong>JavaScript & React:</strong> Leverage your existing web development skills. If you know JavaScript and React, you're already halfway to building mobile apps.</li>
+                <li><strong>Hot Reloading & Fast Refresh:</strong> Development is highly efficient. See changes instantly without recompiling the entire app.</li>
+                <li><strong>Large Community & Ecosystem:</strong> A vibrant community and a rich ecosystem of libraries and tools make development easier and offer extensive support.</li>
+                <li><strong>Code Reusability:</strong> Not only can you reuse code across iOS and Android, but sometimes even parts of your React web application logic can be repurposed.</li>
+                <li><strong>Access to Native Features:</strong> While React Native focuses on JavaScript, it also provides ways to access native device functionalities (camera, GPS, etc.) when needed.</li>
+            </ul>
+        </section>
+
+        <section class="setup-concepts mb-12">
+            <h2 class="text-3xl font-bold mb-6">Getting Started: Setup & Core Concepts</h2>
+            <p>
+                While a full setup involves installing Node.js, watchman, and specific SDKs (like Xcode for iOS or Android Studio for Android), React Native offers streamlined ways to start.
+            </p>
+            <h3 class="text-2xl font-bold mb-4">1. Expo Go (Recommended for Beginners)</h3>
+            <p>
+                Expo is a set of tools and services built around React Native. Expo Go is a mobile app that lets you open React Native projects on your phone without setting up a development environment locally.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example (Conceptual Expo Project Setup):</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code class="language-bash"># Install Expo CLI globally (if you have Node.js)
+npm install -g expo-cli
+
+# Create a new Expo project
+expo init MyFirstMobileApp
+
+# Navigate into the project directory
+cd MyFirstMobileApp
+
+# Start the development server
+expo start
+# This will open a browser page with a QR code. Scan it with Expo Go app on your phone.</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">2. Core React Native Concepts</h3>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Components:</strong> The building blocks of any React Native application. Like React for web, components are reusable, self-contained pieces of UI.</li>
+                <li><strong>JSX:</strong> A syntax extension for JavaScript, similar to XML/HTML, used to describe what the UI should look like. React Native components return JSX.</li>
+                <li><strong>State:</strong> Data that is private to a component and can change over time, triggering re-renders of the component. Manages internal data.</li>
+                <li><strong>Props (Properties):</strong> Data passed from a parent component to a child component. Props are read-only and immutable.</li>
+            </ul>
+        </section>
+
+        <section class="basic-components mb-12">
+            <h2 class="text-3xl font-bold mb-6">Basic React Native Components</h2>
+            <p>
+                React Native provides a set of core components that map directly to native UI elements. These are the equivalents of HTML tags in the web world.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">1. `View`</h3>
+            <p>
+                The most fundamental component for building UI. It's a container that supports layout with Flexbox, styling, touch handling, and accessibility controls. Think of it as a `&lt;div&gt;` in HTML.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example:</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code class="language-javascript">import React from 'react';
+import { View, Text } from 'react-native';
+
+const MyContainer = () => {
+  return (
+    &lt;View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}&gt;
+      &lt;Text&gt;Hello from inside a View!&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+};
+
+export default MyContainer;</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">2. `Text`</h3>
+            <p>
+                Used to display text. All text in a React Native app must be wrapped inside a `Text` component.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example:</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code class="language-javascript">import React from 'react';
+import { Text } from 'react-native';
+
+const MyTextComponent = () => {
+  return (
+    &lt;Text style={{ fontSize: 24, color: 'white' }}&gt;
+      This is &lt;Text style={{ fontWeight: 'bold' }}&gt;bold&lt;/Text&gt; text.
+    &lt;/Text&gt;
+  );
+};
+
+export default MyTextComponent;</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">3. `Image`</h3>
+            <p>
+                Displays different types of images, including network images, static resources, and temporary local images.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example:</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code class="language-javascript">import React from 'react';
+import { Image, View } from 'react-native';
+
+const MyImageComponent = () => {
+  return (
+    &lt;View&gt;
+      &lt;Image
+        source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
+        style={{ width: 50, height: 50 }}
+      /&gt;
+      &lt;Image
+        source={require('./assets/local-image.png')} // For local images
+        style={{ width: 100, height: 100 }}
+      /&gt;
+    &lt;/View&gt;
+  );
+};
+
+export default MyImageComponent;</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">4. `Button`</h3>
+            <p>
+                A basic button component that renders nicely on any platform.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example:</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code class="language-javascript">import React from 'react';
+import { Button, Alert, View } from 'react-native';
+
+const MyButton = () => {
+  const handlePress = () => {
+    Alert.alert('Button Pressed!', 'You tapped the button.');
+  };
+
+  return (
+    &lt;View&gt;
+      &lt;Button
+        title="Press Me"
+        onPress={handlePress}
+        color="#841584" // Optional: custom button color
+      /&gt;
+    &lt;/View&gt;
+  );
+};
+
+export default MyButton;</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">5. `TextInput`</h3>
+            <p>
+                A component for users to input text. It has a number of props to configure behavior (multiline, keyboard type, placeholder).
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example:</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code class="language-javascript">import React, { useState } from 'react';
+import { TextInput, View } from 'react-native';
+
+const MyTextInput = () => {
+  const [text, setText] = useState('');
+
+  return (
+    &lt;View&gt;
+      &lt;TextInput
+        style={{ height: 40, borderColor: 'gray', borderWidth: 1, color: 'white', paddingHorizontal: 10 }}
+        placeholder="Type here!"
+        placeholderTextColor="gray"
+        onChangeText={newText => setText(newText)}
+        defaultValue={text}
+      /&gt;
+      &lt;Text style={{ color: 'white', marginTop: 10 }}&gt;You typed: {text}&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+};
+
+export default MyTextInput;</code></pre>
+            </div>
+        </section>
+
+        <section class="styling-navigation mb-12">
+            <h2 class="text-3xl font-bold mb-6">Styling & Basic Navigation</h2>
+
+            <h3 class="text-2xl font-bold mb-4">1. Styling in React Native</h3>
+            <p>
+                React Native uses JavaScript to style components. It's similar to CSS but uses camelCase property names and a subset of CSS properties. Flexbox is the primary layout system.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Inline Styles & `StyleSheet.create`</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code class="language-javascript">import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+
+const MyStyledComponent = () => {
+  return (
+    &lt;View style={styles.container}&gt;
+      &lt;Text style={styles.title}&gt;Styled App&lt;/Text&gt;
+      &lt;Text style={{ color: 'lightgray', fontSize: 16 }}&gt;Inline style example&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#333',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    borderRadius: 10,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#63b3ed', // Blue
+    marginBottom: 10,
+  },
+});
+
+export default MyStyledComponent;</code></pre>
+            </div>
+            <p>
+                Using `StyleSheet.create` helps optimize performance by sending style objects to the native side only once.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">2. Basic Navigation (Conceptual)</h3>
+            <p>
+                For navigation between different screens, React Native applications typically use a library like `React Navigation`. This library provides a complete solution for navigation, including stack navigators (for screens that slide over each other), tab navigators, and drawer navigators.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Conceptual Example (`React Navigation` Stack):</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code class="language-javascript">// In a real app, you'd install @react-navigation/native and @react-navigation/stack
+// npm install @react-navigation/native @react-navigation/stack
+
+import * as React from 'react';
+import { View, Text, Button } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+function HomeScreen({ navigation }) {
+  return (
+    &lt;View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#0d1117' }}&gt;
+      &lt;Text style={{ color: '#e6e6e6', fontSize: 24, marginBottom: 20 }}&gt;Home Screen&lt;/Text&gt;
+      &lt;Button
+        title="Go to Details"
+        onPress={() => navigation.navigate('Details')}
+        color="#a78bfa"
+      /&gt;
+    &lt;/View&gt;
+  );
+}
+
+function DetailsScreen({ navigation }) {
+  return (
+    &lt;View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#0d1117' }}&gt;
+      &lt;Text style={{ color: '#e6e6e6', fontSize: 24, marginBottom: 20 }}&gt;Details Screen&lt;/Text&gt;
+      &lt;Button
+        title="Go back Home"
+        onPress={() => navigation.goBack()}
+        color="#63b3ed"
+      /&gt;
+    &lt;/View&gt;
+  );
+}
+
+const Stack = createStackNavigator();
+
+function App() {
+  return (
+    &lt;NavigationContainer&gt;
+      &lt;Stack.Navigator initialRouteName="Home"
+        screenOptions={{
+          headerStyle: { backgroundColor: '#1f2937' },
+          headerTintColor: '#e6e6e6',
+          headerTitleStyle: { fontWeight: 'bold' },
+        }}
+      &gt;
+        &lt;Stack.Screen name="Home" component={HomeScreen} /&gt;
+        &lt;Stack.Screen name="Details" component={DetailsScreen} /&gt;
+      &lt;/Stack.Navigator&gt;
+    &lt;/NavigationContainer&gt;
+  );
+}
+
+export default App;</code></pre>
+            </div>
+        </section>
+
+        <section class="debugging-rn mb-12">
+            <h2 class="text-3xl font-bold mb-6">Debugging React Native Apps</h2>
+            <p>
+                Debugging React Native apps involves a mix of browser tools and specialized techniques.
+            </p>
+            <h3 class="text-2xl font-bold mb-4">1. Console Logging</h3>
+            <p>
+                The simplest way to inspect values and execution flow. Your `console.log()` statements will appear in the debugger console (e.g., your browser's developer console or Metro Bundler's terminal).
+            </p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code class="language-javascript">import React, { useState } from 'react';
+import { View, Text, Button } from 'react-native';
+
+const DebugExample = () => {
+  const [count, setCount] = useState(0);
+
+  const increment = () => {
+    setCount(prevCount => {
+      console.log('Previous count:', prevCount); // Log state before update
+      const newCount = prevCount + 1;
+      console.log('New count:', newCount);     // Log state after update
+      return newCount;
+    });
+  };
+
+  return (
+    &lt;View&gt;
+      &lt;Text&gt;Count: {count}&lt;/Text&gt;
+      &lt;Button title="Increment" onPress={increment} /&gt;
+    &lt;/View&gt;
+  );
+};
+
+export default DebugExample;</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">2. React Native Debugger / Chrome DevTools</h3>
+            <p>
+                When your app is running in debug mode, you can connect your desktop browser's developer tools (or a specialized React Native Debugger app) to inspect network requests, use the console, and set breakpoints in your JavaScript code.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Steps (Conceptual):</h4>
+            <ol class="list-decimal list-inside ml-4 mb-4">
+                <li>Shake your device (or press `Ctrl+M` on Android emulator / `Cmd+D` on iOS simulator).</li>
+                <li>Select "Debug remote JS" (or "Debug with Chrome").</li>
+                <li>A new browser tab will open (usually `http://localhost:8081/debugger-ui`). Open the browser's developer console (F12).</li>
+                <li>Your `console.log` messages will appear here, and you can set breakpoints in the `Sources` tab.</li>
+            </ol>
+
+            <h3 class="text-2xl font-bold mb-4">3. React Developer Tools</h3>
+            <p>
+                Similar to web, you can use React Developer Tools (available as a browser extension or standalone app) to inspect the component tree, props, and state of your React Native components.
+            </p>
+        </section>
+
+        <section class="conclusion mb-12">
+            <h2 class="text-3xl font-bold mb-6">Conclusion & Your Mobile App Journey</h2>
+            <p>
+                Congratulations! You've taken your first significant steps into the exciting world of mobile app development with React Native. You've learned the power of cross-platform development, understood core concepts like components, state, and props, and familiarized yourself with essential UI components and basic debugging techniques. This foundation will serve you well as you embark on building more complex and feature-rich mobile applications.
+            </p>
+            <p>
+                As you continue your mobile app development journey:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Build Projects:</strong> The best way to learn is by doing. Start with simple apps (e.g., a to-do list, a weather app, a calculator) and gradually add complexity.</li>
+                <li><strong>Explore React Navigation:</strong> Deep dive into the `React Navigation` library for advanced navigation patterns.</li>
+                <li><strong>Learn Native Modules:</strong> Understand when and how to write native code (Java/Kotlin for Android, Swift/Objective-C for iOS) for platform-specific functionalities not covered by React Native.</li>
+                <li><strong>State Management:</strong> Explore advanced state management solutions like Redux, Zustand, or React Context for larger applications.</li>
+                <li><strong>API Integration:</strong> Practice integrating your mobile apps with backend APIs to fetch and send data.</li>
+                <li><strong>Performance Optimization:</strong> Learn techniques to optimize your React Native app for performance and responsiveness.</li>
+            </ul>
+            <p>
+                React Native offers a vast and rewarding landscape for developers. Embrace the challenges, keep building, and soon you'll be creating stunning mobile experiences that reach users across the globe. Happy mobile coding, and keep whizzing with math (and mobile tech)!
+            </p>
+        </section>
+
+        <footer class="text-center text-gray-500 text-sm mt-12 pt-8 border-t border-gray-700">
+            &copy; 2025 Whizmath. All rights reserved.
+        </footer>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="scroll-to-top">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js Background Animation
+        window.onload = function() {
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-bg'), antialias: true });
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setClearColor(0x0d1117, 1); // Match body background
+
+            // Particles for a "mobile network/data flow" feel
+            const particleCount = 2800;
+            const particles = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount * 3; i++) {
+                positions[i] = (Math.random() - 0.5) * 350; // Wider spread
+            }
+
+            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const particleMaterial = new THREE.PointsMaterial({
+                color: 0x63b3ed, // Blueish color, consistent with others
+                size: 1.5,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                sizeAttenuation: true,
+                opacity: 0.7
+            });
+
+            const particleMesh = new THREE.Points(particles, particleMaterial);
+            scene.add(particleMesh);
+
+            // Lines connecting particles (representing mobile connections/data packets)
+            const lineMaterial = new THREE.LineBasicMaterial({
+                color: 0xa78bfa, // Purplish color, consistent with others
+                transparent: true,
+                opacity: 0.2
+            });
+            const lineGeometry = new THREE.BufferGeometry();
+            const linePositions = new Float32Array(particleCount * 3 * 2);
+
+            const threshold = 20; // Distance for connections
+            let lineIndex = 0;
+            for (let i = 0; i < particleCount; i++) {
+                for (let j = i + 1; j < particleCount; j++) {
+                    const x1 = positions[i * 3];
+                    const y1 = positions[i * 3 + 1];
+                    const z1 = positions[i * 3 + 2];
+
+                    const x2 = positions[j * 3];
+                    const y2 = positions[j * 3 + 1];
+                    const z2 = positions[j * 3 + 2];
+
+                    const dx = x1 - x2;
+                    const dy = y1 - y2;
+                    const dz = z1 - z2;
+                    const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+                    if (distance < threshold) {
+                        if (lineIndex + 6 <= linePositions.length) {
+                            linePositions[lineIndex++] = x1;
+                            linePositions[lineIndex++] = y1;
+                            linePositions[lineIndex++] = z1;
+
+                            linePositions[lineIndex++] = x2;
+                            linePositions[lineIndex++] = y2;
+                            linePositions[lineIndex++] = z2;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                 if (lineIndex + 6 > linePositions.length) {
+                    break;
+                }
+            }
+
+            lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions.slice(0, lineIndex), 3));
+            const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+            scene.add(lines);
+
+
+            camera.position.z = 100;
+
+            let mouseX = 0;
+            let mouseY = 0;
+
+            function onDocumentMouseMove(event) {
+                mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+            }
+            document.addEventListener('mousemove', onDocumentMouseMove);
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // Rotate particles and lines slightly
+                particleMesh.rotation.x += 0.0003; // Slower rotation
+                particleMesh.rotation.y += 0.0005;
+
+                lines.rotation.x += 0.0003;
+                lines.rotation.y += 0.0005;
+
+                // Make camera slowly follow mouse
+                camera.position.x += (mouseX * 30 - camera.position.x) * 0.01; // Slightly less aggressive mouse follow
+                camera.position.y += (mouseY * 30 - camera.position.y) * 0.01;
+                camera.lookAt(scene.position);
+
+
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Handle window resizing
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+
+        // Scroll to Top Button Logic
+        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+        // When the user scrolls down 200px from the top of the document, show the button
+        window.onscroll = function() {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                scrollToTopBtn.style.display = "block";
+                scrollToTopBtn.style.opacity = "1";
+            } else {
+                scrollToTopBtn.style.opacity = "0";
+                setTimeout(() => { // Give time for transition before hiding
+                    if (document.body.scrollTop <= 200 && document.documentElement.scrollTop <= 200) {
+                        scrollToTopBtn.style.display = "none";
+                    }
+                }, 300);
+            }
+        };
+
+        // When the user clicks on the button, scroll to the top of the document
+        scrollToTopBtn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+
+        // Code Copy Functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling; // Get the <pre> tag
+            const code = codeBlock.textContent || codeBlock.innerText; // Get the code text
+
+            // Create a temporary textarea element to copy the text
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = code;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                const msg = successful ? 'Copied!' : 'Failed to copy.';
+                button.textContent = msg; // Change button text
+                setTimeout(() => {
+                    button.textContent = 'Copy Code'; // Revert button text
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                button.textContent = 'Error!';
+                setTimeout(() => {
+                    button.textContent = 'Copy Code';
+                }, 2000);
+            } finally {
+                document.body.removeChild(tempTextArea); // Clean up
+            }
+        }
+    </script>
+</body>
+</html>
