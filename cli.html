@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO & Metadata -->
+    <title>Command Line Interface (CLI) - Whizmath | Master Basics</title>
+    <meta name="description" content="Master Command Line Interface (CLI) basics at Whizmath. Learn to navigate, control your system, manage files, and execute commands efficiently for programming, system administration, and development tasks.">
+    <meta name="keywords" content="Command Line Interface, CLI, Terminal, Bash, Shell, Command Prompt, Linux commands, Windows commands, macOS commands, File System, Navigation, File Management, System Control, Programming Tools, Whizmath, Learn CLI, Basic Commands">
+    <link rel="canonical" href="https://yourdomain.com/cli_lesson.html"> <!-- Replace with your actual URL -->
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://yourdomain.com/cli_lesson.html"> <!-- Replace with your actual URL -->
+    <meta property="og:title" content="Command Line Interface (CLI) - Whizmath | Master Basics">
+    <meta property="og:description" content="Master Command Line Interface (CLI) basics at Whizmath. Learn to navigate, control your system, manage files, and execute commands efficiently for programming, system administration, and development tasks.">
+    <meta property="og:image" content="https://placehold.co/1200x630/4ade80/ffffff?text=Whizmath+CLI"> <!-- Placeholder image for social share -->
+    <meta property="og:site_name" content="Whizmath">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yourdomain.com/cli_lesson.html"> <!-- Replace with your actual URL -->
+    <meta property="twitter:title" content="Command Line Interface (CLI) - Whizmath | Master Basics">
+    <meta property="twitter:description" content="Master Command Line Interface (CLI) basics at Whizmath. Learn to navigate, control your system, manage files, and execute commands efficiently for programming, system administration, and development tasks.">
+    <meta property="twitter:image" content="https://placehold.co/1200x630/4ade80/ffffff?text=Whizmath+CLI"> <!-- Placeholder image for social share -->
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://yourdomain.com/cli_lesson.html"
+      },
+      "headline": "Command Line Interface (CLI) Basics: Navigate and Control Your System",
+      "description": "A comprehensive lesson for beginners on CLI, covering fundamental commands for file system navigation, file and directory management, process control, and basic shell scripting. Essential for developers, system administrators, and anyone seeking greater control over their computer.",
+      "image": "https://placehold.co/1200x630/4ade80/ffffff?text=Whizmath+CLI",
+      "author": {
+        "@type": "Organization",
+        "name": "Whizmath"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Whizmath",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://placehold.co/600x60/63b3ed/ffffff?text=Whizmath+Logo" <!-- Placeholder logo for publisher -->
+        }
+      },
+      "datePublished": "2025-06-07T09:00:00+01:00", <!-- Update with actual publish date/time -->
+      "dateModified": "2025-06-07T09:00:00+01:00",  <!-- Update with actual modify date/time -->
+      "keywords": "Command Line Interface, CLI, Terminal, Bash, Shell, Command Prompt, Linux commands, Windows commands, macOS commands, File System, Navigation, File Management, System Control, Programming Tools, Whizmath, Learn CLI, Basic Commands"
+    }
+    </script>
+
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Dark background for professional look */
+            color: #e6e6e6; /* Light text for contrast */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            position: relative; /* For scroll-to-top positioning */
+        }
+        #three-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send it to the back */
+            overflow: hidden;
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 1; /* Keep content above background */
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            background-color: rgba(17, 24, 39, 0.9); /* Slightly transparent dark background for content */
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px); /* Subtle blur effect */
+            -webkit-backdrop-filter: blur(8px);
+        }
+        h1, h2, h3, h4 {
+            color: #63b3ed; /* Consistent vibrant blue for headings */
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.5rem; }
+        p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        a {
+            color: #a78bfa; /* Consistent subtle purple for links */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .code-block {
+            position: relative;
+            background-color: #1f2937; /* Darker background for code */
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto; /* Enable horizontal scrolling for long lines of code */
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+            color: #e6e6e6; /* White/Light gray for code text for readability */
+        }
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #4a5568; /* Grayish background for button */
+            color: #e6e6e6;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease-in-out;
+            border: none;
+            outline: none;
+        }
+        .copy-button:hover {
+            background-color: #646b7a;
+        }
+        .back-button {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 100;
+            background-color: #63b3ed; /* Consistent vibrant blue for back button */
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px; /* Fully rounded */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-button:hover {
+            background-color: #4299e1;
+            transform: translateY(-2px);
+        }
+        .back-button svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #a78bfa; /* Consistent subtle purple for scroll button */
+            color: white;
+            padding: 1rem;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: none; /* Hidden by default */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+            z-index: 100;
+        }
+        .scroll-to-top:hover {
+            background-color: #8b5cf6;
+            transform: translateY(-2px);
+        }
+        .scroll-to-top svg {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 1.5rem 1rem;
+                margin: 0 0.5rem;
+            }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.75rem; }
+            h3 { font-size: 1.5rem; }
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            .back-button svg {
+                width: 1rem;
+                height: 1rem;
+            }
+            .scroll-to-top {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                padding: 0.75rem;
+            }
+            .scroll-to-top svg {
+                width: 1.25rem;
+                height: 1.25rem;
+            }
+            .copy-button {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Three.js Background Canvas -->
+    <canvas id="three-bg"></canvas>
+
+    <!-- Back Button -->
+    <a href="index.html" class="back-button">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Home
+    </a>
+
+    <div class="content-wrapper">
+        <header class="text-center mb-10">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4 animate-pulse">
+                Whizmath
+            </h1>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
+                Command Line Interface (CLI)
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400">
+                Navigate and control your system using the command line. <br class="hidden md:block">
+                Essential Basics for all Users.
+            </p>
+        </header>
+
+        <section class="intro mb-12">
+            <h2 class="text-3xl font-bold mb-6">Introduction to the Command Line Interface (CLI)</h2>
+            <p>
+                In an era dominated by graphical user interfaces (GUIs), the Command Line Interface (CLI) often appears as a relic of the past—a dark, text-only screen, intimidating to the uninitiated. However, for developers, system administrators, data scientists, and anyone seeking precise control over their computer, the CLI remains an incredibly powerful and efficient tool. Mastering the command line unlocks a new level of productivity, automation, and problem-solving capabilities that a GUI simply cannot match.
+            </p>
+            <p>
+                Think of the CLI as direct communication with your computer's operating system. Instead of clicking icons, you type commands. This method, though initially less intuitive, offers unparalleled speed, flexibility, and the ability to combine various tools to perform complex tasks with just a few keystrokes. Whether you're managing files, installing software, running scripts, or interacting with version control systems like Git, the CLI is your gateway to the heart of your system.
+            </p>
+            <p>
+                This comprehensive lesson will demystify the CLI, guiding you through its fundamental concepts and essential commands. By the end, you'll be comfortable navigating your file system, manipulating files and directories, understanding basic input/output, and setting the stage for more advanced command-line wizardry. Get ready to experience the raw power and elegance of controlling your computer through text!
+            </p>
+        </section>
+
+        <section class="why-cli mb-12">
+            <h2 class="text-3xl font-bold mb-6">Why Learn the Command Line?</h2>
+            <p>
+                Despite the prevalence of GUIs, the CLI offers distinct advantages that make it an invaluable skill:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Efficiency and Speed:</strong> Once you know the commands, tasks can be executed much faster than navigating through multiple menus and clicks in a GUI.</li>
+                <li><strong>Automation:</strong> CLI commands can be easily scripted, allowing you to automate repetitive tasks, saving time and reducing errors.</li>
+                <li><strong>Precision and Control:</strong> CLI provides fine-grained control over system operations and file manipulations that might be impossible or cumbersome with a GUI.</li>
+                <li><strong>Remote Access:</strong> When working with remote servers (e.g., cloud instances, web servers), the CLI (via SSH) is often the only interface available.</li>
+                <li><strong>Essential for Development:</strong> Many development tools (Git, Node.js, Python, Docker, build tools) are primarily command-line driven.</li>
+                <li><strong>Resource Efficiency:</strong> CLIs typically consume fewer system resources compared to graphical interfaces, which can be important for performance-critical tasks or older hardware.</li>
+                <li><strong>Troubleshooting:</strong> System diagnostics and error messages are often more detailed and accessible via the command line.</li>
+            </ul>
+            <p>
+                The CLI is a universal language in the tech world. Once you master it, your skills are highly transferable across different operating systems (Linux, macOS, Windows with Bash/WSL).
+            </p>
+        </section>
+
+        <section class="basic-navigation mb-12">
+            <h2 class="text-3xl font-bold mb-6">Basic Navigation: Exploring Your File System</h2>
+            <p>
+                The file system is the hierarchical structure your operating system uses to organize files and directories (folders). Learning to navigate it is the first step in mastering the CLI.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">1. `pwd` (Print Working Directory)</h3>
+            <p>
+                This command tells you where you are currently located in the file system. It outputs the "present working directory" or "current directory."
+            </p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>pwd
+# Example Output: /home/youruser/documents</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">2. `ls` (List Directory Contents)</h3>
+            <p>
+                The `ls` command lists the files and directories in your current location or a specified directory.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: List contents of current directory</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>ls
+# Example Output: file1.txt folderA another_file.pdf</code></pre>
+            </div>
+            <h4 class="text-xl font-bold mb-3">Common `ls` Options:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><code>ls -l</code>: Long listing format (shows permissions, owner, size, date, etc.).</li>
+                <li><code>ls -a</code>: Shows all files, including hidden ones (those starting with a dot, e.g., `.bashrc`).</li>
+                <li><code>ls -lh</code>: Long listing with human-readable file sizes (e.g., 1K, 234M, 2G).</li>
+            </ul>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>ls -la
+# Example Output:
+# drwxr-xr-x   5 youruser staff   160 Jun  7 09:00 .
+# drwxr-xr-x 135 youruser staff  4.3K Jun  7 08:55 ..
+# -rw-r--r--   1 youruser staff    10 Jun  7 09:00 .hidden_file.txt
+# -rw-r--r--   1 youruser staff   1.5K Jun  7 09:00 report.md
+# drwxr-xr-x   2 youruser staff    64 Jun  7 09:00 data_folder</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">3. `cd` (Change Directory)</h3>
+            <p>
+                The `cd` command is used to move between directories.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Move into a subdirectory</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>cd data_folder
+pwd
+# Example Output: /home/youruser/documents/data_folder</code></pre>
+            </div>
+            <h4 class="text-xl font-bold mb-3">Example: Move up one directory level</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>cd ..
+pwd
+# Example Output: /home/youruser/documents</code></pre>
+            </div>
+            <h4 class="text-xl font-bold mb-3">Example: Move to your home directory</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>cd ~
+# OR
+cd
+pwd
+# Example Output: /home/youruser (or /Users/youruser on macOS)</code></pre>
+            </div>
+            <h4 class="text-xl font-bold mb-3">Example: Move to the root directory</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>cd /
+pwd
+# Example Output: /</code></pre>
+            </div>
+        </section>
+
+        <section class="file-management mb-12">
+            <h2 class="text-3xl font-bold mb-6">File & Directory Management</h2>
+            <p>
+                Beyond navigation, the CLI allows you to create, copy, move, and delete files and directories.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">1. `mkdir` (Make Directory)</h3>
+            <p>
+                Creates new directories (folders).
+            </p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>mkdir new_project
+ls
+# Output: new_project file1.txt folderA ...</code></pre>
+            </div>
+            <p>
+                To create nested directories in one go:
+            </p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>mkdir -p parent_folder/child_folder/grandchild</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">2. `touch` (Create Empty File)</h3>
+            <p>
+                Creates a new empty file or updates the timestamp of an existing file.
+            </p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>touch my_notes.txt
+ls
+# Output: my_notes.txt new_project ...</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">3. `cp` (Copy Files and Directories)</h3>
+            <p>
+                Copies files or directories from one location to another.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Copy a file</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>cp my_notes.txt my_notes_backup.txt
+ls
+# Output: my_notes.txt my_notes_backup.txt new_project ...</code></pre>
+            </div>
+            <h4 class="text-xl font-bold mb-3">Example: Copy a directory (recursively)</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>cp -r new_project archived_project
+ls
+# Output: archived_project my_notes.txt new_project ...</code></pre>
+            </div>
+            <p>
+                The `-r` (recursive) flag is crucial for copying directories.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">4. `mv` (Move or Rename Files and Directories)</h3>
+            <p>
+                Moves files or directories, or renames them.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Rename a file</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>mv my_notes.txt important_notes.txt
+ls
+# Output: important_notes.txt my_notes_backup.txt new_project ...</code></pre>
+            </div>
+            <h4 class="text-xl font-bold mb-3">Example: Move a file to another directory</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>mv important_notes.txt new_project/
+ls new_project/
+# Output: important_notes.txt (inside new_project)</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">5. `rm` (Remove Files and Directories)</h3>
+            <p>
+                Used to delete files or directories. This command should be used with caution as deletions are often permanent and cannot be easily undone.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Delete a file</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>rm my_notes_backup.txt
+ls
+# Output: new_project ... (my_notes_backup.txt is gone)</code></pre>
+            </div>
+            <h4 class="text-xl font-bold mb-3">Example: Delete an empty directory</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>rmdir empty_folder # Only works if folder is empty</code></pre>
+            </div>
+            <h4 class="text-xl font-bold mb-3">Example: Delete a non-empty directory (recursively and forcefully)</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>rm -rf archived_project
+# -r: recursive (for directories)
+# -f: force (no prompt for confirmation)
+# USE WITH EXTREME CAUTION! This is a dangerous command if misused.</code></pre>
+            </div>
+        </section>
+
+        <section class="file-content-viewing mb-12">
+            <h2 class="text-3xl font-bold mb-6">Viewing File Content</h2>
+            <p>
+                The CLI provides several utilities to view the content of text files without opening a full-fledged editor.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">1. `cat` (Concatenate and Display Files)</h3>
+            <p>
+                Displays the entire content of a file to the terminal. Useful for short files.
+            </p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>cat my_file.txt</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">2. `less` (Page Through Files)</h3>
+            <p>
+                A more powerful pager than `cat` for viewing large files. You can scroll up and down, search, etc. Press `q` to quit.
+            </p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>less large_log_file.txt</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">3. `head` and `tail`</h3>
+            <p>
+                `head` displays the first few lines of a file, and `tail` displays the last few lines. Useful for quick glances or monitoring log files.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: View first 10 lines (default)</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>head file.txt
+# To see first 5 lines:
+head -n 5 file.txt</code></pre>
+            </div>
+            <h4 class="text-xl font-bold mb-3">Example: View last 10 lines (default)</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>tail file.txt
+# To see last 20 lines:
+tail -n 20 file.txt
+# To follow a log file in real-time:
+tail -f access.log</code></pre>
+            </div>
+        </section>
+
+        <section class="pipes-redirection mb-12">
+            <h2 class="text-3xl font-bold mb-6">Pipes (`|`) and Redirection (`>`, `<`)</h2>
+            <p>
+                These are powerful features that allow you to combine commands and control their input/output.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">1. Redirection (`>`, `>>`, `<`)</h3>
+            <p>
+                Redirects the output of a command to a file (or input from a file).
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><code>></code>: Redirects standard output to a file. **Overwrites** the file if it exists.</li>
+                <li><code>>></code>: Redirects standard output to a file. **Appends** to the file if it exists.</li>
+                <li><code><</code>: Redirects standard input from a file.</li>
+            </ul>
+            <h4 class="text-xl font-bold mb-3">Example: Output of `ls` to a file</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>ls -l > file_list.txt
+# Creates file_list.txt with a long listing of current directory
+
+echo "New line of text" >> file_list.txt
+# Adds "New line of text" to the end of file_list.txt</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">2. Pipes (`|`)</h3>
+            <p>
+                Connects the standard output of one command to the standard input of another command. This allows you to chain commands together, building complex operations from simple ones.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Find files and then search within them</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>ls -l | grep "Jun"
+# Lists files, then pipes that list to `grep` which filters for lines containing "Jun"
+
+cat my_large_file.txt | less
+# Pipes the content of my_large_file.txt to the `less` pager</code></pre>
+            </div>
+            <p>
+                This is a fundamental concept in CLI usage, enabling powerful data processing on the fly.
+            </p>
+        </section>
+
+        <section class="permissions-ownership mb-12">
+            <h2 class="text-3xl font-bold mb-6">Permissions and Ownership (Briefly)</h2>
+            <p>
+                In Linux/macOS, every file and directory has permissions that determine who can read, write, or execute it. Understanding these is crucial for security and collaboration.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: `ls -l` output breakdown</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>-rw-r--r--   1 youruser staff   1.5K Jun  7 09:00 report.md
+# ^^^ ^^^^ ^^^^       ^      ^        ^       ^        ^
+# 1   2    3          4      5        6       7        8
+# 1: File type (- for file, d for directory)
+# 2: Permissions for owner (r=read, w=write, x=execute)
+# 3: Permissions for group
+# 4: Permissions for others
+# 5: Number of links
+# 6: Owner
+# 7: Group
+# 8: Size
+# 9: Date/Time
+# 10: Filename</code></pre>
+            </div>
+            <h3 class="text-2xl font-bold mb-4">`chmod` (Change Mode/Permissions)</h3>
+            <p>
+                Used to change file permissions. Permissions are often represented as a three-digit octal number (e.g., `755`).
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>`r` (read) = 4</li>
+                <li>`w` (write) = 2</li>
+                <li>`x` (execute) = 1</li>
+            </ul>
+            <p>
+                Combine these numbers for desired permissions (e.g., `rwx` = 4+2+1 = 7, `rw-` = 4+2+0 = 6, `r-x` = 4+0+1 = 5).
+            </p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>chmod 755 script.sh
+# Owner: rwx (7)
+# Group: r-x (5)
+# Others: r-x (5)
+# This makes script.sh executable for everyone.</code></pre>
+            </div>
+        </section>
+
+        <section class="common-cli-commands mb-12">
+            <h2 class="text-3xl font-bold mb-6">Cheat Sheet: More Common CLI Commands</h2>
+            <p>
+                Beyond the basics, here are some other frequently used commands:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><code>clear</code>: Clears the terminal screen.</li>
+                <li><code>history</code>: Shows a list of previously executed commands.</li>
+                <li><code>man [command]</code>: Displays the manual page (documentation) for a command. Press `q` to quit.</li>
+                <li><code>echo "text"</code>: Prints text to the terminal.</li>
+                <li><code>grep "pattern" [file]</code>: Searches for a pattern within files. (e.g., `grep "error" server.log`)</li>
+                <li><code>find [path] -name "pattern"</code>: Searches for files and directories based on criteria. (e.g., `find . -name "*.txt"`)</li>
+                <li><code>ssh [user]@[host]</code>: Connects to a remote server securely.</li>
+                <li><code>df -h</code>: Reports disk space usage in human-readable format.</li>
+                <li><code>du -sh [directory]</code>: Summarizes disk usage for a directory in human-readable format.</li>
+                <li><code>top</code> / <code>htop</code>: Displays running processes and system resource usage. (<code>htop</code> is a more user-friendly version, often needs to be installed).</li>
+                <li><code>ping [hostname]</code>: Tests network connectivity to a host.</li>
+                <li><code>wget [url]</code> / <code>curl [url]</code>: Downloads files from the internet.</li>
+            </ul>
+        </section>
+
+        <section class="conclusion mb-12">
+            <h2 class="text-3xl font-bold mb-6">Conclusion & Your CLI Journey</h2>
+            <p>
+                You've taken a significant step in your technical journey by exploring the fundamentals of the Command Line Interface! While it might seem daunting at first, the CLI offers unparalleled control, efficiency, and a deeper understanding of how your computer operates. This foundational knowledge is crucial for anyone involved in software development, system administration, data analysis, or simply aiming to be a more proficient computer user.
+            </p>
+            <p>
+                As you continue to refine your CLI skills:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Practice Regularly:</strong> Integrate CLI into your daily workflow. The more you use it, the more natural it becomes.</li>
+                <li><strong>Experiment:</strong> Don't be afraid to try new commands and options (on non-critical files first!). Use `man` to understand what commands do.</li>
+                <li><strong>Learn Shell Scripting:</strong> Once comfortable with individual commands, learn how to combine them into shell scripts (Bash, Zsh, PowerShell) to automate complex tasks.</li>
+                <li><strong>Explore Text Editors:</strong> Learn command-line text editors like `Vim` or `Nano` for quick edits directly in the terminal.</li>
+                <li><strong>Understand the Shell:</strong> Delve into topics like shell aliases, functions, and environment variables to customize your CLI environment.</li>
+            </ul>
+            <p>
+                The command line is a powerful realm waiting to be explored. Embrace its logic, leverage its efficiency, and transform the way you interact with your computer. Happy commanding, and keep whizzing with math (and tech)!
+            </p>
+        </section>
+
+        <footer class="text-center text-gray-500 text-sm mt-12 pt-8 border-t border-gray-700">
+            &copy; 2025 Whizmath. All rights reserved.
+        </footer>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="scroll-to-top">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js Background Animation
+        window.onload = function() {
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-bg'), antialias: true });
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setClearColor(0x0d1117, 1); // Match body background
+
+            // Particles for a "terminal-like" effect
+            const particleCount = 2800; // More particles
+            const particles = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount * 3; i++) {
+                positions[i] = (Math.random() - 0.5) * 350; // Wider spread
+            }
+
+            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const particleMaterial = new THREE.PointsMaterial({
+                color: 0x63b3ed, // Blueish color, consistent with DS&A and Git
+                size: 1.5,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                sizeAttenuation: true,
+                opacity: 0.7
+            });
+
+            const particleMesh = new THREE.Points(particles, particleMaterial);
+            scene.add(particleMesh);
+
+            // Lines connecting particles (representing data flow/connections)
+            const lineMaterial = new THREE.LineBasicMaterial({
+                color: 0xa78bfa, // Purplish color, consistent with DS&A and Git
+                transparent: true,
+                opacity: 0.2
+            });
+            const lineGeometry = new THREE.BufferGeometry();
+            const linePositions = new Float32Array(particleCount * 3 * 2);
+
+            const threshold = 20; // Distance for connections
+            let lineIndex = 0;
+            for (let i = 0; i < particleCount; i++) {
+                for (let j = i + 1; j < particleCount; j++) {
+                    const x1 = positions[i * 3];
+                    const y1 = positions[i * 3 + 1];
+                    const z1 = positions[i * 3 + 2];
+
+                    const x2 = positions[j * 3];
+                    const y2 = positions[j * 3 + 1];
+                    const z2 = positions[j * 3 + 2];
+
+                    const dx = x1 - x2;
+                    const dy = y1 - y2;
+                    const dz = z1 - z2;
+                    const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+                    if (distance < threshold) {
+                        if (lineIndex + 6 <= linePositions.length) {
+                            linePositions[lineIndex++] = x1;
+                            linePositions[lineIndex++] = y1;
+                            linePositions[lineIndex++] = z1;
+
+                            linePositions[lineIndex++] = x2;
+                            linePositions[lineIndex++] = y2;
+                            linePositions[lineIndex++] = z2;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                 if (lineIndex + 6 > linePositions.length) {
+                    break;
+                }
+            }
+
+            lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions.slice(0, lineIndex), 3));
+            const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+            scene.add(lines);
+
+
+            camera.position.z = 100;
+
+            let mouseX = 0;
+            let mouseY = 0;
+
+            function onDocumentMouseMove(event) {
+                mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+            }
+            document.addEventListener('mousemove', onDocumentMouseMove);
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // Rotate particles and lines slightly
+                particleMesh.rotation.x += 0.0003; // Slower rotation
+                particleMesh.rotation.y += 0.0005;
+
+                lines.rotation.x += 0.0003;
+                lines.rotation.y += 0.0005;
+
+                // Make camera slowly follow mouse
+                camera.position.x += (mouseX * 30 - camera.position.x) * 0.01; // Slightly less aggressive mouse follow
+                camera.position.y += (mouseY * 30 - camera.position.y) * 0.01;
+                camera.lookAt(scene.position);
+
+
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Handle window resizing
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+
+        // Scroll to Top Button Logic
+        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+        // When the user scrolls down 200px from the top of the document, show the button
+        window.onscroll = function() {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                scrollToTopBtn.style.display = "block";
+                scrollToTopBtn.style.opacity = "1";
+            } else {
+                scrollToTopBtn.style.opacity = "0";
+                setTimeout(() => { // Give time for transition before hiding
+                    if (document.body.scrollTop <= 200 && document.documentElement.scrollTop <= 200) {
+                        scrollToTopBtn.style.display = "none";
+                    }
+                }, 300);
+            }
+        };
+
+        // When the user clicks on the button, scroll to the top of the document
+        scrollToTopBtn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+
+        // Code Copy Functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling; // Get the <pre> tag
+            const code = codeBlock.textContent || codeBlock.innerText; // Get the code text
+
+            // Create a temporary textarea element to copy the text
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = code;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                const msg = successful ? 'Copied!' : 'Failed to copy.';
+                button.textContent = msg; // Change button text
+                setTimeout(() => {
+                    button.textContent = 'Copy Code'; // Revert button text
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                button.textContent = 'Error!';
+                setTimeout(() => {
+                    button.textContent = 'Copy Code';
+                }, 2000);
+            } finally {
+                document.body.removeChild(tempTextArea); // Clean up
+            }
+        }
+    </script>
+</body>
+</html>
