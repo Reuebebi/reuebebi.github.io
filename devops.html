@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO & Metadata -->
+    <title>DevOps Practices: CI/CD Introduction - Whizmath | Automate Delivery</title>
+    <meta name="description" content="Master DevOps CI/CD fundamentals at Whizmath. Learn about Continuous Integration, Continuous Delivery, Continuous Deployment, their benefits, key pipeline stages, and essential tools for automating your software delivery process.">
+    <meta name="keywords" content="DevOps, CI/CD, Continuous Integration, Continuous Delivery, Continuous Deployment, Software Delivery Pipeline, Automation, Git, Jenkins, GitLab CI, GitHub Actions, Azure DevOps, CircleCI, Docker, Kubernetes, Version Control, Automated Testing, Deployment, Release Management, Whizmath">
+    <link rel="canonical" href="https://yourdomain.com/devops_ci_cd_lesson.html"> <!-- Replace with your actual URL -->
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://yourdomain.com/devops_ci_cd_lesson.html"> <!-- Replace with your actual URL -->
+    <meta property="og:title" content="DevOps Practices: CI/CD Introduction - Whizmath | Automate Delivery">
+    <meta property="og:description" content="Master DevOps CI/CD fundamentals at Whizmath. Learn about Continuous Integration, Continuous Delivery, Continuous Deployment, their benefits, key pipeline stages, and essential tools for automating your software delivery process.">
+    <meta property="og:image" content="https://placehold.co/1200x630/a78bfa/ffffff?text=Whizmath+CI/CD"> <!-- Placeholder image for social share -->
+    <meta property="og:site_name" content="Whizmath">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yourdomain.com/devops_ci_cd_lesson.html"> <!-- Replace with your actual URL -->
+    <meta property="twitter:title" content="DevOps Practices: CI/CD Introduction - Whizmath | Automate Delivery">
+    <meta property="twitter:description" content="Master DevOps CI/CD fundamentals at Whizmath. Learn about Continuous Integration, Continuous Delivery, Continuous Deployment, their benefits, key pipeline stages, and essential tools for automating your software delivery process.">
+    <meta property="twitter:image" content="https://placehold.co/1200x630/a78bfa/ffffff?text=Whizmath+CI/CD"> <!-- Placeholder image for social share -->
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://yourdomain.com/devops_ci_cd_lesson.html"
+      },
+      "headline": "DevOps Practices: CI/CD Introduction - Automate Your Software Delivery Pipeline",
+      "description": "A foundational lesson on DevOps and CI/CD, explaining Continuous Integration, Continuous Delivery, and Continuous Deployment. Covers the benefits of automation, key pipeline stages, and commonly used tools for building, testing, and deploying software efficiently.",
+      "image": "https://placehold.co/1200x630/a78bfa/ffffff?text=Whizmath+CI/CD",
+      "author": {
+        "@type": "Organization",
+        "name": "Whizmath"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Whizmath",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://placehold.co/600x60/63b3ed/ffffff?text=Whizmath+Logo" <!-- Placeholder logo for publisher -->
+        }
+      },
+      "datePublished": "2025-06-07T09:00:00+01:00", <!-- Update with actual publish date/time -->
+      "dateModified": "2025-06-07T09:00:00+01:00",  <!-- Update with actual modify date/time -->
+      "keywords": "DevOps, CI/CD, Continuous Integration, Continuous Delivery, Continuous Deployment, Software Delivery Pipeline, Automation, Git, Jenkins, GitLab CI, GitHub Actions, Azure DevOps, CircleCI, Docker, Kubernetes, Version Control, Automated Testing, Deployment, Release Management, Whizmath"
+    }
+    </script>
+
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Dark background for professional look */
+            color: #e6e6e6; /* Light text for contrast */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            position: relative; /* For scroll-to-top positioning */
+        }
+        #three-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send it to the back */
+            overflow: hidden;
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 1; /* Keep content above background */
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            background-color: rgba(17, 24, 39, 0.9); /* Slightly transparent dark background for content */
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px); /* Subtle blur effect */
+            -webkit-backdrop-filter: blur(8px);
+        }
+        h1, h2, h3, h4 {
+            color: #63b3ed; /* Consistent vibrant blue for headings */
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.5rem; }
+        p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        a {
+            color: #a78bfa; /* Consistent subtle purple for links */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .code-block {
+            position: relative;
+            background-color: #1f2937; /* Darker background for code */
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto; /* Enable horizontal scrolling for long lines of code */
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+            color: #e6e6e6; /* White/Light gray for code text for readability */
+        }
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #4a5568; /* Grayish background for button */
+            color: #e6e6e6;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease-in-out;
+            border: none;
+            outline: none;
+        }
+        .copy-button:hover {
+            background-color: #646b7a;
+        }
+        .back-button {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 100;
+            background-color: #63b3ed; /* Consistent vibrant blue for back button */
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px; /* Fully rounded */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-button:hover {
+            background-color: #4299e1;
+            transform: translateY(-2px);
+        }
+        .back-button svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #a78bfa; /* Consistent subtle purple for scroll button */
+            color: white;
+            padding: 1rem;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: none; /* Hidden by default */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+            z-index: 100;
+        }
+        .scroll-to-top:hover {
+            background-color: #8b5cf6;
+            transform: translateY(-2px);
+        }
+        .scroll-to-top svg {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 1.5rem 1rem;
+                margin: 0 0.5rem;
+            }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.75rem; }
+            h3 { font-size: 1.5rem; }
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            .back-button svg {
+                width: 1rem;
+                height: 1rem;
+            }
+            .scroll-to-top {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                padding: 0.75rem;
+            }
+            .scroll-to-top svg {
+                width: 1.25rem;
+                height: 1.25rem;
+            }
+            .copy-button {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Three.js Background Canvas -->
+    <canvas id="three-bg"></canvas>
+
+    <!-- Back Button -->
+    <a href="index.html" class="back-button">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Home
+    </a>
+
+    <div class="content-wrapper">
+        <header class="text-center mb-10">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4 animate-pulse">
+                Whizmath
+            </h1>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
+                DevOps Practices
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400">
+                Automate your software delivery pipeline with CI/CD. <br class="hidden md:block">
+                Continuous Integration & Delivery Introduction.
+            </p>
+        </header>
+
+        <section class="intro mb-12">
+            <h2 class="text-3xl font-bold mb-6">Introduction to DevOps</h2>
+            <p>
+                In the rapidly evolving landscape of software development, simply writing code isn't enough. Modern practices demand faster delivery, higher quality, and seamless collaboration between development and operations teams. This is where **DevOps** comes in. DevOps is not just a set of tools or a methodology; it's a cultural philosophy that unifies software development (Dev) and IT operations (Ops) to enable faster, more reliable delivery of software. It aims to shorten the systems development life cycle and provide continuous delivery with high software quality.
+            </p>
+            <p>
+                The core tenets of DevOps revolve around automation, collaboration, continuous improvement, and a strong feedback loop. By breaking down silos between traditionally separate teams, DevOps fosters a culture where everyone shares responsibility for the entire software lifecycle, from ideation to deployment and monitoring. For those with a logical mind, DevOps is akin to optimizing a complex manufacturing process to ensure a continuous flow of high-quality products.
+            </p>
+            <p>
+                Central to the DevOps movement are the practices of **Continuous Integration (CI)**, **Continuous Delivery (CD)**, and **Continuous Deployment (CD)** – often collectively referred to as CI/CD. These practices automate the various stages of software development, ensuring that code changes are continuously built, tested, and prepared for release. This comprehensive lesson will introduce you to the world of DevOps and dive deep into the fundamentals of CI/CD, outlining their benefits, key stages, and the tools that make them possible. Get ready to transform your software delivery process!
+            </p>
+        </section>
+
+        <section class="what-is-cicd mb-12">
+            <h2 class="text-3xl font-bold mb-6">What is CI/CD?</h2>
+            <p>
+                CI/CD represents a set of practices that automate and monitor the stages of software development, from integration and testing to delivery and deployment. It forms the backbone of modern DevOps.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">1. Continuous Integration (CI)</h3>
+            <p>
+                Continuous Integration is a development practice where developers frequently merge their code changes into a central repository, usually multiple times a day. Each merge triggers an automated build and test process. The primary goal of CI is to detect integration issues early and quickly, making them easier and cheaper to fix.
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Frequency:</strong> Developers commit small, frequent changes.</li>
+                <li><strong>Automation:</strong> Automated build (compilation, dependency management) and automated unit/integration tests are run on every commit.</li>
+                <li><strong>Feedback:</strong> Developers receive immediate feedback on the success or failure of their changes.</li>
+            </ul>
+            <h4 class="text-xl font-bold mb-3">Example Workflow:</h4>
+            <ol class="list-decimal list-inside ml-4 mb-4">
+                <li>Developer writes code locally.</li>
+                <li>Pushes code to a shared version control repository (e.g., Git).</li>
+                <li>CI server automatically detects the new commit.</li>
+                <li>CI server pulls the code, builds the application, and runs automated tests.</li>
+                <li>If tests pass, the build is marked successful. If not, developers are notified immediately to fix.</li>
+            </ol>
+
+            <h3 class="text-2xl font-bold mb-4">2. Continuous Delivery (CD)</h3>
+            <p>
+                Continuous Delivery is a software engineering approach where teams produce software in short cycles, ensuring that the software can be reliably released at any time. It extends CI by automating the process of preparing a release (packaging the application, running further automated tests like end-to-end or performance tests) and delivering it to a "production-like" environment (e.g., staging or pre-production). The final step of deploying to production is a *manual decision* or trigger.
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Readiness:</strong> Always in a releasable state.</li>
+                <li><strong>Automated Release Preparation:</strong> Builds, tests, and deploys to staging environments automatically.</li>
+                <li><strong>Manual Production Deployment:</strong> A human decides when to push to production.</li>
+            </ul>
+
+            <h3 class="text-2xl font-bold mb-4">3. Continuous Deployment (CD)</h3>
+            <p>
+                Continuous Deployment is an extension of Continuous Delivery, where every change that passes all automated tests is automatically deployed to production without human intervention. This is the ultimate goal for many organizations, enabling extremely rapid delivery of new features and bug fixes.
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Full Automation:</strong> No manual gates after successful automated tests.</li>
+                <li><strong>Rapid Releases:</strong> Changes go live as soon as they pass all checks.</li>
+                <li><strong>High Confidence in Automation:</strong> Requires extremely robust automated testing and monitoring.</li>
+            </ul>
+            <p>
+                <strong class="text-blue-400">Key Distinction:</strong> Continuous Delivery means it *can* be deployed at any time, while Continuous Deployment means it *is* deployed automatically.
+            </p>
+        </section>
+
+        <section class="benefits mb-12">
+            <h2 class="text-3xl font-bold mb-6">Benefits of Implementing CI/CD</h2>
+            <p>
+                Adopting CI/CD practices yields numerous advantages for development teams and organizations:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Faster Release Cycles:</strong> Automating the pipeline significantly reduces the time from code commit to production, allowing for more frequent releases.</li>
+                <li><strong>Improved Code Quality:</strong> Early and continuous testing catches bugs quickly, making them easier and cheaper to fix. Consistent feedback loops help maintain high code quality.</li>
+                <li><strong>Reduced Risk:</strong> Small, frequent changes are less risky than large, infrequent ones. Automated tests provide confidence that new changes don't break existing functionality.</li>
+                <li><strong>Increased Developer Productivity:</strong> Developers spend less time on manual tasks (building, testing, deploying) and more time writing code.</li>
+                <li><strong>Better Collaboration:</strong> Frequent code merges and automated feedback loops encourage better communication and collaboration between development, testing, and operations teams.</li>
+                <li><strong>Cost Efficiency:</strong> Automation reduces manual effort, testing time, and the cost of fixing bugs late in the cycle.</li>
+                <li><strong>Higher Customer Satisfaction:</strong> Faster delivery of features and bug fixes leads to a more responsive product and happier users.</li>
+                <li><strong>Reproducible Builds & Deployments:</strong> Automated pipelines ensure consistency, making builds and deployments reliable and predictable across all environments.</li>
+            </ul>
+        </section>
+
+        <section class="pipeline-components mb-12">
+            <h2 class="text-3xl font-bold mb-6">Key Stages of a CI/CD Pipeline</h2>
+            <p>
+                A typical CI/CD pipeline consists of several interconnected stages, each designed to ensure quality and readiness for deployment.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">1. Source Stage (Code)</h3>
+            <p>
+                This is where the pipeline begins. It's triggered by a code change (e.g., a commit or pull request) in a version control system.
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Action:</strong> Monitor code repository for changes, pull latest code.</li>
+                <li><strong>Tools:</strong> Git, GitHub, GitLab, Bitbucket, Azure Repos.</li>
+            </ul>
+
+            <h3 class="text-2xl font-bold mb-4">2. Build Stage</h3>
+            <p>
+                In this stage, the application code is compiled, dependencies are fetched, and executable artifacts are created.
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Action:</strong> Compile source code, run static code analysis (linting), create executable packages (JARs, WARs, Docker images).</li>
+                <li><strong>Tools:</strong> Maven, Gradle, Webpack, Docker, npm, Yarn.</li>
+            </ul>
+
+            <h3 class="text-2xl font-bold mb-4">3. Test Stage</h3>
+            <p>
+                Automated tests are run to validate the functionality and quality of the built artifact. This is often divided into multiple sub-stages.
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Action:</strong> Run unit tests, integration tests, API tests, security scans (SAST/DAST), performance tests, end-to-end (E2E) tests.</li>
+                <li><strong>Tools:</strong> JUnit, Jest, Pytest, Selenium, Cypress, JMeter, SonarQube.</li>
+            </ul>
+
+            <h3 class="text-2xl font-bold mb-4">4. Release Stage</h3>
+            <p>
+                If all tests pass, the artifact is prepared for release. This might involve creating a release branch, tagging the version, or storing the artifact in a repository.
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Action:</strong> Store deployable artifact in an artifact repository, apply version tags.</li>
+                <li><strong>Tools:</strong> Artifactory, Nexus.</li>
+            </ul>
+
+            <h3 class="text-2xl font-bold mb-4">5. Deploy Stage</h3>
+            <p>
+                The prepared artifact is deployed to a target environment (e.g., development, staging, production).
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Action:</strong> Deploy application to servers, containers, or serverless platforms; configure infrastructure (Infrastructure as Code).</li>
+                <li><strong>Tools:</strong> Kubernetes, Docker Swarm, AWS Elastic Beanstalk, Azure App Service, Google App Engine, Terraform, Ansible, Chef, Puppet.</li>
+            </ul>
+
+            <h3 class="text-2xl font-bold mb-4">6. Monitor Stage (Post-Deployment)</h3>
+            <p>
+                While not strictly part of the "delivery" aspect, continuous monitoring is a critical DevOps practice that completes the feedback loop.
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Action:</strong> Collect metrics (performance, errors), log events, set up alerts, analyze application behavior in production.</li>
+                <li><strong>Tools:</strong> Prometheus, Grafana, ELK Stack (Elasticsearch, Logstash, Kibana), Splunk, Datadog, New Relic.</li>
+            </ul>
+        </section>
+
+        <section class="ci-cd-tools mb-12">
+            <h2 class="text-3xl font-bold mb-6">Popular CI/CD Tools</h2>
+            <p>
+                A wide array of tools are available to implement and manage CI/CD pipelines. Here are some of the most widely used:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Jenkins:</strong> An open-source automation server that provides hundreds of plugins to support building, deploying and automating any project. Highly customizable.</li>
+                <li><strong>GitLab CI/CD:</strong> Built directly into GitLab, offering seamless integration with source code management, powerful YAML-based pipeline configuration, and robust features for both CI and CD.</li>
+                <li><strong>GitHub Actions:</strong> A flexible automation platform integrated directly into GitHub repositories. It allows you to automate workflows for build, test, and deployment.</li>
+                <li><strong>Azure DevOps (formerly VSTS/TFS):</strong> A suite of services from Microsoft that includes Azure Pipelines (for CI/CD), Azure Repos, Azure Boards, etc. Strong for Microsoft-centric environments but supports many languages and platforms.</li>
+                <li><strong>CircleCI:</strong> A cloud-based CI/CD platform known for its ease of setup, speed, and support for various languages and platforms.</li>
+                <li><strong>Travis CI:</strong> One of the earliest hosted CI/CD services, popular for open-source projects.</li>
+                <li><strong>Bitbucket Pipelines:</strong> Built-in CI/CD service for Bitbucket repositories, similar to GitLab CI/CD for its native integration.</li>
+                <li><strong>TeamCity:</strong> A commercial CI/CD server from JetBrains, known for its powerful features and ease of use.</li>
+            </ul>
+        </section>
+
+        <section class="conclusion mb-12">
+            <h2 class="text-3xl font-bold mb-6">Conclusion & Your DevOps Journey</h2>
+            <p>
+                You've now embarked on understanding DevOps and the critical role of CI/CD practices in modern software development. By automating the software delivery pipeline, Continuous Integration, Continuous Delivery, and Continuous Deployment enable teams to deliver high-quality software faster, more reliably, and with greater confidence. This foundational knowledge is essential for anyone aiming to thrive in today's dynamic tech industry.
+            </p>
+            <p>
+                As you continue your DevOps and CI/CD journey:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Get Hands-On:</strong> The best way to learn CI/CD is by building a pipeline yourself. Start with a simple project (e.g., a small web app) and integrate it with a CI/CD tool like GitHub Actions, GitLab CI, or Jenkins.</li>
+                <li><strong>Explore Tools:</strong> Dive deeper into the configuration and capabilities of one or two CI/CD tools that interest you most.</li>
+                <li><strong>Learn Infrastructure as Code (IaC):</strong> Understand how tools like Terraform or Ansible can automate the provisioning and management of your infrastructure within the pipeline.</li>
+                <li><strong>Containerization:</strong> Explore Docker and Kubernetes, which are often used in conjunction with CI/CD for packaging and orchestrating applications.</li>
+                <li><strong>Monitoring & Observability:</strong> Further investigate how to set up robust monitoring and logging to gain insights into your applications post-deployment.</li>
+                <li><strong>Continuous Learning:</strong> DevOps is a rapidly evolving field. Stay updated with new tools, practices, and industry trends.</li>
+            </ul>
+            <p>
+                Embracing CI/CD means fostering a culture of automation, collaboration, and continuous improvement. It's a journey that will transform how you build, test, and deliver software, leading to more robust products and a more efficient development process. Happy automating, and keep whizzing with math (and DevOps)!
+            </p>
+        </section>
+
+        <footer class="text-center text-gray-500 text-sm mt-12 pt-8 border-t border-gray-700">
+            &copy; 2025 Whizmath. All rights reserved.
+        </footer>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="scroll-to-top">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js Background Animation
+        window.onload = function() {
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-bg'), antialias: true });
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setClearColor(0x0d1117, 1); // Match body background
+
+            // Particles for a "pipeline/data flow" feel
+            const particleCount = 2800;
+            const particles = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount * 3; i++) {
+                positions[i] = (Math.random() - 0.5) * 350; // Wider spread
+            }
+
+            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const particleMaterial = new THREE.PointsMaterial({
+                color: 0x63b3ed, // Blueish color, consistent with others
+                size: 1.5,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                sizeAttenuation: true,
+                opacity: 0.7
+            });
+
+            const particleMesh = new THREE.Points(particles, particleMaterial);
+            scene.add(particleMesh);
+
+            // Lines connecting particles (representing pipeline stages/connections)
+            const lineMaterial = new THREE.LineBasicMaterial({
+                color: 0xa78bfa, // Purplish color, consistent with others
+                transparent: true,
+                opacity: 0.2
+            });
+            const lineGeometry = new THREE.BufferGeometry();
+            const linePositions = new Float32Array(particleCount * 3 * 2);
+
+            const threshold = 20; // Distance for connections
+            let lineIndex = 0;
+            for (let i = 0; i < particleCount; i++) {
+                for (let j = i + 1; j < particleCount; j++) {
+                    const x1 = positions[i * 3];
+                    const y1 = positions[i * 3 + 1];
+                    const z1 = positions[i * 3 + 2];
+
+                    const x2 = positions[j * 3];
+                    const y2 = positions[j * 3 + 1];
+                    const z2 = positions[j * 3 + 2];
+
+                    const dx = x1 - x2;
+                    const dy = y1 - y2;
+                    const dz = z1 - z2;
+                    const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+                    if (distance < threshold) {
+                        if (lineIndex + 6 <= linePositions.length) {
+                            linePositions[lineIndex++] = x1;
+                            linePositions[lineIndex++] = y1;
+                            linePositions[lineIndex++] = z1;
+
+                            linePositions[lineIndex++] = x2;
+                            linePositions[lineIndex++] = y2;
+                            linePositions[lineIndex++] = z2;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                 if (lineIndex + 6 > linePositions.length) {
+                    break;
+                }
+            }
+
+            lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions.slice(0, lineIndex), 3));
+            const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+            scene.add(lines);
+
+
+            camera.position.z = 100;
+
+            let mouseX = 0;
+            let mouseY = 0;
+
+            function onDocumentMouseMove(event) {
+                mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+            }
+            document.addEventListener('mousemove', onDocumentMouseMove);
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // Rotate particles and lines slightly
+                particleMesh.rotation.x += 0.0003; // Slower rotation
+                particleMesh.rotation.y += 0.0005;
+
+                lines.rotation.x += 0.0003;
+                lines.rotation.y += 0.0005;
+
+                // Make camera slowly follow mouse
+                camera.position.x += (mouseX * 30 - camera.position.x) * 0.01; // Slightly less aggressive mouse follow
+                camera.position.y += (mouseY * 30 - camera.position.y) * 0.01;
+                camera.lookAt(scene.position);
+
+
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Handle window resizing
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+
+        // Scroll to Top Button Logic
+        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+        // When the user scrolls down 200px from the top of the document, show the button
+        window.onscroll = function() {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                scrollToTopBtn.style.display = "block";
+                scrollToTopBtn.style.opacity = "1";
+            } else {
+                scrollToTopBtn.style.opacity = "0";
+                setTimeout(() => { // Give time for transition before hiding
+                    if (document.body.scrollTop <= 200 && document.documentElement.scrollTop <= 200) {
+                        scrollToTopBtn.style.display = "none";
+                    }
+                }, 300);
+            }
+        };
+
+        // When the user clicks on the button, scroll to the top of the document
+        scrollToTopBtn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+
+        // Code Copy Functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling; // Get the <pre> tag
+            const code = codeBlock.textContent || codeBlock.innerText; // Get the code text
+
+            // Create a temporary textarea element to copy the text
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = code;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                const msg = successful ? 'Copied!' : 'Failed to copy.';
+                button.textContent = msg; // Change button text
+                setTimeout(() => {
+                    button.textContent = 'Copy Code'; // Revert button text
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                button.textContent = 'Error!';
+                setTimeout(() => {
+                    button.textContent = 'Copy Code';
+                }, 2000);
+            } finally {
+                document.body.removeChild(tempTextArea); // Clean up
+            }
+        }
+    </script>
+</body>
+</html>
