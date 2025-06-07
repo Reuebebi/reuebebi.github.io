@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced DevOps: CI/CD, IaC, SRE - Whizmath</title>
+    <meta name="description" content="Deep dive into advanced CI/CD strategies, Infrastructure as Code mastery, and Site Reliability Engineering (SRE) principles. Learn to build highly scalable, reliable, and secure systems with Whizmath.">
+    <meta name="keywords" content="Advanced DevOps, CI/CD, Continuous Integration, Continuous Delivery, Continuous Deployment, Infrastructure as Code, IaC, Terraform, Kubernetes, SRE, Site Reliability Engineering, Observability, Monitoring, Logging, Tracing, Prometheus, Grafana, GitOps, Canary Deployment, Blue/Green, Chaos Engineering, DevSecOps, FinOps, Whizmath, advanced course, systems engineering, cloud computing, automation">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font from Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Dark background similar to GitHub */
+            color: #c9d1d9; /* Light text for contrast */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+        
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.2; /* Subtle background */
+        }
+
+        /* Custom scrollbar for a sleek look */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a202c; /* Darker track */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a5568; /* Greyish thumb */
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; /* Lighter on hover */
+        }
+
+        .code-block-container {
+            position: relative;
+            background-color: #161b22; /* Darker background for code blocks */
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto; /* Enable horizontal scrolling for wide code */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+        }
+
+        .code-block-container pre {
+            margin: 0;
+            padding: 0;
+            white-space: pre-wrap; /* Wrap long lines */
+            word-break: break-all; /* Break words if necessary */
+        }
+
+        .code-block-container code {
+            font-family: 'Fira Code', 'Cascadia Code', monospace; /* Monospaced font for code */
+            color: #58a6ff; /* Light blue for code */
+            display: block; /* Ensure code takes full width */
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            padding: 0.5rem 1rem;
+            background-color: #374151; /* Dark grey */
+            color: #d1d5db; /* Light grey text */
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            border: none;
+            outline: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .copy-button:hover {
+            background-color: #4b5563; /* Lighter dark grey on hover */
+        }
+
+        .copy-button:active {
+            background-color: #1f2937; /* Even darker on click */
+        }
+
+        .copy-button i {
+            margin-right: 0.25rem;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 50; /* Ensure it's above content */
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background-color: #4f46e5; /* Indigo */
+            color: white;
+            border-radius: 9999px; /* Fully rounded */
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+        }
+
+        .back-button:hover {
+            background-color: #4338ca; /* Darker indigo */
+            transform: translateX(-5px); /* Subtle slide effect */
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+        }
+
+        .scroll-to-top-btn {
+            display: none; /* Hidden by default */
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 99; /* Higher z-index */
+            background-color: #3b82f6; /* Blue 500 */
+            color: white;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4); /* Blue shadow */
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+        }
+
+        .scroll-to-top-btn:hover {
+            background-color: #2563eb; /* Blue 600 */
+            transform: translateY(-5px); /* Lift effect */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+            .scroll-to-top-btn {
+                bottom: 1rem;
+                right: 1rem;
+                width: 3rem;
+                height: 3rem;
+                font-size: 1.25rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Three.js Canvas for animated background -->
+    <canvas id="three-canvas"></canvas>
+
+    <!-- Back to Programming Button -->
+    <a href="programming.html" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Programming</span>
+    </a>
+
+    <!-- Main Content Area -->
+    <div class="relative z-10 min-h-screen flex flex-col items-center justify-center py-16 px-4 md:px-8 bg-gradient-to-br from-gray-900 to-black">
+        <header class="text-center mb-16 max-w-4xl">
+            <h1 class="text-6xl md:text-7xl font-extrabold text-white leading-tight mb-4 animate-fade-in-down">
+                <span class="text-blue-400">Whizmath</span> presents:
+            </h1>
+            <h2 class="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500 leading-tight">
+                Advanced DevOps
+            </h2>
+            <p class="text-2xl md:text-3xl text-gray-300 mt-6 animate-fade-in-up">
+                Deep dive into advanced CI/CD, Infrastructure as Code, and Site Reliability Engineering.
+            </p>
+            <p class="text-xl text-gray-400 mt-4 max-w-2xl mx-auto">
+                Build highly scalable, reliable, and secure systems.
+            </p>
+        </header>
+
+        <main class="main-content max-w-4xl mx-auto bg-gray-800 bg-opacity-70 backdrop-blur-sm p-8 md:p-12 rounded-xl shadow-2xl space-y-10 border border-gray-700">
+            <section class="mb-10">
+                <h3 class="text-4xl font-bold text-teal-400 mb-6 border-b-2 border-teal-400 pb-2">
+                    Introduction: Elevating DevOps to the Next Level
+                </h3>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    DevOps has transformed how organizations deliver software, breaking down silos between development and operations teams and fostering a culture of automation, collaboration, and continuous improvement. However, as systems grow in complexity, scale, and criticality, basic DevOps practices are no longer sufficient. This is where <strong class="text-blue-400">Advanced DevOps</strong> comes into play – a comprehensive approach that deepens the integration of cutting-edge technologies, sophisticated methodologies, and a relentless focus on reliability and security.
+                </p>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    This extensive course from Whizmath is designed for professionals and enthusiasts who have a foundational understanding of DevOps and are ready to tackle the complexities of building and maintaining high-performance, fault-tolerant, and secure distributed systems. We will move beyond merely automating tasks to truly engineering robust delivery pipelines, managing infrastructure with unparalleled precision, and embedding reliability at the core of every operation.
+                </p>
+                <p class="text-lg leading-relaxed text-gray-300">
+                    Prepare to explore the intricacies of advanced CI/CD strategies, master the art of Infrastructure as Code (IaC) for dynamic environments, and internalize the principles of Site Reliability Engineering (SRE) to ensure your applications are not just functional, but consistently available, performant, and resilient. Let's embark on this journey to become architects of the next generation of software delivery.
+                </p>
+            </section>
+
+            <section class="mb-10">
+                <h3 class="text-4xl font-bold text-purple-400 mb-6 border-b-2 border-purple-400 pb-2">
+                    Part 1: Advanced CI/CD Strategies - Orchestrating Delivery
+                </h3>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    1.1 Beyond Basic Pipelines: Multi-Stage and Conditional Builds
+                </h4>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    Traditional CI/CD pipelines often consist of sequential steps. Advanced pipelines, however, leverage <strong class="text-green-400">multi-stage pipelines</strong> to separate concerns (e.g., build, test, deploy to different environments) and <strong class="text-green-400">conditional logic</strong> to adapt execution based on various factors (e.g., branch name, commit message, test results).
+                </p>
+                <ul class="list-disc list-inside text-lg leading-relaxed text-gray-300 pl-6 space-y-3">
+                    <li><strong class="text-blue-400">Multi-stage Pipelines:</strong> Organize complex workflows into logical stages (e.g., `Build`, `Unit Test`, `Integration Test`, `Staging Deploy`, `Production Deploy`). Each stage can have its own environment, permissions, and dependencies.
+                        <div class="code-block-container ml-4">
+                            <button class="copy-button" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i> Copy Code
+                            </button>
+<pre><code class="language-yaml">
+# Example: GitLab CI/CD with stages
+stages:
+  - build
+  - test
+  - deploy-staging
+  - deploy-prod
+
+build_job:
+  stage: build
+  script:
+    - echo "Building application..."
+    - docker build -t my-app:$CI_COMMIT_SHORT_SHA .
+  artifacts:
+    paths:
+      - docker-image.tar # Save image for later stages
+
+unit_test_job:
+  stage: test
+  script:
+    - echo "Running unit tests..."
+    - make test
+  only:
+    - merge_requests
+
+deploy_staging_job:
+  stage: deploy-staging
+  script:
+    - echo "Deploying to staging..."
+    - kubectl apply -f k8s/staging-deployment.yaml
+  needs: ["build_job", "unit_test_job"] # Depends on previous stages
+  environment:
+    name: staging
+    url: https://staging.example.com
+  when: on_success # Only run if previous stages succeed
+
+deploy_prod_job:
+  stage: deploy-prod
+  script:
+    - echo "Deploying to production..."
+    - kubectl apply -f k8s/prod-deployment.yaml
+  needs: ["deploy_staging_job"]
+  environment:
+    name: production
+    url: https://prod.example.com
+  when: manual # Requires manual approval
+  only:
+    - main
+</code></pre>
+                        </div>
+                    </li>
+                    <li><strong class="text-blue-400">Conditional Execution:</strong> Use `if` statements or specific `when` clauses in pipeline definitions to control job execution. This allows for dynamic pipelines that adapt to changes.</li>
+                    <li><strong class="text-blue-400">Matrix Builds:</strong> Run a job multiple times with different combinations of variables (e.g., testing against different OS versions, language versions, or database types). This is crucial for ensuring compatibility and broad coverage.</li>
+                </ul>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    1.2 GitOps and Progressive Delivery
+                </h4>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    <strong class="text-orange-400">GitOps</strong> is an operational framework that takes DevOps best practices used for application development, like version control, collaboration, compliance, and CI/CD, and applies them to infrastructure automation. It uses Git as the single source of truth for declarative infrastructure and applications.
+                </p>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    <strong class="text-orange-400">Progressive Delivery</strong> refers to techniques for gradually exposing new software versions to users, minimizing risk and allowing for rapid rollback.
+                </p>
+                <ul class="list-disc list-inside text-lg leading-relaxed text-gray-300 pl-6 space-y-3">
+                    <li><strong class="text-blue-400">Canary Deployments:</strong> A new version (canary) is deployed to a small subset of users or servers. Traffic is gradually shifted to the canary, allowing for real-time monitoring and quick rollback if issues arise.
+                        <div class="code-block-container ml-4">
+                            <button class="copy-button" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i> Copy Code
+                            </button>
+<pre><code class="language-yaml">
+# Example: Kubernetes deployment for canary (simplified)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-v1
+spec:
+  replicas: 9 # Old version, most traffic
+  selector:
+    matchLabels:
+      app: my-app
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: my-app
+        version: v1
+    spec:
+      containers:
+      - name: my-app
+        image: my-repo/my-app:v1.0.0
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-v2-canary
+spec:
+  replicas: 1 # New version, small traffic
+  selector:
+    matchLabels:
+      app: my-app
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: my-app
+        version: v2
+    spec:
+      containers:
+      - name: my-app
+        image: my-repo/my-app:v2.0.0
+</code></pre>
+                        </div>
+                    </li>
+                    <li><strong class="text-blue-400">Blue/Green Deployments:</strong> Two identical production environments ("Blue" and "Green") are maintained. The new version is deployed to the inactive environment (e.g., Green), traffic is switched completely once testing is complete, and the old environment (Blue) is kept as a quick rollback option.</li>
+                    <li><strong class="text-blue-400">A/B Testing:</strong> Specific features or changes are tested with different user segments, often for business metric optimization rather than just stability. This requires feature flags or routing at the application/load balancer level.</li>
+                </ul>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    1.3 CI/CD for Microservices: Challenges and Solutions
+                </h4>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    Microservices introduce unique CI/CD challenges compared to monolithic applications:
+                </p>
+                <ul class="list-disc list-inside text-lg leading-relaxed text-gray-300 pl-6 space-y-3">
+                    <li><strong class="text-blue-400">Dependency Management:</strong> Each microservice might have its own dependencies, requiring robust dependency resolution and versioning.</li>
+                    <li><strong class="text-blue-400">Testing Complexity:</strong> Integration testing across multiple microservices becomes complex. Strategies like consumer-driven contracts (CDCs) using tools like Pact can help.</li>
+                    <li><strong class="text-blue-400">Deployment Coordination:</strong> Deploying interdependent services in the correct order or in a rolling fashion without downtime.</li>
+                    <li><strong class="text-blue-400">Monorepos vs. Polyrepos:</strong>
+                        <ul class="list-circle list-inside text-gray-400 pl-6 mt-1">
+                            <li><strong class="text-yellow-300">Monorepo:</strong> All services in one repository. Simplifies dependency versioning but CI/CD pipelines need to detect changes only in relevant service directories.</li>
+                            <li><strong class="text-yellow-300">Polyrepo:</strong> Each service in its own repository. Clear separation, but dependency management and cross-service testing can be harder.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p class="text-lg leading-relaxed text-gray-300 mt-4">
+                    Solutions involve advanced pipeline triggers, shared pipeline libraries, and dedicated microservice-aware deployment tools.
+                </p>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    1.4 Pipeline Security (DevSecOps - CI/CD Integration)
+                </h4>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    Security must be "shifted left" into the CI/CD pipeline, making it an integral part of the development and delivery process. This is a core tenet of <strong class="text-red-400">DevSecOps</strong>.
+                </p>
+                <ul class="list-disc list-inside text-lg leading-relaxed text-gray-300 pl-6 space-y-3">
+                    <li><strong class="text-blue-400">Static Application Security Testing (SAST):</strong> Automated tools that analyze source code for vulnerabilities without executing it. Integrated into the build stage.</li>
+                    <li><strong class="text-blue-400">Dynamic Application Security Testing (DAST):</strong> Tools that test a running application for vulnerabilities by attacking it from the outside. Integrated into testing or staging deployment stages.</li>
+                    <li><strong class="text-blue-400">Software Composition Analysis (SCA):</strong> Identifies vulnerabilities in open-source components and libraries used in your project.</li>
+                    <li><strong class="text-blue-400">Container Image Scanning:</strong> Scans Docker images for known vulnerabilities in their layers and components.</li>
+                    <li><strong class="text-blue-400">Secret Management:</strong> Never hardcode secrets (API keys, passwords) in code or configuration files. Use dedicated secret management solutions (e.g., HashiCorp Vault, AWS Secrets Manager, Kubernetes Secrets with external providers) integrated into CI/CD.
+                        <div class="code-block-container ml-4">
+                            <button class="copy-button" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i> Copy Code
+                            </button>
+<pre><code class="language-yaml">
+# Example: Using environment variables for secrets (simplified, better to use dedicated vault)
+deploy_prod_job:
+  stage: deploy-prod
+  script:
+    - echo "Deploying with secure token..."
+    - VAULT_TOKEN=$(cat /path/to/vault_token.txt) # Fetched securely at runtime
+    - KUBECONFIG_BASE64=$(vault read -field=kubeconfig secret/my-app/kubeconfig | base64)
+    - echo $KUBECONFIG_BASE64 | base64 -d > ~/.kube/config
+    - kubectl apply -f k8s/prod-deployment.yaml
+  secrets:
+    VAULT_TOKEN:
+      vault: path/to/my/secret:field=token
+</code></pre>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="mb-10">
+                <h3 class="text-4xl font-bold text-teal-400 mb-6 border-b-2 border-teal-400 pb-2">
+                    Part 2: Infrastructure as Code (IaC) Mastery
+                </h3>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    Infrastructure as Code (IaC) is the management of infrastructure (networks, virtual machines, load balancers, etc.) in a descriptive model, using the same versioning and best practices as software development. Mastering IaC moves beyond simple resource provisioning to defining and managing complex, dynamic, and resilient systems.
+                </p>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    2.1 Deep Dive into Terraform, CloudFormation, and Ansible
+                </h4>
+                <ul class="list-disc list-inside text-lg leading-relaxed text-gray-300 pl-6 space-y-3">
+                    <li><strong class="text-blue-400">Terraform (HashiCorp):</strong> A declarative, open-source IaC tool that allows you to safely and predictably create, change, and improve infrastructure.
+                        <ul class="list-circle list-inside text-gray-400 pl-6 mt-1">
+                            <li><strong class="text-yellow-300">Advanced Modules:</strong> Reusable, customizable components that encapsulate common infrastructure patterns.</li>
+                            <li><strong class="text-yellow-300">State Management:</strong> Understanding `terraform.tfstate` (local/remote), state locking, and encryption for collaborative environments. Remote state backends (S3, Azure Blob, GCS, HashiCorp Consul/Terraform Cloud) are essential for teams.</li>
+                            <li><strong class="text-yellow-300">Workspaces:</strong> Managing multiple distinct environments (dev, staging, prod) within a single Terraform configuration.</li>
+                            <li><strong class="text-yellow-300">Providers and Data Sources:</strong> Interacting with various cloud and SaaS platforms, and fetching existing resource information.</li>
+                        </ul>
+                    </li>
+                    <li><strong class="text-blue-400">CloudFormation (AWS):</strong> AWS's native IaC service for provisioning and managing AWS resources. Offers deep integration with AWS services and features.</li>
+                    <li><strong class="text-blue-400">Ansible (Red Hat):</strong> An open-source automation engine for configuration management, application deployment, and task automation. Agentless and uses YAML for playbooks.
+                        <ul class="list-circle list-inside text-gray-400 pl-6 mt-1">
+                            <li><strong class="text-yellow-300">Roles and Collections:</strong> For organizing and reusing automation content.</li>
+                            <li><strong class="text-yellow-300">Idempotency:</strong> Playbooks are designed to be run multiple times without causing unintended side effects (e.g., creating resources that already exist).</li>
+                            <li><strong class="text-yellow-300">Vault:</strong> For encrypting sensitive data in playbooks.</li>
+                        </ul>
+                        <div class="code-block-container ml-4">
+                            <button class="copy-button" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i> Copy Code
+                            </button>
+<pre><code class="language-yaml">
+# Example: Ansible Playbook for Nginx installation (idempotent)
+---
+- name: Configure Webservers
+  hosts: webservers
+  become: true # Run commands with sudo
+
+  tasks:
+    - name: Ensure nginx is installed
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Ensure nginx is running and enabled at boot
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Copy custom nginx config
+      ansible.builtin.copy:
+        src: files/nginx.conf
+        dest: /etc/nginx/nginx.conf
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Restart nginx # Only restart if config changes
+
+  handlers:
+    - name: Restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+</code></pre>
+                        </div>
+                    </li>
+                </ul>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    2.2 Idempotency and Desired State Configuration
+                </h4>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    A cornerstone of robust IaC is <strong class="text-orange-400">idempotency</strong>. An idempotent operation produces the same result regardless of how many times it's executed. IaC tools achieve this by operating on a <strong class="text-orange-400">desired state</strong>. Instead of writing scripts that define *how* to change infrastructure (imperative), you write configurations that describe *what* the infrastructure should look like (declarative). The IaC tool then figures out the necessary changes to bring the current state to the desired state.
+                </p>
+                <p class="text-lg leading-relaxed text-gray-300">
+                    This ensures consistency, prevents configuration drift, and allows for safe, repeatable deployments, even when errors occur.
+                </p>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    2.3 Policy as Code: Governance and Compliance
+                </h4>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    <strong class="text-orange-400">Policy as Code (PaC)</strong> extends IaC by defining and enforcing security, compliance, and operational policies through code. This allows organizations to automate governance checks, ensure consistency across environments, and prevent non-compliant infrastructure from being provisioned.
+                </p>
+                <ul class="list-disc list-inside text-lg leading-relaxed text-gray-300 pl-6 space-y-3">
+                    <li><strong class="text-blue-400">Open Policy Agent (OPA):</strong> An open-source policy engine that allows you to define policies in a high-level declarative language called Rego. OPA can be integrated with Terraform, Kubernetes, API Gateways, and more to enforce policies at various stages of the software lifecycle.</li>
+                    <li><strong class="text-blue-400">HashiCorp Sentinel:</strong> A policy-as-code framework integrated specifically with HashiCorp products (Terraform, Vault, Consul, Nomad).</li>
+                    <li><strong class="text-blue-400">Use Cases:</strong> Preventing creation of unencrypted S3 buckets, ensuring specific tag usage on cloud resources, enforcing resource size limits, checking for specific Kubernetes manifest configurations.</li>
+                </ul>
+                <div class="code-block-container">
+                    <button class="copy-button" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> Copy Code
+                    </button>
+<pre><code class="language-rego">
+# Example: OPA Rego policy to ensure S3 buckets are encrypted
+package terraform.aws.s3
+
+deny[msg] {
+    some i
+    input.resource.aws_s3_bucket[i].server_side_encryption_configuration[_].rule.apply_server_side_encryption_by_default.sse_algorithm != "AES256"
+    input.resource.aws_s3_bucket[i].server_side_encryption_configuration[_].rule.apply_server_side_encryption_by_default.sse_algorithm != "aws:kms"
+    msg := "S3 bucket must have server-side encryption enabled with AES256 or KMS."
+}
+</code></pre>
+                </div>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    2.4 Advanced Provisioning Patterns
+                </h4>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    Beyond basic IaC, advanced patterns enhance infrastructure agility and resilience:
+                </p>
+                <ul class="list-disc list-inside text-lg leading-relaxed text-gray-300 pl-6 space-y-3">
+                    <li><strong class="text-blue-400">Immutable Infrastructure:</strong> Servers are never modified after deployment. If a change is needed, a new server image is built and deployed, replacing the old one. Tools like Packer (for image building) and Ansible/Terraform (for provisioning) are often used together. Reduces configuration drift and simplifies rollbacks.</li>
+                    <li><strong class="text-blue-400">Dynamic Provisioning:</strong> Infrastructure components are provisioned on demand, rather than being static. This is common in Kubernetes (e.g., dynamic persistent volume provisioning) and serverless environments.</li>
+                    <li><strong class="text-blue-400">Self-Service Portals:</strong> Empowering development teams to provision their own infrastructure safely within predefined guardrails, reducing bottlenecks and increasing developer velocity.</li>
+                </ul>
+            </section>
+
+            <section class="mb-10">
+                <h3 class="text-4xl font-bold text-purple-400 mb-6 border-b-2 border-purple-400 pb-2">
+                    Part 3: Site Reliability Engineering (SRE) Principles in Depth
+                </h3>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    Site Reliability Engineering (SRE) is a discipline that incorporates aspects of software engineering to infrastructure and operations problems. Its main goals are to create highly scalable and exceptionally reliable software systems. Coined at Google, SRE brings an engineering mindset to operations.
+                </p>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    3.1 SLOs, SLIs, SLAs: Defining and Measuring Reliability
+                </h4>
+                <ul class="list-disc list-inside text-lg leading-relaxed text-gray-300 pl-6 space-y-3">
+                    <li><strong class="text-blue-400">Service Level Indicator (SLI):</strong> A quantitative measure of some aspect of the service provided. Examples: latency (time to serve a request), availability (proportion of valid requests served), error rate (proportion of invalid requests).</li>
+                    <li><strong class="text-blue-400">Service Level Objective (SLO):</strong> A target value or range of values for a service level that is measured by an SLI. Example: "99.9% of requests will be served in under 100ms over a 30-day period." SLOs define the desired level of service quality.</li>
+                    <li><strong class="text-blue-400">Service Level Agreement (SLA):</strong> A formal or informal contract between a service provider and its customers that specifies the terms of service and includes penalties if SLOs are not met. SLAs are typically business-oriented.</li>
+                </ul>
+                <p class="text-lg leading-relaxed text-gray-300">
+                    SRE teams define and track SLOs, which drive decisions on feature development, risk-taking, and operational priorities.
+                </p>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    3.2 Error Budgets: Balancing Velocity and Reliability
+                </h4>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    An <strong class="text-orange-400">error budget</strong> is the allowable downtime or unreliability of a service within a given period (often derived directly from an SLO). For example, if an SLO is 99.9% availability, the error budget is 0.1% of the time that the service can be unavailable.
+                </p>
+                <p class="text-lg leading-relaxed text-gray-300">
+                    The error budget acts as a crucial agreement between product development and SRE teams:
+                </p>
+                <ul class="list-disc list-inside text-lg leading-relaxed text-gray-300 pl-6 space-y-2">
+                    <li>If the error budget is healthy (not being consumed rapidly), teams can prioritize new feature development.</li>
+                    <li>If the error budget is being consumed too quickly or is depleted, teams must pause new feature development and prioritize reliability work (e.g., refactoring, technical debt, incident resolution) to get back within budget.</li>
+                </ul>
+                <p class="text-lg leading-relaxed text-gray-300">
+                    This mechanism creates a strong incentive for teams to balance innovation with operational stability.
+                </p>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    3.3 Observability: Logs, Metrics, Traces
+                </h4>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    <strong class="text-orange-400">Observability</strong> is the ability to understand the internal state of a system by examining its external outputs. Unlike traditional monitoring, which focuses on known-unknowns (e.g., CPU utilization), observability aims to help diagnose unknown-unknowns (e.g., why a specific request failed unexpectedly). It relies on three main pillars:
+                </p>
+                <ul class="list-disc list-inside text-lg leading-relaxed text-gray-300 pl-6 space-y-3">
+                    <li><strong class="text-blue-400">Logs:</strong> Discrete, timestamped records of events that occurred within an application or system. Critical for debugging specific issues. Tools: Elasticsearch, Splunk, Loki.</li>
+                    <li><strong class="text-blue-400">Metrics:</strong> Aggregated numerical data points measured over time (e.g., CPU usage, request count, error rate). Excellent for identifying trends, anomalies, and overall system health. Tools: Prometheus, Graphite, InfluxDB.</li>
+                    <li><strong class="text-blue-400">Traces:</strong> Represent the end-to-end journey of a single request or transaction through a distributed system. Crucial for understanding latency, dependencies, and bottlenecks in microservices architectures. Tools: Jaeger, Zipkin, OpenTelemetry.</li>
+                </ul>
+                <p class="text-lg leading-relaxed text-gray-300">
+                    Comprehensive observability combines these signals to provide a holistic view of system behavior, enabling rapid problem detection and resolution.
+                </p>
+                <div class="code-block-container">
+                    <button class="copy-button" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> Copy Code
+                    </button>
+<pre><code class="language-yaml">
+# Example: Prometheus scrape config for an application
+scrape_configs:
+  - job_name: 'my-app'
+    static_configs:
+      - targets: ['localhost:8080'] # Replace with actual service discovery
+
+# Example: Grafana dashboard query (Prometheus data source)
+# Sum of HTTP requests per second, grouped by path and status code
+# rate(http_requests_total{job="my-app"}[5m])
+</code></pre>
+                </div>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    3.4 Incident Management & Postmortems: Learning from Failure
+                </h4>
+                <ul class="list-disc list-inside text-lg leading-relaxed text-gray-300 pl-6 space-y-3">
+                    <li><strong class="text-blue-400">Incident Management:</strong> A structured process for responding to, investigating, and resolving service disruptions. Focuses on minimizing Mean Time To Detect (MTTD) and Mean Time To Resolve (MTTR).</li>
+                    <li><strong class="text-blue-400">Blameless Postmortems:</strong> After an incident, a postmortem is conducted to understand *what* happened, *why* it happened, and *how* to prevent similar incidents in the future. The "blameless" aspect emphasizes systemic failures over individual mistakes, fostering a culture of learning and psychological safety. Key output is a set of action items for improvement.</li>
+                    <li><strong class="text-blue-400">Runbooks:</strong> Detailed, documented procedures for handling specific operational incidents or routine tasks. They reduce cognitive load during high-stress situations and ensure consistent responses.</li>
+                </ul>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    3.5 Chaos Engineering: Proactive Resilience Testing
+                </h4>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    <strong class="text-orange-400">Chaos Engineering</strong> is the discipline of experimenting on a system in order to build confidence in that system's capability to withstand turbulent conditions in production. Instead of reacting to failures, you proactively introduce controlled failures (e.g., network latency, server outages, CPU spikes) to uncover weaknesses before they cause real customer impact.
+                </p>
+                <ul class="list-disc list-inside text-lg leading-relaxed text-gray-300 pl-6 space-y-3">
+                    <li><strong class="text-blue-400">Chaos Monkey (Netflix):</strong> The original chaos engineering tool, which randomly terminates instances in production.</li>
+                    <li><strong class="text-blue-400">Gremlin, Chaos Mesh, LitmusChaos:</strong> Modern tools offering a wider range of failure injection scenarios.</li>
+                    <li><strong class="text-blue-400">Benefits:</strong> Identifies hidden vulnerabilities, improves fault tolerance, validates monitoring and alerting, and enhances team's incident response muscle.</li>
+                </ul>
+            </section>
+
+            <section class="mb-10">
+                <h3 class="text-4xl font-bold text-teal-400 mb-6 border-b-2 border-teal-400 pb-2">
+                    Part 4: Complementary Advanced DevOps Topics
+                </h3>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    4.1 Container Orchestration (Advanced Kubernetes)
+                </h4>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    While basic Kubernetes is part of foundational DevOps, advanced usage unlocks its full potential for complex distributed systems.
+                </p>
+                <ul class="list-disc list-inside text-lg leading-relaxed text-gray-300 pl-6 space-y-3">
+                    <li><strong class="text-blue-400">Operators:</strong> Application-specific controllers that extend Kubernetes API to manage complex stateful applications (e.g., database operators).</li>
+                    <li><strong class="text-blue-400">Custom Resource Definitions (CRDs):</strong> Define your own API objects in Kubernetes to manage application-specific resources. Operators often rely on CRDs.</li>
+                    <li><strong class="text-blue-400">Helm Charts:</strong> Package and manage Kubernetes applications. Advanced Helm usage includes templating, dependencies, and managing releases.</li>
+                    <li><strong class="text-blue-400">Service Mesh (Istio, Linkerd):</strong> A dedicated infrastructure layer for handling service-to-service communication. Provides features like traffic management (routing, circuit breakers), security (mTLS), and observability without modifying application code.</li>
+                </ul>
+                <div class="code-block-container">
+                    <button class="copy-button" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> Copy Code
+                    </button>
+<pre><code class="language-yaml">
+# Example: Basic Istio VirtualService for traffic splitting
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: my-app-vs
+spec:
+  hosts:
+  - my-app.default.svc.cluster.local
+  http:
+  - route:
+    - destination:
+        host: my-app.default.svc.cluster.local
+        subset: v1
+      weight: 90
+    - destination:
+        host: my-app.default.svc.cluster.local
+        subset: v2
+      weight: 10
+</code></pre>
+                </div>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    4.2 Serverless Architectures in DevOps
+                </h4>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    Serverless computing abstracts away server management, allowing developers to focus solely on code. DevOps for serverless involves managing functions (FaaS), integrating with Backend as a Service (BaaS), and adapting CI/CD pipelines.
+                </p>
+                <ul class="list-disc list-inside text-lg leading-relaxed text-gray-300 pl-6 space-y-3">
+                    <li><strong class="text-blue-400">Deployment Frameworks:</strong> Serverless Framework, AWS SAM, Azure Functions Core Tools.</li>
+                    <li><strong class="text-blue-400">CI/CD Adaptation:</strong> Pipelines must be optimized for fast deployments of individual functions, potentially using specialized buildpacks or container images for functions.</li>
+                    <li><strong class="text-blue-400">Observability Challenges:</strong> Distributed nature and ephemeral functions make traditional monitoring difficult. Reliance on centralized logging and tracing is crucial.</li>
+                </ul>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    4.3 Advanced DevOps Security (DevSecOps Deep Dive)
+                </h4>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    Beyond basic pipeline security, DevSecOps involves integrating security into every phase of the SDLC.
+                </p>
+                <ul class="list-disc list-inside text-lg leading-relaxed text-gray-300 pl-6 space-y-3">
+                    <li><strong class="text-blue-400">Security Automation:</strong> Automating security testing, vulnerability scanning, and compliance checks.</li>
+                    <li><strong class="text-blue-400">Secrets Management:</strong> Robust solutions for storing and retrieving sensitive information securely (e.g., Vault, Kubernetes Secrets with external providers).</li>
+                    <li><strong class="text-blue-400">Runtime Security:</strong> Protecting running applications and infrastructure using tools like Falco (runtime security for Kubernetes), network policies, and Web Application Firewalls (WAFs).</li>
+                    <li><strong class="text-blue-400">Supply Chain Security:</strong> Protecting against attacks on software dependencies and build processes (e.g., signing artifacts, using trusted registries, SBOM - Software Bill of Materials).</li>
+                </ul>
+
+                <h4 class="text-3xl font-semibold text-pink-400 mt-8 mb-4">
+                    4.4 FinOps: Managing Cloud Costs in a DevOps Culture
+                </h4>
+                <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                    <strong class="text-orange-400">FinOps</strong> is an evolving operational framework that brings financial accountability to the variable spend model of cloud, enabling organizations to make business decisions based on cost-effectiveness. It's about bringing finance, technology, and business teams together.
+                </p>
+                <ul class="list-disc list-inside text-lg leading-relaxed text-gray-300 pl-6 space-y-3">
+                    <li><strong class="text-blue-400">Cost Visibility & Allocation:</strong> Tagging resources, detailed reporting, and cost anomaly detection.</li>
+                    <li><strong class="text-blue-400">Cost Optimization:</strong> Rightsizing resources, identifying idle resources, leveraging reserved instances/savings plans, and automating cost-saving actions within CI/CD.</li>
+                    <li><strong class="text-blue-400">Shared Responsibility Model:</strong> Everyone in the DevOps cycle has a role in managing cloud costs.</li>
+                </ul>
+            </section>
+
+            <section class="text-center pt-10">
+                <h3 class="text-5xl font-extrabold text-white mb-6">
+                    Conclusion: The Future of Engineered Operations
+                </h3>
+                <p class="text-xl leading-relaxed text-gray-300 mb-6">
+                    You have now completed an in-depth exploration of Advanced DevOps, moving beyond basic automation to truly engineer software delivery, infrastructure management, and system reliability. We've navigated complex CI/CD strategies, mastered Infrastructure as Code for dynamic environments, deeply understood Site Reliability Engineering principles, and touched upon critical complementary areas like advanced container orchestration, serverless, DevSecOps, and FinOps.
+                </p>
+                <p class="text-xl leading-relaxed text-gray-300 mb-6">
+                    The advanced practices discussed in this course are not just theoretical concepts; they are essential disciplines for organizations building and operating highly available, scalable, and secure systems in today's cloud-native landscape. The journey of a DevOps professional is one of continuous learning and adaptation, as new tools and methodologies constantly emerge.
+                </p>
+                <p class="text-xl leading-relaxed text-gray-300">
+                    Whizmath encourages you to apply these advanced concepts, experiment with the tools mentioned, and contribute to the ongoing evolution of operational excellence. The future of software is built on robust, reliable, and intelligently engineered operations. Keep automating, keep observing, and keep improving!
+                </p>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="scroll-to-top-btn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script>
+        // Three.js Animated Background
+        let scene, camera, renderer, particles;
+        const particleCount = 1500;
+        const maxParticleSize = 0.5;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('three-canvas');
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio); // Improve clarity on high-DPI screens
+            camera.position.z = 5;
+
+            // Create particles
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            // DevOps-inspired colors: Emerald Green, Azure Blue, Gold
+            const color1 = new THREE.Color(0x00A86B); // Emerald Green
+            const color2 = new THREE.Color(0x007ACC); // Azure Blue
+            const color3 = new THREE.Color(0xFFD700); // Gold
+
+            for (let i = 0; i < particleCount; i++) {
+                // Position particles randomly in a cube
+                positions[i * 3] = (Math.random() - 0.5) * 20; // x
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 20; // y
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 20; // z
+
+                // Assign random color from a gradient
+                const mixedColor = new THREE.Color();
+                mixedColor.lerpColors(color1, color2, Math.random());
+                mixedColor.lerp(color3, Math.random()); // Blend with third color
+
+                colors[i * 3] = mixedColor.r;
+                colors[i * 3 + 1] = mixedColor.g;
+                colors[i * 3 + 2] = mixedColor.b;
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: maxParticleSize,
+                vertexColors: true,
+                transparent: true,
+                blending: THREE.AdditiveBlending, // For glowing effect
+                sizeAttenuation: true // Particles closer to camera appear larger
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // Add a simple light source for general ambiance
+            const ambientLight = new THREE.AmbientLight(0x404040); // Soft white light
+            scene.add(ambientLight);
+
+            // Add a directional light for subtle highlights
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            directionalLight.position.set(0, 1, 0); // From top
+            scene.add(directionalLight);
+
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Animate particles
+            particles.rotation.x += 0.0005;
+            particles.rotation.y += 0.0008;
+
+            // Move particles slightly to create a floating effect
+            const positions = particles.geometry.attributes.position.array;
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3 + 1] += 0.001; // Move up slowly
+                if (positions[i * 3 + 1] > 10) { // If particle goes too high, reset it to bottom
+                    positions[i * 3 + 1] = -10;
+                }
+            }
+            particles.geometry.attributes.position.needsUpdate = true; // Tell Three.js to update the positions
+
+            renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        window.addEventListener('resize', onWindowResize);
+        window.onload = initThreeJS; // Initialize Three.js when the window loads
+
+        // Scroll to Top Button functionality
+        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+        window.addEventListener("scroll", () => {
+            if (window.pageYOffset > 300) { // Show button after scrolling 300px
+                scrollToTopBtn.style.display = "flex";
+            } else {
+                scrollToTopBtn.style.display = "none";
+            }
+        });
+
+        scrollToTopBtn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth" // Smooth scroll
+            });
+        });
+
+        // Copy Code Functionality
+        function copyCode(buttonElement) {
+            const codeBlock = buttonElement.nextElementSibling; // Get the <pre><code> element
+            const textToCopy = codeBlock.innerText;
+
+            // Use a temporary textarea to copy text (cross-browser compatible for iframes)
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            document.body.appendChild(textArea);
+            textArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                const msg = successful ? 'Copied!' : 'Copy Failed!';
+                
+                // Provide visual feedback
+                buttonElement.innerHTML = `<i class="fas fa-check"></i> ${msg}`;
+                setTimeout(() => {
+                    buttonElement.innerHTML = `<i class="fas fa-copy"></i> Copy Code`;
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                buttonElement.innerHTML = `<i class="fas fa-times"></i> Error!`;
+                setTimeout(() => {
+                    buttonElement.innerHTML = `<i class="fas fa-copy"></i> Copy Code`;
+                }, 2000);
+            } finally {
+                document.body.removeChild(textArea);
+            }
+        }
+    </script>
+</body>
+</html>
