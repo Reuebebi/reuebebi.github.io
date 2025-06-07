@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO & Metadata -->
+    <title>Git & Version Control - Whizmath | Master Code Collaboration Essentials</title>
+    <meta name="description" content="Master Git and version control essentials at Whizmath. Learn how to collaborate effectively, manage your code, understand branching, merging, committing, remotes, and common Git commands for efficient software development.">
+    <meta name="keywords" content="Git, Version Control, GitHub, GitLab, Bitbucket, Code Management, Collaboration, Branching, Merging, Committing, Pull Request, Push, Pull, Clone, Repository, Diff, Rebase, Stash, Git Workflow, Software Development, Whizmath, Learn Git, Git Commands">
+    <link rel="canonical" href="https://yourdomain.com/git_lesson.html"> <!-- Replace with your actual URL -->
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://yourdomain.com/git_lesson.html"> <!-- Replace with your actual URL -->
+    <meta property="og:title" content="Git & Version Control - Whizmath | Master Code Collaboration Essentials">
+    <meta property="og:description" content="Master Git and version control essentials at Whizmath. Learn how to collaborate effectively, manage your code, understand branching, merging, committing, remotes, and common Git commands for efficient software development.">
+    <meta property="og:image" content="https://placehold.co/1200x630/a78bfa/ffffff?text=Whizmath+Git"> <!-- Placeholder image for social share -->
+    <meta property="og:site_name" content="Whizmath">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yourdomain.com/git_lesson.html"> <!-- Replace with your actual URL -->
+    <meta property="twitter:title" content="Git & Version Control - Whizmath | Master Code Collaboration Essentials">
+    <meta property="twitter:description" content="Master Git and version control essentials at Whizmath. Learn how to collaborate effectively, manage your code, understand branching, merging, committing, remotes, and common Git commands for efficient software development.">
+    <meta property="twitter:image" content="https://placehold.co/1200x630/a78bfa/ffffff?text=Whizmath+Git"> <!-- Placeholder image for social share -->
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://yourdomain.com/git_lesson.html"
+      },
+      "headline": "Git & Version Control Essentials: Collaborate Effectively and Manage Your Code",
+      "description": "A comprehensive lesson for beginners on Git and version control, covering core concepts like repositories, commits, branches, merges, and remote operations with GitHub. Essential for effective team collaboration and code management.",
+      "image": "https://placehold.co/1200x630/a78bfa/ffffff?text=Whizmath+Git",
+      "author": {
+        "@type": "Organization",
+        "name": "Whizmath"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Whizmath",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://placehold.co/600x60/63b3ed/ffffff?text=Whizmath+Logo" <!-- Placeholder logo for publisher -->
+        }
+      },
+      "datePublished": "2025-06-07T09:00:00+01:00", <!-- Update with actual publish date/time -->
+      "dateModified": "2025-06-07T09:00:00+01:00",  <!-- Update with actual modify date/time -->
+      "keywords": "Git, Version Control, GitHub, GitLab, Bitbucket, Code Management, Collaboration, Branching, Merging, Committing, Pull Request, Push, Pull, Clone, Repository, Diff, Rebase, Stash, Git Workflow, Software Development, Whizmath, Learn Git, Git Commands"
+    }
+    </script>
+
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Dark background for professional look */
+            color: #e6e6e6; /* Light text for contrast */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            position: relative; /* For scroll-to-top positioning */
+        }
+        #three-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send it to the back */
+            overflow: hidden;
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 1; /* Keep content above background */
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            background-color: rgba(17, 24, 39, 0.9); /* Slightly transparent dark background for content */
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px); /* Subtle blur effect */
+            -webkit-backdrop-filter: blur(8px);
+        }
+        h1, h2, h3, h4 {
+            color: #a78bfa; /* A subtle purple for headings, matching Git theme */
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.5rem; }
+        p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        a {
+            color: #63b3ed; /* A vibrant blue for links */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .code-block {
+            position: relative;
+            background-color: #1f2937; /* Darker background for code */
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto; /* Enable horizontal scrolling for long lines of code */
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+        }
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #4a5568; /* Grayish background for button */
+            color: #e6e6e6;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease-in-out;
+            border: none;
+            outline: none;
+        }
+        .copy-button:hover {
+            background-color: #646b7a;
+        }
+        .back-button {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 100;
+            background-color: #a78bfa; /* Purple for back button */
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px; /* Fully rounded */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-button:hover {
+            background-color: #8b5cf6;
+            transform: translateY(-2px);
+        }
+        .back-button svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #63b3ed; /* Blue for scroll button */
+            color: white;
+            padding: 1rem;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: none; /* Hidden by default */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+            z-index: 100;
+        }
+        .scroll-to-top:hover {
+            background-color: #4299e1;
+            transform: translateY(-2px);
+        }
+        .scroll-to-top svg {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 1.5rem 1rem;
+                margin: 0 0.5rem;
+            }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.75rem; }
+            h3 { font-size: 1.5rem; }
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            .back-button svg {
+                width: 1rem;
+                height: 1rem;
+            }
+            .scroll-to-top {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                padding: 0.75rem;
+            }
+            .scroll-to-top svg {
+                width: 1.25rem;
+                height: 1.25rem;
+            }
+            .copy-button {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Three.js Background Canvas -->
+    <canvas id="three-bg"></canvas>
+
+    <!-- Back Button -->
+    <a href="index.html" class="back-button">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Home
+    </a>
+
+    <div class="content-wrapper">
+        <header class="text-center mb-10">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-600 mb-4 animate-pulse">
+                Whizmath
+            </h1>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
+                Git & Version Control
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400">
+                Collaborate effectively and manage your code with Git. <br class="hidden md:block">
+                Essentials for Developers.
+            </p>
+        </header>
+
+        <section class="intro mb-12">
+            <h2 class="text-3xl font-bold mb-6">Introduction to Git & Version Control</h2>
+            <p>
+                In the modern landscape of software development, managing code effectively, collaborating with teams, and tracking changes over time are absolutely crucial. This is where Version Control Systems (VCS) come into play, and among them, Git stands out as the undisputed leader. Git is a distributed version control system that enables developers to keep a history of their project, easily revert to previous versions, work on different features simultaneously, and seamlessly integrate changes from multiple contributors.
+            </p>
+            <p>
+                Imagine trying to write a complex mathematical proof with several collaborators, all making changes to the same document. Without a system to track who changed what, when, and why, it would quickly descend into chaos. Version control solves this by providing a structured way to record changes, manage concurrent work, and resolve conflicts.
+            </p>
+            <p>
+                This comprehensive lesson will guide you through the essentials of Git, from its core philosophy to practical commands for everyday use. Whether you're a student, a mathematician venturing into computational sciences, or an aspiring developer, mastering Git is an indispensable skill that will streamline your workflow and unlock new possibilities for collaboration.
+            </p>
+        </section>
+
+        <section class="what-is-vcs mb-12">
+            <h2 class="text-3xl font-bold mb-6">What is Version Control?</h2>
+            <p>
+                At its heart, version control is a system that records changes to a file or set of files over time so that you can recall specific versions later. It's like having a superpower to undo mistakes, track every alteration, and coordinate work among multiple people on the same project.
+            </p>
+            <p>
+                Historically, developers might have manually copied folders (e.g., `project_final`, `project_final_final`, `project_final_final_v2`), leading to massive confusion and data loss. Version Control Systems automate this process, making it reliable and efficient.
+            </p>
+            <h3 class="text-2xl font-bold mb-4">Types of Version Control Systems:</h3>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Local Version Control Systems (LVCS):</strong> Store revisions on your local disk. Simple but prone to data loss if your machine fails. (e.g., RCS)</li>
+                <li><strong>Centralized Version Control Systems (CVCS):</strong> Maintain a single, central repository that everyone connects to. Easier collaboration but a single point of failure and reliance on network connectivity. (e.g., SVN, Perforce)</li>
+                <li><strong>Distributed Version Control Systems (DVCS):</strong> Clients don't just check out the latest snapshot of the files; they fully mirror the entire repository, including its full history. This means every clone is a full backup of the server. (e.g., Git, Mercurial)</li>
+            </ul>
+        </section>
+
+        <section class="why-git mb-12">
+            <h2 class="text-3xl font-bold mb-6">Why Git? The Power of Distributed Control</h2>
+            <p>
+                Git's popularity stems from its distributed nature and robust design. Here are some key advantages:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Distributed Development:</strong> Every developer has a complete copy of the repository, enabling offline work and reducing reliance on a central server.</li>
+                <li><strong>Speed:</strong> Git is incredibly fast for most operations because it works with local copies of the repository.</li>
+                <li><strong>Branching and Merging:</strong> Git's strongest features. It makes branching and merging incredibly lightweight and easy, encouraging frequent use for feature development and experimentation.</li>
+                <li><strong>Data Integrity:</strong> Every piece of data in Git is checksummed using SHA-1, ensuring that the content cannot be modified without Git detecting it.</li>
+                <li><strong>Non-linear Development:</strong> Git excels at managing complex, non-linear workflows common in modern software projects.</li>
+                <li><strong>Open Source and Widely Adopted:</strong> Backed by a huge community, with vast resources and integrations available.</li>
+            </ul>
+        </section>
+
+        <section class="git-basics mb-12">
+            <h2 class="text-3xl font-bold mb-6">The Git Basics: Setting Up Your First Repository</h2>
+            <p>
+                Let's start with the fundamental steps to get a Git repository up and running.
+            </p>
+            <h3 class="text-2xl font-bold mb-4">1. Installing Git</h3>
+            <p>
+                First, you need to install Git on your system. You can download it from the official website or use your system's package manager.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Install on Linux (Ubuntu/Debian)</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>sudo apt update
+sudo apt install git</code></pre>
+            </div>
+            <h4 class="text-xl font-bold mb-3">Example: Install on macOS (using Homebrew)</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>brew install git</code></pre>
+            </div>
+            <h3 class="text-2xl font-bold mb-4">2. Configuring Git</h3>
+            <p>
+                After installation, configure your user name and email. These will be embedded in your commits.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Global Configuration</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git config --global user.name "Your Name"
+git config --global user.email "youremail@example.com"</code></pre>
+            </div>
+            <p>
+                The `--global` flag sets these for all your Git repositories. You can omit it to set them only for a specific repository.
+            </p>
+            <h3 class="text-2xl font-bold mb-4">3. Initializing a Repository</h3>
+            <p>
+                To start tracking a new project with Git, you need to initialize a Git repository in your project directory.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Initialize a new Git repo</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code># Navigate to your project directory
+cd /path/to/your/project
+
+# Initialize a new Git repository
+git init</code></pre>
+            </div>
+            <p>
+                This creates a hidden `.git` directory, which contains all the necessary files for Git to track your project.
+            </p>
+        </section>
+
+        <section class="workflow-essentials mb-12">
+            <h2 class="text-3xl font-bold mb-6">The Git Workflow: Add, Commit, Track</h2>
+            <p>
+                Git's core workflow revolves around three states your files can be in:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Working Directory:</strong> The files you currently see and are editing.</li>
+                <li><strong>Staging Area (Index):</strong> A temporary area where you prepare changes before committing them. Think of it as a draft of your next commit.</li>
+                <li><strong>Git Repository (.git directory):</strong> Where Git stores the permanent history of your project.</li>
+            </ul>
+
+            <h3 class="text-2xl font-bold mb-4">1. Checking Status: `git status`</h3>
+            <p>
+                Always start by checking the status of your working directory. This command tells you which files are untracked, modified, or staged.
+            </p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git status</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">2. Staging Changes: `git add`</h3>
+            <p>
+                After modifying or creating files, you need to add them to the staging area. This tells Git that you want to include these specific changes in your next commit.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Staging a single file</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git add my_math_proof.tex</code></pre>
+            </div>
+            <h4 class="text-xl font-bold mb-3">Example: Staging all changes in the current directory</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git add .</code></pre>
+            </div>
+            <p>
+                Using `git add .` is common but be careful; it stages *all* changes, including new files and deletions.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">3. Committing Changes: `git commit`</h3>
+            <p>
+                Once changes are staged, you "commit" them to the repository. A commit is a snapshot of your project at a specific point in time, along with a message describing the changes.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Committing with a message</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git commit -m "Added initial structure for mathematical proofs"</code></pre>
+            </div>
+            <p>
+                A good commit message is concise, descriptive, and explains *why* the change was made.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">4. Viewing History: `git log`</h3>
+            <p>
+                To see a chronological list of all commits in your repository, use `git log`.
+            </p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git log</code></pre>
+            </div>
+            <p>
+                You'll see commit hashes, authors, dates, and commit messages.
+            </p>
+        </section>
+
+        <section class="branching-merging mb-12">
+            <h2 class="text-3xl font-bold mb-6">Branching & Merging: Parallel Development</h2>
+            <p>
+                Branching is arguably Git's most powerful feature, enabling parallel development. A branch is essentially a lightweight movable pointer to one of your commits. The default branch name in Git is `main` (or `master` in older setups).
+            </p>
+            <h3 class="text-2xl font-bold mb-4">1. Creating a New Branch: `git branch`</h3>
+            <p>
+                You typically create branches for new features, bug fixes, or experimental work.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Create a new branch named 'feature/complex-equation'</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git branch feature/complex-equation</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">2. Switching Branches: `git checkout`</h3>
+            <p>
+                To start working on a new branch, you need to switch to it. This updates your working directory to match the state of that branch.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Switch to the new feature branch</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git checkout feature/complex-equation</code></pre>
+            </div>
+            <p>
+                You can combine creating and switching into one command:
+            </p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git checkout -b new-feature-branch</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">3. Listing Branches: `git branch` (again)</h3>
+            <p>
+                To see all local branches and which one you're currently on:
+            </p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git branch</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">4. Merging Branches: `git merge`</h3>
+            <p>
+                Once your work on a feature branch is complete and tested, you'll want to integrate it back into the main development line (e.g., `main` branch).
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Merge 'feature/complex-equation' into 'main'</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code># First, switch to the branch you want to merge INTO
+git checkout main
+
+# Then, merge the feature branch into the current branch
+git merge feature/complex-equation</code></pre>
+            </div>
+            <p>
+                Git will attempt to automatically merge the changes. If there are conflicting changes (where both branches modified the same part of the same file), Git will pause the merge and ask you to resolve the conflicts manually.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">5. Deleting Branches: `git branch -d`</h3>
+            <p>
+                After a branch has been successfully merged, it's good practice to delete it to keep your repository clean.
+            </p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git branch -d feature/complex-equation</code></pre>
+            </div>
+            <p>
+                Use `-D` instead of `-d` to force delete an unmerged branch (use with caution!).
+            </p>
+        </section>
+
+        <section class="remotes mb-12">
+            <h2 class="text-3xl font-bold mb-6">Working with Remotes: Collaboration & GitHub</h2>
+            <p>
+                While Git itself is distributed and works locally, most development teams use remote repositories hosted on platforms like GitHub, GitLab, or Bitbucket for collaborative work, backups, and code review.
+            </p>
+            <h3 class="text-2xl font-bold mb-4">1. Cloning a Repository: `git clone`</h3>
+            <p>
+                To get a copy of an existing remote repository onto your local machine, you "clone" it.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Clone a repository from GitHub</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git clone https://github.com/username/repo-name.git</code></pre>
+            </div>
+            <p>
+                This command creates a new directory named `repo-name` and initializes a local Git repository inside it, pulling down all the files and history from the remote.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">2. Adding a Remote: `git remote add`</h3>
+            <p>
+                If you initialized a local repository (`git init`) and now want to connect it to an empty remote repository, you add the remote. The convention is to name the primary remote `origin`.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Add a remote named 'origin'</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git remote add origin https://github.com/username/your-repo.git</code></pre>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">3. Pushing Changes: `git push`</h3>
+            <p>
+                After committing changes locally, you "push" them to the remote repository to share them with others or to back them up.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Push changes from local 'main' to remote 'origin'</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git push origin main</code></pre>
+            </div>
+            <p>
+                The first time you push a new branch, you might need to set the upstream tracking:
+            </p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git push -u origin feature/new-feature</code></pre>
+            </div>
+            <p>
+                Subsequent pushes on that branch can then simply be `git push`.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">4. Pulling Changes: `git pull`</h3>
+            <p>
+                To fetch changes from the remote repository and merge them into your current local branch, you "pull." This keeps your local repository synchronized with the remote.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Pull changes from remote 'origin' into local 'main'</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git pull origin main</code></pre>
+            </div>
+            <p>
+                If you have set an upstream branch, you can just use `git pull`.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">5. Fetching Changes: `git fetch`</h3>
+            <p>
+                `git fetch` downloads changes from the remote repository but does NOT merge them into your local branches. It's useful for seeing what others have done without altering your current work.
+            </p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git fetch origin</code></pre>
+            </div>
+            <p>
+                After fetching, you can see the remote's branches using `git branch -r` and then `git diff` with a remote branch to see what's new.
+            </p>
+        </section>
+
+        <section class="conflict-resolution mb-12">
+            <h2 class="text-3xl font-bold mb-6">Conflict Resolution: When Things Go Wrong (and How to Fix Them)</h2>
+            <p>
+                Conflicts occur when two branches you are trying to merge (or pull) have made different changes to the same lines in the same file, or one branch deleted a file that the other modified. Git doesn't know which change to keep, so it pauses the merge and asks for your intervention.
+            </p>
+            <h3 class="text-2xl font-bold mb-4">Steps to Resolve a Merge Conflict:</h3>
+            <ol class="list-decimal list-inside ml-4 mb-4">
+                <li><strong>Identify Conflicts:</strong> Git will tell you which files have conflicts.
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git status</code></pre>
+                    </div>
+                    This command will show files marked as "unmerged."
+                </li>
+                <li><strong>Open Conflicted Files:</strong> Open the file(s) in your code editor. You'll see "conflict markers" like `<<<<<<<`, `=======`, and `>>>>>>>`.
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>// Example of a conflicted file:
+Line 1 of common code
+<<<<<<< HEAD
+This is my change on the current branch.
+=======
+This is the incoming change from the other branch.
+>>>>>>> feature/another-branch
+Line N of common code</code></pre>
+                    </div>
+                    <ul>
+                        <li>`<<<<<<< HEAD`: Marks the beginning of the changes from your current branch.</li>
+                        <li>`=======`: Separates the changes from your current branch and the incoming changes.</li>
+                        <li>`>>>>>>> [branch-name]`: Marks the end of the incoming changes from the other branch.</li>
+                    </ul>
+                </li>
+                <li><strong>Manually Edit:</strong> Delete the conflict markers and edit the code to combine the changes as desired. You decide which lines to keep, which to discard, or how to rephrase them.</li>
+                <li><strong>Stage Resolved Files:</strong> After editing, `git add` the resolved file(s) to the staging area.
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git add conflicted_file.txt</code></pre>
+                    </div>
+                </li>
+                <li><strong>Commit the Merge:</strong> Once all conflicts are resolved and staged, commit the merge. Git will pre-populate a commit message for you; you can accept it or modify it.
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>git commit -m "Merge branch 'feature/another-branch' into main with conflict resolution"</code></pre>
+                    </div>
+                </li>
+            </ol>
+            <p>
+                Conflict resolution is a common part of collaborative development. Don't be afraid of it; embrace it as a way to integrate different lines of work!
+            </p>
+        </section>
+
+        <section class="common-commands mb-12">
+            <h2 class="text-3xl font-bold mb-6">Cheat Sheet: Essential Git Commands</h2>
+            <p>
+                Here's a quick reference to common Git commands you'll use daily:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><code>git init</code>: Initializes a new local Git repository.</li>
+                <li><code>git clone [url]</code>: Clones an existing remote repository.</li>
+                <li><code>git add [file]</code>: Stages changes from a specific file.</li>
+                <li><code>git add .</code>: Stages all changes in the current directory.</li>
+                <li><code>git commit -m "message"</code>: Records staged changes with a descriptive message.</li>
+                <li><code>git status</code>: Shows the status of changes as untracked, modified, or staged.</li>
+                <li><code>git log</code>: Shows the commit history.</li>
+                <li><code>git branch</code>: Lists local branches.</li>
+                <li><code>git branch [new-branch-name]</code>: Creates a new branch.</li>
+                <li><code>git checkout [branch-name]</code>: Switches to a different branch.</li>
+                <li><code>git checkout -b [new-branch-name]</code>: Creates and switches to a new branch.</li>
+                <li><code>git merge [branch-to-merge]</code>: Merges the specified branch into the current branch.</li>
+                <li><code>git branch -d [branch-name]</code>: Deletes a local branch (after it's merged).</li>
+                <li><code>git remote add [name] [url]</code>: Adds a remote repository.</li>
+                <li><code>git push [remote] [branch]</code>: Uploads local commits to a remote repository.</li>
+                <li><code>git pull [remote] [branch]</code>: Fetches and merges changes from a remote repository.</li>
+                <li><code>git diff</code>: Shows changes not yet staged.</li>
+                <li><code>git diff --staged</code>: Shows changes in the staging area that are not yet committed.</li>
+                <li><code>git reset [file]</code>: Unstages a file.</li>
+                <li><code>git restore [file]</code>: Discards changes in the working directory for a file (Git 2.23+).</li>
+                <li><code>git revert [commit-hash]</code>: Creates a new commit that undoes the changes of a previous commit.</li>
+            </ul>
+        </section>
+
+        <section class="conclusion mb-12">
+            <h2 class="text-3xl font-bold mb-6">Conclusion & Your Git Journey</h2>
+            <p>
+                You've now covered the essential concepts and commands for Git and version control! This knowledge is fundamental for any developer, enabling you to work efficiently, track your progress, and collaborate seamlessly with others. Git is a powerful tool, and like any powerful tool, it has a learning curve. Don't be discouraged by initial complexities; consistent practice is key.
+            </p>
+            <p>
+                As you continue your Git journey:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Practice Daily:</strong> Use Git for all your personal projects, even small ones. Repetition builds muscle memory.</li>
+                <li><strong>Explore More:</strong> Dive into advanced topics like `rebase`, `stash`, `cherry-pick`, `tagging`, `.gitignore`, and Git workflows (e.g., GitFlow, GitHub Flow).</li>
+                <li><strong>Collaborate:</strong> Find open-source projects or contribute to team projects to gain real-world collaboration experience.</li>
+                <li><strong>Understand the Internals:</strong> For advanced users, understanding how Git stores objects (blobs, trees, commits) can deepen your appreciation for its design.</li>
+            </ul>
+            <p>
+                Git empowers you to manage complexity, recover from mistakes, and build great software together. Embrace the distributed nature of Git, and happy version controlling!
+            </p>
+        </section>
+
+        <footer class="text-center text-gray-500 text-sm mt-12 pt-8 border-t border-gray-700">
+            &copy; 2025 Whizmath. All rights reserved.
+        </footer>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="scroll-to-top">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js Background Animation
+        window.onload = function() {
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-bg'), antialias: true });
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setClearColor(0x0d1117, 1); // Match body background
+
+            // Particles for a "code-like" or "network" feel
+            const particleCount = 2000;
+            const particles = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount * 3; i++) {
+                positions[i] = (Math.random() - 0.5) * 300; // Larger spread for more dynamic background
+            }
+
+            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const particleMaterial = new THREE.PointsMaterial({
+                color: 0x63b3ed, // Blueish color
+                size: 1.8, // Slightly larger particles
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                sizeAttenuation: true,
+                opacity: 0.8 // More opaque particles
+            });
+
+            const particleMesh = new THREE.Points(particles, particleMaterial);
+            scene.add(particleMesh);
+
+            // Lines connecting particles (representing connections/commits)
+            const lineMaterial = new THREE.LineBasicMaterial({
+                color: 0xa78bfa, // Purplish color
+                transparent: true,
+                opacity: 0.35 // More opaque lines
+            });
+            const lineGeometry = new THREE.BufferGeometry();
+            const linePositions = new Float32Array(particleCount * 3 * 2); // Each line connects two points
+
+            const threshold = 25; // Increased max distance for connection
+            let lineIndex = 0;
+            for (let i = 0; i < particleCount; i++) {
+                for (let j = i + 1; j < particleCount; j++) {
+                    const x1 = positions[i * 3];
+                    const y1 = positions[i * 3 + 1];
+                    const z1 = positions[i * 3 + 2];
+
+                    const x2 = positions[j * 3];
+                    const y2 = positions[j * 3 + 1];
+                    const z2 = positions[j * 3 + 2];
+
+                    const dx = x1 - x2;
+                    const dy = y1 - y2;
+                    const dz = z1 - z2;
+                    const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+                    if (distance < threshold) {
+                        if (lineIndex + 6 <= linePositions.length) { // Prevent exceeding buffer size
+                            linePositions[lineIndex++] = x1;
+                            linePositions[lineIndex++] = y1;
+                            linePositions[lineIndex++] = z1;
+
+                            linePositions[lineIndex++] = x2;
+                            linePositions[lineIndex++] = y2;
+                            linePositions[lineIndex++] = z2;
+                        } else {
+                            // If buffer is full, stop adding lines
+                            break;
+                        }
+                    }
+                }
+                 if (lineIndex + 6 > linePositions.length) { // Break outer loop if buffer full
+                    break;
+                }
+            }
+
+            lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions.slice(0, lineIndex), 3));
+            const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+            scene.add(lines);
+
+
+            camera.position.z = 100;
+
+            let mouseX = 0;
+            let mouseY = 0;
+
+            function onDocumentMouseMove(event) {
+                mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+            }
+            document.addEventListener('mousemove', onDocumentMouseMove);
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // Rotate particles and lines slightly
+                particleMesh.rotation.x += 0.0004;
+                particleMesh.rotation.y += 0.0006;
+
+                lines.rotation.x += 0.0004;
+                lines.rotation.y += 0.0006;
+
+                // Make camera slowly follow mouse
+                camera.position.x += (mouseX * 40 - camera.position.x) * 0.01; // Slightly less aggressive mouse follow
+                camera.position.y += (mouseY * 40 - camera.position.y) * 0.01;
+                camera.lookAt(scene.position);
+
+
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Handle window resizing
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+
+        // Scroll to Top Button Logic
+        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+        // When the user scrolls down 200px from the top of the document, show the button
+        window.onscroll = function() {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                scrollToTopBtn.style.display = "block";
+                scrollToTopBtn.style.opacity = "1";
+            } else {
+                scrollToTopBtn.style.opacity = "0";
+                setTimeout(() => { // Give time for transition before hiding
+                    if (document.body.scrollTop <= 200 && document.documentElement.scrollTop <= 200) {
+                        scrollToTopBtn.style.display = "none";
+                    }
+                }, 300);
+            }
+        };
+
+        // When the user clicks on the button, scroll to the top of the document
+        scrollToTopBtn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+
+        // Code Copy Functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling; // Get the <pre> tag
+            const code = codeBlock.textContent || codeBlock.innerText; // Get the code text
+
+            // Create a temporary textarea element to copy the text
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = code;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                const msg = successful ? 'Copied!' : 'Failed to copy.';
+                button.textContent = msg; // Change button text
+                setTimeout(() => {
+                    button.textContent = 'Copy Code'; // Revert button text
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                button.textContent = 'Error!';
+                setTimeout(() => {
+                    button.textContent = 'Copy Code';
+                }, 2000);
+            } finally {
+                document.body.removeChild(tempTextArea); // Clean up
+            }
+        }
+    </script>
+</body>
+</html>
