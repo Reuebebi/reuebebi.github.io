@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO & Metadata -->
+    <title>Game Development: Unity/Unreal Basics - Whizmath | Create Interactive Games</title>
+    <meta name="description" content="Get started with Game Development at Whizmath. Learn the fundamentals of interactive game creation using popular engines like Unity and Unreal Engine, understanding game loops, assets, physics, and scripting.">
+    <meta name="keywords" content="Game Development, Game Design, Unity, Unreal Engine, Game Engines, C#, Blueprints, Interactive Games, Game Loop, Game Physics, Game Assets, Game Scripting, 3D Games, 2D Games, Indie Game Dev, Whizmath">
+    <link rel="canonical" href="https://yourdomain.com/game_development_lesson.html"> <!-- Replace with your actual URL -->
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://yourdomain.com/game_development_lesson.html"> <!-- Replace with your actual URL -->
+    <meta property="og:title" content="Game Development: Unity/Unreal Basics - Whizmath | Create Interactive Games">
+    <meta property="og:description" content="Get started with Game Development at Whizmath. Learn the fundamentals of interactive game creation using popular engines like Unity and Unreal Engine, understanding game loops, assets, physics, and scripting.">
+    <meta property="og:image" content="https://placehold.co/1200x630/a78bfa/ffffff?text=Whizmath+GameDev"> <!-- Placeholder image for social share -->
+    <meta property="og:site_name" content="Whizmath">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yourdomain.com/game_development_lesson.html"> <!-- Replace with your actual URL -->
+    <meta property="twitter:title" content="Game Development: Unity/Unreal Basics - Whizmath | Create Interactive Games">
+    <meta property="twitter:description" content="Get started with Game Development at Whizmath. Learn the fundamentals of interactive game creation using popular engines like Unity and Unreal Engine, understanding game loops, assets, physics, and scripting.">
+    <meta property="twitter:image" content="https://placehold.co/1200x630/a78bfa/ffffff?text=Whizmath+GameDev"> <!-- Placeholder image for social share -->
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://yourdomain.com/game_development_lesson.html"
+      },
+      "headline": "Game Development: Create Interactive Games with Popular Game Engines (Unity/Unreal Basics)",
+      "description": "A beginner's guide to game development fundamentals, introducing game engines like Unity and Unreal, key concepts such as the game loop, assets, physics, and scripting. Learn how to start building interactive digital experiences.",
+      "image": "https://placehold.co/1200x630/a78bfa/ffffff?text=Whizmath+GameDev",
+      "author": {
+        "@type": "Organization",
+        "name": "Whizmath"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Whizmath",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://placehold.co/600x60/63b3ed/ffffff?text=Whizmath+Logo" <!-- Placeholder logo for publisher -->
+        }
+      },
+      "datePublished": "2025-06-07T09:00:00+01:00", <!-- Update with actual publish date/time -->
+      "dateModified": "2025-06-07T09:00:00+01:00",  <!-- Update with actual modify date/time -->
+      "keywords": "Game Development, Game Design, Unity, Unreal Engine, Game Engines, C#, Blueprints, Interactive Games, Game Loop, Game Physics, Game Assets, Game Scripting, 3D Games, 2D Games, Indie Game Dev, Whizmath"
+    }
+    </script>
+
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Dark background for professional look */
+            color: #e6e6e6; /* Light text for contrast */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            position: relative; /* For scroll-to-top positioning */
+        }
+        #three-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send it to the back */
+            overflow: hidden;
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 1; /* Keep content above background */
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            background-color: rgba(17, 24, 39, 0.9); /* Slightly transparent dark background for content */
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px); /* Subtle blur effect */
+            -webkit-backdrop-filter: blur(8px);
+        }
+        h1, h2, h3, h4 {
+            color: #63b3ed; /* Consistent vibrant blue for headings */
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.5rem; }
+        p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        a {
+            color: #a78bfa; /* Consistent subtle purple for links */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .code-block {
+            position: relative;
+            background-color: #1f2937; /* Darker background for code */
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto; /* Enable horizontal scrolling for long lines of code */
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+            color: #e6e6e6; /* White/Light gray for code text for readability */
+        }
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #4a5568; /* Grayish background for button */
+            color: #e6e6e6;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease-in-out;
+            border: none;
+            outline: none;
+        }
+        .copy-button:hover {
+            background-color: #646b7a;
+        }
+        .back-button {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 100;
+            background-color: #63b3ed; /* Consistent vibrant blue for back button */
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px; /* Fully rounded */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-button:hover {
+            background-color: #4299e1;
+            transform: translateY(-2px);
+        }
+        .back-button svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #a78bfa; /* Consistent subtle purple for scroll button */
+            color: white;
+            padding: 1rem;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: none; /* Hidden by default */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+            z-index: 100;
+        }
+        .scroll-to-top:hover {
+            background-color: #8b5cf6;
+            transform: translateY(-2px);
+        }
+        .scroll-to-top svg {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 1.5rem 1rem;
+                margin: 0 0.5rem;
+            }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.75rem; }
+            h3 { font-size: 1.5rem; }
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            .back-button svg {
+                width: 1rem;
+                height: 1rem;
+            }
+            .scroll-to-top {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                padding: 0.75rem;
+            }
+            .scroll-to-top svg {
+                width: 1.25rem;
+                height: 1.25rem;
+            }
+            .copy-button {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Three.js Background Canvas -->
+    <canvas id="three-bg"></canvas>
+
+    <!-- Back Button -->
+    <a href="index.html" class="back-button">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Home
+    </a>
+
+    <div class="content-wrapper">
+        <header class="text-center mb-10">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4 animate-pulse">
+                Whizmath
+            </h1>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
+                Game Development
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400">
+                Create interactive games with popular game engines. <br class="hidden md:block">
+                Unity/Unreal Basics.
+            </p>
+        </header>
+
+        <section class="intro mb-12">
+            <h2 class="text-3xl font-bold mb-6">Introduction to Game Development</h2>
+            <p>
+                From the simple pixelated adventures of early arcade games to the breathtaking open worlds of modern blockbusters, video games have captivated audiences for decades. Game development is the art and science of creating these interactive digital experiences. It's a multidisciplinary field that blends programming, art, design, audio engineering, and storytelling to craft engaging virtual realities.
+            </p>
+            <p>
+                Historically, building a game from scratch required immense technical expertise across all these domains. However, the advent of powerful **game engines** has democratized the process, making it accessible to a wider audience, from hobbyists to large studios. Game engines provide a robust framework and a suite of tools that handle many of the complex underlying tasks, allowing developers to focus more on the creative aspects and unique gameplay mechanics.
+            </p>
+            <p>
+                This comprehensive lesson will serve as your introduction to game development, focusing on the fundamental concepts and the role of popular game engines like Unity and Unreal Engine. We'll explore the core components that make up a game, the typical development workflow, and why these engines are the go-to choice for millions of creators worldwide. If you've ever dreamt of bringing your virtual worlds to life, this is where your journey begins!
+            </p>
+        </section>
+
+        <section class="why-game-dev mb-12">
+            <h2 class="text-3xl font-bold mb-6">Why Learn Game Development?</h2>
+            <p>
+                Learning game development offers a unique blend of creative expression and technical challenge:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Creative Outlet:</strong> Bring your imaginative worlds, characters, and stories to life.</li>
+                <li><strong>Problem-Solving:</strong> Game development is a constant exercise in problem-solving, from optimizing performance to debugging complex interactions.</li>
+                <li><strong>Interdisciplinary Skills:</strong> You'll learn programming, logic, physics, art, design, audio, and project management.</li>
+                <li><strong>High Demand:</strong> The gaming industry is massive and constantly growing, offering diverse career opportunities.</li>
+                <li><strong>Transferable Skills:</strong> Many skills learned in game development (e.g., performance optimization, complex system design, 3D graphics) are highly transferable to other tech fields like simulations, virtual reality, and interactive applications.</li>
+                <li><strong>Community:</strong> A vast and supportive global community of game developers, both professional and indie.</li>
+            </ul>
+        </section>
+
+        <section class="game-engines-intro mb-12">
+            <h2 class="text-3xl font-bold mb-6">What are Game Engines?</h2>
+            <p>
+                A game engine is a software development environment designed for creating video games. It provides a set of tools and functionalities that handle the complexities of game development, allowing developers to focus on building gameplay mechanics, designing levels, and creating assets, rather than writing low-level code for rendering, physics, or input handling from scratch.
+            </p>
+            <h3 class="text-2xl font-bold mb-4">Key Features Provided by Game Engines:</h3>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Rendering Engine:</strong> For 2D and 3D graphics (how things look on screen).</li>
+                <li><strong>Physics Engine:</strong> Simulates realistic physical interactions (gravity, collisions).</li>
+                <li><strong>Input Handling:</strong> Manages player input from keyboard, mouse, controllers.</li>
+                <li><strong>Sound Engine:</strong> For playing and managing audio.</li>
+                <li><strong>Animation System:</strong> Tools for animating characters and objects.</li>
+                <li><strong>Scripting System:</strong> Allows developers to write code for game logic (e.g., C# for Unity, C++ / Blueprints for Unreal).</li>
+                <li><strong>Asset Management:</strong> Tools for importing, organizing, and optimizing game assets (models, textures, audio, animations).</li>
+                <li><strong>Level Editor:</strong> Tools for designing game worlds and placing objects.</li>
+                <li><strong>Networking:</strong> Support for multiplayer functionality.</li>
+            </ul>
+        </section>
+
+        <section class="core-concepts mb-12">
+            <h2 class="text-3xl font-bold mb-6">Core Concepts in Game Development</h2>
+            <p>
+                Regardless of the engine you choose, these concepts are fundamental to interactive game experiences:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Game Loop:</strong> The continuous cycle that runs a game. It typically involves:
+                    <ol class="list-decimal list-inside ml-4 mt-2">
+                        <li><strong>Input:</strong> Process player commands.</li>
+                        <li><strong>Update (Logic):</strong> Update game state, physics, AI, animations.</li>
+                        <li><strong>Render (Draw):</strong> Draw the updated game world to the screen.</li>
+                    </ol>
+                    <p class="mt-2">This loop repeats many times per second to create the illusion of motion.</p>
+                </li>
+                <li><strong>Assets:</strong> All the components that make up your game's content:
+                    <ul>
+                        <li><strong>3D Models:</strong> Characters, objects, environments.</li>
+                        <li><strong>Textures:</strong> Images applied to models for color and detail.</li>
+                        <li><strong>Audio:</strong> Sound effects, music, voiceovers.</li>
+                        <li><strong>Animations:</strong> Sequences of movements for characters or objects.</li>
+                        <li><strong>Prefabs/Blueprints:</strong> Reusable game objects with defined properties and behaviors.</li>
+                    </ul>
+                </li>
+                <li><strong>Game Objects / Actors:</strong> The fundamental entities in your game world. In Unity, these are "GameObjects"; in Unreal, they are "Actors." They are containers for components that define their behavior and appearance.</li>
+                <li><strong>Components:</strong> Modular pieces of functionality that you attach to GameObjects/Actors to give them specific behaviors (e.g., a "Rigidbody" component for physics, a "MeshRenderer" component for drawing).</li>
+                <li><strong>Scripting:</strong> Writing code to define game logic, player controls, AI behavior, and more.
+                    <ul>
+                        <li><strong>Unity:</strong> Primarily uses C#.</li>
+                        <li><strong>Unreal Engine:</strong> Primarily uses C++, but also features a visual scripting language called **Blueprints**, which is very popular for game logic without writing code.</li>
+                    </ul>
+                </li>
+                <li><strong>Scenes / Levels:</strong> The distinct environments or stages within your game (e.g., "Main Menu" scene, "Level 1" scene, "Game Over" scene).</li>
+                <li><strong>Collision Detection:</strong> The process by which the game engine determines if two objects are overlapping or touching.</li>
+                <li><strong>Raycasting:</strong> Firing an invisible ray from a point in a given direction to detect what it hits. Useful for shooting, line-of-sight, or interaction.</li>
+            </ul>
+        </section>
+
+        <section class="unity-basics mb-12">
+            <h2 class="text-3xl font-bold mb-6">Unity Basics</h2>
+            <p>
+                <a href="https://unity.com/" target="_blank" rel="noopener noreferrer" class="font-bold">Unity</a> is one of the most popular and versatile game engines, widely used for 2D, 3D, VR, AR, and mobile game development. It's known for its user-friendliness, extensive asset store, and strong community.
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Programming Language:</strong> Primarily C#.</li>
+                <li><strong>Workflow:</strong> Visual editor (Scene View, Hierarchy, Inspector), C# scripting for logic.</li>
+                <li><strong>Key Concepts:</strong>
+                    <ul>
+                        <li><strong>GameObject:</strong> Any entity in your scene (player, enemy, light, camera).</li>
+                        <li><strong>Component:</strong> Attach scripts, renderers, colliders, etc., to GameObjects.</li>
+                        <li><strong>Prefabs:</strong> Reusable GameObjects.</li>
+                        <li><strong>Scripting:</strong> Create C# scripts that inherit from `MonoBehaviour`.</li>
+                    </ul>
+                </li>
+            </ul>
+            <h4 class="text-xl font-bold mb-3">Example (Conceptual Unity C# Script - Player Movement):</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code class="language-csharp">using UnityEngine;
+
+public class PlayerMovement : MonoBehaviour
+{
+    public float moveSpeed = 5.0f; // Public variable, editable in Unity editor
+
+    // Start is called before the first frame update (once)
+    void Start()
+    {
+        Debug.Log("Player script started!");
+    }
+
+    // Update is called once per frame (game loop)
+    void Update()
+    {
+        // Get input from horizontal and vertical axes (e.g., WASD or Arrow Keys)
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
+
+        // Calculate movement direction
+        Vector3 movement = new Vector3(horizontalInput, 0, verticalInput);
+
+        // Move the player (time.deltaTime ensures consistent speed across different frame rates)
+        transform.position += movement * moveSpeed * Time.deltaTime;
+
+        // Optional: Log player's current position
+        // Debug.Log("Player position: " + transform.position);
+    }
+}</code></pre>
+            </div>
+            <p class="mt-2">
+                You would attach this script as a component to a 3D object (e.g., a Cube) in your Unity scene, and then when you run the game, pressing WASD or arrow keys would move the object.
+            </p>
+        </section>
+
+        <section class="unreal-basics mb-12">
+            <h2 class="text-3xl font-bold mb-6">Unreal Engine Basics</h2>
+            <p>
+                <a href="https://www.unrealengine.com/" target="_blank" rel="noopener noreferrer" class="font-bold">Unreal Engine (UE)</a> is a powerful, high-fidelity game engine known for its cutting-edge graphics, robust toolset for AAA game development, and the innovative Blueprint visual scripting system. It's often chosen for large-scale, graphically intensive projects.
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Programming Language:</strong> C++, and visual scripting via Blueprints.</li>
+                <li><strong>Workflow:</strong> Highly visual editor, powerful material editor, robust physics, animation, and lighting systems.</li>
+                <li><strong>Key Concepts:</strong>
+                    <ul>
+                        <li><strong>Actor:</strong> Any object that can be placed in a level (equivalent to Unity's GameObject).</li>
+                        <li><strong>Component:</strong> Attach functionalities to Actors (e.g., Static Mesh Component, Camera Component).</li>
+                        <li><strong>Blueprint:</strong> A visual scripting system that allows game logic creation without C++ code.</li>
+                        <li><strong>Level:</strong> The environment or map where gameplay occurs.</li>
+                    </ul>
+                </li>
+            </ul>
+            <h4 class="text-xl font-bold mb-3">Example (Conceptual Unreal Engine Blueprint - Player Movement):</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code class="language-pseudocode">// This is a conceptual representation of a Blueprint script.
+// In Unreal Engine, you would drag and drop nodes and connect them.
+
+// Event BeginPlay (runs when game starts)
+//  &gt; Print String: "Player Blueprint started!"
+
+// Event Tick (runs every frame - similar to Unity's Update)
+//  &gt; Get Player Controller
+//      &gt; Get InputAxis Value (Axis Name: "MoveForward")
+//          &gt; Multiply by Delta Seconds (Frame Rate Independent)
+//              &gt; Multiply by a 'MoveSpeed' variable (e.g., 500.0)
+//                  &gt; Add Movement Input (Self, Forward Vector, Scaled Value)
+
+//  &gt; Get InputAxis Value (Axis Name: "MoveRight")
+//      &gt; Multiply by Delta Seconds
+//          &gt; Multiply by 'MoveSpeed' variable
+//              &gt; Add Movement Input (Self, Right Vector, Scaled Value)
+
+// The above visually represents taking input, scaling it by speed and time,
+// and applying movement to the Actor.</code></pre>
+            </div>
+            <p class="mt-2">
+                Unreal Engine's Blueprints allow for rapid prototyping and complex logic development, making C++ optional for many game functionalities.
+            </p>
+        </section>
+
+        <section class="conclusion mb-12">
+            <h2 class="text-3xl font-bold mb-6">Conclusion & Your Game Development Journey</h2>
+            <p>
+                You've now taken your initial steps into the captivating world of game development, understanding the role of game engines like Unity and Unreal, and grasping fundamental concepts such as the game loop, assets, and scripting. This foundational knowledge is your gateway to transforming creative ideas into interactive digital experiences.
+            </p>
+            <p>
+                Game development is an incredibly vast and rewarding field that requires dedication, perseverance, and a passion for creation. As you continue your journey:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Pick an Engine & Stick With It:</strong> Both Unity and Unreal are powerful. Choose one that resonates with you and focus on mastering its core features.</li>
+                <li><strong>Start Small:</strong> Your first game should be something simple like a Pong clone, a Flappy Bird clone, or a basic platformer. Don't try to build the next AAA title immediately.</li>
+                <li><strong>Complete Projects:</strong> Finishing even small projects is crucial for learning the full development cycle and building confidence.</li>
+                <li><strong>Utilize Tutorials & Documentation:</strong> Both Unity and Unreal have extensive official documentation, tutorials, and vibrant communities.</li>
+                <li><strong>Learn Specific Domains:</strong> As you progress, you might specialize in programming, 3D modeling, level design, animation, audio, or UI/UX.</li>
+                <li><strong>Collaborate:</strong> Join game jams or collaborate with others to experience team-based development.</li>
+                <li><strong>Embrace Iteration:</strong> Game development is an iterative process. Build, test, get feedback, and refine.</li>
+            </ul>
+            <p>
+                The world of game development is open to endless possibilities. With creativity, persistence, and the powerful tools available, you can truly build anything you can imagine. Happy creating, and keep whizzing with math (and game logic)!
+            </p>
+        </section>
+
+        <footer class="text-center text-gray-500 text-sm mt-12 pt-8 border-t border-gray-700">
+            &copy; 2025 Whizmath. All rights reserved.
+        </footer>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="scroll-to-top">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js Background Animation
+        window.onload = function() {
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-bg'), antialias: true });
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setClearColor(0x0d1117, 1); // Match body background
+
+            // Particles for a "creative/digital world" feel
+            const particleCount = 2800;
+            const particles = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount * 3; i++) {
+                positions[i] = (Math.random() - 0.5) * 350; // Wider spread
+            }
+
+            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const particleMaterial = new THREE.PointsMaterial({
+                color: 0x63b3ed, // Blueish color, consistent with others
+                size: 1.5,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                sizeAttenuation: true,
+                opacity: 0.7
+            });
+
+            const particleMesh = new THREE.Points(particles, particleMaterial);
+            scene.add(particleMesh);
+
+            // Lines connecting particles (representing artistic connections/game logic)
+            const lineMaterial = new THREE.LineBasicMaterial({
+                color: 0xa78bfa, // Purplish color, consistent with others
+                transparent: true,
+                opacity: 0.2
+            });
+            const lineGeometry = new THREE.BufferGeometry();
+            const linePositions = new Float32Array(particleCount * 3 * 2);
+
+            const threshold = 20; // Distance for connections
+            let lineIndex = 0;
+            for (let i = 0; i < particleCount; i++) {
+                for (let j = i + 1; j < particleCount; j++) {
+                    const x1 = positions[i * 3];
+                    const y1 = positions[i * 3 + 1];
+                    const z1 = positions[i * 3 + 2];
+
+                    const x2 = positions[j * 3];
+                    const y2 = positions[j * 3 + 1];
+                    const z2 = positions[j * 3 + 2];
+
+                    const dx = x1 - x2;
+                    const dy = y1 - y2;
+                    const dz = z1 - z2;
+                    const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+                    if (distance < threshold) {
+                        if (lineIndex + 6 <= linePositions.length) {
+                            linePositions[lineIndex++] = x1;
+                            linePositions[lineIndex++] = y1;
+                            linePositions[lineIndex++] = z1;
+
+                            linePositions[lineIndex++] = x2;
+                            linePositions[lineIndex++] = y2;
+                            linePositions[lineIndex++] = z2;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                 if (lineIndex + 6 > linePositions.length) {
+                    break;
+                }
+            }
+
+            lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions.slice(0, lineIndex), 3));
+            const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+            scene.add(lines);
+
+
+            camera.position.z = 100;
+
+            let mouseX = 0;
+            let mouseY = 0;
+
+            function onDocumentMouseMove(event) {
+                mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+            }
+            document.addEventListener('mousemove', onDocumentMouseMove);
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // Rotate particles and lines slightly
+                particleMesh.rotation.x += 0.0003; // Slower rotation
+                particleMesh.rotation.y += 0.0005;
+
+                lines.rotation.x += 0.0003;
+                lines.rotation.y += 0.0005;
+
+                // Make camera slowly follow mouse
+                camera.position.x += (mouseX * 30 - camera.position.x) * 0.01; // Slightly less aggressive mouse follow
+                camera.position.y += (mouseY * 30 - camera.position.y) * 0.01;
+                camera.lookAt(scene.position);
+
+
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Handle window resizing
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+
+        // Scroll to Top Button Logic
+        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+        // When the user scrolls down 200px from the top of the document, show the button
+        window.onscroll = function() {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                scrollToTopBtn.style.display = "block";
+                scrollToTopBtn.style.opacity = "1";
+            } else {
+                scrollToTopBtn.style.opacity = "0";
+                setTimeout(() => { // Give time for transition before hiding
+                    if (document.body.scrollTop <= 200 && document.documentElement.scrollTop <= 200) {
+                        scrollToTopBtn.style.display = "none";
+                    }
+                }, 300);
+            }
+        };
+
+        // When the user clicks on the button, scroll to the top of the document
+        scrollToTopBtn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+
+        // Code Copy Functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling; // Get the <pre> tag
+            const code = codeBlock.textContent || codeBlock.innerText; // Get the code text
+
+            // Create a temporary textarea element to copy the text
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = code;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                const msg = successful ? 'Copied!' : 'Failed to copy.';
+                button.textContent = msg; // Change button text
+                setTimeout(() => {
+                    button.textContent = 'Copy Code'; // Revert button text
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                button.textContent = 'Error!';
+                setTimeout(() => {
+                    button.textContent = 'Copy Code';
+                }, 2000);
+            } finally {
+                document.body.removeChild(tempTextArea); // Clean up
+            }
+        }
+    </script>
+</body>
+</html>
