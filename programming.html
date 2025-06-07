@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizmath - Comprehensive Programming Courses | Learn to Code</title>
+    <meta name="description" content="Master programming with Whizmath's comprehensive courses, from beginner HTML, CSS, JavaScript to advanced Python, React, Vue.js, Data Science, and more. Start your coding journey today!">
+    <meta name="keywords" content="programming courses, learn to code, web development, HTML, CSS, JavaScript, Python, React.js, Vue.js, Node.js, SQL, Data Structures, Algorithms, Git, web security, mobile app development, cloud computing, DevOps, machine learning, data science, game development, blockchain, cybersecurity, artificial intelligence, quantum computing, online coding classes, programming tutorials, Whizmath">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        /* Custom CSS for Three.js Canvas Background */
+        #three-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Ensure it's behind content */
+            transition: background-color 0.5s ease; /* Smooth transition for background changes */
+        }
+
+        /* Custom CSS for Scroll-to-Top Button */
+        #scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 50; /* Above other content */
+        }
+
+        #scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Custom CSS for Light/Dark Mode Toggle SVG Animation */
+        .moon-icon, .sun-icon {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            transform-origin: center;
+        }
+
+        /* Initial state for sun (visible) */
+        .sun-icon {
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+        }
+
+        /* Initial state for moon (hidden) */
+        .moon-icon {
+            transform: scale(0) rotate(-90deg);
+            opacity: 0;
+        }
+
+        /* Dark mode active: sun hides, moon shows */
+        html.dark .sun-icon {
+            transform: scale(0) rotate(90deg);
+            opacity: 0;
+        }
+
+        html.dark .moon-icon {
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+        }
+
+        /* General body styling for font and background */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--tw-bg-opacity, 1) var(--tw-bg-color); /* Tailwind's background handling */
+            transition: background-color 0.5s ease;
+        }
+
+        /* Tailwind custom configuration for dark mode */
+        :root {
+            --color-text-primary: #1a202c; /* Darker gray for primary text in light mode */
+            --color-text-secondary: #4a5568; /* Medium gray for secondary text */
+            --color-bg-primary: #f8f9fa; /* Off-white background */
+            --color-card-bg: #ffffff; /* White card background */
+            --color-border: #e2e8f0; /* Light border */
+            --color-button-bg: #3b82f6; /* Blue-500 */
+            --color-button-text: #ffffff;
+            --color-header-bg: rgba(255, 255, 255, 0.9);
+            --color-category-frontend: #3b82f6; /* Blue */
+            --color-category-backend: #10b981; /* Green */
+            --color-category-corecs: #8b5cf6; /* Purple */
+            --color-category-specialized: #ef4444; /* Red */
+        }
+
+        html.dark {
+            --color-text-primary: #e2e8f0; /* Light gray for primary text in dark mode */
+            --color-text-secondary: #a0aec0; /* Medium light gray for secondary text */
+            --color-bg-primary: #1a202c; /* Dark blue-gray background */
+            --color-card-bg: #2d3748; /* Darker card background */
+            --color-border: #4a5568; /* Dark border */
+            --color-button-bg: #60a5fa; /* Blue-400 */
+            --color-button-text: #1f2937; /* Dark text for button */
+            --color-header-bg: rgba(26, 32, 44, 0.9);
+            --color-category-frontend: #60a5fa; /* Lighter Blue */
+            --color-category-backend: #34d399; /* Lighter Green */
+            --color-category-corecs: #a78bfa; /* Lighter Purple */
+            --color-category-specialized: #f87171; /* Lighter Red */
+        }
+
+        .text-primary { color: var(--color-text-primary); }
+        .text-secondary { color: var(--color-text-secondary); }
+        .bg-primary { background-color: var(--color-bg-primary); }
+        .bg-card { background-color: var(--color-card-bg); }
+        .border-custom { border-color: var(--color-border); }
+        .btn-primary {
+            background-color: var(--color-button-bg);
+            color: var(--color-button-text);
+            /* Added for better button design */
+            border: 2px solid transparent; /* Initial transparent border */
+            transition: all 0.2s ease-in-out;
+            display: inline-flex; /* Use flex to center content in anchor */
+            align-items: center;
+            justify-content: center;
+            text-decoration: none; /* Remove underline from link */
+        }
+        .btn-primary:hover {
+            background-color: transparent; /* Background becomes transparent on hover */
+            border-color: var(--color-button-bg); /* Border color matches button color */
+            color: var(--color-button-bg); /* Text color matches button color */
+            transform: translateY(-2px); /* Slight lift effect */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* More pronounced shadow */
+        }
+        html.dark .btn-primary:hover {
+            color: var(--color-button-bg); /* Ensure text color is correct in dark mode hover */
+        }
+
+        .header-bg { background-color: var(--color-header-bg); }
+
+        /* Category border colors for course cards */
+        .border-frontend { border-left-color: var(--color-category-frontend); }
+        .border-backend { border-left-color: var(--color-category-backend); }
+        .border-corecs { border-left-color: var(--color-category-corecs); }
+        .border-specialized { border-left-color: var(--color-category-specialized); }
+
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--color-bg-primary);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-border);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-text-secondary);
+        }
+    </style>
+</head>
+<body class="bg-primary text-primary min-h-screen flex flex-col">
+    <!-- Three.js Canvas -->
+    <canvas id="three-bg"></canvas>
+
+    <!-- Header -->
+    <header class="header-bg sticky top-0 z-40 backdrop-blur-sm shadow-lg py-5 px-6 md:px-16 flex justify-between items-center border-b border-custom">
+        <h1 class="text-3xl md:text-5xl font-extrabold text-primary tracking-tight">Whizmath</h1>
+        <!-- Light/Dark Mode Toggle Button -->
+        <button id="theme-toggle" class="relative p-4 mr-6 rounded-full bg-card shadow-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105">
+            <!-- Sun Icon -->
+            <svg class="sun-icon w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M3 12H2m15.325-4.675l.707-.707M6.675 17.325l-.707.707M17.325 17.325l.707.707M6.675 6.675l-.707-.707M12 18a6 6 0 100-12 6 6 0 000 12z"></path>
+            </svg>
+            <!-- Moon Icon -->
+            <svg class="moon-icon absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+        </button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto p-6 md:p-12">
+        <section class="mb-16">
+            <h2 class="text-5xl md:text-6xl font-extrabold text-center mb-6 text-primary leading-tight">Explore Our Comprehensive Programming Courses at Whizmath</h2>
+            <p class="text-center text-xl text-secondary max-w-5xl mx-auto leading-relaxed">
+                Dive into the world of programming and **learn to code** with Whizmath's comprehensive **online coding classes**, meticulously designed for all levels.
+                From foundational concepts like **HTML, CSS, and JavaScript** to advanced techniques in **React.js, Vue.js, C++, Node.js, Go, and Rust**, our **programming tutorials** empower you to master the essential skills needed for today's dynamic tech landscape, including **web development, data science, and artificial intelligence**.
+            </p>
+        </section>
+
+        <!-- Courses Grid - Dynamically generated by JavaScript -->
+        <section id="courses-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <!-- Course cards will be inserted here by JavaScript -->
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-card text-secondary py-8 mt-16 border-t border-custom text-center">
+        <p class="text-lg">&copy; 2025 Whizmath. All rights reserved.</p>
+        <p class="text-base mt-2">Designed with passion for learning and a commitment to excellence.</p>
+    </footer>
+
+    <!-- Scroll-to-Top Button -->
+    <button id="scroll-to-top" class="p-4 rounded-full bg-blue-500 text-white shadow-xl hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 hover:scale-110">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <script>
+        // --- Three.js Background Animation ---
+        let scene, camera, renderer, particles, particleMaterial;
+        let ambientLight, directionalLight;
+
+        function initThreeJS() {
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, canvas: document.getElementById('three-bg') });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Lights
+            ambientLight = new THREE.AmbientLight(0x404040, 0.5); // soft white light
+            scene.add(ambientLight);
+
+            directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(0, 1, 1).normalize();
+            scene.add(directionalLight);
+
+            // Particles
+            const particleCount = 1000;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            const color1 = new THREE.Color();
+            const color2 = new THREE.Color();
+
+            // Set initial colors based on current theme
+            updateThreeJSColors(document.documentElement.classList.contains('dark'));
+
+            for (let i = 0; i < particleCount; i++) {
+                // Position particles randomly in a cube
+                positions[i * 3] = (Math.random() - 0.5) * 20;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+
+                // Assign random colors (will be overridden by updateThreeJSColors for overall theme)
+                color1.setHSL(Math.random(), 0.8, 0.5);
+                colors[i * 3] = color1.r;
+                colors[i * 3 + 1] = color1.g;
+                colors[i * 3 + 2] = color1.b;
+            }
+
+            const particleGeometry = new THREE.BufferGeometry();
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 0.15, // Increased particle size
+                vertexColors: true,
+                blending: THREE.AdditiveBlending,
+                transparent: true,
+                opacity: 0.8 // Slightly more opaque
+            });
+
+            particles = new THREE.Points(particleGeometry, particleMaterial);
+            scene.add(particles);
+
+            // Mouse interaction for camera rotation
+            let isDragging = false;
+            let previousMousePosition = { x: 0, y: 0 };
+
+            renderer.domElement.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                previousMousePosition = { x: e.clientX, y: e.clientY };
+            });
+
+            renderer.domElement.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            renderer.domElement.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+
+                const deltaX = e.clientX - previousMousePosition.x;
+                const deltaY = e.clientY - previousMousePosition.y;
+
+                // Rotate camera based on mouse movement
+                camera.rotation.y += deltaX * 0.005;
+                camera.rotation.x += deltaY * 0.005;
+
+                // Clamp camera rotation to prevent flipping
+                camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
+
+                previousMousePosition = { x: e.clientX, y: e.clientY };
+            });
+
+            // Touch events for camera rotation (for mobile)
+            renderer.domElement.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    isDragging = true;
+                    previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                }
+            });
+
+            renderer.domElement.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+
+            renderer.domElement.addEventListener('touchmove', (e) => {
+                if (!isDragging || e.touches.length !== 1) return;
+
+                const deltaX = e.touches[0].clientX - previousMousePosition.x;
+                const deltaY = e.touches[0].clientY - previousMousePosition.y;
+
+                camera.rotation.y += deltaX * 0.005;
+                camera.rotation.x += deltaY * 0.005;
+
+                camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
+
+                previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            });
+        }
+
+        function updateThreeJSColors(isDarkMode) {
+            if (!scene || !renderer || !particleMaterial) return;
+
+            if (isDarkMode) {
+                // Dark mode: light particles on dark background
+                scene.background = new THREE.Color(0x0a0a1a); // Very dark blue-black
+                particleMaterial.color.set(0xeeeeff); // Very light blue-white particles
+                ambientLight.color.set(0x303030);
+                directionalLight.color.set(0xcccccc);
+            } else {
+                // Light mode: dark particles on light background
+                scene.background = new THREE.Color(0xf0f4f8); // Light gray-blue
+                particleMaterial.color.set(0x222244); // Very dark blue particles
+                ambientLight.color.set(0x606060);
+                directionalLight.color.set(0xaaaaaa);
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Animate particles
+            if (particles) {
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0008;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        window.addEventListener('resize', onWindowResize);
+
+        // --- Light/Dark Mode Toggle ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+
+        // Check for saved theme preference or default to dark
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            htmlElement.classList.remove('dark');
+            updateThreeJSColors(false); // Update Three.js for light mode
+        } else {
+            htmlElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+            updateThreeJSColors(true); // Update Three.js for dark mode
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                updateThreeJSColors(false); // Update Three.js for light mode
+            } else {
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                updateThreeJSColors(true); // Update Three.js for dark mode
+            }
+        });
+
+        // --- Scroll-to-Top Button ---
+        const scrollToTopBtn = document.getElementById('scroll-to-top');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 200) { // Show button after scrolling 200px
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll to top
+            });
+        });
+
+        // --- Course Data and Dynamic Rendering ---
+        const courses = [
+            { title: "HTML", level: "Beginner", category: "Frontend", description: "Master the foundational language for building web pages.", url: "html-beginner.html" },
+            { title: "HTML5", level: "Advanced Features", category: "Frontend", description: "Explore modern HTML5 elements, APIs, and best practices.", url: "html5-beginners.html" },
+            { title: "CSS", level: "Beginner", category: "Frontend", description: "Learn to style web pages with Cascading Style Sheets.", url: "css-beginners.html" },
+            { title: "CSS3", level: "Modern Styling", category: "Frontend", description: "Dive into advanced CSS3 features like animations and flexbox.", url: "css-advanced.html" },
+            { title: "JavaScript", level: "Beginner", category: "Frontend", description: "Start your journey with the essential language for web interactivity.", url: "javascript-beginner.html" },
+            { title: "JavaScript", level: "Advanced Concepts", category: "Frontend", description: "Deep dive into asynchronous JavaScript, closures, and more.", url: "javascript-advanced.html" },
+            { title: "Tailwind CSS", level: "Utility-First Styling", category: "Frontend", description: "Accelerate your UI development with Tailwind's utility classes.", url: "t-css-beginner.html" },
+            { title: "React.js", level: "Beginner to Advanced", category: "Frontend", description: "Develop dynamic single-page applications with React.", url: "react-js.html" },
+            { title: "Vue.js", level: "Beginner to Advanced", category: "Frontend", description: "Build interactive user interfaces with the progressive Vue.js framework.", url: "vue-js.html" },
+            { title: "Go Programming", level: "Beginner to Intermediate", category: "Backend", description: "Learn Google's Go language for efficient and scalable backend services.", url: "go.html" },
+            { title: "Rust Programming", level: "Beginner to Intermediate", category: "Core CS", description: "Explore Rust, a language for performance, reliability, and safety, ideal for systems programming.", url: "rust-programming.html" },
+            { title: "C++ Programming", level: "Beginner to Advanced", category: "Core CS", description: "Learn C++, a powerful language for system programming, game development, and high-performance applications.", url: "c++.html" },
+            { title: "Node.js", level: "Fundamentals & Express.js", category: "Backend", description: "Build scalable server-side applications with Node.js.", url: "node-js.html" },
+            { title: "SQL & Databases", level: "Design & Querying", category: "Backend", description: "Understand database design and efficient SQL querying.", url: "sql.html" },
+            { title: "API Development", level: "RESTful Services", category: "Backend", description: "Design and implement robust RESTful APIs.", url: "api-development.html" },
+            { title: "Authentication & Authorization", level: "Security", category: "Backend", description: "Secure your applications with proper authentication and authorization.", url: "authentication.html" },
+            { title: "Data Structures & Algorithms", level: "Beginner to Intermediate", category: "Core CS", description: "Master fundamental data structures and efficient algorithms.", url: "dsa.html" },
+            { title: "Git & Version Control", level: "Essentials", category: "Core CS", description: "Collaborate effectively and manage your code with Git.", url: "git.html" },
+            { title: "Command Line Interface (CLI)", level: "Basics", category: "Core CS", description: "Navigate and control your system using the command line.", url: "cli.html" },
+            { title: "Web Security Basics", level: "OWASP Top 10", category: "Core CS", description: "Learn to identify and mitigate common web vulnerabilities.", url: "web-security.html" },
+            { title: "Software Testing & Debugging", level: "Fundamentals", category: "Core CS", description: "Write robust code with effective testing and debugging techniques.", url: "software-testing.html" },
+            { title: "Mobile App Development", level: "React Native - Beginner", category: "Specialized", description: "Build cross-platform mobile apps with React Native.", url: "mobile-app.html" },
+            { title: "Cloud Computing Fundamentals", level: "AWS/Azure/GCP", category: "Specialized", description: "Understand the basics of cloud services and deployment.", url: "cloud-computing.html" },
+            { title: "DevOps Practices", level: "CI/CD Introduction", category: "Specialized", description: "Automate your software delivery pipeline with CI/CD.", url: "devops.html" },
+            { title: "Advanced DevOps", level: "Advanced", category: "Specialized", description: "Deep dive into advanced CI/CD, infrastructure as code, and site reliability engineering (SRE).", url: "devops.html" }, /* Linking to main devops page for simplicity */
+            { title: "Machine Learning Basics", level: "with Python", category: "Specialized", description: "Get started with the fundamentals of machine learning.", url: "machine-learning.html" },
+            { title: "Data Science", level: "Introduction", category: "Specialized", description: "Explore data analysis, visualization, and statistical modeling.", url: "data-science.html" },
+            { title: "Game Development", level: "Unity/Unreal Basics", category: "Specialized", description: "Create interactive games with popular game engines.", url: "game-development.html" },
+            { title: "Blockchain", level: "Fundamentals", category: "Specialized", description: "Understand the core concepts of decentralized ledger technology.", url: "blockchain.html" },
+            { title: "Cybersecurity", level: "Ethical Hacking", category: "Specialized", description: "Learn defensive and offensive cybersecurity techniques.", url: "cybersecurity.html" },
+            { title: "Artificial Intelligence", level: "Concepts & Applications", category: "Specialized", description: "Discover the principles and applications of AI.", url: "artificial-intelligence.html" },
+            { title: "Quantum Computing", level: "Introduction", category: "Specialized", description: "An introductory course to the fascinating world of quantum computing.", url: "quantum-computing.html" },
+        ];
+
+        function getCategoryIcon(category) {
+            switch (category) {
+                case 'Frontend':
+                    return `<svg class="w-6 h-6 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>`; // Code brackets
+                case 'Backend':
+                    return `<svg class="w-6 h-6 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"></path></svg>`; // Database icon (simplified arrow)
+                case 'Core CS':
+                    return `<svg class="w-6 h-6 text-purple-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>`; // Processor chip
+                case 'Specialized':
+                    return `<svg class="w-6 h-6 text-red-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>`; // Lightbulb / idea
+                default:
+                    return `<svg class="w-6 h-6 text-gray-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`; // Info icon
+            }
+        }
+
+        function renderCourses() {
+            const coursesGrid = document.getElementById('courses-grid');
+            coursesGrid.innerHTML = ''; // Clear existing content
+
+            courses.forEach(course => {
+                const categoryClass = course.category.toLowerCase().replace(/\s/g, ''); // e.g., 'frontend', 'corecs'
+                const courseCard = document.createElement('div');
+                courseCard.className = `bg-card rounded-xl shadow-xl p-6 border border-custom border-l-4 border-${categoryClass} transform hover:scale-105 transition-transform duration-300 flex flex-col justify-between`;
+
+                let levelColorClass = '';
+                if (course.level.includes('Beginner')) {
+                    levelColorClass = 'text-green-500';
+                } else if (course.level.includes('Advanced')) {
+                    levelColorClass = 'text-red-500';
+                } else if (course.level.includes('Intermediate')) {
+                    levelColorClass = 'text-yellow-500';
+                } else {
+                    levelColorClass = 'text-blue-500'; // Default for other levels
+                }
+
+                courseCard.innerHTML = `
+                    <div>
+                        <div class="flex items-center mb-3">
+                            ${getCategoryIcon(course.category)}
+                            <h3 class="text-2xl font-semibold text-primary">${course.title}</h3>
+                        </div>
+                        <p class="text-secondary text-base mb-4">${course.description}</p>
+                    </div>
+                    <div class="flex items-center justify-between mt-4">
+                        <span class="text-sm font-medium ${levelColorClass}">${course.level}</span>
+                        <a href="${course.url}" class="px-5 py-2 btn-primary rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-base font-medium">
+                            Learn More
+                        </a>
+                    </div>
+                `;
+                coursesGrid.appendChild(courseCard);
+            });
+        }
+
+        // Initialize Three.js, start animation, and render courses when the window loads
+        window.onload = function () {
+            initThreeJS();
+            animate();
+            renderCourses(); // Call renderCourses on load
+        };
+    </script>
+</body>
+</html>
