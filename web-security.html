@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO & Metadata -->
+    <title>Web Security Basics & OWASP Top 10 - Whizmath | Learn Vulnerabilities</title>
+    <meta name="description" content="Master Web Security Basics at Whizmath. Learn to identify and mitigate common web vulnerabilities including the OWASP Top 10: Injection, Broken Access Control, Cryptographic Failures, and more. Essential for secure web development.">
+    <meta name="keywords" content="Web Security, Cybersecurity, OWASP Top 10, Web Vulnerabilities, SQL Injection, XSS, Cross-Site Scripting, CSRF, Cross-Site Request Forgery, Broken Access Control, Sensitive Data Exposure, Security Misconfiguration, Vulnerable Components, Authentication Failures, Insecure Design, Software Integrity, Security Logging, SSRF, Web Development, Information Security, Whizmath">
+    <link rel="canonical" href="https://yourdomain.com/web_security_lesson.html"> <!-- Replace with your actual URL -->
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://yourdomain.com/web_security_lesson.html"> <!-- Replace with your actual URL -->
+    <meta property="og:title" content="Web Security Basics & OWASP Top 10 - Whizmath | Learn Vulnerabilities">
+    <meta property="og:description" content="Master Web Security Basics at Whizmath. Learn to identify and mitigate common web vulnerabilities including the OWASP Top 10: Injection, Broken Access Control, Cryptographic Failures, and more. Essential for secure web development.">
+    <meta property="og:image" content="https://placehold.co/1200x630/63b3ed/ffffff?text=Whizmath+Web+Security"> <!-- Placeholder image for social share -->
+    <meta property="og:site_name" content="Whizmath">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yourdomain.com/web_security_lesson.html"> <!-- Replace with your actual URL -->
+    <meta property="twitter:title" content="Web Security Basics & OWASP Top 10 - Whizmath | Learn Vulnerabilities">
+    <meta property="twitter:description" content="Master Web Security Basics at Whizmath. Learn to identify and mitigate common web vulnerabilities including the OWASP Top 10: Injection, Broken Access Control, Cryptographic Failures, and more. Essential for secure web development.">
+    <meta property="twitter:image" content="https://placehold.co/1200x630/63b3ed/ffffff?text=Whizmath+Web+Security"> <!-- Placeholder image for social share -->
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://yourdomain.com/web_security_lesson.html"
+      },
+      "headline": "Web Security Basics: Identify & Mitigate Common Web Vulnerabilities (OWASP Top 10)",
+      "description": "A comprehensive guide to web security fundamentals, covering the CIA triad, common threats, and detailed explanations of the OWASP Top 10 web application security risks. Learn practical mitigation strategies for developers and security enthusiasts.",
+      "image": "https://placehold.co/1200x630/63b3ed/ffffff?text=Whizmath+Web+Security",
+      "author": {
+        "@type": "Organization",
+        "name": "Whizmath"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Whizmath",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://placehold.co/600x60/63b3ed/ffffff?text=Whizmath+Logo" <!-- Placeholder logo for publisher -->
+        }
+      },
+      "datePublished": "2025-06-07T09:00:00+01:00", <!-- Update with actual publish date/time -->
+      "dateModified": "2025-06-07T09:00:00+01:00",  <!-- Update with actual modify date/time -->
+      "keywords": "Web Security, Cybersecurity, OWASP Top 10, Web Vulnerabilities, SQL Injection, XSS, Cross-Site Scripting, CSRF, Cross-Site Request Forgery, Broken Access Control, Sensitive Data Exposure, Security Misconfiguration, Vulnerable Components, Authentication Failures, Insecure Design, Software Integrity, Security Logging, SSRF, Web Development, Information Security, Whizmath"
+    }
+    </script>
+
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Dark background for professional look */
+            color: #e6e6e6; /* Light text for contrast */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            position: relative; /* For scroll-to-top positioning */
+        }
+        #three-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send it to the back */
+            overflow: hidden;
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 1; /* Keep content above background */
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            background-color: rgba(17, 24, 39, 0.9); /* Slightly transparent dark background for content */
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px); /* Subtle blur effect */
+            -webkit-backdrop-filter: blur(8px);
+        }
+        h1, h2, h3, h4 {
+            color: #63b3ed; /* Consistent vibrant blue for headings */
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.5rem; }
+        p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        a {
+            color: #a78bfa; /* Consistent subtle purple for links */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .code-block {
+            position: relative;
+            background-color: #1f2937; /* Darker background for code */
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto; /* Enable horizontal scrolling for long lines of code */
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+            color: #e6e6e6; /* White/Light gray for code text for readability */
+        }
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #4a5568; /* Grayish background for button */
+            color: #e6e6e6;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease-in-out;
+            border: none;
+            outline: none;
+        }
+        .copy-button:hover {
+            background-color: #646b7a;
+        }
+        .back-button {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 100;
+            background-color: #63b3ed; /* Consistent vibrant blue for back button */
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px; /* Fully rounded */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-button:hover {
+            background-color: #4299e1;
+            transform: translateY(-2px);
+        }
+        .back-button svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #a78bfa; /* Consistent subtle purple for scroll button */
+            color: white;
+            padding: 1rem;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: none; /* Hidden by default */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+            z-index: 100;
+        }
+        .scroll-to-top:hover {
+            background-color: #8b5cf6;
+            transform: translateY(-2px);
+        }
+        .scroll-to-top svg {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 1.5rem 1rem;
+                margin: 0 0.5rem;
+            }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.75rem; }
+            h3 { font-size: 1.5rem; }
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            .back-button svg {
+                width: 1rem;
+                height: 1rem;
+            }
+            .scroll-to-top {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                padding: 0.75rem;
+            }
+            .scroll-to-top svg {
+                width: 1.25rem;
+                height: 1.25rem;
+            }
+            .copy-button {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Three.js Background Canvas -->
+    <canvas id="three-bg"></canvas>
+
+    <!-- Back Button -->
+    <a href="index.html" class="back-button">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Home
+    </a>
+
+    <div class="content-wrapper">
+        <header class="text-center mb-10">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4 animate-pulse">
+                Whizmath
+            </h1>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
+                Web Security Basics
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400">
+                Learn to identify and mitigate common web vulnerabilities. <br class="hidden md:block">
+                Focus on OWASP Top 10.
+            </p>
+        </header>
+
+        <section class="intro mb-12">
+            <h2 class="text-3xl font-bold mb-6">Introduction to Web Security</h2>
+            <p>
+                In today's interconnected world, web applications are at the core of almost every digital interaction—from online banking and e-commerce to social media and cloud services. While these applications offer immense convenience, they also present a vast attack surface for malicious actors. A single web security vulnerability can lead to devastating data breaches, financial losses, reputational damage, and erosion of user trust. Therefore, understanding and implementing robust web security measures is not just good practice; it is an absolute necessity for any developer, system administrator, or even curious user.
+            </p>
+            <p>
+                Web security is the practice of protecting websites, web applications, and web services from threats that exploit vulnerabilities in code, configurations, or operational processes. It involves a continuous cycle of identifying potential weaknesses, implementing protective controls, and monitoring for suspicious activities. For those with a mathematical inclination, think of web security as a complex optimization problem: how to minimize risk while maximizing functionality and user experience.
+            </p>
+            <p>
+                This comprehensive lesson will introduce you to the fundamental concepts of web security and delve into the most critical web application security risks as outlined by the <a href="https://owasp.org/www-project-top-10/" target="_blank" rel="noopener noreferrer">OWASP Top 10</a>. The OWASP (Open Web Application Security Project) Top 10 is a standard awareness document for developers and web application security. It represents a broad consensus about the most critical security risks to web applications. By understanding these top threats and their mitigation strategies, you will be well-equipped to build more secure web applications and protect valuable data.
+            </p>
+        </section>
+
+        <section class="fundamentals mb-12">
+            <h2 class="text-3xl font-bold mb-6">Web Security Fundamentals</h2>
+            <p>
+                Before diving into specific vulnerabilities, let's establish some core principles that underpin web security.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">1. The CIA Triad: Confidentiality, Integrity, Availability</h3>
+            <p>
+                The CIA Triad is a foundational model for information security. These three principles are the goals of a secure system:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Confidentiality:</strong> Protecting information from unauthorized access. Only authorized individuals should be able to view sensitive data. (e.g., encryption of user passwords).</li>
+                <li><strong>Integrity:</strong> Ensuring that information is accurate, consistent, and trustworthy throughout its lifecycle. Preventing unauthorized modification or deletion. (e.g., data validation, checksums).</li>
+                <li><strong>Availability:</strong> Ensuring that authorized users have timely and uninterrupted access to information and resources. (e.g., DDoS protection, redundant systems).</li>
+            </ul>
+
+            <h3 class="text-2xl font-bold mb-4">2. Threats, Vulnerabilities, and Risks</h3>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Threat:</strong> A potential danger that might exploit a vulnerability to breach security and cause harm. (e.g., a hacker, a malicious insider, natural disaster).</li>
+                <li><strong>Vulnerability:</strong> A weakness in a system, design, implementation, or operation that could be exploited by a threat. (e.g., unvalidated input field, weak password policy, misconfigured firewall).</li>
+                <li><strong>Risk:</strong> The potential for loss, damage, or destruction of an asset as a result of a threat exploiting a vulnerability. It's the probability of a threat occurring multiplied by its impact.</li>
+            </ul>
+
+            <h3 class="text-2xl font-bold mb-4">3. Defense-in-Depth</h3>
+            <p>
+                This principle advocates for multiple layers of security controls, rather than relying on a single point of defense. If one security mechanism fails, another one should be in place to prevent a breach. Think of it like multiple locks on a door, or multiple layers of armor. Examples include firewalls, intrusion detection systems, strong authentication, input validation, encryption, etc.
+            </p>
+        </section>
+
+        <section class="owasp-top10 mb-12">
+            <h2 class="text-3xl font-bold mb-6">The OWASP Top 10 (2021)</h2>
+            <p>
+                The OWASP Top 10 is a powerful awareness document for web application security. It lists the 10 most critical web application security risks. Understanding these will cover the vast majority of web application security concerns.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4">A01:2021-Broken Access Control</h3>
+            <p>
+                Access control enforces policy such that users cannot act outside of their intended permissions. Failures typically lead to unauthorized information disclosure, modification, or destruction of all data, or performing a business function outside of the user's limits.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Common Scenarios:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Bypassing authorization checks by modifying URL parameters (e.g., `account?id=123` to `account?id=456`).</li>
+                <li>Elevation of privilege (e.g., regular user accessing admin functions).</li>
+                <li>Horizontal privilege escalation (e.g., user accessing another user's data).</li>
+            </ul>
+            <h4 class="text-xl font-bold mb-3">Mitigation:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Implement robust access control checks on the server-side for every request.</li>
+                <li>Deny by default; only grant access to specific roles or users.</li>
+                <li>Implement domain-based access control (e.g., restrict access based on organization or group).</li>
+                <li>Disable web server directory listing.</li>
+            </ul>
+        </section>
+
+        <section class="owasp-top10-crypto-failures mb-12">
+            <h3 class="text-2xl font-bold mb-4">A02:2021-Cryptographic Failures (Sensitive Data Exposure)</h3>
+            <p>
+                This category previously focused on "Sensitive Data Exposure" and is now broadened to "Cryptographic Failures" to emphasize the root cause of the exposure. It occurs when sensitive data is not properly protected, either at rest or in transit. This can include passwords, financial details, health records, or personal identifying information (PII).
+            </p>
+            <h4 class="text-xl font-bold mb-3">Common Scenarios:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Storing unencrypted passwords or credit card numbers in a database.</li>
+                <li>Using weak or outdated encryption algorithms.</li>
+                <li>Failing to enforce HTTPS for all sensitive traffic.</li>
+                <li>Poor key management.</li>
+            </ul>
+            <h4 class="text-xl font-bold mb-3">Mitigation:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Classify sensitive data and encrypt it both at rest and in transit (e.g., TLS/SSL for all web traffic).</li>
+                <li>Use strong, industry-standard cryptographic algorithms and protocols.</li>
+                <li>Properly salt and hash passwords (e.g., using bcrypt, Argon2, scrypt). Never store plain text passwords.</li>
+                <li>Implement secure key management practices.</li>
+            </ul>
+        </section>
+
+        <section class="owasp-top10-injection mb-12">
+            <h3 class="text-2xl font-bold mb-4">A03:2021-Injection</h3>
+            <p>
+                Injection flaws occur when untrusted data is sent to an interpreter as part of a command or query. The attacker’s hostile data can trick the interpreter into executing unintended commands or accessing data without proper authorization. This category includes SQL Injection, NoSQL Injection, OS Command Injection, LDAP Injection, and Cross-Site Scripting (XSS).
+            </p>
+            <h4 class="text-xl font-bold mb-3">a. SQL Injection (SQLi)</h4>
+            <p>
+                Occurs when an attacker manipulates SQL queries by injecting malicious SQL code into input fields.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Example: Vulnerable Query</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>// Pseudocode: Vulnerable SQL query
+query = "SELECT * FROM users WHERE username = '" + user_input_username + "' AND password = '" + user_input_password + "'";
+// If user_input_username is 'admin'-- and user_input_password is ' OR 1=1; --
+// The query becomes: "SELECT * FROM users WHERE username = 'admin' AND password = '' OR 1=1; --'"
+// The '--' comments out the rest, and 'OR 1=1' always evaluates to true, bypassing authentication.</code></pre>
+            </div>
+            <h4 class="text-xl font-bold mb-3">Mitigation for SQLi:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Parameterized Queries (Prepared Statements):</strong> This is the most effective defense. It separates the SQL logic from the user-provided data.
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>// Pseudocode: Secure Parameterized Query
+// query = "SELECT * FROM users WHERE username = ? AND password = ?";
+// statement.setString(1, user_input_username);
+// statement.setString(2, user_input_password);
+// execute(statement);</code></pre>
+                    </div>
+                </li>
+                <li><strong>Stored Procedures:</strong> Can also offer protection if implemented securely.</li>
+                <li><strong>Input Validation:</strong> Sanitize and validate all user inputs, but do not rely solely on this.</li>
+            </ul>
+
+            <h4 class="text-xl font-bold mb-3">b. Cross-Site Scripting (XSS)</h4>
+            <p>
+                Occurs when an attacker injects malicious client-side scripts (e.g., JavaScript) into web pages viewed by other users.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Types of XSS:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Stored (Persistent) XSS:</strong> Malicious script is permanently stored on the target servers (e.g., in a database) and served to users.</li>
+                <li><strong>Reflected (Non-Persistent) XSS:</strong> Malicious script is reflected off the web server to the user's browser, usually in an error message or search result.</li>
+                <li><strong>DOM-based XSS:</strong> The vulnerability lies in client-side code rather than server-side.</li>
+            </ul>
+            <h4 class="text-xl font-bold mb-3">Example: XSS Attack</h4>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>// Attacker injects this into a comment field:
+&lt;script&gt;alert('You are hacked!'); document.cookie = 'stolen_cookie_value';&lt;/script&gt;
+
+// If the application doesn't sanitize input, the browser might render:
+&lt;div&gt;Welcome, &lt;script&gt;alert('You are hacked!');&lt;/script&gt;&lt;/div&gt;
+// Leading to the script execution in the victim's browser.</code></pre>
+            </div>
+            <h4 class="text-xl font-bold mb-3">Mitigation for XSS:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Output Encoding/Escaping:</strong> Encode untrusted data before it is inserted into HTML, JavaScript, CSS, or URL attributes. This prevents the browser from interpreting the data as code.
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)">Copy Code</button>
+<pre><code>// Pseudocode: Encoding HTML characters
+// If user_input is "&lt;script&gt;alert('hi')&lt;/script&gt;"
+// Encoded output becomes: "&amp;lt;script&amp;gt;alert('hi')&amp;lt;/script&amp;gt;"
+// The browser will render this as literal text, not executable script.</code></pre>
+                    </div>
+                </li>
+                <li><strong>Input Validation:</strong> Whitelist approach (only allow known good characters).</li>
+                <li><strong>Content Security Policy (CSP):</strong> A powerful browser security mechanism that allows you to specify trusted sources of content.</li>
+            </ul>
+        </section>
+
+        <section class="owasp-top10-insecure-design mb-12">
+            <h3 class="text-2xl font-bold mb-4">A04:2021-Insecure Design</h3>
+            <p>
+                This is a new category in 2021 focusing on design flaws rather than implementation bugs. It represents missing or ineffective control design. Insecure design often stems from a lack of security risk profiling, secure design patterns, and proper threat modeling.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Common Scenarios:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Lack of business logic protections (e.g., ability to re-use discount codes).</li>
+                <li>Insufficient separation of duties.</li>
+                <li>Failure to implement proper access control models.</li>
+                <li>Designing an API that trusts client-side input for critical operations without server-side validation.</li>
+            </ul>
+            <h4 class="text-xl font-bold mb-3">Mitigation:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Implement and use a secure development lifecycle (SDL) with security practices integrated from design phase.</li>
+                <li>Conduct threat modeling (e.g., STRIDE, DREAD) to identify and mitigate design risks.</li>
+                <li>Utilize secure design patterns (e.g., using a security library for authentication instead of building from scratch).</li>
+                <li>Establish and enforce access control models (RBAC, ABAC).</li>
+            </ul>
+        </section>
+
+        <section class="owasp-top10-security-misconfig mb-12">
+            <h3 class="text-2xl font-bold mb-4">A05:2021-Security Misconfiguration</h3>
+            <p>
+                This category covers a wide range of configuration errors: unpatched flaws, insecure default configurations, incomplete or disabled security controls, open cloud storage, misconfigured HTTP headers, and verbose error messages containing sensitive information.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Common Scenarios:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Leaving default accounts/passwords active.</li>
+                <li>Enabled unnecessary features (e.g., old admin interfaces).</li>
+                <li>Directory listing enabled on web servers.</li>
+                <li>Lack of security hardening (e.g., weak TLS cipher suites).</li>
+                <li>Exposing sensitive information in error messages (e.g., stack traces).</li>
+            </ul>
+            <h4 class="text-xl font-bold mb-3">Mitigation:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Implement a repeatable hardening process (development, QA, production environments).</li>
+                <li>Remove or disable unused features, components, and services.</li>
+                <li>Minimize attack surface by running only necessary services.</li>
+                <li>Review and update configurations regularly (e.g., web server, application server, database, framework).</li>
+                <li>Ensure error messages are generic and do not reveal sensitive system details.</li>
+            </ul>
+        </section>
+
+        <section class="owasp-top10-vulnerable-outdated mb-12">
+            <h3 class="text-2xl font-bold mb-4">A06:2021-Vulnerable and Outdated Components</h3>
+            <p>
+                Applications often rely on third-party components (libraries, frameworks, other software modules). If these components have known vulnerabilities and are not updated, the entire application becomes vulnerable. This is a significant risk as many developers don't track the versions of all components they use.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Common Scenarios:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Using outdated JavaScript libraries with known XSS vulnerabilities.</li>
+                <li>Outdated operating system or web server versions.</li>
+                <li>Using components from insecure sources.</li>
+            </ul>
+            <h4 class="text-xl font-bold mb-3">Mitigation:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Regularly inventory all components and their versions.</li>
+                <li>Subscribe to security advisories for used components.</li>
+                <li>Use automated tools (e.g., dependency checkers, Software Composition Analysis - SCA tools) to identify vulnerable components.</li>
+                <li>Update or patch components promptly.</li>
+                <li>Remove unused dependencies.</li>
+            </ul>
+        </section>
+
+        <section class="owasp-top10-auth-failures mb-12">
+            <h3 class="text-2xl font-bold mb-4">A07:2021-Identification and Authentication Failures</h3>
+            <p>
+                This category (formerly "Broken Authentication") now covers broader authentication-related weaknesses, including password attacks, forgotten password flows, and session management issues. It includes weaknesses that allow attackers to compromise passwords, keys, or session tokens, or to exploit other implementation flaws to assume other users' identities.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Common Scenarios:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Weak password policies (e.g., allowing "123456" as a password).</li>
+                <li>No multi-factor authentication (MFA).</li>
+                <li>Weak or insecure session management (e.g., predictable session IDs, session fixation).</li>
+                <li>Brute-force attacks against login pages.</li>
+                <li>Missing or ineffective forgotten password flows.</li>
+            </ul>
+            <h4 class="text-xl font-bold mb-3">Mitigation:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Implement strong password policies (complexity, length).</li>
+                <li>Use multi-factor authentication (MFA) whenever possible.</li>
+                <li>Implement secure session management (e.g., short session timeouts, regenerating session IDs on login).</li>
+                <li>Implement rate limiting for login attempts to prevent brute-force attacks.</li>
+                <li>Ensure secure forgotten password mechanisms (e.g., unique, time-limited tokens).</li>
+                <li>Store credentials securely (hashed and salted passwords).</li>
+            </ul>
+        </section>
+
+        <section class="owasp-top10-integrity-failures mb-12">
+            <h3 class="text-2xl font-bold mb-4">A08:2021-Software and Data Integrity Failures</h3>
+            <p>
+                This new category focuses on vulnerabilities related to software updates, critical data, and CI/CD pipelines where integrity checks are missing or insufficient. It covers issues that can compromise the integrity of code or data.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Common Scenarios:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Using insecure deserialization that allows remote code execution.</li>
+                <li>Lack of integrity checks on software updates or critical data.</li>
+                <li>Compromised CI/CD pipeline allowing malicious code injection.</li>
+                <li>Applications relying on untrusted data from client-side or external sources without validation.</li>
+            </ul>
+            <h4 class="text-xl font-bold mb-3">Mitigation:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Implement strong integrity checks for all software updates, critical data, and CI/CD artifacts (e.g., digital signatures, checksums).</li>
+                <li>Ensure secure deserialization practices (e.g., using safe object deserialization mechanisms).</li>
+                <li>Harden your build and deployment environments.</li>
+                <li>Validate input data rigorously from all sources, especially untrusted ones.</li>
+            </ul>
+        </section>
+
+        <section class="owasp-top10-logging-monitoring mb-12">
+            <h3 class="text-2xl font-bold mb-4">A09:2021-Security Logging and Monitoring Failures</h3>
+            <p>
+                Insufficient logging and monitoring, coupled with ineffective or missing incident response, means that attacks cannot be detected and responded to in a timely manner. This makes it harder to track down the root cause of breaches and recover.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Common Scenarios:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Missing logs for critical security events (logins, failed authentications, access attempts, errors).</li>
+                <li>Logs not being monitored or analyzed.</li>
+                <li>Logs being stored insecurely or deleted by attackers.</li>
+                <li>Lack of alerts for suspicious activities.</li>
+            </ul>
+            <h4 class="text-xl font-bold mb-3">Mitigation:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Implement robust logging for all security-relevant events (authentication attempts, access control failures, input validation errors, critical business logic events).</li>
+                <li>Ensure logs are in a format that can be easily parsed and analyzed.</li>
+                <li>Protect logs from tampering and unauthorized access.</li>
+                <li>Implement effective monitoring and alerting systems to detect suspicious patterns.</li>
+                <li>Establish an incident response plan.</li>
+            </ul>
+        </section>
+
+        <section class="owasp-top10-ssrf mb-12">
+            <h3 class="text-2xl font-bold mb-4">A10:2021-Server-Side Request Forgery (SSRF)</h3>
+            <p>
+                SSRF flaws occur when a web application fetches a remote resource without validating the user-supplied URL. This allows an attacker to coerce the application into sending a crafted request to an unexpected destination, even when protected by firewalls, VPNs, or other network access controls.
+            </p>
+            <h4 class="text-xl font-bold mb-3">Common Scenarios:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Application fetches images from a user-provided URL, but the attacker provides an internal network URL instead.</li>
+                <li>Accessing sensitive internal resources (e.g., metadata services on cloud platforms, internal APIs, databases).</li>
+                <li>Scanning internal networks.</li>
+            </ul>
+            <h4 class="text-xl font-bold mb-3">Mitigation:</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Whitelist Validation:</strong> The safest way is to enforce a whitelist of allowed URLs or IP addresses that the application can request.</li>
+                <li><strong>Disable Unused URL Schemes:</strong> Only allow HTTP/HTTPS, disable file://, gopher://, etc.</li>
+                <li><strong>Do Not Send Raw Responses:</strong> If fetching, ensure raw responses are not sent back to the client.</li>
+                <li><strong>Network Segmentation:</strong> Place internal services on separate, restricted networks.</li>
+            </ul>
+        </section>
+
+        <section class="general-mitigations mb-12">
+            <h2 class="text-3xl font-bold mb-6">General Mitigation Strategies</h2>
+            <p>
+                Beyond the OWASP Top 10, here are some overarching principles for enhancing web security:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Input Validation & Sanitization:</strong> Crucial for almost all injection-related vulnerabilities. Always validate and sanitize *all* user inputs on the server-side (and client-side for user experience, but never rely solely on client-side).</li>
+                <li><strong>Principle of Least Privilege:</strong> Grant users, processes, and applications only the minimum permissions necessary to perform their legitimate functions.</li>
+                <li><strong>Secure Defaults:</strong> Design systems with security in mind from the start. Default configurations should be secure, not lenient.</li>
+                <li><strong>Regular Security Audits & Testing:</strong> Conduct regular security reviews, penetration testing, and vulnerability assessments (both automated and manual).</li>
+                <li><strong>Keeping Software Updated:</strong> Regularly update operating systems, web servers, databases, frameworks, and all third-party libraries.</li>
+                <li><strong>Use of Security Headers:</strong> Implement HTTP security headers like Content-Security-Policy, X-Frame-Options, X-Content-Type-Options, Strict-Transport-Security.</li>
+                <li><strong>Error Handling:</strong> Implement graceful and generic error handling to avoid leaking sensitive information (e.g., stack traces, database error messages) in production environments.</li>
+            </ul>
+        </section>
+
+        <section class="conclusion mb-12">
+            <h2 class="text-3xl font-bold mb-6">Conclusion & Your Web Security Journey</h2>
+            <p>
+                You've now completed a comprehensive overview of web security basics and the critical OWASP Top 10 vulnerabilities. This knowledge empowers you to build more resilient applications, protect user data, and contribute to a safer digital environment. Remember that web security is an ongoing battle; new threats emerge, and existing ones evolve.
+            </p>
+            <p>
+                As you continue your web security journey:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li><strong>Stay Updated:</strong> Regularly follow OWASP updates, security news, and new vulnerability disclosures.</li>
+                <li><strong>Practice Secure Coding:</strong> Integrate security best practices into your daily coding habits. Make secure coding a reflex.</li>
+                <li><strong>Learn Security Tools:</strong> Familiarize yourself with security tools for scanning, testing, and monitoring (e.g., Burp Suite, Zap Proxy, Nmap).</li>
+                <li><strong>Dive Deeper:</strong> Explore specific areas of interest like cryptography, network security, cloud security, or mobile security.</li>
+                <li><strong>Contribute:</strong> Participate in security communities or bug bounty programs to gain practical experience.</li>
+            </ul>
+            <p>
+                By continuously learning and applying security principles, you become a crucial part of the defense against cyber threats. Secure coding isn't just a technical skill; it's a commitment to protecting privacy and maintaining trust in the digital realm. Happy secure coding, and keep whizzing with math (and security)!
+            </p>
+        </section>
+
+        <footer class="text-center text-gray-500 text-sm mt-12 pt-8 border-t border-gray-700">
+            &copy; 2025 Whizmath. All rights reserved.
+        </footer>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="scroll-to-top">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js Background Animation
+        window.onload = function() {
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-bg'), antialias: true });
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setClearColor(0x0d1117, 1); // Match body background
+
+            // Particles for a "network/secure data" feel
+            const particleCount = 2800;
+            const particles = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3); // Corrected: removed extra 'new'
+
+            for (let i = 0; i < particleCount * 3; i++) {
+                positions[i] = (Math.random() - 0.5) * 350; // Wider spread
+            }
+
+            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const particleMaterial = new THREE.PointsMaterial({
+                color: 0x63b3ed, // Blueish color, consistent with DS&A and Git
+                size: 1.5,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                sizeAttenuation: true,
+                opacity: 0.7
+            });
+
+            const particleMesh = new THREE.Points(particles, particleMaterial);
+            scene.add(particleMesh);
+
+            // Lines connecting particles (representing data flow/connections)
+            const lineMaterial = new THREE.LineBasicMaterial({
+                color: 0xa78bfa, // Purplish color, consistent with DS&A and Git
+                transparent: true,
+                opacity: 0.2
+            });
+            const lineGeometry = new THREE.BufferGeometry();
+            const linePositions = new Float32Array(particleCount * 3 * 2);
+
+            const threshold = 20; // Distance for connections
+            let lineIndex = 0;
+            for (let i = 0; i < particleCount; i++) {
+                for (let j = i + 1; j < particleCount; j++) {
+                    const x1 = positions[i * 3];
+                    const y1 = positions[i * 3 + 1];
+                    const z1 = positions[i * 3 + 2];
+
+                    const x2 = positions[j * 3];
+                    const y2 = positions[j * 3 + 1];
+                    const z2 = positions[j * 3 + 2];
+
+                    const dx = x1 - x2;
+                    const dy = y1 - y2;
+                    const dz = z1 - z2;
+                    const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+                    if (distance < threshold) {
+                        if (lineIndex + 6 <= linePositions.length) {
+                            linePositions[lineIndex++] = x1;
+                            linePositions[lineIndex++] = y1;
+                            linePositions[lineIndex++] = z1;
+
+                            linePositions[lineIndex++] = x2;
+                            linePositions[lineIndex++] = y2;
+                            linePositions[lineIndex++] = z2;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                 if (lineIndex + 6 > linePositions.length) {
+                    break;
+                }
+            }
+
+            lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions.slice(0, lineIndex), 3));
+            const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+            scene.add(lines);
+
+
+            camera.position.z = 100;
+
+            let mouseX = 0;
+            let mouseY = 0;
+
+            function onDocumentMouseMove(event) {
+                mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+            }
+            document.addEventListener('mousemove', onDocumentMouseMove);
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // Rotate particles and lines slightly
+                particleMesh.rotation.x += 0.0003; // Slower rotation
+                particleMesh.rotation.y += 0.0005;
+
+                lines.rotation.x += 0.0003;
+                lines.rotation.y += 0.0005;
+
+                // Make camera slowly follow mouse
+                camera.position.x += (mouseX * 30 - camera.position.x) * 0.01; // Slightly less aggressive mouse follow
+                camera.position.y += (mouseY * 30 - camera.position.y) * 0.01;
+                camera.lookAt(scene.position);
+
+
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Handle window resizing
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+
+        // Scroll to Top Button Logic
+        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+        // When the user scrolls down 200px from the top of the document, show the button
+        window.onscroll = function() {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                scrollToTopBtn.style.display = "block";
+                scrollToTopBtn.style.opacity = "1";
+            } else {
+                scrollToTopBtn.style.opacity = "0";
+                setTimeout(() => { // Give time for transition before hiding
+                    if (document.body.scrollTop <= 200 && document.documentElement.scrollTop <= 200) {
+                        scrollToTopBtn.style.display = "none";
+                    }
+                }, 300);
+            }
+        };
+
+        // When the user clicks on the button, scroll to the top of the document
+        scrollToTopBtn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+
+        // Code Copy Functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling; // Get the <pre> tag
+            const code = codeBlock.textContent || codeBlock.innerText; // Get the code text
+
+            // Create a temporary textarea element to copy the text
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = code;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                const msg = successful ? 'Copied!' : 'Failed to copy.';
+                button.textContent = msg; // Change button text
+                setTimeout(() => {
+                    button.textContent = 'Copy Code'; // Revert button text
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                button.textContent = 'Error!';
+                setTimeout(() => {
+                    button.textContent = 'Copy Code';
+                }, 2000);
+            } finally {
+                document.body.removeChild(tempTextArea); // Clean up
+            }
+        }
+    </script>
+</body>
+</html>
