@@ -6,6 +6,7 @@
     <title>WhizMath - Master Math with Free Tools & Resources</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
      crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-EZH7NJVDNH"></script>
     <script>
         window.dataLayer =
@@ -604,13 +605,13 @@
                 </div>
             </div>
 
-            <!-- Floating Share Button (Bottom Left) -->
-<div id="floating-share-btn" class="fixed bottom-6 left-6 z-[120] flex flex-col items-center space-y-2 group">
+            <div id="floating-share-btn" class="fixed bottom-6 left-6 z-[120] flex flex-col items-center space-y-2 group">
   <!-- Main Button -->
   <button id="main-share-btn"
     class="w-14 h-14 rounded-full bg-blue-600 shadow-xl flex items-center justify-center hover:bg-blue-700 transition duration-300 border-4 border-white dark:border-gray-800 focus:outline-none focus:ring-4 focus:ring-blue-300 group"
     aria-label="Share this page">
-    <img src="share-button.svg" alt="Share" class="w-7 h-7" />
+    <!-- Replaced img with Font Awesome share-alt icon -->
+    <i class="fas fa-share-alt text-white text-2xl"></i>
   </button>
   <!-- Share Options -->
   <div id="share-options"
@@ -618,37 +619,27 @@
     <!-- WhatsApp -->
     <button class="share-option w-12 h-12 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center shadow-lg transition"
       data-network="whatsapp" aria-label="Share on WhatsApp">
-      <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6 text-white">
-        <path d="M...Z"/><!-- WhatsApp Icon Path (shortened for brevity; use full SVG in real use) -->
-      </svg>
+      <i class="fab fa-whatsapp text-white text-2xl"></i>
     </button>
     <!-- X (Twitter) -->
     <button class="share-option w-12 h-12 rounded-full bg-gray-800 hover:bg-gray-900 flex items-center justify-center shadow-lg transition"
       data-network="twitter" aria-label="Share on X (Twitter)">
-      <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6 text-white">
-        <path d="M...Z"/><!-- Twitter/X Icon Path -->
-      </svg>
+      <i class="fab fa-x-twitter text-white text-2xl"></i>
     </button>
     <!-- Facebook -->
     <button class="share-option w-12 h-12 rounded-full bg-blue-700 hover:bg-blue-800 flex items-center justify-center shadow-lg transition"
       data-network="facebook" aria-label="Share on Facebook">
-      <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6 text-white">
-        <path d="M...Z"/><!-- Facebook Icon Path -->
-      </svg>
+      <i class="fab fa-facebook-f text-white text-2xl"></i>
     </button>
     <!-- Telegram -->
     <button class="share-option w-12 h-12 rounded-full bg-cyan-500 hover:bg-cyan-600 flex items-center justify-center shadow-lg transition"
       data-network="telegram" aria-label="Share on Telegram">
-      <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6 text-white">
-        <path d="M...Z"/><!-- Telegram Icon Path -->
-      </svg>
+      <i class="fab fa-telegram-plane text-white text-2xl"></i>
     </button>
     <!-- Copy Link -->
     <button class="share-option w-12 h-12 rounded-full bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 flex items-center justify-center shadow-lg transition"
       data-network="copy" aria-label="Copy Link">
-      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-6 h-6 text-gray-800 dark:text-gray-100">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 010 5.656l-3.657 3.657a4 4 0 01-5.657-5.657l1.414-1.414M10.172 13.828a4 4 0 010-5.657l3.657-3.657a4 4 0 015.657 5.657l-1.414 1.414"/>
-      </svg>
+      <i class="fa fa-link text-gray-800 dark:text-gray-100 text-2xl"></i>
     </button>
   </div>
   <!-- Copied Tooltip -->
@@ -663,7 +654,7 @@
   const tooltip = document.getElementById('share-copied-tooltip');
   let optionsOpen = false;
 
-  // Accessibility: open with keyboard
+  // Accessibility: open with keyboard and toggle
   mainBtn.addEventListener('click', () => {
     optionsOpen = !optionsOpen;
     options.style.opacity = optionsOpen ? '1' : '0';
@@ -702,27 +693,19 @@
         shareLink = `https://t.me/share/url?url=${pageUrl}&text=${pageTitle}`;
         window.open(shareLink, '_blank');
       } else if (network === 'copy') {
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(window.location.href).then(() => {
-            // Show tooltip
-            tooltip.style.opacity = '1';
-            setTimeout(() => {
-              tooltip.style.opacity = '0';
-            }, 1200);
-          });
-        } else {
-          // fallback
-          const temp = document.createElement('input');
-          temp.value = window.location.href;
-          document.body.appendChild(temp);
-          temp.select();
-          document.execCommand('copy');
-          document.body.removeChild(temp);
-          tooltip.style.opacity = '1';
-          setTimeout(() => {
-            tooltip.style.opacity = '0';
-          }, 1200);
-        }
+        // Using document.execCommand('copy') for broader compatibility within iframes
+        const tempInput = document.createElement('textarea');
+        tempInput.value = window.location.href;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+
+        // Show tooltip
+        tooltip.style.opacity = '1';
+        setTimeout(() => {
+          tooltip.style.opacity = '0';
+        }, 1200);
       }
       optionsOpen = false;
       options.style.opacity = '0';
