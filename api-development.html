@@ -650,6 +650,114 @@ Content-Type: application/json
         </section>
     </div>
 
+    <button id="main-share-btn"
+    class="w-14 h-14 rounded-full bg-blue-600 shadow-xl flex items-center justify-center hover:bg-blue-700 transition duration-300 border-4 border-white dark:border-gray-800 focus:outline-none focus:ring-4 focus:ring-blue-300 group"
+    aria-label="Share this page">
+    <!-- Replaced img with Font Awesome share-alt icon -->
+    <i class="fas fa-share-alt text-white text-2xl"></i>
+  </button>
+  <!-- Share Options -->
+  <div id="share-options"
+    class="flex flex-col items-center space-y-2 opacity-0 pointer-events-none group-focus-within:opacity-100 group-focus-within:pointer-events-auto group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-300">
+    <!-- WhatsApp -->
+    <button class="share-option w-12 h-12 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center shadow-lg transition"
+      data-network="whatsapp" aria-label="Share on WhatsApp">
+      <i class="fab fa-whatsapp text-white text-2xl"></i>
+    </button>
+    <!-- X (Twitter) -->
+    <button class="share-option w-12 h-12 rounded-full bg-gray-800 hover:bg-gray-900 flex items-center justify-center shadow-lg transition"
+      data-network="twitter" aria-label="Share on X (Twitter)">
+      <i class="fab fa-x-twitter text-white text-2xl"></i>
+    </button>
+    <!-- Facebook -->
+    <button class="share-option w-12 h-12 rounded-full bg-blue-700 hover:bg-blue-800 flex items-center justify-center shadow-lg transition"
+      data-network="facebook" aria-label="Share on Facebook">
+      <i class="fab fa-facebook-f text-white text-2xl"></i>
+    </button>
+    <!-- Telegram -->
+    <button class="share-option w-12 h-12 rounded-full bg-cyan-500 hover:bg-cyan-600 flex items-center justify-center shadow-lg transition"
+      data-network="telegram" aria-label="Share on Telegram">
+      <i class="fab fa-telegram-plane text-white text-2xl"></i>
+    </button>
+    <!-- Copy Link -->
+    <button class="share-option w-12 h-12 rounded-full bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 flex items-center justify-center shadow-lg transition"
+      data-network="copy" aria-label="Copy Link">
+      <i class="fa fa-link text-gray-800 dark:text-gray-100 text-2xl"></i>
+    </button>
+  </div>
+  <!-- Copied Tooltip -->
+  <span id="share-copied-tooltip"
+    class="absolute left-16 top-6 bg-gray-900 text-white text-xs rounded px-2 py-1 shadow opacity-0 pointer-events-none transition-opacity duration-300">Copied!</span>
+</div>
+
+<script>
+(function () {
+  const mainBtn = document.getElementById('main-share-btn');
+  const options = document.getElementById('share-options');
+  const tooltip = document.getElementById('share-copied-tooltip');
+  let optionsOpen = false;
+
+  // Accessibility: open with keyboard and toggle
+  mainBtn.addEventListener('click', () => {
+    optionsOpen = !optionsOpen;
+    options.style.opacity = optionsOpen ? '1' : '0';
+    options.style.pointerEvents = optionsOpen ? 'auto' : 'none';
+  });
+
+  // Hide options when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!mainBtn.contains(e.target) && !options.contains(e.target)) {
+      optionsOpen = false;
+      options.style.opacity = '0';
+      options.style.pointerEvents = 'none';
+    }
+  });
+
+  // Share logic
+  const shareBtns = document.querySelectorAll('.share-option');
+  const pageUrl = encodeURIComponent(window.location.href);
+  const pageTitle = encodeURIComponent(document.title);
+
+  shareBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const network = btn.dataset.network;
+      let shareLink = '';
+      if (network === 'whatsapp') {
+        shareLink = `https://wa.me/?text=${pageTitle}%20${pageUrl}`;
+        window.open(shareLink, '_blank');
+      } else if (network === 'twitter') {
+        shareLink = `https://twitter.com/intent/tweet?text=${pageTitle}&url=${pageUrl}`;
+        window.open(shareLink, '_blank');
+      } else if (network === 'facebook') {
+        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
+        window.open(shareLink, '_blank');
+      } else if (network === 'telegram') {
+        shareLink = `https://t.me/share/url?url=${pageUrl}&text=${pageTitle}`;
+        window.open(shareLink, '_blank');
+      } else if (network === 'copy') {
+        // Using document.execCommand('copy') for broader compatibility within iframes
+        const tempInput = document.createElement('textarea');
+        tempInput.value = window.location.href;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+
+        // Show tooltip
+        tooltip.style.opacity = '1';
+        setTimeout(() => {
+          tooltip.style.opacity = '0';
+        }, 1200);
+      }
+      optionsOpen = false;
+      options.style.opacity = '0';
+      options.style.pointerEvents = 'none';
+    });
+  });
+})();
+</script>
+
     <script>
         // Three.js Background Animation - Kept separate for clarity
         let scene, camera, renderer, particles, particleMaterial;
