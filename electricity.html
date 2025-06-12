@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizmath - Electricity: Understanding Charge, Fields, and Circuits</title>
+    <meta name="description" content="Introduction to electric charge (q), Coulomb's Law (F=k|q1q2|/r^2), electric fields, and electric potential. Learn about current (I=Δq/Δt), voltage (V), resistance (R), and Ohm's Law (V=IR). Analyze simple series and parallel circuits. A comprehensive lesson from Whizmath.">
+    <meta name="keywords" content="electricity, electric charge, Coulomb's Law, electric field, electric potential, current, voltage, resistance, Ohm's Law, series circuit, parallel circuit, circuit analysis, circuits, physics, electromagnetism, charge, potential difference, Whizmath">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujm/v+r366w5U6+y35Yv5z16b0x/r7t6uTqNqg0g0c0w0/0j0v0b0t0q0p0x0e0i0o0u0a0c0e0r0s0t0v0w0x0y0z0=" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+
+    <!-- MathJax Configuration -->
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow: hidden; /* Hide overflow from Three.js background */
+        }
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send to back */
+            background: linear-gradient(to bottom right, #1a202c, #2d3748); /* Dark gradient for background */
+        }
+        .content-overlay {
+            position: relative;
+            z-index: 1; /* Bring content to front */
+            overflow-y: auto; /* Allow content to scroll */
+            height: 100vh;
+            padding: 2rem;
+            background: rgba(17, 24, 39, 0.85); /* Slightly transparent dark background for readability */
+            backdrop-filter: blur(8px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(8px); /* For Safari */
+            color: #e2e8f0; /* Light text color */
+        }
+        h1, h2, h3, h4 {
+            color: #63b3ed; /* A pleasing blue for headings */
+            font-weight: 700;
+        }
+        h1 { font-size: 3rem; }
+        h2 { font-size: 2.25rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.25rem; }
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 10;
+            background-color: rgba(30, 41, 59, 0.8); /* Darker transparent button */
+            color: #63b3ed;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px; /* Fully rounded */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: rgba(45, 55, 72, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .section-card {
+            background-color: rgba(30, 41, 59, 0.9); /* Dark blue background for content cards */
+            border-radius: 1.5rem; /* More rounded corners */
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+        .math-equation {
+            background-color: #0f172a; /* Even darker background for equations */
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin: 1.5rem 0;
+            overflow-x: auto; /* Allow horizontal scrolling for long equations */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .key-term {
+            color: #a78bfa; /* Purple for key terms */
+            font-weight: 600;
+        }
+        .example-box {
+            background-color: #2a3447; /* Slightly lighter dark for examples */
+            border-left: 5px solid #63b3ed;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0.75rem;
+        }
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a202c;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #63b3ed;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 antialiased">
+    <canvas id="three-canvas"></canvas>
+
+    <a href="physics.html" class="back-button flex items-center justify-center space-x-2 text-lg">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Physics</span>
+    </a>
+
+    <div class="content-overlay max-w-4xl mx-auto py-16">
+        <header class="text-center mb-16">
+            <h1 class="text-6xl font-extrabold text-blue-400 mb-4 animate-pulse">Whizmath</h1>
+            <h2 class="text-5xl font-bold text-gray-100 mb-8 leading-tight">Electricity: The Unseen Force Powering Our World</h2>
+            <p class="text-2xl text-gray-300 max-w-3xl mx-auto">
+                Step into the invisible world of <span class="key-term">electricity</span>. This comprehensive lesson will guide you through the fundamental concepts of <span class="key-term">electric charge</span> and <span class="key-term">Coulomb's Law</span>, explore the nature of <span class="key-term">electric fields</span> and <span class="key-term">potential</span>, and demystify the flow of <span class="key-term">current</span>, <span class="key-term">voltage</span>, and <span class="key-term">resistance</span>. Master <span class="key-term">Ohm's Law</span> and confidently analyze both <span class="key-term">series and parallel circuits</span>.
+            </p>
+        </header>
+
+        <section id="introduction" class="section-card">
+            <h3 class="text-4xl mb-6">1. Introduction to Electricity</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                Welcome to the electrifying realm of <span class="key-term">Electricity</span>, a cornerstone of modern technology and a fundamental force of nature. From the simple static cling that sticks clothes together in a dryer to the complex circuitry of a smartphone, and from the lightning bolts in a storm to the power grids that light up our cities, electricity is an ubiquitous and essential phenomenon. Understanding electricity is not just about powering devices; it's about comprehending the very fabric of matter and its interactions.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                At its most basic level, electricity arises from the properties of <span class="key-term">electric charge</span> – a fundamental property of matter that causes it to experience a force when placed in an electromagnetic field. This lesson will begin by defining electric charge, distinguishing between positive and negative charges, and introducing <span class="key-term">Coulomb's Law</span>, which quantifies the force between static charges. We will then expand our understanding to include <span class="key-term">electric fields</span>, which mediate these forces, and <span class="key-term">electric potential</span> (voltage), which describes the potential energy associated with charge in a field.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                Our journey will then move from static electricity to the flow of charge: <span class="key-term">electric current</span>. We'll explore the concepts of <span class="key-term">voltage</span> (the "push" behind the current), and <span class="key-term">resistance</span> (the "opposition" to current flow). These three quantities are inextricably linked by the fundamental relationship known as <span class="key-term">Ohm's Law</span>. Finally, we will apply these principles to analyze and design simple electrical pathways, distinguishing between <span class="key-term">series and parallel circuits</span>, which are the building blocks of all electronic devices.
+            </p>
+            <p class="text-lg leading-relaxed">
+                Whether you're a curious learner, an aspiring electrician, or a future engineer, this comprehensive lesson will equip you with the foundational knowledge of electricity. Prepare to unravel the invisible currents that power our interconnected world, from the atomic scale to the global grid!
+            </p>
+        </section>
+
+        <section id="electric-charge-coulombs-law" class="section-card">
+            <h3 class="text-4xl mb-6">2. Electric Charge and Coulomb's Law</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                The most fundamental concept in electricity is <span class="key-term">electric charge</span>. It is an intrinsic property of matter that causes it to experience a force when in the presence of other electric charges.
+            </p>
+
+            <h4 class="text-3xl mb-4">2.1. Electric Charge ($q$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                There are two types of electric charge: <span class="key-term">positive (+)</span> and <span class="key-term">negative (-)</span>.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2"><span class="font-bold">Like charges repel:</span> Positive charges repel positive charges, and negative charges repel negative charges.</li>
+                <li class="mb-2"><span class="font-bold">Unlike charges attract:</span> Positive charges attract negative charges.</li>
+            </ul>
+            <p class="text-lg leading-relaxed mb-6">
+                The elementary unit of charge is the magnitude of the charge of an electron or a proton, denoted by $e$:
+            </p>
+            <div class="math-equation">
+                $$e \approx 1.602 \times 10^{-19} \text{ C}$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                An electron has a charge of $-e$, and a proton has a charge of $+e$. The SI unit of electric charge is the <span class="key-term">Coulomb (C)</span>. One Coulomb is a very large amount of charge.
+            </p>
+
+            <h4 class="text-3xl mb-4">2.2. Law of Conservation of Charge</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The <span class="key-term">Law of Conservation of Charge</span> states that the net amount of electric charge produced in any process is zero. Charge is neither created nor destroyed, but rather transferred from one object to another. For example, when you rub a balloon on your hair, charge is transferred from your hair to the balloon, making your hair positively charged and the balloon negatively charged, but the total net charge of the hair-balloon system remains zero.
+            </p>
+
+            <h4 class="text-3xl mb-4">2.3. Coulomb's Law</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Coulomb's Law</span> quantifies the electrostatic force between two stationary, charged particles. It states that the force is directly proportional to the product of the magnitudes of the charges and inversely proportional to the square of the distance between their centers.
+            </p>
+            <div class="math-equation">
+                $$F = k \frac{|q_1 q_2|}{r^2}$$
+                <p>Where:</p>
+                <ul class="list-disc list-inside ml-6">
+                    <li>$F$ is the magnitude of the <span class="key-term">electrostatic force</span> between the charges (in Newtons, N).</li>
+                    <li>$k$ is <span class="key-term">Coulomb's constant</span>, approximately $8.9875 \times 10^9 \text{ N·m}^2/\text{C}^2$.</li>
+                    <li>$|q_1|$ and $|q_2|$ are the magnitudes of the two <span class="key-term">electric charges</span> (in Coulombs, C).</li>
+                    <li>$r$ is the <span class="key-term">distance</span> between the centers of the two charges (in meters, m).</li>
+                </ul>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                The direction of the force is along the line connecting the two charges. If the charges are like, the force is repulsive; if unlike, it's attractive. This law is analogous to Newton's Law of Universal Gravitation, but for charges instead of masses.
+            </p>
+            <div class="example-box">
+                <h4 class="text-xl font-semibold mb-2">Example: Coulomb's Law Calculation</h4>
+                <p class="text-lg leading-relaxed mb-2">
+                    Two point charges, $q_1 = +2.0 \times 10^{-6} \text{ C}$ and $q_2 = -3.0 \times 10^{-6} \text{ C}$, are separated by a distance of $0.5 \text{ m}$. Calculate the magnitude of the electrostatic force between them.
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Given:</span> $q_1 = 2.0 \times 10^{-6} \text{ C}$, $q_2 = -3.0 \times 10^{-6} \text{ C}$, $r = 0.5 \text{ m}$, $k = 8.9875 \times 10^9 \text{ N·m}^2/\text{C}^2$.
+                </p>
+                <p class="text-lg leading-relaxed">
+                    Using $F = k \frac{|q_1 q_2|}{r^2}$:
+                    $$F = (8.9875 \times 10^9) \frac{|(2.0 \times 10^{-6})(-3.0 \times 10^{-6})|}{(0.5)^2}$$
+                    $$F = (8.9875 \times 10^9) \frac{6.0 \times 10^{-12}}{0.25}$$
+                    $$F = (8.9875 \times 10^9)(2.4 \times 10^{-11})$$
+                    $$F \approx 0.216 \text{ N}$$
+                    Since the charges are opposite, the force is attractive. The magnitude of the force is approximately $0.216 \text{ N}$.
+                </p>
+            </div>
+        </section>
+
+        <section id="electric-fields-potential" class="section-card">
+            <h3 class="text-4xl mb-6">3. Electric Fields and Electric Potential</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                Instead of thinking of forces directly between charges, physicists often use the concept of an <span class="key-term">electric field</span> to describe how charges interact.
+            </p>
+
+            <h4 class="text-3xl mb-4">3.1. Electric Field ($\vec{E}$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                An <span class="key-term">electric field</span> is a region around a charged particle or object where a force would be exerted on other charged particles or objects. It is a vector field, meaning it has both magnitude and direction at every point in space. The direction of the electric field at a point is defined as the direction of the force that a small positive "test charge" would experience if placed at that point.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                The magnitude of the electric field ($\vec{E}$) at a point is defined as the force per unit charge:
+            </p>
+            <div class="math-equation">
+                $$\vec{E} = \frac{\vec{F}}{q_0}$$
+                <p>Where:</p>
+                <ul class="list-disc list-inside ml-6">
+                    <li>$\vec{E}$ is the <span class="key-term">electric field</span> (in Newtons per Coulomb, N/C).</li>
+                    <li>$\vec{F}$ is the <span class="key-term">force</span> experienced by a test charge (in Newtons, N).</li>
+                    <li>$q_0$ is the magnitude of the <span class="key-term">test charge</span> (in Coulombs, C).</li>
+                </ul>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                For a single point charge $Q$, the magnitude of the electric field at a distance $r$ from the charge is:
+            </p>
+            <div class="math-equation">
+                $$E = k \frac{|Q|}{r^2}$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                Electric field lines are a visual representation of electric fields. They originate from positive charges and terminate on negative charges, and their density indicates the strength of the field.
+            </p>
+
+            <h4 class="text-3xl mb-4">3.2. Electric Potential ($V$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                Just as there's gravitational potential energy, there's <span class="key-term">electric potential energy</span> associated with a charge's position in an electric field. <span class="key-term">Electric potential ($V$)</span>, often called <span class="key-term">voltage</span>, is defined as the electric potential energy per unit charge. It is a scalar quantity.
+            </p>
+            <div class="math-equation">
+                $$V = \frac{PE_{electric}}{q}$$
+                <p>Where:</p>
+                <ul class="list-disc list-inside ml-6">
+                    <li>$V$ is the <span class="key-term">electric potential</span> (in Volts, V).</li>
+                    <li>$PE_{electric}$ is the <span class="key-term">electric potential energy</span> (in Joules, J).</li>
+                    <li>$q$ is the <span class="key-term">charge</span> (in Coulombs, C).</li>
+                </ul>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                The SI unit for electric potential is the <span class="key-term">Volt (V)</span>, where $1 \text{ V} = 1 \text{ J/C}$.
+            </p>
+
+            <h4 class="text-3xl mb-4">3.3. Electric Potential Difference (Voltage)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                More commonly, we refer to the <span class="key-term">electric potential difference ($\Delta V$)</span> between two points, which is the work done per unit charge to move a test charge between those two points. This difference is what we commonly call <span class="key-term">voltage</span>.
+            </p>
+            <div class="math-equation">
+                $$\Delta V = V_B - V_A = \frac{\Delta PE_{electric}}{q} = \frac{-W_{electric}}{q}$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                A positive charge naturally moves from a region of higher potential to lower potential, much like a mass falls from higher gravitational potential to lower. Conversely, a negative charge moves from lower potential to higher. This potential difference is the "driving force" that causes current to flow in a circuit.
+            </p>
+            <div class="example-box">
+                <h4 class="text-xl font-semibold mb-2">Example: Electric Potential</h4>
+                <p class="text-lg leading-relaxed mb-2">
+                    If $10 \text{ J}$ of work is required to move a charge of $2 \text{ C}$ from point A to point B, what is the potential difference between points A and B?
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Given:</span> $W = 10 \text{ J}$, $q = 2 \text{ C}$. (Assuming work done *by* an external agent against the field, so $W_{electric} = -10 \text{ J}$)
+                </p>
+                <p class="text-lg leading-relaxed">
+                    $$\Delta V = \frac{-W_{electric}}{q} = \frac{-(-10 \text{ J})}{2 \text{ C}} = 5 \text{ J/C} = 5 \text{ V}$$
+                    The potential difference between points A and B is $5 \text{ V}$.
+                </p>
+            </div>
+        </section>
+
+        <section id="current-voltage-resistance" class="section-card">
+            <h3 class="text-4xl mb-6">4. Current, Voltage, and Resistance: The Basics of Circuitry</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                With a foundational understanding of charge and potential, we can now move to the dynamic aspects of electricity: the flow of charge, the driving force behind it, and the opposition to its flow.
+            </p>
+
+            <h4 class="text-3xl mb-4">4.1. Electric Current ($I$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Electric current ($I$)</span> is defined as the rate of flow of electric charge through a conductor.
+            </p>
+            <div class="math-equation">
+                $$I = \frac{\Delta q}{\Delta t}$$
+                <p>Where:</p>
+                <ul class="list-disc list-inside ml-6">
+                    <li>$I$ is the <span class="key-term">current</span> (in Amperes, A).</li>
+                    <li>$\Delta q$ is the amount of <span class="key-term">charge</span> that passes a point (in Coulombs, C).</li>
+                    <li>$\Delta t$ is the <span class="key-term">time interval</span> (in seconds, s).</li>
+                </ul>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                The SI unit for current is the <span class="key-term">Ampere (A)</span>, where $1 \text{ A} = 1 \text{ C/s}$. By convention, the direction of conventional current is defined as the direction in which positive charges would flow, even though in most conductors (like wires), it is negatively charged electrons that are actually moving.
+            </p>
+
+            <h4 class="text-3xl mb-4">4.2. Voltage ($V$) - Revisited as Potential Difference</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                As discussed earlier, <span class="key-term">voltage ($V$)</span> is the electric potential difference between two points in a circuit. It is the "electromotive force" (EMF) that drives the current. A battery, for example, provides a voltage by creating a potential difference between its terminals. It's the energy per unit charge that a charge gains or loses as it moves between two points.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                Voltage is measured in <span class="key-term">Volts (V)</span>.
+            </p>
+
+            <h4 class="text-3xl mb-4">4.3. Resistance ($R$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Resistance ($R$)</span> is a measure of a material's opposition to the flow of electric current. It's like friction for flowing charge. All materials have some resistance, though some (conductors) have very little, and others (insulators) have very high resistance.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                Resistance depends on several factors:
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2"><span class="font-bold">Material:</span> Some materials inherently resist current more than others (e.g., copper has low resistance, rubber has high resistance). This is quantified by <span class="key-term">resistivity ($\rho$)</span>.</li>
+                <li class="mb-2"><span class="font-bold">Length ($L$):</span> Longer wires have more resistance. ($R \propto L$)</li>
+                <li class="mb-2"><span class="font-bold">Cross-sectional Area ($A$):</span> Thicker wires have less resistance (more paths for current). ($R \propto 1/A$)</li>
+                <li class="mb-2"><span class="font-bold">Temperature:</span> For most conductors, resistance increases with temperature.</li>
+            </ul>
+            <p class="text-lg leading-relaxed mb-6">
+                The SI unit for resistance is the <span class="key-term">Ohm ($\Omega$)</span>.
+            </p>
+            <div class="math-equation">
+                <p>The formula for resistance based on material properties is:</p>
+                $$R = \rho \frac{L}{A}$$
+            </div>
+        </section>
+
+        <section id="ohms-law" class="section-card">
+            <h3 class="text-4xl mb-6">5. Ohm's Law: The Fundamental Circuit Relationship</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                The most fundamental relationship between voltage, current, and resistance in many electrical circuits is described by <span class="key-term">Ohm's Law</span>, named after German physicist Georg Simon Ohm.
+            </p>
+
+            <h4 class="text-3xl mb-4">5.1. Statement of Ohm's Law</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Ohm's Law</span> states that the current flowing through a conductor between two points is directly proportional to the voltage across the two points and inversely proportional to the resistance between them, provided the temperature remains constant.
+            </p>
+            <div class="math-equation">
+                $$V = IR$$
+                <p>Where:</p>
+                <ul class="list-disc list-inside ml-6">
+                    <li>$V$ is the <span class="key-term">voltage</span> or potential difference (in Volts, V).</li>
+                    <li>$I$ is the <span class="key-term">current</span> (in Amperes, A).</li>
+                    <li>$R$ is the <span class="key-term">resistance</span> (in Ohms, $\Omega$).</li>
+                </ul>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                This simple yet profound law is the cornerstone of circuit analysis. It allows us to calculate any one of the three quantities if the other two are known.
+            </p>
+
+            <h4 class="text-3xl mb-4">5.2. Rearranging Ohm's Law</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                Ohm's Law can be rearranged to solve for current or resistance:
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">To find current:
+                    <div class="math-equation">
+                        $$I = \frac{V}{R}$$
+                    </div>
+                </li>
+                <li class="mb-2">To find resistance:
+                    <div class="math-equation">
+                        $$R = \frac{V}{I}$$
+                    </div>
+                </li>
+            </ul>
+            <div class="example-box">
+                <h4 class="text-xl font-semibold mb-2">Example: Ohm's Law Calculation</h4>
+                <p class="text-lg leading-relaxed mb-2">
+                    A light bulb with a resistance of $240 \text{ } \Omega$ is connected to a $120 \text{ V}$ power source. What is the current flowing through the bulb?
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Given:</span> $R = 240 \text{ } \Omega$, $V = 120 \text{ V}$.
+                </p>
+                <p class="text-lg leading-relaxed">
+                    Using $I = \frac{V}{R}$:
+                    $$I = \frac{120 \text{ V}}{240 \text{ } \Omega} = 0.5 \text{ A}$$
+                    The current flowing through the bulb is $0.5 \text{ Amperes}$.
+                </p>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                It's important to note that not all materials strictly obey Ohm's Law. Materials that do are called <span class="key-term">ohmic materials</span> (e.g., most metals at constant temperature), while those that don't are <span class="key-term">non-ohmic materials</span> (e.g., diodes, transistors). However, for basic resistors and simple circuits, Ohm's Law is highly accurate and indispensable.
+            </p>
+        </section>
+
+        <section id="circuits" class="section-card">
+            <h3 class="text-4xl mb-6">6. Circuit Analysis: Series and Parallel Circuits</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                An <span class="key-term">electric circuit</span> is a closed loop or path that allows electric charges to flow. Circuits typically consist of a voltage source (like a battery), conductors (wires), and components that consume or modify electrical energy (like resistors, light bulbs, motors). Understanding how components are connected is crucial for analyzing the overall behavior of a circuit.
+            </p>
+
+            <h4 class="text-3xl mb-4">6.1. Series Circuits</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                In a <span class="key-term">series circuit</span>, components are connected one after another in a single path. This means that the current has only one path to flow through all components.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2"><span class="font-bold">Current:</span> The current is the <span class="font-bold">same</span> through every component in a series circuit.</li>
+                <li class="mb-2"><span class="font-bold">Voltage:</span> The total voltage across the circuit is the <span class="font-bold">sum</span> of the individual voltage drops across each component.
+                    $$V_{total} = V_1 + V_2 + V_3 + \dots$$
+                </li>
+                <li class="mb-2"><span class="font-bold">Equivalent Resistance ($R_{eq}$):</span> The total resistance of a series circuit is the <span class="font-bold">sum</span> of the individual resistances.
+                    $$R_{eq} = R_1 + R_2 + R_3 + \dots$$
+                    If one component in a series circuit breaks (creates an open circuit), the entire circuit breaks, and current stops flowing.
+                </li>
+            </ul>
+            <div class="example-box">
+                <h4 class="text-xl font-semibold mb-2">Example: Series Circuit</h4>
+                <p class="text-lg leading-relaxed mb-2">
+                    Two resistors, $R_1 = 10 \text{ } \Omega$ and $R_2 = 20 \text{ } \Omega$, are connected in series to a $6 \text{ V}$ battery.
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">a) What is the equivalent resistance?</span>
+                    $$R_{eq} = R_1 + R_2 = 10 \text{ } \Omega + 20 \text{ } \Omega = 30 \text{ } \Omega$$
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">b) What is the total current flowing from the battery?</span>
+                    Using Ohm's Law for the total circuit: $I = V_{total} / R_{eq}$
+                    $$I = \frac{6 \text{ V}}{30 \text{ } \Omega} = 0.2 \text{ A}$$
+                    This same current flows through both $R_1$ and $R_2$.
+                </p>
+            </div>
+
+            <h4 class="text-3xl mb-4">6.2. Parallel Circuits</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                In a <span class="key-term">parallel circuit</span>, components are connected across the same two points, providing multiple paths for the current to flow.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2"><span class="font-bold">Voltage:</span> The voltage drop is the <span class="font-bold">same</span> across every component connected in parallel.
+                    $$V_{total} = V_1 = V_2 = V_3 = \dots$$
+                </li>
+                <li class="mb-2"><span class="font-bold">Current:</span> The total current entering a parallel combination is the <span class="font-bold">sum</span> of the currents through each individual branch.
+                    $$I_{total} = I_1 + I_2 + I_3 + \dots$$
+                </li>
+                <li class="mb-2"><span class="font-bold">Equivalent Resistance ($R_{eq}$):</span> The reciprocal of the total resistance of a parallel circuit is the <span class="font-bold">sum</span> of the reciprocals of the individual resistances.
+                    $$\frac{1}{R_{eq}} = \frac{1}{R_1} + \frac{1}{R_2} + \frac{1}{R_3} + \dots$$
+                    For two resistors in parallel, a common simplified formula is:
+                    $$R_{eq} = \frac{R_1 R_2}{R_1 + R_2}$$
+                    Adding more resistors in parallel actually decreases the total equivalent resistance of the circuit, as it provides more pathways for current. If one component in a parallel circuit breaks, the other branches can still function.
+                </li>
+            </ul>
+            <div class="example-box">
+                <h4 class="text-xl font-semibold mb-2">Example: Parallel Circuit</h4>
+                <p class="text-lg leading-relaxed mb-2">
+                    Two resistors, $R_1 = 10 \text{ } \Omega$ and $R_2 = 20 \text{ } \Omega$, are connected in parallel to a $6 \text{ V}$ battery.
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">a) What is the equivalent resistance?</span>
+                    $$\frac{1}{R_{eq}} = \frac{1}{10 \text{ } \Omega} + \frac{1}{20 \text{ } \Omega} = \frac{2}{20 \text{ } \Omega} + \frac{1}{20 \text{ } \Omega} = \frac{3}{20 \text{ } \Omega}$$
+                    $$R_{eq} = \frac{20}{3} \text{ } \Omega \approx 6.67 \text{ } \Omega$$
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">b) What is the current flowing through each resistor?</span>
+                    The voltage across each resistor is $6 \text{ V}$.
+                    $$I_1 = \frac{V}{R_1} = \frac{6 \text{ V}}{10 \text{ } \Omega} = 0.6 \text{ A}$$
+                    $$I_2 = \frac{V}{R_2} = \frac{6 \text{ V}}{20 \text{ } \Omega} = 0.3 \text{ A}$$
+                    Total current: $I_{total} = I_1 + I_2 = 0.6 \text{ A} + 0.3 \text{ A} = 0.9 \text{ A}$.
+                </p>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                Understanding series and parallel connections is fundamental for analyzing, troubleshooting, and designing any electrical circuit, from simple household wiring to complex electronic devices.
+            </p>
+        </section>
+
+        <section id="conclusion" class="section-card">
+            <h3 class="text-4xl mb-6">7. Conclusion: The Power of Electric Principles</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                Our comprehensive journey through the world of <span class="key-term">electricity</span> has laid a solid foundation for understanding one of nature's most influential forces. We began by grasping the fundamental concept of <span class="key-term">electric charge</span> and how <span class="key-term">Coulomb's Law</span> quantifies the forces between static charges. This led us to the abstract yet powerful ideas of <span class="key-term">electric fields</span> and <span class="key-term">electric potential</span>, providing the conceptual framework for how charges interact and how potential energy drives their movement.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                We then transitioned from static charges to dynamic flow, defining <span class="key-term">electric current</span>, the "push" of <span class="key-term">voltage</span>, and the "opposition" of <span class="key-term">resistance</span>. The elegant simplicity of <span class="key-term">Ohm's Law ($V=IR$)</span> emerged as the cornerstone for quantifying these relationships in basic circuits. Finally, we gained practical analytical skills by dissecting <span class="key-term">series and parallel circuits</span>, understanding how component arrangement impacts current, voltage, and total resistance.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                The principles of electricity are not confined to textbooks; they are the invisible threads that weave through virtually every aspect of our modern lives. From the minuscule currents in microprocessors that power our digital world to the colossal energy transfers in power grids that sustain our cities, a deep understanding of electricity is essential.
+            </p>
+            <p class="text-lg leading-relaxed">
+                As you continue your explorations in physics, engineering, or simply observe the technology around you, remember that these foundational concepts of charge, potential, current, voltage, and resistance are the keys to unlocking the intricate workings of the electrical universe. Keep experimenting, keep questioning, and keep illuminating your understanding of the power that electrifies our world!
+            </p>
+        </section>
+
+        <section id="glossary" class="section-card">
+            <h3 class="text-4xl mb-6">8. Glossary of Key Terms</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-lg">
+                <div><strong class="key-term">Ampere (A):</strong> The SI unit of electric current. $1 \text{ A} = 1 \text{ C/s}$.</div>
+                <div><strong class="key-term">Charge (Electric Charge, $q$):</strong> An intrinsic property of matter (positive or negative) that causes it to experience a force in an electromagnetic field.</div>
+                <div><strong class="key-term">Circuit (Electric Circuit):</strong> A closed loop or path that allows electric charges to flow.</div>
+                <div><strong class="key-term">Conductor:</strong> A material that allows electric current to flow easily due to free charge carriers.</div>
+                <div><strong class="key-term">Conservation of Charge (Law of):</strong> States that the net amount of electric charge in an isolated system remains constant.</div>
+                <div><strong class="key-term">Coulomb (C):</strong> The SI unit of electric charge.</div>
+                <div><strong class="key-term">Coulomb's Constant ($k$):</strong> The proportionality constant in Coulomb's Law, approximately $8.9875 \times 10^9 \text{ N·m}^2/\text{C}^2$.</div>
+                <div><strong class="key-term">Coulomb's Law:</strong> Quantifies the electrostatic force between two point charges ($F = k \frac{|q_1 q_2|}{r^2}$).</div>
+                <div><strong class="key-term">Current (Electric Current, $I$):</strong> The rate of flow of electric charge ($I = \Delta q / \Delta t$).</div>
+                <div><strong class="key-term">Electric Field ($\vec{E}$):</strong> A region where a charged particle experiences a force, defined as force per unit charge ($\vec{E} = \vec{F}/q_0$).</div>
+                <div><strong class="key-term">Electric Potential ($V$):</strong> Electric potential energy per unit charge ($V = PE_{electric}/q$). Also called voltage.</div>
+                <div><strong class="key-term">Insulator:</strong> A material that resists the flow of electric current due to tightly bound electrons.</div>
+                <div><strong class="key-term">Ohm ($\Omega$):</strong> The SI unit of electrical resistance.</div>
+                <div><strong class="key-term">Ohm's Law:</strong> States that voltage across a conductor is proportional to the current through it and its resistance ($V = IR$).</div>
+                <div><strong class="key-term">Parallel Circuit:</strong> A circuit where components are connected across the same two points, providing multiple paths for current.</div>
+                <div><strong class="key-term">Potential Difference:</strong> The difference in electric potential between two points, commonly known as voltage.</div>
+                <div><strong class="key-term">Resistance ($R$):</strong> A measure of a material's opposition to the flow of electric current.</div>
+                <div><strong class="key-term">Resistivity ($\rho$):</strong> An intrinsic property of a material indicating its resistance to current flow.</div>
+                <div><strong class="key-term">Series Circuit:</strong> A circuit where components are connected one after another in a single path.</div>
+                <div><strong class="key-term">Voltage ($V$):</strong> The electric potential difference between two points, providing the "push" for current flow. Measured in Volts (V).</div>
+                <div><strong class="key-term">Volt (V):</strong> The SI unit of electric potential and voltage. $1 \text{ V} = 1 \text{ J/C}$.</div>
+            </div>
+        </section>
+
+        <section id="references" class="section-card">
+            <h3 class="text-4xl mb-6">9. Further Reading and References</h3>
+            <p class="text-lg leading-relaxed mb-4">To continue your exploration of electricity and its vast applications, consider these recommended resources:</p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
+                <li class="mb-2">Serway, R. A., & Jewett, J. W. (2018). <em>Physics for Scientists and Engineers with Modern Physics</em> (10th ed.). Cengage Learning. (Chapters on Electric Fields, Electric Potential, Current, and Circuits)</li>
+                <li class="mb-2">Halliday, D., Resnick, R., & Walker, J. (2014). <em>Fundamentals of Physics</em> (10th ed.). John Wiley & Sons. (Chapters on Electric Charge, Electric Fields, Electric Potential, Current, Resistance, and Circuits)</li>
+                <li class="mb-2">Young, H. D., & Freedman, R. A. (2020). <em>University Physics with Modern Physics</em> (15th ed.). Pearson. (Comprehensive coverage of electricity and magnetism)</li>
+                <li class="mb-2">Khan Academy: <a href="https://www.khanacademy.org/science/physics/circuits-circuit-elements" target="_blank" class="text-blue-400 hover:underline">Circuits Course</a> (Online video lessons and exercises)</li>
+                <li class="mb-2">HyperPhysics: <a href="http://hyperphysics.phy-astr.gsu.edu/hbase/electric/elecur.html" target="_blank" class="text-blue-400 hover:underline">Electricity Topics</a> (Concise explanations and concept maps)</li>
+            </ul>
+        </section>
+
+    </div>
+
+    <script>
+        // Three.js Animated Background (reused from previous lessons)
+        const canvas = document.getElementById('three-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialiasing: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+
+        camera.position.z = 5;
+
+        const particleCount = 1000;
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount * 3; i += 3) {
+            positions[i] = (Math.random() - 0.5) * 200;
+            positions[i + 1] = (Math.random() - 0.5) * 200;
+            positions[i + 2] = (Math.random() - 0.5) * 200;
+        }
+
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0x63b3ed,
+            size: 0.1,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            opacity: 0.7
+        });
+
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+
+        const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(0, 1, 0);
+        scene.add(directionalLight);
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+
+            particleSystem.rotation.x += 0.0005;
+            particleSystem.rotation.y += 0.001;
+
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                positions[i3 + 2] += 0.05;
+
+                if (positions[i3 + 2] > camera.position.z + 10) {
+                    positions[i3 + 2] = camera.position.z - 200;
+                }
+            }
+            particles.attributes.position.needsUpdate = true;
+
+            renderer.render(scene, camera);
+        };
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        window.onload = function() {
+            animate();
+        };
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
