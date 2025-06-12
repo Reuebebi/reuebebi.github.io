@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizmath - Projectile Motion: Analyzing Trajectories and Flight</title>
+    <meta name="description" content="An in-depth lesson on two-dimensional projectile motion under gravity. Learn about parabolic trajectories, horizontal range, maximum height, and time of flight without air resistance. Essential physics for understanding flight at Whizmath.">
+    <meta name="keywords" content="projectile motion, two-dimensional motion, gravity, parabolic trajectory, horizontal range, maximum height, time of flight, kinematics, constant acceleration, physics, g=9.8 m/s^2, initial velocity, launch angle, Whizmath">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujm/v+r366w5U6+y35Yv5z16b0x/r7t6uTqNqg0g0c0w0/0j0v0b0t0q0p0x0e0i0o0u0a0c0e0r0s0t0v0w0x0y0z0=" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+
+    <!-- MathJax Configuration -->
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow: hidden; /* Hide overflow from Three.js background */
+        }
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send to back */
+            background: linear-gradient(to bottom right, #1a202c, #2d3748); /* Dark gradient for background */
+        }
+        .content-overlay {
+            position: relative;
+            z-index: 1; /* Bring content to front */
+            overflow-y: auto; /* Allow content to scroll */
+            height: 100vh;
+            padding: 2rem;
+            background: rgba(17, 24, 39, 0.85); /* Slightly transparent dark background for readability */
+            backdrop-filter: blur(8px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(8px); /* For Safari */
+            color: #e2e8f0; /* Light text color */
+        }
+        h1, h2, h3, h4 {
+            color: #63b3ed; /* A pleasing blue for headings */
+            font-weight: 700;
+        }
+        h1 { font-size: 3rem; }
+        h2 { font-size: 2.25rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.25rem; }
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 10;
+            background-color: rgba(30, 41, 59, 0.8); /* Darker transparent button */
+            color: #63b3ed;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px; /* Fully rounded */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: rgba(45, 55, 72, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .section-card {
+            background-color: rgba(30, 41, 59, 0.9); /* Dark blue background for content cards */
+            border-radius: 1.5rem; /* More rounded corners */
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+        .math-equation {
+            background-color: #0f172a; /* Even darker background for equations */
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin: 1.5rem 0;
+            overflow-x: auto; /* Allow horizontal scrolling for long equations */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .key-term {
+            color: #a78bfa; /* Purple for key terms */
+            font-weight: 600;
+        }
+        .example-box {
+            background-color: #2a3447; /* Slightly lighter dark for examples */
+            border-left: 5px solid #63b3ed;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0.75rem;
+        }
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a202c;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #63b3ed;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 antialiased">
+    <canvas id="three-canvas"></canvas>
+
+    <a href="physics.html" class="back-button flex items-center justify-center space-x-2 text-lg">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Physics</span>
+    </a>
+
+    <div class="content-overlay max-w-4xl mx-auto py-16">
+        <header class="text-center mb-16">
+            <h1 class="text-6xl font-extrabold text-blue-400 mb-4 animate-pulse">Whizmath</h1>
+            <h2 class="text-5xl font-bold text-gray-100 mb-8 leading-tight">Projectile Motion: The Art and Science of Flight</h2>
+            <p class="text-2xl text-gray-300 max-w-3xl mx-auto">
+                Discover the captivating world of <span class="key-term">projectile motion</span>, the two-dimensional movement of objects influenced solely by <span class="key-term">gravity</span>. This comprehensive lesson will guide you through understanding <span class="key-term">parabolic trajectories</span>, calculating <span class="key-term">horizontal range</span>, determining <span class="key-term">maximum height</span>, and mastering the <span class="key-term">time of flight</span>. Unravel the physics behind every throw, kick, and launch!
+            </p>
+        </header>
+
+        <section id="introduction" class="section-card">
+            <h3 class="text-4xl mb-6">1. Introduction to Projectile Motion</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                In the realm of <span class="key-term">mechanics</span>, understanding how objects move through space is paramount. One of the most common and fascinating forms of two-dimensional motion is <span class="key-term">projectile motion</span>. Whether you're watching a basketball soar through the air, a baseball launched from a bat, a stone skipping across water, or water arching from a fountain, you are observing projectile motion. It's the motion of an object thrown or projected into the air, subject only to the acceleration of gravity.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                This lesson will delve deep into the physics of projectile motion, building upon the foundational concepts of kinematics and Newton's Laws that we explored previously. Our analysis will simplify the real world by making crucial assumptions: we will neglect the effects of <span class="key-term">air resistance</span> and assume that the <span class="key-term">acceleration due to gravity ($g$)</span> is constant throughout the motion (typically taken as $9.8 \text{ m/s}^2$ downwards near Earth's surface). These simplifications allow us to model projectile paths with remarkable accuracy, revealing the beautiful <span class="key-term">parabolic trajectories</span> that define such motion.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                We will break down this complex two-dimensional motion into its independent <span class="key-term">horizontal</span> and <span class="key-term">vertical components</span>, applying the one-dimensional kinematic equations to each. By doing so, we'll learn how to calculate key parameters such as the <span class="key-term">time of flight</span> (how long the object is in the air), the <span class="key-term">maximum height</span> it reaches, and its total <span class="key-term">horizontal range</span>. Practical examples and step-by-step problem-solving strategies will be provided to solidify your understanding.
+            </p>
+            <p class="text-lg leading-relaxed">
+                From sports science to military ballistics and even space exploration, the principles of projectile motion are indispensable. Prepare to gain a profound understanding of the physics behind every launch, enabling you to predict and analyze the path of any object thrown into the air. Let's launch into the captivating world of projectile motion!
+            </p>
+        </section>
+
+        <section id="understanding-projectile-motion" class="section-card">
+            <h3 class="text-4xl mb-6">2. Understanding the Nature of Projectile Motion</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                At its core, projectile motion is a form of two-dimensional motion where the only significant force acting on the object is gravity. To simplify our analysis and gain a foundational understanding, we make a couple of key assumptions:
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="key-term">Negligible Air Resistance:</span> We assume that the effects of air friction (drag) are small enough to be ignored. In reality, air resistance can significantly alter trajectories, especially for light objects or high speeds.
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Constant Acceleration Due to Gravity ($g$):</span> We assume that the acceleration due to gravity is constant in magnitude and direction throughout the projectile's flight. Near the Earth's surface, its value is approximately $g = 9.8 \text{ m/s}^2$ and is always directed vertically downwards. We also assume the Earth is flat over the trajectory, and rotation effects are negligible.
+                </li>
+            </ul>
+            <p class="text-lg leading-relaxed mb-6">
+                Under these assumptions, the most crucial concept in analyzing projectile motion is the <span class="key-term">independence of horizontal and vertical motion</span>. This means that the horizontal motion of the projectile does not affect its vertical motion, and vice versa. We can analyze these two components of motion separately using the one-dimensional kinematic equations.
+            </p>
+
+            <h4 class="text-3xl mb-4">2.1. Horizontal Component of Motion (Constant Velocity)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                In the horizontal direction, there are no forces acting on the projectile (since we're neglecting air resistance). According to Newton's First Law, if there's no net force, there's no acceleration. Therefore, the horizontal velocity of a projectile remains <span class="key-term">constant</span> throughout its flight.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2"><span class="font-bold">Horizontal acceleration ($a_x$):</span> $a_x = 0 \text{ m/s}^2$.</li>
+                <li class="mb-2"><span class="font-bold">Horizontal velocity ($v_x$):</span> Constant. It's equal to the initial horizontal component of velocity ($u_x$).</li>
+                <li class="mb-2"><span class="font-bold">Horizontal displacement ($\Delta x$ or Range, $R$):</span> Governed by the constant velocity formula.</li>
+            </ul>
+            <div class="math-equation">
+                $$v_x = u_x$$
+                $$\Delta x = u_x t$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                Where $u_x$ is the initial horizontal velocity, and $t$ is the time of flight.
+            </p>
+
+            <h4 class="text-3xl mb-4">2.2. Vertical Component of Motion (Constant Acceleration)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                In the vertical direction, the only force acting on the projectile is gravity. This means the projectile experiences a constant downward acceleration equal to $g$.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2"><span class="font-bold">Vertical acceleration ($a_y$):</span> $a_y = -g = -9.8 \text{ m/s}^2$ (if upward is positive).</li>
+                <li class="mb-2"><span class="font-bold">Vertical velocity ($v_y$):</span> Changes due to gravity. It decreases as the projectile rises, becomes zero at the maximum height, and increases in the downward direction as it falls.</li>
+                <li class="mb-2"><span class="font-bold">Vertical displacement ($\Delta y$):</span> Governed by the kinematic equations for constant acceleration.</li>
+            </ul>
+            <div class="math-equation">
+                $$v_y = u_y + a_y t = u_y - gt$$
+                $$\Delta y = u_y t + \frac{1}{2}a_y t^2 = u_y t - \frac{1}{2}gt^2$$
+                $$v_y^2 = u_y^2 + 2a_y \Delta y = u_y^2 - 2g\Delta y$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                Where $u_y$ is the initial vertical velocity.
+            </p>
+
+            <h4 class="text-3xl mb-4">2.3. Initial Velocity Components</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                Often, a projectile is launched with an initial velocity $\vec{u}$ (or $\vec{v}_0$) at an angle $\theta$ above the horizontal. We need to resolve this initial velocity into its horizontal ($u_x$) and vertical ($u_y$) components using trigonometry:
+            </p>
+            <div class="math-equation">
+                $$u_x = u \cos(\theta)$$
+                $$u_y = u \sin(\theta)$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                These components are then used in the respective kinematic equations for horizontal and vertical motion.
+            </p>
+        </section>
+
+        <section id="key-quantities" class="section-card">
+            <h3 class="text-4xl mb-6">3. Key Quantities in Projectile Motion</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                By combining the independent horizontal and vertical analyses, we can derive formulas for the most important characteristics of a projectile's flight.
+            </p>
+
+            <h4 class="text-3xl mb-4">3.1. Time of Flight ($T$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The <span class="key-term">Time of Flight</span> is the total time the projectile spends in the air, from launch until it returns to its initial height (or hits the ground). This is typically determined by the vertical motion.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                If the projectile starts and ends at the same vertical height ($\Delta y = 0$), we can use the vertical displacement equation:
+            </p>
+            <div class="math-equation">
+                $$\Delta y = u_y T - \frac{1}{2}gT^2$$
+                $$0 = u_y T - \frac{1}{2}gT^2$$
+                $$T(u_y - \frac{1}{2}gT) = 0$$
+                <p>This gives two solutions: $T=0$ (the launch instant) or:</p>
+                $$u_y - \frac{1}{2}gT = 0 \implies \frac{1}{2}gT = u_y \implies T = \frac{2u_y}{g}$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                So, for a symmetrical trajectory (starting and ending at the same height):
+            </p>
+            <div class="math-equation">
+                $$T = \frac{2u \sin(\theta)}{g}$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                If the landing height is different from the launch height, you would use the quadratic formula to solve for $T$ from the $\Delta y$ equation.
+            </p>
+
+            <h4 class="text-3xl mb-4">3.2. Maximum Height ($H_{max}$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The <span class="key-term">Maximum Height</span> is the highest vertical position reached by the projectile relative to its launch point. At the very peak of its trajectory, the projectile's vertical velocity ($v_y$) momentarily becomes zero. We can use this fact with the vertical kinematic equations.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                Using $v_y^2 = u_y^2 - 2g\Delta y$, and setting $v_y = 0$ at $H_{max}$:
+            </p>
+            <div class="math-equation">
+                $$0^2 = u_y^2 - 2gH_{max}$$
+                $$2gH_{max} = u_y^2$$
+                $$H_{max} = \frac{u_y^2}{2g}$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                Substituting $u_y = u \sin(\theta)$:
+            </p>
+            <div class="math-equation">
+                $$H_{max} = \frac{(u \sin(\theta))^2}{2g}$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                The time to reach maximum height ($t_{peak}$) is half the total time of flight for a symmetrical trajectory: $t_{peak} = T/2 = \frac{u \sin(\theta)}{g}$. This can also be found by setting $v_y=0$ in $v_y = u_y - gt$.
+            </p>
+
+            <h4 class="text-3xl mb-4">3.3. Horizontal Range ($R$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The <span class="key-term">Horizontal Range</span> is the total horizontal distance traveled by the projectile from its launch point to where it returns to its initial height (or lands). Since horizontal velocity is constant, this is simply the horizontal velocity multiplied by the total time of flight.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                Using $\Delta x = u_x T$:
+            </p>
+            <div class="math-equation">
+                $$R = u_x T$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                For a symmetrical trajectory, substituting $u_x = u \cos(\theta)$ and $T = \frac{2u \sin(\theta)}{g}$:
+            </p>
+            <div class="math-equation">
+                $$R = (u \cos(\theta)) \left(\frac{2u \sin(\theta)}{g}\right)$$
+                $$R = \frac{u^2 (2 \sin(\theta) \cos(\theta))}{g}$$
+                <p>Using the trigonometric identity $2 \sin(\theta) \cos(\theta) = \sin(2\theta)$:</p>
+                $$R = \frac{u^2 \sin(2\theta)}{g}$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                This formula reveals that the maximum range is achieved when $\sin(2\theta)$ is at its maximum, which occurs when $2\theta = 90^\circ$, meaning $\theta = 45^\circ$. Therefore, for a given initial speed, a launch angle of $45^\circ$ yields the greatest horizontal range, assuming equal launch and landing heights.
+            </p>
+
+            <h4 class="text-3xl mb-4">3.4. Trajectory Equation (The Parabola)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The path of a projectile is a <span class="key-term">parabola</span>. We can derive an equation that describes the vertical position ($y$) of the projectile as a function of its horizontal position ($x$).
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                From horizontal motion: $x = u_x t \implies t = \frac{x}{u_x}$.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                Substitute this into the vertical displacement equation, $\Delta y = u_y t - \frac{1}{2}gt^2$, where $\Delta y = y$ and we assume initial $y_0 = 0$:
+            </p>
+            <div class="math-equation">
+                $$y = u_y \left(\frac{x}{u_x}\right) - \frac{1}{2}g \left(\frac{x}{u_x}\right)^2$$
+                $$y = \left(\frac{u_y}{u_x}\right)x - \frac{g}{2u_x^2}x^2$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                Substituting $u_x = u \cos(\theta)$ and $u_y = u \sin(\theta)$:
+            </p>
+            <div class="math-equation">
+                $$y = \left(\frac{u \sin(\theta)}{u \cos(\theta)}\right)x - \frac{g}{2(u \cos(\theta))^2}x^2$$
+                $$y = (\tan(\theta))x - \frac{g}{2u^2 \cos^2(\theta)}x^2$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                This equation is in the form $y = Ax - Bx^2$, which is the general equation for a parabola. This confirms the parabolic shape of the projectile's trajectory.
+            </p>
+        </section>
+
+        <section id="worked-examples" class="section-card">
+            <h3 class="text-4xl mb-6">4. Worked Examples: Applying Projectile Motion Formulas</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                Let's put our knowledge to the test with some practical examples. Remember to break down the initial velocity into components and use the appropriate kinematic equations for horizontal and vertical motion.
+            </p>
+
+            <div class="example-box">
+                <h4 class="text-xl font-semibold mb-2">Example 1: Horizontal Launch from a Height</h4>
+                <p class="text-lg leading-relaxed mb-2">
+                    A stone is thrown horizontally from a cliff $45 \text{ m}$ high with an initial speed of $15 \text{ m/s}$. How long does it take to hit the ground, and how far from the base of the cliff does it land? (Assume $g = 9.8 \text{ m/s}^2$).
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Given:</span>
+                    <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
+                        <li>Initial velocity $u = 15 \text{ m/s}$ (horizontally)</li>
+                        <li>Initial angle $\theta = 0^\circ$ (since it's thrown horizontally)</li>
+                        <li>Vertical displacement $\Delta y = -45 \text{ m}$ (downwards, so negative)</li>
+                        <li>Acceleration due to gravity $g = 9.8 \text{ m/s}^2$</li>
+                    </ul>
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Step 1: Resolve Initial Velocity Components</span>
+                    $$u_x = u \cos(0^\circ) = 15 \text{ m/s} \times 1 = 15 \text{ m/s}$$
+                    $$u_y = u \sin(0^\circ) = 15 \text{ m/s} \times 0 = 0 \text{ m/s}$$
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Step 2: Calculate Time of Flight ($T$) using vertical motion</span>
+                    Use $\Delta y = u_y t + \frac{1}{2}a_y t^2$. Here $a_y = -g = -9.8 \text{ m/s}^2$.
+                    $$-45 = (0)t + \frac{1}{2}(-9.8)t^2$$
+                    $$-45 = -4.9t^2$$
+                    $$t^2 = \frac{-45}{-4.9} \approx 9.18$$
+                    $$t = \sqrt{9.18} \approx 3.03 \text{ s}$$
+                    The time of flight is approximately $3.03 \text{ s}$.
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Step 3: Calculate Horizontal Range ($R$) using horizontal motion</span>
+                    Use $\Delta x = u_x t$.
+                    $$R = (15 \text{ m/s})(3.03 \text{ s})$$
+                    $$R = 45.45 \text{ m}$$
+                    The stone lands approximately $45.45 \text{ m}$ from the base of the cliff.
+                </p>
+            </div>
+
+            <div class="example-box">
+                <h4 class="text-xl font-semibold mb-2">Example 2: Projectile Launched at an Angle</h4>
+                <p class="text-lg leading-relaxed mb-2">
+                    A ball is kicked from the ground with an initial velocity of $20 \text{ m/s}$ at an angle of $30^\circ$ above the horizontal. Assume it lands at the same height it was launched. Calculate the time of flight, maximum height, and horizontal range. ($g = 9.8 \text{ m/s}^2$).
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Given:</span>
+                    <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
+                        <li>Initial velocity $u = 20 \text{ m/s}$</li>
+                        <li>Initial angle $\theta = 30^\circ$</li>
+                        <li>Acceleration due to gravity $g = 9.8 \text{ m/s}^2$</li>
+                    </ul>
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Step 1: Resolve Initial Velocity Components</span>
+                    $$u_x = u \cos(\theta) = 20 \cos(30^\circ) = 20 \times 0.866 = 17.32 \text{ m/s}$$
+                    $$u_y = u \sin(\theta) = 20 \sin(30^\circ) = 20 \times 0.5 = 10 \text{ m/s}$$
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Step 2: Calculate Time of Flight ($T$)</span>
+                    Since it lands at the same height, use $T = \frac{2u_y}{g}$.
+                    $$T = \frac{2 \times 10 \text{ m/s}}{9.8 \text{ m/s}^2} = \frac{20}{9.8} \approx 2.04 \text{ s}$$
+                    The time of flight is approximately $2.04 \text{ s}$.
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Step 3: Calculate Maximum Height ($H_{max}$)</span>
+                    Use $H_{max} = \frac{u_y^2}{2g}$.
+                    $$H_{max} = \frac{(10 \text{ m/s})^2}{2 \times 9.8 \text{ m/s}^2} = \frac{100}{19.6} \approx 5.10 \text{ m}$$
+                    The maximum height reached is approximately $5.10 \text{ m}$.
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Step 4: Calculate Horizontal Range ($R$)</span>
+                    Use $R = u_x T$.
+                    $$R = (17.32 \text{ m/s})(2.04 \text{ s}) \approx 35.33 \text{ m}$$
+                    Alternatively, using $R = \frac{u^2 \sin(2\theta)}{g}$:
+                    $$R = \frac{(20 \text{ m/s})^2 \sin(2 \times 30^\circ)}{9.8 \text{ m/s}^2} = \frac{400 \sin(60^\circ)}{9.8}$$
+                    $$R = \frac{400 \times 0.866}{9.8} = \frac{346.4}{9.8} \approx 35.35 \text{ m}$$
+                    The horizontal range is approximately $35.3 \text{ m}$. (Slight differences due to rounding intermediate steps.)
+                </p>
+            </div>
+        </section>
+
+        <section id="factors-affecting-motion" class="section-card">
+            <h3 class="text-4xl mb-6">5. Factors Affecting Projectile Motion</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                While gravity is the constant influencer, the initial conditions of a projectile significantly determine its trajectory and flight characteristics.
+            </p>
+
+            <h4 class="text-3xl mb-4">5.1. Initial Speed ($u$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                A greater initial speed generally leads to a longer time of flight, higher maximum height, and greater horizontal range. The range and maximum height are proportional to the square of the initial speed ($u^2$), meaning a small increase in launch speed can result in a significant increase in distance and height.
+            </p>
+
+            <h4 class="text-3xl mb-4">5.2. Launch Angle ($\theta$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The launch angle plays a critical role in shaping the projectile's path and determining its range and height.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="font-bold">Angle for Maximum Range ($45^\circ$):</span> For a projectile launched from and landing on the same horizontal level, an angle of $45^\circ$ (or $\pi/4$ radians) will yield the maximum horizontal range. This is because $\sin(2\theta)$ is maximized when $2\theta = 90^\circ$.
+                </li>
+                <li class="mb-2">
+                    <span class="font-bold">Complementary Angles:</span> Interestingly, two launch angles that are complementary (add up to $90^\circ$) will produce the same horizontal range, assuming the same initial speed and launch/landing heights. For example, $15^\circ$ and $75^\circ$ will have the same range, but $75^\circ$ will achieve a much higher maximum height and longer time of flight.
+                </li>
+                <li class="mb-2">
+                    <span class="font-bold">Vertical Motion Dominance (Angles > $45^\circ$):</span> As the angle increases above $45^\circ$ towards $90^\circ$ (vertical launch), the projectile goes higher and stays in the air longer, but its horizontal range decreases.
+                </li>
+                <li class="mb-2">
+                    <span class="font-bold">Horizontal Motion Dominance (Angles < $45^\circ$):</span> As the angle decreases below $45^\circ$ towards $0^\circ$ (horizontal launch), the projectile has a greater initial horizontal velocity component, but its time in the air (and thus vertical height) decreases, leading to a smaller range.
+                </li>
+            </ul>
+
+            <h4 class="text-3xl mb-4">5.3. Air Resistance (A Realistic Consideration)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                While we neglect air resistance in basic projectile motion problems for simplicity, it's crucial to acknowledge its real-world impact. Air resistance (or drag) is a force that opposes the motion of an object through the air. Its magnitude depends on factors like the object's speed, shape, size, and the density of the air.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                When air resistance is considered:
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">The horizontal velocity is no longer constant; air resistance acts to slow down the projectile horizontally.</li>
+                <li class="mb-2">The vertical acceleration is no longer simply $g$; it's $g$ plus a drag component that opposes vertical motion (downwards when going up, upwards when falling down).</li>
+                <li class="mb-2">The trajectory is no longer a perfect parabola; it becomes a more complex curve.</li>
+                <li class="mb-2">The maximum range angle shifts to less than $45^\circ$ (typically around $30^\circ - 40^\circ$ for many sports projectiles), as an earlier, flatter trajectory reduces the time spent battling drag.</li>
+            </ul>
+            <p class="text-lg leading-relaxed">
+                Analyzing projectile motion with air resistance often requires advanced techniques, such as numerical methods or differential equations, which go beyond the scope of introductory mechanics but are vital in fields like aerodynamics and ballistics.
+            </p>
+        </section>
+
+        <section id="conclusion" class="section-card">
+            <h3 class="text-4xl mb-6">6. Conclusion: The Power of Parabolic Paths</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                Our exploration of <span class="key-term">projectile motion</span> has unveiled the elegant physics behind objects moving through the air under the sole influence of <span class="key-term">gravity</span>. By leveraging the principle of the <span class="key-term">independence of horizontal and vertical motion</span>, we've demonstrated how two-dimensional problems can be systematically analyzed using one-dimensional kinematic equations.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                We've learned to quantify the critical aspects of a projectile's flight: its <span class="key-term">time of flight</span>, the <span class="key-term">maximum height</span> it attains, and its total <span class="key-term">horizontal range</span>. The recognition of the <span class="key-term">parabolic trajectory</span> as the characteristic path of a projectile without air resistance is a hallmark of this fundamental concept. Moreover, we've gained insight into how initial conditions, particularly initial speed and launch angle, dramatically influence the projectile's path.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                The principles of projectile motion are not just academic exercises; they are the bedrock for understanding a vast array of real-world phenomena and technologies. From optimizing the launch angle of a javelin thrower to designing cannons, predicting the flight paths of rockets, or even understanding the parabolic trajectory of water from a sprinkler, the concepts learned here are universally applicable.
+            </p>
+            <p class="text-lg leading-relaxed">
+                As you continue your journey in physics and mathematics, remember the power of simplifying complex problems into manageable components. Projectile motion is a prime example of this analytical approach. Keep practicing, keep observing, and you'll find that the science of flight is truly all around us!
+            </p>
+        </section>
+
+        <section id="glossary" class="section-card">
+            <h3 class="text-4xl mb-6">7. Glossary of Key Terms</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-lg">
+                <div><strong class="key-term">Air Resistance (Drag):</strong> A force that opposes the motion of an object through the air. Neglected in ideal projectile motion.</div>
+                <div><strong class="key-term">Acceleration Due to Gravity ($g$):</strong> The constant acceleration experienced by objects due to Earth's gravity, approximately $9.8 \text{ m/s}^2$ downwards.</div>
+                <div><strong class="key-term">Horizontal Range ($R$):</strong> The total horizontal distance traveled by a projectile from its launch point to landing point.</div>
+                <div><strong class="key-term">Independence of Motion:</strong> The principle that horizontal and vertical components of motion can be analyzed separately.</div>
+                <div><strong class="key-term">Initial Velocity Components ($u_x, u_y$):</strong> The horizontal and vertical parts of the initial velocity, resolved using trigonometry.</div>
+                <div><strong class="key-term">Kinematic Equations:</strong> A set of equations used to describe motion with constant acceleration.</div>
+                <div><strong class="key-term">Launch Angle ($\theta$):</strong> The angle at which a projectile is launched relative to the horizontal.</div>
+                <div><strong class="key-term">Maximum Height ($H_{max}$):</strong> The highest vertical position reached by the projectile during its flight.</div>
+                <div><strong class="key-term">Parabolic Trajectory:</strong> The characteristic curved path followed by a projectile, shaped like a parabola.</div>
+                <div><strong class="key-term">Projectile:</strong> An object upon which the only force acting is gravity (neglecting air resistance).</div>
+                <div><strong class="key-term">Projectile Motion:</strong> The two-dimensional motion of an object thrown or projected into the air, subject only to gravity.</div>
+                <div><strong class="key-term">Time of Flight ($T$):</strong> The total duration a projectile spends in the air.</div>
+                <div><strong class="key-term">Trajectory:</strong> The path traced by a moving object.</div>
+            </div>
+        </section>
+
+        <section id="references" class="section-card">
+            <h3 class="text-4xl mb-6">8. Further Reading and References</h3>
+            <p class="text-lg leading-relaxed mb-4">To deepen your understanding of projectile motion and explore related concepts, consider these excellent resources:</p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
+                <li class="mb-2">Serway, R. A., & Jewett, J. W. (2018). <em>Physics for Scientists and Engineers with Modern Physics</em> (10th ed.). Cengage Learning. (Chapter on Motion in Two Dimensions)</li>
+                <li class="mb-2">Halliday, D., Resnick, R., & Walker, J. (2014). <em>Fundamentals of Physics</em> (10th ed.). John Wiley & Sons. (Chapter on Motion in Two and Three Dimensions)</li>
+                <li class="mb-2">Young, H. D., & Freedman, R. A. (2020). <em>University Physics with Modern Physics</em> (15th ed.). Pearson. (Comprehensive coverage of projectile motion)</li>
+                <li class="mb-2">Khan Academy: <a href="https://www.khanacademy.org/science/physics/two-dimensional-motion/projectiles/v/projectile-at-an-angle" target="_blank" class="text-blue-400 hover:underline">Projectile Motion Course</a> (Online video lessons and practice problems)</li>
+                <li class="mb-2">HyperPhysics: <a href="http://hyperphysics.phy-astr.gsu.edu/hbase/traj.html" target="_blank" class="text-blue-400 hover:underline">Projectile Motion Concepts</a> (Concise explanations and interactive diagrams)</li>
+            </ul>
+        </section>
+
+    </div>
+
+    <script>
+        // Three.js Animated Background
+        const canvas = document.getElementById('three-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true }); // alpha for transparent background
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio); // Handle high-DPI screens
+
+        // Adjust camera position
+        camera.position.z = 5;
+
+        // Create particles
+        const particleCount = 1000;
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount * 3; i += 3) {
+            positions[i] = (Math.random() - 0.5) * 200; // x
+            positions[i + 1] = (Math.random() - 0.5) * 200; // y
+            positions[i + 2] = (Math.random() - 0.5) * 200; // z
+        }
+
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0x63b3ed, // Blueish color
+            size: 0.1,
+            blending: THREE.AdditiveBlending, // For glowing effect
+            transparent: true,
+            opacity: 0.7
+        });
+
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+
+        // Add a subtle ambient light
+        const ambientLight = new THREE.AmbientLight(0x404040, 1.5); // soft white light
+        scene.add(ambientLight);
+
+        // Add a directional light for some depth
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(0, 1, 0); // Light from top
+        scene.add(directionalLight);
+
+        // Animation loop
+        const animate = () => {
+            requestAnimationFrame(animate);
+
+            // Rotate particles slowly
+            particleSystem.rotation.x += 0.0005;
+            particleSystem.rotation.y += 0.001;
+
+            // Simple movement effect
+            for (let i = 0; i < particleCount; i++) {
+                // Get current position
+                const i3 = i * 3;
+                positions[i3 + 2] += 0.05; // Move particles forward
+
+                // If particle goes too far, reset its Z position
+                if (positions[i3 + 2] > camera.position.z + 10) {
+                    positions[i3 + 2] = camera.position.z - 200;
+                }
+            }
+            particles.attributes.position.needsUpdate = true; // Tell Three.js to update buffer
+
+            renderer.render(scene, camera);
+        };
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Start animation after window loads
+        window.onload = function() {
+            animate();
+        };
+
+        // Smooth scroll for internal links (if any were added)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
