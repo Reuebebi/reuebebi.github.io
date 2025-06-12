@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizmath - Waves & Optics: Exploring Light and Vibrations</title>
+    <meta name="description" content="Understand the fundamental characteristics of waves (amplitude, wavelength λ, frequency f, speed v=fλ). Explore the basic properties of light, including reflection (mirrors) and refraction (lenses), and Snell's Law (n1sinθ1=n2sinθ2). A comprehensive lesson from Whizmath on waves and optics.">
+    <meta name="keywords" content="waves, optics, light, amplitude, wavelength, frequency, wave speed, reflection, refraction, Snell's Law, mirrors, lenses, electromagnetic waves, transverse waves, longitudinal waves, interference, diffraction, physics, v=fλ, n1sinθ1=n2sinθ2, Whizmath">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujm/v+r366w5U6+y35Yv5z16b0x/r7t6uTqNqg0g0c0w0/0j0v0b0t0q0p0x0e0i0o0u0a0c0e0r0s0t0v0w0x0y0z0=" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+
+    <!-- MathJax Configuration -->
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow: hidden; /* Hide overflow from Three.js background */
+        }
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send to back */
+            background: linear-gradient(to bottom right, #1a202c, #2d3748); /* Dark gradient for background */
+        }
+        .content-overlay {
+            position: relative;
+            z-index: 1; /* Bring content to front */
+            overflow-y: auto; /* Allow content to scroll */
+            height: 100vh;
+            padding: 2rem;
+            background: rgba(17, 24, 39, 0.85); /* Slightly transparent dark background for readability */
+            backdrop-filter: blur(8px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(8px); /* For Safari */
+            color: #e2e8f0; /* Light text color */
+        }
+        h1, h2, h3, h4 {
+            color: #63b3ed; /* A pleasing blue for headings */
+            font-weight: 700;
+        }
+        h1 { font-size: 3rem; }
+        h2 { font-size: 2.25rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.25rem; }
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 10;
+            background-color: rgba(30, 41, 59, 0.8); /* Darker transparent button */
+            color: #63b3ed;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px; /* Fully rounded */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: rgba(45, 55, 72, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .section-card {
+            background-color: rgba(30, 41, 59, 0.9); /* Dark blue background for content cards */
+            border-radius: 1.5rem; /* More rounded corners */
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+        .math-equation {
+            background-color: #0f172a; /* Even darker background for equations */
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin: 1.5rem 0;
+            overflow-x: auto; /* Allow horizontal scrolling for long equations */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .key-term {
+            color: #a78bfa; /* Purple for key terms */
+            font-weight: 600;
+        }
+        .example-box {
+            background-color: #2a3447; /* Slightly lighter dark for examples */
+            border-left: 5px solid #63b3ed;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0.75rem;
+        }
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a202c;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #63b3ed;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 antialiased">
+    <canvas id="three-canvas"></canvas>
+
+    <a href="physics.html" class="back-button flex items-center justify-center space-x-2 text-lg">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Physics</span>
+    </a>
+
+    <div class="content-overlay max-w-4xl mx-auto py-16">
+        <header class="text-center mb-16">
+            <h1 class="text-6xl font-extrabold text-blue-400 mb-4 animate-pulse">Whizmath</h1>
+            <h2 class="text-5xl font-bold text-gray-100 mb-8 leading-tight">Waves and Optics: Unveiling the Rhythms of Light and Motion</h2>
+            <p class="text-2xl text-gray-300 max-w-3xl mx-auto">
+                Dive into the mesmerizing world of <span class="key-term">waves</span> and <span class="key-term">optics</span>. This comprehensive lesson will unravel the fundamental characteristics of wave phenomena, from <span class="key-term">amplitude</span> to <span class="key-term">wavelength</span>, and explore the captivating behavior of <span class="key-term">light</span>, including <span class="key-term">reflection</span>, <span class="key-term">refraction</span>, and the elegance of <span class="key-term">Snell's Law</span>. Prepare to see the world with new eyes!
+            </p>
+        </header>
+
+        <section id="introduction" class="section-card">
+            <h3 class="text-4xl mb-6">1. Introduction to Waves and Optics</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                Welcome to a fascinating exploration of <span class="key-term">Waves and Optics</span>, two interconnected branches of physics that profoundly shape our perception of the world. From the ripples in a pond to the intricate workings of a telescope, from the sound of music to the vibrant colors we perceive, wave phenomena are ubiquitous. At the heart of optics lies light, a form of electromagnetic wave, whose behavior dictates how we see, how cameras capture images, and how information travels across vast distances.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                In this extensive lesson, we will embark on a journey to understand the fundamental nature of waves. We will define their key characteristics – <span class="key-term">amplitude</span>, <span class="key-term">wavelength ($\lambda$)</span>, <span class="key-term">frequency ($f$)</span>, and <span class="key-term">period ($T$)</span> – and discover the crucial relationship that binds them to <span class="key-term">wave speed ($v$)</span>. We'll differentiate between various types of waves, such as transverse and longitudinal, setting the stage for understanding light itself.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                Our focus will then shift to <span class="key-term">optics</span>, the study of light. We will explore its basic properties and then delve into two of its most fundamental interactions with matter: <span class="key-term">reflection</span> and <span class="key-term">refraction</span>. We'll learn the laws governing these phenomena, including the pivotal <span class="key-term">Law of Reflection</span> for mirrors and <span class="key-term">Snell's Law</span> for lenses and other transparent media. Practical applications, from the everyday use of mirrors to the complex designs of optical instruments, will illustrate the profound impact of these principles.
+            </p>
+            <p class="text-lg leading-relaxed">
+                Whether you're a curious mind eager to understand how a rainbow forms, a student grappling with the concepts of wave motion, or an aspiring engineer looking to design the next generation of optical devices, this lesson is crafted to provide a comprehensive and intuitive grasp of waves and optics. Prepare to unravel the invisible rhythms and visible wonders that define our universe!
+            </p>
+        </section>
+
+        <section id="fundamental-waves" class="section-card">
+            <h3 class="text-4xl mb-6">2. Fundamental Characteristics of Waves</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                A <span class="key-term">wave</span> is a disturbance that propagates through space and time, usually by the transfer of energy without the net transfer of matter. Think of a ripple in a pond: the water oscillates up and down, but the disturbance (the wave) travels outwards.
+            </p>
+
+            <h4 class="text-3xl mb-4">2.1. Types of Waves</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                Waves can be broadly classified based on the direction of oscillation of the medium's particles relative to the direction of wave propagation:
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="key-term">Transverse Waves:</span> The particles of the medium oscillate perpendicular to the direction of wave propagation. Examples include waves on a string, electromagnetic waves (like light), and ocean waves.
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Longitudinal Waves:</span> The particles of the medium oscillate parallel to the direction of wave propagation. These waves consist of compressions (regions of high density/pressure) and rarefactions (regions of low density/pressure). Sound waves are the most common example of longitudinal waves.
+                </li>
+            </ul>
+            <p class="text-lg leading-relaxed mb-6">
+                Another classification is based on whether a medium is required:
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="key-term">Mechanical Waves:</span> Require a medium to travel through (e.g., sound waves, water waves, waves on a spring).
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Electromagnetic Waves:</span> Do not require a medium and can travel through a vacuum (e.g., light, radio waves, X-rays). These are self-propagating oscillations of electric and magnetic fields.
+                </li>
+            </ul>
+
+            <h4 class="text-3xl mb-4">2.2. Key Wave Properties</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                To describe waves quantitatively, we use several key properties:
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="key-term">Amplitude ($A$):</span> The maximum displacement or distance moved by a point on a vibrating body or wave measured from its equilibrium position. For a water wave, it's the height from the equilibrium level to a crest or trough. For a sound wave, it's related to the pressure variation. Amplitude is related to the energy carried by the wave.
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Wavelength ($\lambda$):</span> The spatial period of the wave, the distance over which the wave's shape repeats. It is the distance between two consecutive corresponding points on a wave, such as two adjacent crests or two adjacent troughs. Measured in meters (m).
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Frequency ($f$):</span> The number of complete oscillations or cycles that pass a given point per unit of time. Measured in Hertz (Hz), where $1 \text{ Hz} = 1 \text{ cycle/second}$. Frequency is determined by the source of the wave.
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Period ($T$):</span> The time it takes for one complete oscillation or cycle to pass a given point. It is the reciprocal of frequency. Measured in seconds (s).
+                    <div class="math-equation">
+                        $$T = \frac{1}{f}$$
+                    </div>
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Wave Speed ($v$):</span> The speed at which the wave propagates through the medium. It's the distance a wave travels per unit of time.
+                </li>
+            </ul>
+
+            <h4 class="text-3xl mb-4">2.3. The Wave Speed Equation</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The wave speed, wavelength, and frequency are intimately related by a fundamental equation:
+            </p>
+            <div class="math-equation">
+                $$v = f\lambda$$
+                <p>Where:</p>
+                <ul class="list-disc list-inside ml-6">
+                    <li>$v$ is the <span class="key-term">wave speed</span> (in m/s).</li>
+                    <li>$f$ is the <span class="key-term">frequency</span> (in Hz).</li>
+                    <li>$\lambda$ is the <span class="key-term">wavelength</span> (in m).</li>
+                </ul>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                This equation tells us that if a wave has a high frequency, it must have a short wavelength to maintain a certain speed, and vice-versa. The speed of a wave is determined by the properties of the medium through which it travels, not by its source's frequency or amplitude.
+            </p>
+            <div class="example-box">
+                <h4 class="text-xl font-semibold mb-2">Example: Wave Speed Calculation</h4>
+                <p class="text-lg leading-relaxed mb-2">
+                    A sound wave in air has a frequency of $440 \text{ Hz}$ (Concert A) and a wavelength of $0.78 \text{ m}$. What is the speed of sound in air?
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Given:</span> $f = 440 \text{ Hz}$, $\lambda = 0.78 \text{ m}$.
+                </p>
+                <p class="text-lg leading-relaxed">
+                    Using $v = f\lambda$:
+                    $$v = (440 \text{ Hz})(0.78 \text{ m})$$
+                    $$v = 343.2 \text{ m/s}$$
+                    The speed of sound in air is approximately $343 \text{ m/s}$.
+                </p>
+            </div>
+        </section>
+
+        <section id="light-properties" class="section-card">
+            <h3 class="text-4xl mb-6">3. Basic Properties of Light</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Light</span> is a specific type of <span class="key-term">electromagnetic wave</span>, which is a transverse wave consisting of oscillating electric and magnetic fields that propagate perpendicular to each other and to the direction of energy transfer. Unlike mechanical waves, light does not require a medium and can travel through the vacuum of space.
+            </p>
+
+            <h4 class="text-3xl mb-4">3.1. The Electromagnetic Spectrum</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                Visible light is just a small portion of the vast <span class="key-term">electromagnetic spectrum</span>, which includes (in order of increasing frequency and decreasing wavelength): radio waves, microwaves, infrared radiation, visible light, ultraviolet radiation, X-rays, and gamma rays. All electromagnetic waves travel at the same speed in a vacuum.
+            </p>
+
+            <h4 class="text-3xl mb-4">3.2. Speed of Light in Vacuum ($c$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The speed of light in a vacuum is a fundamental physical constant, denoted by $c$. Its value is approximately:
+            </p>
+            <div class="math-equation">
+                $$c = 299,792,458 \text{ m/s} \approx 3.00 \times 10^8 \text{ m/s}$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                This incredibly high speed is why light seems to travel instantaneously over short distances. In transparent media (like water or glass), light travels slower than $c$.
+            </p>
+
+            <h4 class="text-3xl mb-4">3.3. Wave-Particle Duality (Brief Mention)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                One of the most intriguing aspects of light is its <span class="key-term">wave-particle duality</span>. While light undeniably exhibits wave-like properties (like interference and diffraction, which we'll briefly mention), it also behaves like a particle, called a <span class="key-term">photon</span>, in certain interactions (like the photoelectric effect). For most introductory optics, treating light as a wave is sufficient.
+            </p>
+        </section>
+
+        <section id="reflection" class="section-card">
+            <h3 class="text-4xl mb-6">4. Reflection: Bouncing Back</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Reflection</span> is the phenomenon where a wave, such as light, bounces off a surface and changes direction. It's how we see objects (light reflects off them into our eyes) and how mirrors work.
+            </p>
+
+            <h4 class="text-3xl mb-4">4.1. Law of Reflection</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The <span class="key-term">Law of Reflection</span> is a simple yet powerful rule that governs how light reflects from a smooth surface. It states:
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">The <span class="key-term">incident ray</span> (incoming light ray), the <span class="key-term">reflected ray</span> (outgoing light ray), and the <span class="key-term">normal</span> (a line perpendicular to the surface at the point of incidence) all lie in the same plane.</li>
+                <li class="mb-2">The <span class="key-term">angle of incidence ($\theta_i$)</span> is equal to the <span class="key-term">angle of reflection ($\theta_r$)</span>.
+                    <div class="math-equation">
+                        $$\theta_i = \theta_r$$
+                    </div>
+                    These angles are always measured with respect to the normal.
+                </li>
+            </ul>
+
+            <h4 class="text-3xl mb-4">4.2. Types of Reflection</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The appearance of a reflected image depends on the nature of the reflecting surface:
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="key-term">Specular (Regular) Reflection:</span> Occurs when light reflects off a smooth, polished surface (like a mirror or still water). Parallel incident rays reflect as parallel reflected rays, forming clear, distinct images.
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Diffuse Reflection:</span> Occurs when light reflects off a rough or uneven surface (like a wall or clothing). Parallel incident rays scatter in many different directions, which is why we can see objects from various angles and why rough surfaces don't produce clear reflections. Most objects we see are due to diffuse reflection.
+                </li>
+            </ul>
+
+            <h4 class="text-3xl mb-4">4.3. Mirrors (Brief Mention)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                Mirrors are surfaces that produce specular reflection.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="key-term">Plane Mirrors:</span> Flat mirrors that produce virtual (light rays do not actually converge at the image), upright, same-size images that are laterally inverted (left and right are swapped) and appear to be behind the mirror at the same distance as the object in front.
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Spherical Mirrors:</span> Mirrors that are segments of a sphere.
+                    <ul class="list-circle list-inside ml-8">
+                        <li class="mb-1"><span class="font-bold">Concave Mirrors:</span> Curved inward (like a spoon). They converge parallel light rays to a focal point. Can form both real and virtual images, depending on object position. Used in shaving mirrors, headlights, and telescopes.</li>
+                        <li class="mb-1"><span class="font-bold">Convex Mirrors:</span> Curved outward. They diverge parallel light rays, making objects appear smaller and farther away. Always form virtual, upright, and diminished images. Used in side-view mirrors on cars and security mirrors in stores to provide a wider field of view.</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section id="refraction" class="section-card">
+            <h3 class="text-4xl mb-6">5. Refraction: Bending Through Media</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Refraction</span> is the bending of a wave as it passes from one medium into another, due to a change in the wave's speed. When light passes from air into water, for example, its speed changes, causing it to bend. This phenomenon is responsible for why objects submerged in water appear distorted, and how lenses work.
+            </p>
+
+            <h4 class="text-3xl mb-4">5.1. Index of Refraction ($n$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The <span class="key-term">index of refraction ($n$)</span> of a medium is a dimensionless quantity that describes how much light slows down when it enters that medium. It is defined as the ratio of the speed of light in a vacuum ($c$) to the speed of light in the medium ($v$):
+            </p>
+            <div class="math-equation">
+                $$n = \frac{c}{v}$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                The index of refraction is always greater than or equal to 1. For a vacuum, $n=1$. For air, $n \approx 1.0003$. For water, $n \approx 1.33$. For glass, $n$ typically ranges from $1.5$ to $1.9$. A higher index of refraction means light travels slower in that medium and bends more when entering or leaving it.
+            </p>
+
+            <h4 class="text-3xl mb-4">5.2. Snell's Law</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Snell's Law</span> (also known as the Law of Refraction) quantitatively describes the relationship between the angles of incidence and refraction when light passes between two different media.
+            </p>
+            <div class="math-equation">
+                $$n_1 \sin(\theta_1) = n_2 \sin(\theta_2)$$
+                <p>Where:</p>
+                <ul class="list-disc list-inside ml-6">
+                    <li>$n_1$ is the index of refraction of the first medium.</li>
+                    <li>$\theta_1$ is the <span class="key-term">angle of incidence</span> (angle between the incident ray and the normal to the surface).</li>
+                    <li>$n_2$ is the index of refraction of the second medium.</li>
+                    <li>$\theta_2$ is the <span class="key-term">angle of refraction</span> (angle between the refracted ray and the normal in the second medium).</li>
+                </ul>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                Key implications of Snell's Law:
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">If light passes from a less dense medium ($n_1$) to a more dense medium ($n_2$) (i.e., $n_1 < n_2$), then $\theta_2 < \theta_1$, and the light ray bends <span class="font-bold">towards the normal</span>.</li>
+                <li class="mb-2">If light passes from a more dense medium ($n_1$) to a less dense medium ($n_2$) (i.e., $n_1 > n_2$), then $\theta_2 > \theta_1$, and the light ray bends <span class="font-bold">away from the normal</span>.</li>
+                <li class="mb-2">If light hits the boundary perpendicularly ($\theta_1 = 0^\circ$), it does not bend, as $\sin(0^\circ) = 0$.</li>
+            </ul>
+            <div class="example-box">
+                <h4 class="text-xl font-semibold mb-2">Example: Snell's Law Application</h4>
+                <p class="text-lg leading-relaxed mb-2">
+                    A light ray passes from air ($n_1 = 1.00$) into water ($n_2 = 1.33$) at an angle of incidence of $30^\circ$. What is the angle of refraction?
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Given:</span> $n_1 = 1.00$, $\theta_1 = 30^\circ$, $n_2 = 1.33$.
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    Using Snell's Law: $n_1 \sin(\theta_1) = n_2 \sin(\theta_2)$
+                    $$1.00 \sin(30^\circ) = 1.33 \sin(\theta_2)$$
+                    $$1.00 \times 0.5 = 1.33 \sin(\theta_2)$$
+                    $$0.5 = 1.33 \sin(\theta_2)$$
+                    $$\sin(\theta_2) = \frac{0.5}{1.33} \approx 0.376$$
+                    $$\theta_2 = \arcsin(0.376) \approx 22.1^\circ$$
+                    The angle of refraction is approximately $22.1^\circ$. The light bends towards the normal, as expected when entering a denser medium.
+                </p>
+            </div>
+
+            <h4 class="text-3xl mb-4">5.3. Total Internal Reflection (Brief Mention)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                When light travels from a denser medium to a less dense medium (e.g., from water to air), there is a critical angle. If the angle of incidence exceeds this <span class="key-term">critical angle</span>, the light ray will not refract into the second medium but will instead be entirely reflected back into the first medium. This phenomenon is called <span class="key-term">Total Internal Reflection (TIR)</span> and is the principle behind fiber optics, diamonds' sparkle, and binoculars.
+            </p>
+
+            <h4 class="text-3xl mb-4">5.4. Lenses (Brief Mention)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Lenses</span> are optical devices that use refraction to focus or disperse light, forming images. They are typically made of transparent materials like glass or plastic, with curved surfaces.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="key-term">Converging Lenses (Convex):</span> Thicker in the middle than at the edges. They converge parallel light rays to a real focal point. Used in magnifying glasses, cameras, and corrective lenses for farsightedness.
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Diverging Lenses (Concave):</span> Thinner in the middle than at the edges. They diverge parallel light rays, making them appear to originate from a virtual focal point. Used in peepholes and corrective lenses for nearsightedness.
+                </li>
+            </ul>
+        </section>
+
+        <section id="interference-diffraction" class="section-card">
+            <h3 class="text-4xl mb-6">6. Wave Phenomena: Interference and Diffraction</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                Beyond reflection and refraction, waves exhibit other fascinating behaviors that provide strong evidence for their wave nature.
+            </p>
+
+            <h4 class="text-3xl mb-4">6.1. Interference</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Interference</span> occurs when two or more waves overlap, resulting in a new wave pattern whose amplitude is the sum of the amplitudes of the individual waves.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="font-bold">Constructive Interference:</span> Occurs when waves combine "in phase" (crest meets crest, trough meets trough), resulting in a larger amplitude.
+                </li>
+                <li class="mb-2">
+                    <span class="font-bold">Destructive Interference:</span> Occurs when waves combine "out of phase" (crest meets trough), resulting in a smaller or even zero amplitude.
+                </li>
+            </ul>
+            <p class="text-lg leading-relaxed mb-6">
+                Examples include standing waves on a string, beats produced by two slightly different sound frequencies, and the vibrant colors seen in soap bubbles or oil slicks.
+            </p>
+
+            <h4 class="text-3xl mb-4">6.2. Diffraction</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Diffraction</span> is the bending of waves around obstacles or the spreading out of waves as they pass through narrow openings. This phenomenon is why you can hear sound around a corner even if you can't see the source, and why light passing through a tiny slit produces a spreading pattern instead of a sharp image.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                The amount of diffraction is most significant when the wavelength of the wave is comparable to the size of the obstacle or opening. This is why sound waves (long wavelengths) diffract easily around everyday objects, while visible light waves (short wavelengths) do not, unless the opening is very small.
+            </p>
+        </section>
+
+        <section id="conclusion" class="section-card">
+            <h3 class="text-4xl mb-6">7. Conclusion: The Visible and Invisible Rhythms of the Universe</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                Our comprehensive journey through <span class="key-term">Waves and Optics</span> has revealed the fundamental characteristics that govern all wave phenomena and the captivating ways in which <span class="key-term">light</span> interacts with its environment. We've mastered the key wave properties – <span class="key-term">amplitude</span>, <span class="key-term">wavelength</span>, <span class="key-term">frequency</span>, and <span class="key-term">speed</span> – and the crucial equation that links them ($v=f\lambda$).
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                We then delved into the realm of <span class="key-term">optics</span>, understanding how light, an <span class="key-term">electromagnetic wave</span>, behaves. The principles of <span class="key-term">reflection</span> elucidated how mirrors form images, while <span class="key-term">refraction</span> explained the bending of light as it passes between different media, beautifully quantified by <span class="key-term">Snell's Law ($n_1 \sin\theta_1 = n_2 \sin\theta_2$)</span>. We also briefly touched upon the intriguing phenomena of <span class="key-term">interference</span> and <span class="key-term">diffraction</span>, further showcasing the wave nature of light.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                The applications of these principles are truly boundless, impacting virtually every aspect of our technological world and natural environment. From the design of advanced cameras, microscopes, and fiber optic communication systems to understanding atmospheric phenomena like rainbows and mirages, the physics of waves and light is indispensable.
+            </p>
+            <p class="text-lg leading-relaxed">
+                As you continue your explorations in physics and mathematics, remember that the wave model provides an incredibly powerful framework for understanding not just light and sound, but many other physical processes. The ability to analyze wave behavior and light's interactions will unlock new insights into how our universe functions and how we can harness its fundamental principles. Keep observing, keep questioning, and keep illuminating your understanding of the world!
+            </p>
+        </section>
+
+        <section id="glossary" class="section-card">
+            <h3 class="text-4xl mb-6">8. Glossary of Key Terms</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-lg">
+                <div><strong class="key-term">Amplitude ($A$):</strong> The maximum displacement of a wave from its equilibrium position.</div>
+                <div><strong class="key-term">Angle of Incidence ($\theta_i$):</strong> The angle between an incident ray and the normal to the surface.</div>
+                <div><strong class="key-term">Angle of Reflection ($\theta_r$):</strong> The angle between a reflected ray and the normal to the surface. Equal to the angle of incidence.</div>
+                <div><strong class="key-term">Angle of Refraction ($\theta_2$):</strong> The angle between a refracted ray and the normal in the second medium.</div>
+                <div><strong class="key-term">Concave Mirror/Lens:</strong> Curved inward mirror (converges light) or lens (diverges light).</div>
+                <div><strong class="key-term">Converging Lens (Convex):</strong> A lens that focuses parallel light rays to a point.</div>
+                <div><strong class="key-term">Convex Mirror/Lens:</strong> Curved outward mirror (diverges light) or lens (converges light).</div>
+                <div><strong class="key-term">Critical Angle:</strong> The angle of incidence above which total internal reflection occurs.</div>
+                <div><strong class="key-term">Diffraction:</strong> The bending of waves around obstacles or through narrow openings.</div>
+                <div><strong class="key-term">Diverging Lens (Concave):</strong> A lens that spreads out parallel light rays.</div>
+                <div><strong class="key-term">Electromagnetic Spectrum:</strong> The full range of electromagnetic waves, from radio waves to gamma rays.</div>
+                <div><strong class="key-term">Electromagnetic Wave:</strong> A transverse wave consisting of oscillating electric and magnetic fields; does not require a medium (e.g., light).</div>
+                <div><strong class="key-term">Frequency ($f$):</strong> The number of wave cycles passing a point per unit time. Measured in Hertz (Hz).</div>
+                <div><strong class="key-term">Incident Ray:</strong> The incoming light ray.</div>
+                <div><strong class="key-term">Index of Refraction ($n$):</strong> A measure of how much light slows down in a medium ($n = c/v$).</div>
+                <div><strong class="key-term">Interference:</strong> The phenomenon where two or more waves overlap to form a new wave pattern.</div>
+                <div><strong class="key-term">Law of Reflection:</strong> States that the angle of incidence equals the angle of reflection ($\theta_i = \theta_r$).</div>
+                <div><strong class="key-term">Lenses:</strong> Optical devices that use refraction to focus or disperse light.</div>
+                <div><strong class="key-term">Light:</strong> The portion of the electromagnetic spectrum that is visible to the human eye.</div>
+                <div><strong class="key-term">Longitudinal Wave:</strong> A wave in which particles of the medium oscillate parallel to the wave propagation direction (e.g., sound).</div>
+                <div><strong class="key-term">Mechanical Wave:</strong> A wave that requires a medium to travel (e.g., sound, water waves).</div>
+                <div><strong class="key-term">Normal:</strong> A line perpendicular to a surface at the point where a ray strikes it.</div>
+                <div><strong class="key-term">Optics:</strong> The branch of physics that studies the behavior and properties of light.</div>
+                <div><strong class="key-term">Period ($T$):</strong> The time for one complete wave cycle ($T = 1/f$).</div>
+                <div><strong class="key-term">Photon:</strong> A quantum of light, behaving as a particle.</div>
+                <div><strong class="key-term">Plane Mirror:</strong> A flat mirror that produces virtual, upright, same-size, laterally inverted images.</div>
+                <div><strong class="key-term">Reflected Ray:</strong> The outgoing light ray after reflection.</div>
+                <div><strong class="key-term">Reflection:</strong> The bouncing back of a wave from a surface.</div>
+                <div><strong class="key-term">Refraction:</strong> The bending of a wave as it passes from one medium to another.</div>
+                <div><strong class="key-term">Snell's Law:</strong> Describes refraction: $n_1 \sin(\theta_1) = n_2 \sin(\theta_2)$.</div>
+                <div><strong class="key-term">Specular Reflection:</strong> Reflection from a smooth surface, producing clear images.</div>
+                <div><strong class="key-term">Speed of Light in Vacuum ($c$):</strong> Approximately $3.00 \times 10^8 \text{ m/s}$.</div>
+                <div><strong class="key-term">Total Internal Reflection (TIR):</strong> Complete reflection of a light ray back into a denser medium when the angle of incidence exceeds the critical angle.</div>
+                <div><strong class="key-term">Transverse Wave:</strong> A wave in which particles of the medium oscillate perpendicular to the wave propagation direction (e.g., light, water waves).</div>
+                <div><strong class="key-term">Wave:</strong> A disturbance that propagates through space and time, transferring energy.</div>
+                <div><strong class="key-term">Wave Speed ($v$):</strong> The speed at which a wave travels through a medium ($v = f\lambda$).</div>
+                <div><strong class="key-term">Wavelength ($\lambda$):</strong> The spatial period of a wave, the distance between two consecutive corresponding points on a wave. Measured in meters (m).</div>
+            </div>
+        </section>
+
+        <section id="references" class="section-card">
+            <h3 class="text-4xl mb-6">9. Further Reading and References</h3>
+            <p class="text-lg leading-relaxed mb-4">To further your understanding of waves and optics, explore these recommended resources:</p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
+                <li class="mb-2">Serway, R. A., & Jewett, J. W. (2018). <em>Physics for Scientists and Engineers with Modern Physics</em> (10th ed.). Cengage Learning. (Chapters on Wave Motion, Light Waves, Reflection, and Refraction)</li>
+                <li class="mb-2">Halliday, D., Resnick, R., & Walker, J. (2014). <em>Fundamentals of Physics</em> (10th ed.). John Wiley & Sons. (Chapters on Waves, Light & Reflection, and Refraction & Lenses)</li>
+                <li class="mb-2">Young, H. D., & Freedman, R. A. (2020). <em>University Physics with Modern Physics</em> (15th ed.). Pearson. (Comprehensive coverage of waves and optics)</li>
+                <li class="mb-2">Khan Academy: <a href="https://www.khanacademy.org/science/physics/waves-and-light" target="_blank" class="text-blue-400 hover:underline">Waves and Light Course</a> (Online video lessons and exercises)</li>
+                <li class="mb-2">HyperPhysics: <a href="http://hyperphysics.phy-astr.gsu.edu/hbase/waves/wavrel.html" target="_blank" class="text-blue-400 hover:underline">Waves and Optics Topics</a> (Concise explanations and interactive diagrams)</li>
+            </ul>
+        </section>
+
+    </div>
+
+    <script>
+        // Three.js Animated Background (reused from previous lessons)
+        const canvas = document.getElementById('three-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+
+        camera.position.z = 5;
+
+        const particleCount = 1000;
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount * 3; i += 3) {
+            positions[i] = (Math.random() - 0.5) * 200;
+            positions[i + 1] = (Math.random() - 0.5) * 200;
+            positions[i + 2] = (Math.random() - 0.5) * 200;
+        }
+
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0x63b3ed,
+            size: 0.1,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            opacity: 0.7
+        });
+
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+
+        const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(0, 1, 0);
+        scene.add(directionalLight);
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+
+            particleSystem.rotation.x += 0.0005;
+            particleSystem.rotation.y += 0.001;
+
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                positions[i3 + 2] += 0.05;
+
+                if (positions[i3 + 2] > camera.position.z + 10) {
+                    positions[i3 + 2] = camera.position.z - 200;
+                }
+            }
+            particles.attributes.position.needsUpdate = true;
+
+            renderer.render(scene, camera);
+        };
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        window.onload = function() {
+            animate();
+        };
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
