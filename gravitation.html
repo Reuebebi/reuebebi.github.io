@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizmath - Gravitation: Unveiling the Universal Attraction</title>
+    <meta name="description" content="Understand Newton's Law of Universal Gravitation (F=Gm1m2/r^2), which describes the attractive force between any two masses. Learn about gravitational fields, weight, and the basics of planetary motion and Kepler's Laws. A comprehensive lesson from Whizmath on the force that shapes the cosmos.">
+    <meta name="keywords" content="gravitation, gravity, Newton's Law of Universal Gravitation, gravitational force, gravitational field, weight, mass, planetary motion, Kepler's Laws, orbital mechanics, inverse square law, G, gravitational potential energy, escape velocity, physics, Whizmath">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujm/v+r366w5U6+y35Yv5z16b0x/r7t6uTqNqg0g0c0w0/0j0v0b0t0q0p0x0e0i0o0u0a0c0e0r0s0t0v0w0x0y0z0=" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+
+    <!-- MathJax Configuration -->
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow: hidden; /* Hide overflow from Three.js background */
+        }
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send to back */
+            background: linear-gradient(to bottom right, #1a202c, #2d3748); /* Dark gradient for background */
+        }
+        .content-overlay {
+            position: relative;
+            z-index: 1; /* Bring content to front */
+            overflow-y: auto; /* Allow content to scroll */
+            height: 100vh;
+            padding: 2rem;
+            background: rgba(17, 24, 39, 0.85); /* Slightly transparent dark background for readability */
+            backdrop-filter: blur(8px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(8px); /* For Safari */
+            color: #e2e8f0; /* Light text color */
+        }
+        h1, h2, h3, h4 {
+            color: #63b3ed; /* A pleasing blue for headings */
+            font-weight: 700;
+        }
+        h1 { font-size: 3rem; }
+        h2 { font-size: 2.25rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.25rem; }
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 10;
+            background-color: rgba(30, 41, 59, 0.8); /* Darker transparent button */
+            color: #63b3ed;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px; /* Fully rounded */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: rgba(45, 55, 72, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .section-card {
+            background-color: rgba(30, 41, 59, 0.9); /* Dark blue background for content cards */
+            border-radius: 1.5rem; /* More rounded corners */
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+        .math-equation {
+            background-color: #0f172a; /* Even darker background for equations */
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin: 1.5rem 0;
+            overflow-x: auto; /* Allow horizontal scrolling for long equations */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .key-term {
+            color: #a78bfa; /* Purple for key terms */
+            font-weight: 600;
+        }
+        .example-box {
+            background-color: #2a3447; /* Slightly lighter dark for examples */
+            border-left: 5px solid #63b3ed;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0.75rem;
+        }
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a202c;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #63b3ed;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 antialiased">
+    <canvas id="three-canvas"></canvas>
+
+    <a href="physics.html" class="back-button flex items-center justify-center space-x-2 text-lg">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Physics</span>
+    </a>
+
+    <div class="content-overlay max-w-4xl mx-auto py-16">
+        <header class="text-center mb-16">
+            <h1 class="text-6xl font-extrabold text-blue-400 mb-4 animate-pulse">Whizmath</h1>
+            <h2 class="text-5xl font-bold text-gray-100 mb-8 leading-tight">Gravitation: The Universal Force That Shapes the Cosmos</h2>
+            <p class="text-2xl text-gray-300 max-w-3xl mx-auto">
+                Unravel the mystery of <span class="key-term">gravitation</span>, the fundamental force governing celestial mechanics and everyday falls. This comprehensive lesson will explore <span class="key-term">Newton's Law of Universal Gravitation</span>, delve into <span class="key-term">gravitational fields</span>, distinguish between <span class="key-term">mass and weight</span>, and touch upon the fascinating <span class="key-term">basics of planetary motion</span> as described by Kepler's Laws. Discover the invisible ties that bind the universe.
+            </p>
+        </header>
+
+        <section id="introduction" class="section-card">
+            <h3 class="text-4xl mb-6">1. Introduction to Gravitation</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                Welcome to the profound and far-reaching realm of <span class="key-term">Gravitation</span> – the universal force that dictates the motion of everything from falling apples to orbiting planets, and from the formation of stars to the structure of galaxies. It is one of the four fundamental forces of nature, and arguably the first to be precisely described mathematically, thanks to the genius of Sir Isaac Newton. Understanding gravitation is not just about comprehending why things fall; it's about unlocking the very mechanics of the cosmos.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                Before Newton, the motions of celestial bodies were observed and described (notably by Johannes Kepler), but the underlying cause remained a mystery. Newton's groundbreaking insight was to propose that the same force causing an apple to fall to Earth is responsible for holding the Moon in its orbit around Earth, and Earth in its orbit around the Sun. This revolutionary idea, known as <span class="key-term">Universal Gravitation</span>, unified terrestrial and celestial mechanics, forever changing our understanding of the universe.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                This comprehensive lesson will systematically unpack <span class="key-term">Newton's Law of Universal Gravitation</span>, providing its mathematical formulation and explaining each of its components. We will then transition to the concept of a <span class="key-term">gravitational field</span>, a powerful tool for visualizing and calculating gravitational influences without needing to consider individual masses. We will clarify the often-confused concepts of <span class="key-term">mass and weight</span>, and explore how apparent weight can change in various scenarios. Furthermore, we will delve into <span class="key-term">gravitational potential energy</span>, linking it to the work done by gravity. Finally, we will touch upon the <span class="key-term">basics of planetary motion</span>, introducing Kepler's empirical laws and showing how they are a direct consequence of Newton's gravitational law.
+            </p>
+            <p class="text-lg leading-relaxed">
+                Whether you're curious about why astronauts float in space, how black holes exert their immense pull, or simply how the solar system maintains its intricate dance, a deep understanding of gravitation is indispensable. Prepare to grasp the invisible threads that weave the cosmic tapestry!
+            </p>
+        </section>
+
+        <section id="newtons-law-of-universal-gravitation" class="section-card">
+            <h3 class="text-4xl mb-6">2. Newton's Law of Universal Gravitation</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                In 1687, Sir Isaac Newton published his law describing the gravitational attraction between any two objects with mass. This law was revolutionary because it applied universally, from small objects on Earth to vast celestial bodies.
+            </p>
+
+            <h4 class="text-3xl mb-4">2.1. The Formula for Universal Gravitation</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Newton's Law of Universal Gravitation</span> states that every particle in the universe attracts every other particle with a force that is directly proportional to the product of their masses and inversely proportional to the square of the distance between their centers.
+            </p>
+            <div class="math-equation">
+                $$F = G \frac{m_1 m_2}{r^2}$$
+                <p>Where:</p>
+                <ul class="list-disc list-inside ml-6">
+                    <li>$F$ is the magnitude of the <span class="key-term">gravitational force</span> between the two masses (in Newtons, N).</li>
+                    <li>$G$ is the <span class="key-term">Universal Gravitational Constant</span>, a fundamental constant of nature, approximately $6.674 \times 10^{-11} \text{ N·m}^2/\text{kg}^2$. This value was first accurately measured by Henry Cavendish.</li>
+                    <li>$m_1$ and $m_2$ are the <span class="key-term">masses</span> of the two interacting objects (in kilograms, kg).</li>
+                    <li>$r$ is the <span class="key-term">distance</span> between the centers of the two masses (in meters, m). It is crucial to measure from center to center, especially for large spherical objects like planets.</li>
+                </ul>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                The direction of the gravitational force is always <span class="key-term">attractive</span>, pulling the two masses directly towards each other along the line connecting their centers. This is a crucial distinction from electrostatic forces, which can be both attractive and repulsive.
+            </p>
+
+            <h4 class="text-3xl mb-4">2.2. The Inverse Square Law</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The dependence on $1/r^2$ is known as an <span class="key-term">inverse square law</span>. This means that if you double the distance between two masses, the gravitational force between them decreases by a factor of $2^2 = 4$. If you triple the distance, the force becomes nine times weaker ($3^2=9$). This inverse square relationship is common in nature for forces that spread out uniformly in three dimensions, such as gravity and electric forces.
+            </p>
+
+            <h4 class="text-3xl mb-4">2.3. Gravitational Force vs. Other Forces</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                Gravitational force is often described as the weakest of the four fundamental forces. For example, the electromagnetic force between two electrons is vastly stronger than their gravitational attraction. However, because mass is always positive and gravity is always attractive, its effects accumulate over large distances and for massive objects, making it the dominant force on astronomical scales.
+            </p>
+            <div class="example-box">
+                <h4 class="text-xl font-semibold mb-2">Example: Gravitational Force between Two People</h4>
+                <p class="text-lg leading-relaxed mb-2">
+                    Calculate the gravitational force between two people, each with a mass of $70 \text{ kg}$, standing $1 \text{ m}$ apart.
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Given:</span> $m_1 = 70 \text{ kg}$, $m_2 = 70 \text{ kg}$, $r = 1 \text{ m}$, $G = 6.674 \times 10^{-11} \text{ N·m}^2/\text{kg}^2$.
+                </p>
+                <p class="text-lg leading-relaxed">
+                    Using $F = G \frac{m_1 m_2}{r^2}$:
+                    $$F = (6.674 \times 10^{-11}) \frac{(70)(70)}{(1)^2}$$
+                    $$F = (6.674 \times 10^{-11}) \frac{4900}{1}$$
+                    $$F = 3.27 \times 10^{-7} \text{ N}$$
+                    The force is approximately $3.27 \times 10^{-7} \text{ N}$. This is an extremely small force, highlighting why we don't feel the gravitational pull of nearby objects in everyday life – it's completely dwarfed by Earth's gravity.
+                </p>
+            </div>
+        </section>
+
+        <section id="gravitational-fields" class="section-card">
+            <h3 class="text-4xl mb-6">3. Gravitational Fields</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                Just as we described electric forces using electric fields, we can conceptualize gravitational forces using the idea of a <span class="key-term">gravitational field</span>. This field describes the influence that a mass exerts on the space around it.
+            </p>
+
+            <h4 class="text-3xl mb-4">3.1. Definition of Gravitational Field Strength ($\vec{g}$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                A <span class="key-term">gravitational field strength ($\vec{g}$)</span> at a point in space is defined as the gravitational force per unit mass that would be exerted on a small test mass placed at that point. It is a vector quantity.
+            </p>
+            <div class="math-equation">
+                $$\vec{g} = \frac{\vec{F}_g}{m_0}$$
+                <p>Where:</p>
+                <ul class="list-disc list-inside ml-6">
+                    <li>$\vec{g}$ is the <span class="key-term">gravitational field strength</span> (in Newtons per kilogram, N/kg).</li>
+                    <li>$\vec{F}_g$ is the <span class="key-term">gravitational force</span> experienced by a test mass $m_0$ (in Newtons, N).</li>
+                    <li>$m_0$ is the magnitude of the <span class="key-term">test mass</span> (in kilograms, kg).</li>
+                </ul>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                Crucially, the magnitude of the gravitational field strength is numerically equal to the <span class="key-term">acceleration due to gravity</span> at that point, also denoted by $g$. So, $1 \text{ N/kg} = 1 \text{ m/s}^2$. The direction of the gravitational field at any point is the direction a free-falling object would accelerate.
+            </p>
+
+            <h4 class="text-3xl mb-4">3.2. Gravitational Field of a Point Mass or Spherical Body</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                For a single point mass $M$ (or a spherically symmetric body like a planet or star), the magnitude of the gravitational field strength at a distance $r$ from its center is:
+            </p>
+            <div class="math-equation">
+                $$g = G \frac{M}{r^2}$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                This formula explains why the acceleration due to gravity near the Earth's surface ($g \approx 9.8 \text{ m/s}^2$) is roughly constant. It is the gravitational field strength at the Earth's surface ($r = \text{Earth's Radius}$). As you move farther from Earth, $r$ increases, and $g$ decreases according to the inverse square law.
+            </p>
+            <div class="example-box">
+                <h4 class="text-xl font-semibold mb-2">Example: Gravitational Field on the Moon</h4>
+                <p class="text-lg leading-relaxed mb-2">
+                    The Moon has a mass of $7.34 \times 10^{22} \text{ kg}$ and a radius of $1.74 \times 10^6 \text{ m}$. Calculate the gravitational field strength on its surface.
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Given:</span> $M_{Moon} = 7.34 \times 10^{22} \text{ kg}$, $R_{Moon} = 1.74 \times 10^6 \text{ m}$, $G = 6.674 \times 10^{-11} \text{ N·m}^2/\text{kg}^2$.
+                </p>
+                <p class="text-lg leading-relaxed">
+                    Using $g = G \frac{M}{r^2}$:
+                    $$g_{Moon} = (6.674 \times 10^{-11}) \frac{7.34 \times 10^{22}}{(1.74 \times 10^6)^2}$$
+                    $$g_{Moon} = (6.674 \times 10^{-11}) \frac{7.34 \times 10^{22}}{3.0276 \times 10^{12}}$$
+                    $$g_{Moon} \approx 1.62 \text{ N/kg} \text{ or } 1.62 \text{ m/s}^2$$
+                    The gravitational field strength on the Moon's surface is approximately $1.62 \text{ m/s}^2$, which is about one-sixth of Earth's gravity. This explains why astronauts on the Moon could jump much higher.
+                </p>
+            </div>
+        </section>
+
+        <section id="mass-and-weight" class="section-card">
+            <h3 class="text-4xl mb-6">4. Mass and Weight: A Crucial Distinction</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                In everyday language, "mass" and "weight" are often used interchangeably, but in physics, they are distinct concepts with different meanings and units.
+            </p>
+
+            <h4 class="text-3xl mb-4">4.1. Mass ($m$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Mass ($m$)</span> is a fundamental property of matter that quantifies the amount of "stuff" in an object and its <span class="key-term">inertia</span> (resistance to changes in motion).
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">Mass is a <span class="key-term">scalar quantity</span>.</li>
+                <li class="mb-2">The SI unit of mass is the <span class="key-term">kilogram (kg)</span>.</li>
+                <li class="mb-2">Mass is an intrinsic property of an object and does not change with location (e.g., your mass is the same on Earth, the Moon, or in deep space).</li>
+            </ul>
+
+            <h4 class="text-3xl mb-4">4.2. Weight ($W$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Weight ($W$)</span> is the force of gravity acting on an object. It is a vector quantity, always directed towards the center of the gravitational source.
+            </p>
+            <div class="math-equation">
+                $$W = mg$$
+                <p>Where:</p>
+                <ul class="list-disc list-inside ml-6">
+                    <li>$W$ is the <span class="key-term">weight</span> (in Newtons, N).</li>
+                    <li>$m$ is the <span class="key-term">mass</span> of the object (in kilograms, kg).</li>
+                    <li>$g$ is the <span class="key-term">gravitational field strength</span> (or acceleration due to gravity) at the object's location (in N/kg or m/s$^2$).</li>
+                </ul>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                The SI unit of weight is the <span class="key-term">Newton (N)</span>, as it is a force.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">Weight changes with location because $g$ changes with location. For example, your weight on the Moon is about one-sixth of your weight on Earth, even though your mass remains the same.</li>
+                <li class="mb-2">In deep space, far from any significant gravitational sources, your weight would be practically zero, but your mass would still be the same.</li>
+            </ul>
+            <div class="example-box">
+                <h4 class="text-xl font-semibold mb-2">Example: Mass vs. Weight</h4>
+                <p class="text-lg leading-relaxed mb-2">
+                    A person has a mass of $80 \text{ kg}$.
+                </p>
+                <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
+                    <li class="mb-2">
+                        <span class="font-bold">Weight on Earth:</span> Assuming $g_{Earth} = 9.8 \text{ m/s}^2$.
+                        $$W_{Earth} = mg_{Earth} = (80 \text{ kg})(9.8 \text{ m/s}^2) = 784 \text{ N}$$
+                    </li>
+                    <li class="mb-2">
+                        <span class="font-bold">Weight on Moon:</span> Assuming $g_{Moon} = 1.62 \text{ m/s}^2$ (from previous example).
+                        $$W_{Moon} = mg_{Moon} = (80 \text{ kg})(1.62 \text{ m/s}^2) = 129.6 \text{ N}$$
+                    </li>
+                </ul>
+                <p class="text-lg leading-relaxed mt-2">
+                    The person's mass is always $80 \text{ kg}$, but their weight changes depending on the gravitational field.
+                </p>
+            </div>
+
+            <h4 class="text-3xl mb-4">4.3. Apparent Weight and Weightlessness</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Apparent weight</span> is the force an object exerts on its support (or the force a scale reads). It can differ from actual weight ($mg$) when there are additional vertical forces or acceleration.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="font-bold">In an Elevator:</span>
+                    <ul class="list-circle list-inside ml-8">
+                        <li class="mb-1">Accelerating upward: Apparent weight > actual weight.</li>
+                        <li class="mb-1">Accelerating downward: Apparent weight < actual weight.</li>
+                        <li class="mb-1">Constant velocity: Apparent weight = actual weight.</li>
+                        <li class="mb-1">Free fall (cable breaks): Apparent weight = 0 (this is true weightlessness).</li>
+                    </ul>
+                </li>
+            </ul>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Weightlessness</span> does not mean an absence of gravity. Astronauts in orbit are constantly falling around Earth; they are in a state of continuous free fall, which creates the sensation of weightlessness (apparent weight is zero), even though Earth's gravitational field is still significant at their orbital altitude.
+            </p>
+        </section>
+
+        <section id="gravitational-potential-energy" class="section-card">
+            <h3 class="text-4xl mb-6">5. Gravitational Potential Energy</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                We previously defined gravitational potential energy ($PE_g = mgh$) for situations near the Earth's surface where $g$ is constant. However, for objects far from Earth, or for interactions between celestial bodies, $g$ is not constant, and we need a more general definition.
+            </p>
+
+            <h4 class="text-3xl mb-4">5.1. General Definition of Gravitational Potential Energy ($U_g$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The <span class="key-term">gravitational potential energy ($U_g$)</span> of a system of two masses $m_1$ and $m_2$ separated by a distance $r$ is defined as the work done by an external agent to bring the masses from infinite separation to their current separation, in the absence of other forces. Due to the nature of gravity, it's more convenient to define the zero potential energy point at infinite separation. This leads to a negative value for potential energy when masses are attracted.
+            </p>
+            <div class="math-equation">
+                $$U_g = -G \frac{m_1 m_2}{r}$$
+                <p>Where:</p>
+                <ul class="list-disc list-inside ml-6">
+                    <li>$U_g$ is the <span class="key-term">gravitational potential energy</span> (in Joules, J).</li>
+                    <li>The negative sign indicates that the gravitational force is attractive. As $r$ decreases (masses get closer), $U_g$ becomes more negative, meaning the system is more stable or tightly bound.</li>
+                </ul>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                This general formula is essential for understanding energy conservation in celestial mechanics, satellite orbits, and escape velocity.
+            </p>
+
+            <h4 class="text-3xl mb-4">5.2. Escape Velocity</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Escape velocity ($v_e$)</span> is the minimum speed an object must have to break free from the gravitational attraction of a massive body (like a planet or star) and never fall back. It is derived using the principle of conservation of energy. To escape, an object's total mechanical energy (kinetic + potential) must be zero or positive.
+            </p>
+            <div class="math-equation">
+                $$\frac{1}{2}mv_e^2 + U_g = 0$$
+                $$\frac{1}{2}mv_e^2 - G \frac{Mm}{R} = 0$$
+                $$v_e^2 = \frac{2GM}{R}$$
+                $$v_e = \sqrt{\frac{2GM}{R}}$$
+                <p>Where:</p>
+                <ul class="list-disc list-inside ml-6">
+                    <li>$v_e$ is the <span class="key-term">escape velocity</span>.</li>
+                    <li>$G$ is the gravitational constant.</li>
+                    <li>$M$ is the mass of the celestial body (e.g., Earth, Moon).</li>
+                    <li>$R$ is the radius from the center of the celestial body from which the object is escaping.</li>
+                </ul>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                For Earth, the escape velocity from the surface is approximately $11.2 \text{ km/s}$ ($25,000 \text{ mph}$). This is the speed required for rockets to leave Earth's gravity.
+            </p>
+            <div class="example-box">
+                <h4 class="text-xl font-semibold mb-2">Example: Escape Velocity from Earth</h4>
+                <p class="text-lg leading-relaxed mb-2">
+                    Given Earth's mass $M_E = 5.97 \times 10^{24} \text{ kg}$ and radius $R_E = 6.37 \times 10^6 \text{ m}$, calculate the escape velocity from its surface.
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Given:</span> $M_E = 5.97 \times 10^{24} \text{ kg}$, $R_E = 6.37 \times 10^6 \text{ m}$, $G = 6.674 \times 10^{-11} \text{ N·m}^2/\text{kg}^2$.
+                </p>
+                <p class="text-lg leading-relaxed">
+                    $$v_e = \sqrt{\frac{2GM_E}{R_E}}$$
+                    $$v_e = \sqrt{\frac{2(6.674 \times 10^{-11})(5.97 \times 10^{24})}{6.37 \times 10^6}}$$
+                    $$v_e = \sqrt{\frac{7.96 \times 10^{14}}{6.37 \times 10^6}} = \sqrt{1.249 \times 10^8}$$
+                    $$v_e \approx 11175 \text{ m/s} \approx 11.2 \text{ km/s}$$
+                </p>
+            </div>
+        </section>
+
+        <section id="planetary-motion" class="section-card">
+            <h3 class="text-4xl mb-6">6. Basics of Planetary Motion: Kepler's Laws</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                Before Newton formulated his law of universal gravitation, Johannes Kepler, an astronomer, empirically derived three laws describing the motion of planets around the Sun based on Tycho Brahe's meticulous astronomical observations. Newton later showed that these empirical laws were a direct consequence of his gravitational law and the principles of classical mechanics.
+            </p>
+
+            <h4 class="text-3xl mb-4">6.1. Kepler's First Law: The Law of Orbits</h4>
+            <blockquote class="text-xl italic border-l-4 border-blue-500 pl-4 py-2 my-6">
+                "All planets move in elliptical orbits with the Sun at one focus."
+            </blockquote>
+            <p class="text-lg leading-relaxed mb-6">
+                This law states that orbits are not perfect circles but are ellipses. The Sun is not at the center of the ellipse, but at one of its two focal points.
+            </p>
+
+            <h4 class="text-3xl mb-4">6.2. Kepler's Second Law: The Law of Areas</h4>
+            <blockquote class="text-xl italic border-l-4 border-blue-500 pl-4 py-2 my-6">
+                "A line segment joining a planet and the Sun sweeps out equal areas during equal intervals of time."
+            </blockquote>
+            <p class="text-lg leading-relaxed mb-6">
+                This law implies that a planet moves faster when it is closer to the Sun (at perihelion) and slower when it is farther away (at aphelion). This is a consequence of the conservation of angular momentum.
+            </p>
+
+            <h4 class="text-3xl mb-4">6.3. Kepler's Third Law: The Law of Periods</h4>
+            <blockquote class="text-xl italic border-l-4 border-blue-500 pl-4 py-2 my-6">
+                "The square of the orbital period ($T$) of a planet is directly proportional to the cube of the semi-major axis ($a$) of its orbit."
+            </blockquote>
+            <div class="math-equation">
+                $$T^2 \propto a^3$$
+                <p>or, more precisely for orbits around a central mass $M$:</p>
+                $$T^2 = \left(\frac{4\pi^2}{GM}\right) a^3$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                This law allows us to calculate the orbital period of a planet (or satellite) if we know the size of its orbit and the mass of the central body, or vice versa. It highlights a fundamental relationship between the orbital characteristics and the gravitational force.
+            </p>
+            <div class="example-box">
+                <h4 class="text-xl font-semibold mb-2">Example: Kepler's Third Law</h4>
+                <p class="text-lg leading-relaxed mb-2">
+                    Mars's average distance from the Sun (semi-major axis) is approximately $1.52$ times Earth's average distance. Use Kepler's Third Law to estimate Mars's orbital period in Earth years.
+                </p>
+                <p class="text-lg leading-relaxed mb-2">
+                    <span class="font-bold">Given:</span> For Earth, $a_{Earth} = 1 \text{ AU}$ (Astronomical Unit), $T_{Earth} = 1 \text{ year}$. For Mars, $a_{Mars} = 1.52 \text{ AU}$.
+                </p>
+                <p class="text-lg leading-relaxed">
+                    From Kepler's Third Law: $T^2 \propto a^3$.
+                    So, $\frac{T_{Mars}^2}{T_{Earth}^2} = \frac{a_{Mars}^3}{a_{Earth}^3}$
+                    $$T_{Mars}^2 = T_{Earth}^2 \left(\frac{a_{Mars}}{a_{Earth}}\right)^3$$
+                    $$T_{Mars}^2 = (1 \text{ year})^2 \left(\frac{1.52 \text{ AU}}{1 \text{ AU}}\right)^3$$
+                    $$T_{Mars}^2 = 1.52^3 \text{ year}^2 = 3.5118 \text{ year}^2$$
+                    $$T_{Mars} = \sqrt{3.5118} \text{ years} \approx 1.87 \text{ years}$$
+                    Mars's orbital period is approximately $1.87$ Earth years. This matches observed values remarkably well.
+                </p>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                These laws are fundamental to understanding the stability and predictability of our solar system and the dynamics of exoplanetary systems.
+            </p>
+        </section>
+
+        <section id="conclusion" class="section-card">
+            <h3 class="text-4xl mb-6">7. Conclusion: The Invisible Architect of the Cosmos</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                Our extensive journey through <span class="key-term">gravitation</span> has unveiled the profound simplicity and universal reach of this fundamental force. We began with <span class="key-term">Newton's Law of Universal Gravitation</span>, understanding how this inverse square attractive force binds all masses in the cosmos, from apples to galaxies. The concept of a <span class="key-term">gravitational field</span> provided a powerful way to describe this influence, linking force to the <span class="key-term">acceleration due to gravity</span> at any point in space.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                We then clarified the crucial distinction between <span class="key-term">mass</span> (an intrinsic property of matter) and <span class="key-term">weight</span> (the gravitational force on an object), and explored the fascinating implications for <span class="key-term">apparent weight</span> and <span class="key-term">weightlessness</span>. Extending our energy concepts, we introduced the general formula for <span class="key-term">gravitational potential energy</span> and derived the critical <span class="key-term">escape velocity</span>, highlighting the energy required to break free from a celestial body's pull.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                Finally, we appreciated the brilliance of <span class="key-term">Kepler's Laws of Planetary Motion</span>, which empirically described the elliptical orbits, sweeping areas, and period-radius relationships of planets. Newton's genius then demonstrated how these observational laws were a direct, elegant consequence of his single, universal law of gravitation.
+            </p>
+            <p class="text-lg leading-relaxed">
+                The principles of gravitation are indispensable to understanding the cosmos, from the dynamics of our solar system and the stability of galaxies to the formation of stars and black holes. They are also crucial for space travel, satellite navigation, and even for understanding geophysical phenomena on Earth. As you continue your journey in physics, engineering, or astronomy, remember that this invisible force, though often weak on small scales, is the primary architect of the large-scale universe, shaping its structure and guiding its celestial dance. Keep exploring, keep questioning, and keep gravitating towards deeper knowledge!
+            </p>
+        </section>
+
+        <section id="glossary" class="section-card">
+            <h3 class="text-4xl mb-6">8. Glossary of Key Terms</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-lg">
+                <div><strong class="key-term">Acceleration due to Gravity ($g$):</strong> The acceleration experienced by an object due to a gravitational field. Numerically equal to gravitational field strength.</div>
+                <div><strong class="key-term">Apparent Weight:</strong> The force an object exerts on its support; can differ from actual weight due to acceleration.</div>
+                <div><strong class="key-term">Escape Velocity ($v_e$):</strong> The minimum speed an object needs to break free from a gravitational field and never fall back.</div>
+                <div><strong class="key-term">Gravitation:</strong> The universal attractive force between any two objects with mass.</div>
+                <div><strong class="key-term">Gravitational Field Strength ($\vec{g}$):</strong> The gravitational force per unit mass at a point in space. Measured in N/kg or m/s$^2$.</div>
+                <div><strong class="key-term">Gravitational Force ($\vec{F}_g$):</strong> The attractive force between two masses, described by Newton's Law of Universal Gravitation.</div>
+                <div><strong class="key-term">Gravitational Potential Energy ($U_g$):</strong> Energy stored in a system of masses due to their relative positions in a gravitational field ($U_g = -G \frac{m_1 m_2}{r}$). Defined as zero at infinite separation.</div>
+                <div><strong class="key-term">Inverse Square Law:</strong> A physical law stating that an intensity or force is inversely proportional to the square of the distance from the source.</div>
+                <div><strong class="key-term">Kepler's First Law (Law of Orbits):</strong> All planets move in elliptical orbits with the Sun at one focus.</div>
+                <div><strong class="key-term">Kepler's Second Law (Law of Areas):</strong> A line segment joining a planet and the Sun sweeps out equal areas during equal intervals of time.</div>
+                <div><strong class="key-term">Kepler's Third Law (Law of Periods):</strong> The square of the orbital period of a planet is proportional to the cube of the semi-major axis of its orbit ($T^2 \propto a^3$).</div>
+                <div><strong class="key-term">Mass ($m$):</strong> A fundamental measure of the amount of matter in an object and its inertia. Measured in kilograms (kg).</div>
+                <div><strong class="key-term">Newton's Law of Universal Gravitation:</strong> Every particle attracts every other particle with a force proportional to the product of their masses and inversely proportional to the square of the distance between them ($F = G \frac{m_1 m_2}{r^2}$).</div>
+                <div><strong class="key-term">Planetary Motion:</strong> The movement of planets (or satellites) around a central massive body, governed by gravitation.</div>
+                <div><strong class="key-term">Universal Gravitational Constant ($G$):</strong> A fundamental constant in Newton's Law of Universal Gravitation, $6.674 \times 10^{-11} \text{ N·m}^2/\text{kg}^2$.</div>
+                <div><strong class="key-term">Weight ($W$):</strong> The force of gravity acting on an object ($W = mg$). Measured in Newtons (N).</div>
+                <div><strong class="key-term">Weightlessness:</strong> A state where an object has no apparent weight, typically due to being in continuous free fall (e.g., in orbit).</div>
+            </div>
+        </section>
+
+        <section id="references" class="section-card">
+            <h3 class="text-4xl mb-6">9. Further Reading and References</h3>
+            <p class="text-lg leading-relaxed mb-4">To continue your cosmic journey and explore the profound implications of gravitation, consider these recommended resources:</p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
+                <li class="mb-2">Serway, R. A., & Jewett, J. W. (2018). <em>Physics for Scientists and Engineers with Modern Physics</em> (10th ed.). Cengage Learning. (Chapters on Gravitation)</li>
+                <li class="mb-2">Halliday, D., Resnick, R., & Walker, J. (2014). <em>Fundamentals of Physics</em> (10th ed.). John Wiley & Sons. (Chapter on Gravitation)</li>
+                <li class="mb-2">Young, H. D., & Freedman, R. A. (2020). <em>University Physics with Modern Physics</em> (15th ed.). Pearson. (Comprehensive coverage of gravitation and celestial mechanics)</li>
+                <li class="mb-2">Khan Academy: <a href="https://www.khanacademy.org/science/physics/gravitational-force-and-orbits" target="_blank" class="text-blue-400 hover:underline">Gravitational Force and Orbits Course</a> (Online video lessons and exercises)</li>
+                <li class="mb-2">HyperPhysics: <a href="http://hyperphysics.phy-astr.gsu.edu/hbase/grav.html" target="_blank" class="text-blue-400 hover:underline">Gravitation Topics</a> (Concise explanations and concept maps)</li>
+            </ul>
+        </section>
+
+    </div>
+
+    <script>
+        // Three.js Animated Background (reused from previous lessons)
+        const canvas = document.getElementById('three-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+
+        camera.position.z = 5;
+
+        const particleCount = 1000;
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount * 3; i += 3) {
+            positions[i] = (Math.random() - 0.5) * 200;
+            positions[i + 1] = (Math.random() - 0.5) * 200;
+            positions[i + 2] = (Math.random() - 0.5) * 200;
+        }
+
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0x63b3ed,
+            size: 0.1,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            opacity: 0.7
+        });
+
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+
+        const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(0, 1, 0);
+        scene.add(directionalLight);
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+
+            particleSystem.rotation.x += 0.0005;
+            particleSystem.rotation.y += 0.001;
+
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                positions[i3 + 2] += 0.05;
+
+                if (positions[i3 + 2] > camera.position.z + 10) {
+                    positions[i3 + 2] = camera.position.z - 200;
+                }
+            }
+            particles.attributes.position.needsUpdate = true;
+
+            renderer.render(scene, camera);
+        };
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        window.onload = function() {
+            animate();
+        };
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
