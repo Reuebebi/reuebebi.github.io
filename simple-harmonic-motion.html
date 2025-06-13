@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Harmonic Motion - Whizmath</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script>
+        // Optional: Configure MathJax to process dollar signs for inline math
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll due to potential canvas overflow */
+        }
+        #three-js-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send canvas to the background */
+            pointer-events: none; /* Allow clicks to pass through to content */
+        }
+        .content-container {
+            position: relative;
+            z-index: 1; /* Ensure content is above the canvas */
+            background: rgba(17, 24, 39, 0.9); /* Dark background with slight transparency for canvas to show */
+            padding: 2rem;
+            margin: 0 auto;
+            max-width: 90vw; /* Fluid width */
+            border-radius: 1.5rem; /* Rounded corners */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            color: #E5E7EB; /* Light grey text */
+            margin-top: 4rem; /* Space from top */
+            margin-bottom: 4rem; /* Space from bottom */
+        }
+
+        /* Responsive adjustments for content container */
+        @media (min-width: 768px) {
+            .content-container {
+                max-width: 80vw;
+            }
+        }
+        @media (min-width: 1024px) {
+            .content-container {
+                max-width: 70vw;
+            }
+        }
+        @media (min-width: 1280px) {
+            .content-container {
+                max-width: 60vw;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937; /* Darker grey */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4B5563; /* Medium grey */
+            border-radius: 10px;
+            border: 3px solid #1f2937;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6B7280; /* Lighter grey on hover */
+        }
+
+        /* Back button specific styling */
+        .back-button {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.25rem;
+            background: linear-gradient(135deg, #6366F1, #8B5CF6); /* Purple gradient */
+            color: white;
+            border-radius: 9999px; /* Fully rounded */
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.2), 0 6px 8px -4px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #4F46E5, #7C3AED);
+        }
+        .back-button svg {
+            margin-right: 0.5rem;
+        }
+
+        /* Styling for headings and paragraphs */
+        h1 {
+            font-size: 3rem; /* Larger heading */
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #93C5FD; /* Light blue */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        h2 {
+            font-size: 2.25rem;
+            font-weight: 600;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #9BD0F5; /* Slightly darker light blue */
+            border-bottom: 2px solid #3B82F6; /* Blue underline */
+            padding-bottom: 0.5rem;
+        }
+        h3 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #BEE3F8; /* Even lighter blue */
+        }
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+            font-size: 1.1rem;
+            text-align: justify;
+        }
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+            list-style-type: disc;
+        }
+        li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        code {
+            background-color: #374151; /* Darker grey for code snippets */
+            padding: 0.2em 0.4em;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            color: #D1D5DB;
+        }
+        .key-term {
+            font-weight: 600;
+            color: #60A5FA; /* Blue for key terms as requested */
+        }
+
+        /* Specific styling for MathJax elements */
+        .MathJax {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            overflow-x: auto; /* Allow horizontal scrolling for long equations */
+        }
+
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 min-h-screen flex flex-col items-center">
+
+    <!-- Three.js Canvas -->
+    <canvas id="three-js-canvas"></canvas>
+
+    <!-- Back Button -->
+    <a href="physics.html" class="back-button">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Physics
+    </a>
+
+    <!-- Main Content Container -->
+    <div class="content-container">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-10 leading-tight">
+            Exploring <span class="text-blue-400">Simple Harmonic Motion</span>: The Universal Rhythm
+        </h1>
+
+        <p class="text-lg mb-8 text-center px-4">
+            Welcome to Whizmath's in-depth guide to <span class="key-term">Simple Harmonic Motion (SHM)</span>, a fundamental concept in <span class="key-term">physics</span> that describes many natural <span class="key-term">oscillatory motions</span>. From the swing of a <span class="key-term">pendulum</span> to the vibration of a <span class="key-term">guitar string</span> or the bobbing of a <span class="key-term">mass on a spring</span>, SHM is characterized by a <span class="key-term">restoring force</span> directly proportional to the <span class="key-term">displacement</span> from an <span class="key-term">equilibrium position</span>. This lesson will define key terms like <span class="key-term">period</span> and <span class="key-term">frequency</span>, and thoroughly explore the dynamics of <span class="key-term">simple pendulums</span> and <span class="key-term">mass-spring systems</span>. We will also delve into the energy transformations, the effects of <span class="key-term">damping</span>, and the fascinating phenomenon of <span class="key-term">resonance</span>. Prepare to uncover the elegance and predictability of periodic motion, a rhythm that underpins much of our physical universe!
+        </p>
+
+        <h2 id="introduction">1. Introduction to Oscillatory Motion: The Repetitive Dance</h2>
+        <p>
+            In the vast tapestry of <span class="key-term">physics</span>, motion is a central theme. We encounter various types of motion daily: linear motion, rotational motion, and a particularly intriguing category known as <span class="key-term">oscillatory motion</span> or <span class="key-term">vibrational motion</span>. This refers to any repetitive motion back and forth or up and down about a central point or <span class="key-term">equilibrium position</span>. The sway of a tree in the wind, the rhythmic beat of a drum, the pulsating rhythm of a heart, or the gentle rocking of a boat on water are all everyday manifestations of oscillatory behavior.
+        </p>
+        <p>
+            Among these various forms of <span class="key-term">oscillatory motion</span>, <span class="key-term">Simple Harmonic Motion (SHM)</span> stands out due to its simplicity, predictability, and pervasive nature. It's considered 'simple' because it adheres to a very specific mathematical relationship that makes its behavior exceptionally predictable. This mathematical elegance allows SHM to serve as a foundational model for understanding more complex periodic phenomena across diverse fields. For instance, the propagation of <span class="key-term">sound waves</span>, the electromagnetic oscillations of <span class="key-term">light</span>, and even the thermal vibrations of <span class="key-term">atoms</span> within solid materials can often be accurately modeled using the principles of SHM. Its widespread applicability makes it an indispensable concept in engineering, acoustics, optics, and even quantum mechanics.
+        </p>
+        <p>
+            This comprehensive guide to <span class="key-term">Simple Harmonic Motion</span> on Whizmath will provide a deep dive into its intricacies, equipping you with a robust understanding of this fundamental physical phenomenon. We will meticulously explore:
+        </p>
+        <ul class="list-disc ml-6">
+            <li>The fundamental definition and distinguishing characteristics of <span class="key-term">SHM</span>.</li>
+            <li>The critical role of the <span class="key-term">restoring force</span>, particularly as described by <span class="key-term">Hooke's Law</span> ($F = -kx$), and its implications for the motion.</li>
+            <li>Precise definitions and interrelationships of key parameters such as <span class="key-term">displacement</span>, <span class="key-term">amplitude</span>, <span class="key-term">period</span>, and <span class="key-term">frequency</span>, along with their mathematical representations.</li>
+            <li>A detailed analysis of two classic examples: the <span class="key-term">mass-spring system</span> (both horizontal and vertical configurations) and the <span class="key-term">simple pendulum</span>, including their derivations and limitations.</li>
+            <li>The dynamic <span class="key-term">energy transformations</span> that occur between <span class="key-term">kinetic energy</span> and <span class="key-term">potential energy</span> throughout an SHM cycle, emphasizing the principle of <span class="key-term">conservation of mechanical energy</span>.</li>
+            <li>An exploration of real-world scenarios where oscillations are influenced by <span class="key-term">damping forces</span>, leading to a decay in amplitude, and the different types of damping.</li>
+            <li>An in-depth look into <span class="key-term">forced oscillations</span> and the critical phenomenon of <span class="key-term">resonance</span>, where external driving forces can dramatically amplify oscillations.</li>
+            <li>Practical applications of SHM across various scientific and technological domains, highlighting its enduring relevance.</li>
+            <li>A brief conceptual link between <span class="key-term">Simple Harmonic Motion</span> and the broader theory of <span class="key-term">waves</span>.</li>
+        </ul>
+
+        <h2 id="defining-shm">2. Defining Simple Harmonic Motion: The Proportionality Principle</h2>
+        <p>
+            The cornerstone of <span class="key-term">Simple Harmonic Motion (SHM)</span> lies in a very specific relationship between the force acting on an oscillating object and its position. At its heart, <span class="key-term">SHM</span> is defined by the condition that the <span class="key-term">restoring force</span> acting on the object is directly proportional to its <span class="key-term">displacement</span> from the <span class="key-term">equilibrium position</span>, and crucially, this force always acts in the direction opposite to the <span class="key-term">displacement</span>.
+        </p>
+
+        <h3>2.1. The Restoring Force: Hooke's Law and its Mathematical Implications</h3>
+        <p>
+            The concept of a <span class="key-term">restoring force</span> is paramount. This force invariably acts to pull or push the oscillating object back towards its <span class="key-term">equilibrium position</span> – the point where the net force on the object is zero, and it would remain at rest if undisturbed. For an ideal spring, this force is precisely quantified by <span class="key-term">Hooke's Law</span>:
+            $$F = -kx$$
+            Let's break down each component of this fundamental equation:
+            <ul>
+                <li>$F$: Represents the <span class="key-term">restoring force</span>, measured in Newtons (N). This force is the driving factor that causes the object to oscillate.</li>
+                <li>$k$: Is the <span class="key-term">spring constant</span>, a quantitative measure of the stiffness or rigidity of the spring. Its units are Newtons per meter (N/m). A higher value of $k$ indicates a stiffer spring, meaning more force is required to stretch or compress it by a given amount.</li>
+                <li>$x$: Denotes the <span class="key-term">displacement</span> of the object from its <span class="key-term">equilibrium position</span>, measured in meters (m). It specifies both the distance and the direction from equilibrium.</li>
+                <li>The negative sign: This seemingly small detail is profoundly important. It signifies that the <span class="key-term">restoring force</span> always opposes the <span class="key-term">displacement</span>. If you stretch a spring to the right (positive $x$), the spring pulls back to the left (negative $F$). Conversely, if you compress the spring to the left (negative $x$), the spring pushes back to the right (positive $F$). This opposing nature is what causes the oscillation, as the force constantly tries to restore the system to equilibrium.</li>
+            </ul>
+        </p>
+        <p>
+            While <span class="key-term">Hooke's Law</span> is specifically named for springs, the underlying principle of a <span class="key-term">restoring force proportional to displacement</span> is the universal criterion for all systems exhibiting <span class="key-term">Simple Harmonic Motion</span>. Even for systems that don't visibly contain a spring, such as a simple pendulum (for small angles), an effective restoring force with this proportionality emerges, allowing us to analyze their motion as SHM.
+        </p>
+
+        <h3>2.2. The Differential Equation of SHM: A Mathematical Description</h3>
+        <p>
+            To fully understand the motion, we combine <span class="key-term">Hooke's Law</span> with <span class="key-term">Newton's Second Law of Motion</span> ($F = ma$, where $m$ is mass and $a$ is acceleration). Since $F_{net} = -kx$, we can write:
+            $$ma = -kx$$
+            Knowing that <span class="key-term">acceleration</span> is the second derivative of <span class="key-term">displacement</span> with respect to time ($a = \frac{d^2x}{dt^2}$), we arrive at the defining differential equation for <span class="key-term">SHM</span>:
+            $$m\frac{d^2x}{dt^2} = -kx$$
+            Rearranging this, we get:
+            $$\frac{d^2x}{dt^2} + \frac{k}{m}x = 0$$
+            This second-order linear differential equation is characteristic of <span class="key-term">Simple Harmonic Motion</span>. The solutions to this equation are sinusoidal functions (sines or cosines), which mathematically confirm the oscillatory nature of the motion.
+            The general solution for displacement as a function of time is:
+            $$x(t) = A \cos(\omega t + \phi)$$
+            Here:
+            <ul>
+                <li>$x(t)$ is the <span class="key-term">displacement</span> of the object at any given time $t$.</li>
+                <li>$A$ is the <span class="key-term">amplitude</span>, the maximum displacement from equilibrium.</li>
+                <li>$\omega$ is the <span class="key-term">angular frequency</span>, a measure of how quickly the oscillation occurs. From the differential equation, we can see that $\omega^2 = \frac{k}{m}$, so $\omega = \sqrt{\frac{k}{m}}$.</li>
+                <li>$\phi$ is the <span class="key-term">phase constant</span> or initial phase, which accounts for the initial conditions of the motion (i.e., where the object is and its velocity at $t=0$).</li>
+            </ul>
+            This equation encapsulates the entire kinematic behavior of an object undergoing <span class="key-term">SHM</span>.
+        </p>
+
+        <h3>2.3. Kinematics of SHM: Displacement, Velocity, and Acceleration</h3>
+        <p>
+            Understanding the relationships between <span class="key-term">displacement</span>, <span class="key-term">velocity</span>, and <span class="key-term">acceleration</span> in <span class="key-term">SHM</span> is crucial.
+            Given the <span class="key-term">displacement</span> equation:
+            $$x(t) = A \cos(\omega t + \phi)$$
+            We can find the <span class="key-term">velocity</span> by taking the first derivative with respect to time:
+            $$v(t) = \frac{dx}{dt} = -A\omega \sin(\omega t + \phi)$$
+            The maximum <span class="key-term">velocity</span> is $v_{max} = A\omega$, and it occurs when the object passes through the <span class="key-term">equilibrium position</span> ($x=0$).
+            <br><br>
+            And we can find the <span class="key-term">acceleration</span> by taking the second derivative with respect to time (or the first derivative of velocity):
+            $$a(t) = \frac{dv}{dt} = -A\omega^2 \cos(\omega t + \phi)$$
+            Substituting $x(t) = A \cos(\omega t + \phi)$ back into the acceleration equation, we get:
+            $$a(t) = -\omega^2 x(t)$$
+            This confirms the defining characteristic of <span class="key-term">SHM</span>: <span class="key-term">acceleration</span> is directly proportional to <span class="key-term">displacement</span> and acts in the opposite direction. The maximum <span class="key-term">acceleration</span> is $a_{max} = A\omega^2$, and it occurs at the extreme ends of the oscillation (maximum <span class="key-term">displacement</span>).
+        </p>
+        <p>
+            **Graphical Representation:**
+            If we assume $\phi=0$, the graphs of <span class="key-term">displacement</span>, <span class="key-term">velocity</span>, and <span class="key-term">acceleration</span> as functions of time would look like this:
+            <ul>
+                <li><span class="key-term">Displacement ($x(t)$):</span> A cosine wave. Starts at maximum positive amplitude, goes to zero, then maximum negative, then back to maximum positive.</li>
+                <li><span class="key-term">Velocity ($v(t)$):</span> A negative sine wave. Starts at zero, goes to maximum negative, then zero, then maximum positive, then back to zero. It is $90^\circ$ (or $\pi/2$ radians) out of phase with displacement.</li>
+                <li><span class="key-term">Acceleration ($a(t)$):</span> A negative cosine wave. Starts at maximum negative, goes to zero, then maximum positive, then back to maximum negative. It is $180^\circ$ (or $\pi$ radians) out of phase with displacement.</li>
+            </ul>
+            This phase relationship is crucial for understanding the dynamics of <span class="key-term">SHM</span>.
+        </p>
+
+        <h3>2.4. Key Terminology and Relationships</h3>
+        <p>
+            To fully grasp <span class="key-term">SHM</span>, several key terms are essential, along with their precise definitions and interrelationships:
+        </p>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Equilibrium Position:</span> This is the stable point where the net force on the oscillating object is zero. In <span class="key-term">SHM</span>, the object oscillates symmetrically about this point. It's the "home" position where the system wants to reside.</li>
+            <li><span class="key-term">Displacement ($x$):</span> The instantaneous distance and direction of the oscillating object from its <span class="key-term">equilibrium position</span> at any given moment. It is a vector quantity, meaning it has both magnitude and direction (e.g., $+2 \text{ cm}$ or $-5 \text{ cm}$).</li>
+            <li><span class="key-term">Amplitude ($A$):</span> The maximum <span class="key-term">displacement</span> from the <span class="key-term">equilibrium position</span>. It represents the maximum extent of the oscillation, signifying how far the object moves from its center point. It is always a positive scalar quantity.</li>
+            <li><span class="key-term">Period ($T$):</span> The time taken for one complete oscillation or cycle of the motion. It is measured in seconds (s). One complete cycle means the object returns to its starting point and is moving in the same direction. For example, if a pendulum swings from its highest point on the right, to the highest point on the left, and back to the highest point on the right, that constitutes one <span class="key-term">period</span>.</li>
+            <li><span class="key-term">Frequency ($f$):</span> The number of complete oscillations or cycles that occur per unit time. It is the reciprocal of the <span class="key-term">period</span>, meaning $f = 1/T$. The standard unit for <span class="key-term">frequency</span> is Hertz (Hz), where $1 \text{ Hz} = 1 \text{ cycle/second}$. A higher <span class="key-term">frequency</span> means more oscillations per second, implying a shorter <span class="key-term">period</span>.</li>
+            <li><span class="key-term">Angular Frequency ($\omega$):</span> Often seen in the mathematical description of <span class="key-term">SHM</span>, <span class="key-term">angular frequency</span> is related to <span class="key-term">frequency</span> and <span class="key-term">period</span> by the formulas $\omega = 2\pi f = 2\pi/T$. It is measured in radians per second (rad/s) and serves as a convenient link between linear <span class="key-term">SHM</span> and its projection from uniform circular motion. Imagine a point moving in a circle; its projection onto a diameter undergoes SHM.</li>
+            <li><span class="key-term">Phase Constant ($\phi$):</span> This constant describes the initial conditions of the oscillating object at time $t=0$. It tells us where the object is in its cycle at the very beginning of our observation, and it's essential for accurately describing the motion.</li>
+        </ul>
+
+        <h2 id="mass-spring-systems">3. Mass-Spring Systems: The Prototypical Oscillator</h2>
+        <p>
+            The <span class="key-term">mass-spring system</span> is perhaps the most fundamental and intuitive example of <span class="key-term">Simple Harmonic Motion</span>. Its clear adherence to <span class="key-term">Hooke's Law</span> makes it an ideal model for illustrating the principles of <span class="key-term">SHM</span>.
+        </p>
+
+        <h3>3.1. Dynamics of a Horizontal Mass-Spring System</h3>
+        <p>
+            Consider a mass $m$ attached to one end of an ideal spring with spring constant $k$, with the other end of the spring fixed to a rigid support. The mass rests on a frictionless horizontal surface. When the mass is at its <span class="key-term">equilibrium position</span>, the spring is neither stretched nor compressed, and the net force on the mass is zero.
+            <br><br>
+            If we displace the mass from its <span class="key-term">equilibrium position</span> by a distance $x$ (either stretching or compressing the spring) and then release it, the spring exerts a <span class="key-term">restoring force</span> $F = -kx$ on the mass. This force is always directed back towards the <span class="key-term">equilibrium position</span>.
+            <br><br>
+            Applying <span class="key-term">Newton's Second Law of Motion</span> ($F_{net} = ma$) to this system, where the net force is the <span class="key-term">restoring force</span>:
+            $$ma = -kx$$
+            Since acceleration $a = \frac{d^2x}{dt^2}$, we substitute this into the equation:
+            $$m\frac{d^2x}{dt^2} = -kx$$
+            Rearranging this equation, we get the standard form of the differential equation for <span class="key-term">SHM</span>:
+            $$\frac{d^2x}{dt^2} + \left(\frac{k}{m}\right)x = 0$$
+            By comparing this to the general form of the SHM differential equation ($\frac{d^2x}{dt^2} + \omega^2 x = 0$), we immediately identify the square of the <span class="key-term">angular frequency</span>:
+            $$\omega^2 = \frac{k}{m}$$
+            Therefore, the <span class="key-term">angular frequency</span> of oscillation for a mass-spring system is:
+            $$\omega = \sqrt{\frac{k}{m}}$$
+        </p>
+
+        <h3>3.2. Period and Frequency of a Mass-Spring System</h3>
+        <p>
+            Using the relationships between <span class="key-term">angular frequency</span>, <span class="key-term">period</span>, and <span class="key-term">frequency</span>, we can derive the formulas for $T$ and $f$ for the mass-spring system.
+            Since $T = 2\pi/\omega$:
+            $$T = 2\pi\sqrt{\frac{m}{k}}$$
+            This equation provides the <span class="key-term">period</span> of oscillation in seconds.
+            <br><br>
+            And since $f = 1/T$:
+            $$f = \frac{1}{2\pi}\sqrt{\frac{k}{m}}$$
+            This equation provides the <span class="key-term">frequency</span> of oscillation in Hertz.
+            <br><br>
+            **Key Insights from these Equations:**
+            <ul class="list-disc ml-6">
+                <li><span class="key-term">Mass ($m$):</span> The <span class="key-term">period</span> ($T$) is directly proportional to the square root of the mass. This means if you increase the mass, the oscillation will become slower (longer <span class="key-term">period</span>). A heavier mass has more inertia, making it harder for the spring to accelerate and decelerate it quickly.</li>
+                <li><span class="key-term">Spring Constant ($k$):</span> The <span class="key-term">period</span> ($T$) is inversely proportional to the square root of the spring constant. A stiffer spring (larger $k$) will result in a faster oscillation (shorter <span class="key-term">period</span>) because it exerts a stronger <span class="key-term">restoring force</span> for a given <span class="key-term">displacement</span>.</li>
+                <li><span class="key-term">Amplitude Independence:</span> Crucially, for an ideal mass-spring system, the <span class="key-term">period</span> and <span class="key-term">frequency</span> of oscillation are independent of its <span class="key-term">amplitude</span>. This means whether you pull the mass a little or a lot (within the elastic limit of the spring), it will still take the same amount of time to complete one full oscillation. This is a defining characteristic of true <span class="key-term">SHM</span>.</li>
+            </ul>
+        </p>
+
+        <h3>3.3. Vertical Mass-Spring System</h3>
+        <p>
+            The principles for a vertical mass-spring system are very similar to the horizontal one. When a mass is hung from a spring, it will stretch the spring to a new <span class="key-term">equilibrium position</span>, where the upward spring force balances the downward gravitational force ($F_{spring} = mg$).
+            $$k x_0 = mg$$
+            where $x_0$ is the equilibrium stretch.
+            <br><br>
+            If the mass is then displaced from *this new equilibrium position* and released, it will undergo <span class="key-term">SHM</span> about this new equilibrium point. The gravitational force $mg$ simply shifts the equilibrium position; it does not affect the <span class="key-term">restoring force</span> relationship ($F = -kx'$) where $x'$ is the displacement from the *new* equilibrium. Thus, the <span class="key-term">period</span> and <span class="key-term">frequency</span> formulas ($T = 2\pi\sqrt{m/k}$ and $f = \frac{1}{2\pi}\sqrt{k/m}$) remain the same for both horizontal and vertical mass-spring systems.
+        </p>
+
+        <h2 id="simple-pendulums">4. Simple Pendulums: Gravity's Harmonic Dance</h2>
+        <p>
+            The <span class="key-term">simple pendulum</span> is another iconic example of a system that approximates <span class="key-term">Simple Harmonic Motion</span> under specific conditions. It serves as an excellent model for understanding oscillatory behavior driven by <span class="key-term">gravity</span>.
+        </p>
+
+        <h3>4.1. The Ideal Simple Pendulum</h3>
+        <p>
+            An ideal <span class="key-term">simple pendulum</span> consists of a point mass, often called a "bob," suspended from a fixed pivot by a massless, inextensible string or rod of length $L$.
+            <br><br>
+            When the pendulum bob is displaced from its <span class="key-term">equilibrium position</span> (which is vertically below the pivot) and released, it swings back and forth. The force that brings the pendulum back to its equilibrium is a component of the gravitational force.
+            <br><br>
+            The gravitational force acting on the bob is $mg$, directed vertically downwards. When the pendulum is displaced by an angle $\theta$ from the vertical, the gravitational force can be resolved into two components:
+            <ul class="list-disc ml-6">
+                <li>A component $mg \cos\theta$ acting along the string, which is balanced by the tension in the string.</li>
+                <li>A component $mg \sin\theta$ acting tangential to the arc of motion, directed back towards the <span class="key-term">equilibrium position</span>. This is the <span class="key-term">restoring force</span>.</li>
+            </ul>
+            So, the <span class="key-term">restoring force</span> is:
+            $$F_{restoring} = -mg \sin\theta$$
+            The negative sign indicates that the force is opposite to the <span class="key-term">displacement</span>.
+            <br><br>
+            Applying <span class="key-term">Newton's Second Law</span> in the tangential direction:
+            $$ma_t = -mg \sin\theta$$
+            Where $a_t$ is the tangential acceleration. Since $a_t = L \frac{d^2\theta}{dt^2}$ (for angular acceleration), we get:
+            $$mL \frac{d^2\theta}{dt^2} = -mg \sin\theta$$
+            $$\frac{d^2\theta}{dt^2} = -\frac{g}{L} \sin\theta$$
+            This differential equation is *not* the same as the <span class="key-term">SHM</span> differential equation because of the $\sin\theta$ term. If this were true SHM, it would be simply $\theta$ instead of $\sin\theta$.
+        </p>
+
+        <h3>4.2. Small Angle Approximation for SHM</h3>
+        <p>
+            For a <span class="key-term">simple pendulum</span> to approximate <span class="key-term">Simple Harmonic Motion</span>, a crucial approximation is needed: the <span class="key-term">small angle approximation</span>.
+            <br><br>
+            For very small angles (typically $\theta < 15^\circ$ or approximately $0.26$ radians), the value of $\sin\theta$ is very nearly equal to $\theta$ (when $\theta$ is measured in radians).
+            Mathematically: $\sin\theta \approx \theta$ (for small $\theta$ in radians).
+            <br><br>
+            Using this approximation, the differential equation for the pendulum becomes:
+            $$\frac{d^2\theta}{dt^2} = -\frac{g}{L} \theta$$
+            This equation now perfectly matches the form of the <span class="key-term">SHM</span> differential equation ($\frac{d^2x}{dt^2} + \omega^2 x = 0$), where $x$ is replaced by $\theta$.
+            From this, we can identify the square of the <span class="key-term">angular frequency</span> for a simple pendulum:
+            $$\omega^2 = \frac{g}{L}$$
+            So, the <span class="key-term">angular frequency</span> is:
+            $$\omega = \sqrt{\frac{g}{L}}$$
+        </p>
+
+        <h3>4.3. Period and Frequency of a Simple Pendulum</h3>
+        <p>
+            Using the relationships $T = 2\pi/\omega$ and $f = 1/T$:
+            The <span class="key-term">period</span> of oscillation for a <span class="key-term">simple pendulum</span> (for small angles) is:
+            $$T = 2\pi\sqrt{\frac{L}{g}}$$
+            Where:
+            <ul>
+                <li>$T$ is the <span class="key-term">period</span> of the pendulum in seconds.</li>
+                <li>$L$ is the <span class="key-term">length</span> of the string from the pivot point to the center of the bob in meters.</li>
+                <li>$g$ is the <span class="key-term">acceleration due to gravity</span>, approximately $9.81 \text{ m/s}^2$ on Earth.</li>
+            </ul>
+            And the <span class="key-term">frequency</span> is:
+            $$f = \frac{1}{2\pi}\sqrt{\frac{g}{L}}$$
+            <br><br>
+            **Key Insights from these Equations:**
+            <ul class="list-disc ml-6">
+                <li><span class="key-term">Length ($L$):</span> The <span class="key-term">period</span> of a <span class="key-term">simple pendulum</span> is directly proportional to the square root of its <span class="key-term">length</span>. A longer pendulum swings slower (longer <span class="key-term">period</span>).</li>
+                <li><span class="key-term">Acceleration due to Gravity ($g$):</span> The <span class="key-term">period</span> is inversely proportional to the square root of $g$. This implies that a pendulum clock would run slower on the Moon (where $g$ is lower) and faster on Jupiter (where $g$ is higher).</li>
+                <li><span class="key-term">Mass Independence:</span> The <span class="key-term">period</span> of a <span class="key-term">simple pendulum</span> does NOT depend on the <span class="key-term">mass of the bob</span>. A heavier bob will swing with the same <span class="key-term">period</span> as a lighter bob, provided the length is the same and air resistance is negligible.</li>
+                <li><span class="key-term">Amplitude Dependence (for large angles):</span> Unlike the mass-spring system, the <span class="key-term">period</span> of a <span class="key-term">simple pendulum</span> *does* become dependent on the <span class="key-term">amplitude</span> for larger angles. As the amplitude increases beyond the small angle approximation, the actual <span class="key-term">period</span> will be slightly longer than predicted by the formula, and the motion is no longer strictly <span class="key-term">SHM</span>.</li>
+            </ul>
+        </p>
+
+        <h3>4.4. The Physical Pendulum (Briefly)</h3>
+        <p>
+            While the <span class="key-term">simple pendulum</span> is an idealized model, a <span class="key-term">physical pendulum</span> is any real pendulum that has a distributed mass, not concentrated at a single point. Its <span class="key-term">period</span> depends on its <span class="key-term">moment of inertia</span> ($I$) about the pivot point and the distance $d$ from the pivot to its center of mass.
+            $$T = 2\pi\sqrt{\frac{I}{mgd}}$$
+            For a <span class="key-term">simple pendulum</span>, $I = mL^2$ and $d=L$, which simplifies to $T = 2\pi\sqrt{L/g}$, confirming the validity of the simple model under its assumptions.
+        </p>
+
+        <h2 id="energy-in-shm">5. Energy in Simple Harmonic Motion: Constant Transformation</h2>
+        <p>
+            In an ideal <span class="key-term">Simple Harmonic Motion (SHM)</span> system—one where there is no friction, air resistance, or other non-conservative forces at play—the <span class="key-term">total mechanical energy is conserved</span>. This means the sum of the <span class="key-term">kinetic energy (KE)</span> and <span class="key-term">potential energy (PE)</span> of the system remains constant throughout the oscillation. Instead of energy being lost, it continuously transforms back and forth between these two forms.
+        </p>
+
+        <h3>5.1. Kinetic Energy (KE)</h3>
+        <p>
+            The <span class="key-term">kinetic energy</span> of the oscillating object is due to its motion and is given by the familiar formula:
+            $$\text{KE} = \frac{1}{2}mv^2$$
+            Where $m$ is the mass of the object and $v$ is its instantaneous velocity.
+            <br><br>
+            In <span class="key-term">SHM</span>, the <span class="key-term">kinetic energy</span> is:
+            <ul class="list-disc ml-6">
+                <li>**Maximum** when the object passes through its <span class="key-term">equilibrium position</span> ($x=0$). At this point, the <span class="key-term">restoring force</span> is zero, but the object has its maximum speed. Its velocity is $v_{max} = A\omega$. So, $\text{KE}_{max} = \frac{1}{2}m(A\omega)^2 = \frac{1}{2}mA^2\omega^2$.</li>
+                <li>**Zero** at the extreme ends of its swing (i.e., at $x = +A$ or $x = -A$). At these points, the object momentarily stops before reversing direction, so its velocity is zero.</li>
+            </ul>
+        </p>
+
+        <h3>5.2. Potential Energy (PE)</h3>
+        <p>
+            The <span class="key-term">potential energy</span> in an <span class="key-term">SHM</span> system is stored within the mechanism that provides the <span class="key-term">restoring force</span>.
+        </p>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">For a Mass-Spring System:</span> The energy is stored as elastic <span class="key-term">potential energy</span> in the spring, which is stretched or compressed. The formula for this energy is:
+                $$\text{PE}_{\text{spring}} = \frac{1}{2}kx^2$$
+                This energy is:
+                <ul>
+                    <li>**Maximum** at the extreme ends of the oscillation (maximum <span class="key-term">displacement</span>, $x = \pm A$). At these points, $\text{PE}_{max} = \frac{1}{2}kA^2$.</li>
+                    <li>**Zero** at the <span class="key-term">equilibrium position</span> ($x=0$), where the spring is neither stretched nor compressed.</li>
+                </ul>
+            </li>
+            <li><span class="key-term">For a Simple Pendulum:</span> The energy is stored as gravitational <span class="key-term">potential energy</span> due to the bob's height above its lowest point.
+                $$\text{PE}_{\text{gravity}} = mgh$$
+                where $h$ is the vertical height above the equilibrium position. This energy is:
+                <ul>
+                    <li>**Maximum** at the extreme ends of the swing (maximum height).</li>
+                    <li>**Minimum** (defined as zero) at the <span class="key-term">equilibrium position</span> (the lowest point of the swing).</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>5.3. Total Mechanical Energy and its Conservation</h3>
+        <p>
+            The <span class="key-term">total mechanical energy (E)</span> of an ideal <span class="key-term">SHM</span> system is the sum of its <span class="key-term">kinetic energy</span> and <span class="key-term">potential energy</span> at any given moment:
+            $$E = \text{KE} + \text{PE} = \frac{1}{2}mv^2 + \frac{1}{2}kx^2 = \text{constant}$$
+            (For a mass-spring system, replace $\frac{1}{2}kx^2$ with $mgh$ for a pendulum).
+            <br><br>
+            Since energy is conserved, the total energy can be determined by considering the system at either the maximum displacement (where velocity is zero and KE is zero, so all energy is PE) or at the equilibrium position (where displacement is zero and PE is zero, so all energy is KE).
+            <br><br>
+            Therefore, for a mass-spring system:
+            $$E = \text{PE}_{max} = \frac{1}{2}kA^2$$
+            And also:
+            $$E = \text{KE}_{max} = \frac{1}{2}mv_{max}^2$$
+            Equating these two expressions for total energy:
+            $$\frac{1}{2}kA^2 = \frac{1}{2}mv_{max}^2$$
+            $$v_{max} = A\sqrt{\frac{k}{m}} = A\omega$$
+            This re-derivation of $v_{max}$ from energy conservation beautifully aligns with the kinematic derivation, reinforcing the consistency of physics principles.
+            <br><br>
+            This continuous conversion between <span class="key-term">kinetic energy</span> and <span class="key-term">potential energy</span> is the driving mechanism behind the persistent oscillations in an ideal <span class="key-term">SHM</span> system. As the object moves towards equilibrium, its speed increases, converting potential energy into kinetic energy. As it moves away from equilibrium, its speed decreases, converting kinetic energy back into potential energy, until it momentarily stops at the extreme amplitude before the process reverses.
+        </p>
+
+        <h2 id="damping">6. Damped Oscillations: The Fading Rhythm</h2>
+        <p>
+            In the real world, ideal <span class="key-term">Simple Harmonic Motion</span> (where oscillations continue indefinitely) is rarely observed. Most physical systems experience some form of energy dissipation due to resistive forces like friction or air resistance. These forces cause the <span class="key-term">amplitude</span> of oscillation to gradually decrease over time, a phenomenon known as <span class="key-term">damping</span>.
+        </p>
+
+        <h3>6.1. The Damping Force</h3>
+        <p>
+            A common model for a <span class="key-term">damping force</span> is one that is proportional to the velocity of the oscillating object and acts in the opposite direction to the velocity. This is often called viscous damping:
+            $$F_d = -bv$$
+            Where:
+            <ul>
+                <li>$F_d$ is the <span class="key-term">damping force</span>.</li>
+                <li>$b$ is the <span class="key-term">damping coefficient</span>, a constant that depends on the properties of the medium (e.g., air, fluid) and the shape of the oscillating object. Its units are Ns/m.</li>
+                <li>$v$ is the velocity of the object.</li>
+                <li>The negative sign indicates that the damping force always opposes the motion.</li>
+            </ul>
+        </p>
+
+        <h3>6.2. Types of Damping</h3>
+        <p>
+            When a <span class="key-term">damping force</span> is introduced into an <span class="key-term">SHM</span> system, <span class="key-term">Newton's Second Law</span> becomes:
+            $$ma = -kx - bv$$
+            $$m\frac{d^2x}{dt^2} + b\frac{dx}{dt} + kx = 0$$
+            The solutions to this differential equation describe three main types of damped oscillations, depending on the relative magnitudes of $b$, $m$, and $k$:
+            <ul class="list-disc ml-6">
+                <li><span class="key-term">Underdamped Oscillation:</span> This occurs when the damping is relatively weak (small $b$). The system still oscillates, but its <span class="key-term">amplitude</span> gradually decreases over time, eventually dying out. This is the most common type of damping observed in systems like a swing or a vibrating string. The oscillation has a slightly longer <span class="key-term">period</span> than the undamped system.</li>
+                <li><span class="key-term">Critically Damped Oscillation:</span> This represents the optimal level of damping where the system returns to its <span class="key-term">equilibrium position</span> as quickly as possible without oscillating. There is no oscillatory motion. Examples include well-designed door closers or car shock absorbers. This occurs at a specific damping coefficient, $b_c = 2\sqrt{mk}$.</li>
+                <li><span class="key-term">Overdamped Oscillation:</span> This occurs when the damping is very strong (large $b$). The system returns to equilibrium slowly and without oscillating, but it takes a longer time to do so than a critically damped system. Imagine trying to open a door against very thick molasses – it moves sluggishly.</li>
+            </ul>
+        </p>
+        <p>
+            <span class="key-term">Damping</span> is often a desirable feature in engineering (e.g., in vehicle suspensions to absorb bumps, or in measuring instruments to settle quickly). However, in some applications, it can be detrimental, such as in high-precision oscillators where consistent, undamped motion is required.
+        </p>
+
+        <h2 id="forced-oscillations">7. Forced Oscillations and Resonance: Amplifying the Rhythm</h2>
+        <p>
+            What happens if we apply an external, periodic force to an oscillating system that is already experiencing <span class="key-term">damping</span>? This leads to the phenomenon of <span class="key-term">forced oscillations</span> and the incredibly important concept of <span class="key-term">resonance</span>.
+        </p>
+
+        <h3>7.1. Forced Oscillations</h3>
+        <p>
+            When an external periodic force, often called a <span class="key-term">driving force</span> ($F_{drive}(t) = F_0 \cos(\omega_d t)$), is applied to a damped oscillating system, the system will eventually settle into a steady-state oscillation at the <span class="key-term">frequency</span> of the driving force ($\omega_d$), regardless of its own natural <span class="key-term">frequency</span> ($\omega_0 = \sqrt{k/m}$). This is known as a <span class="key-term">forced oscillation</span>.
+            <br><br>
+            The differential equation for a forced, damped harmonic oscillator becomes:
+            $$m\frac{d^2x}{dt^2} + b\frac{dx}{dt} + kx = F_0 \cos(\omega_d t)$$
+            In the steady state, the <span class="key-term">amplitude</span> of the oscillation depends on the <span class="key-term">amplitude</span> of the driving force ($F_0$), the <span class="key-term">damping coefficient</span> ($b$), and how close the driving <span class="key-term">frequency</span> ($\omega_d$) is to the system's natural <span class="key-term">frequency</span> ($\omega_0$).
+        </p>
+
+        <h3>7.2. Resonance</h3>
+        <p>
+            <span class="key-term">Resonance</span> is the dramatic increase in the <span class="key-term">amplitude</span> of an oscillating system when the <span class="key-term">frequency</span> of the externally applied <span class="key-term">driving force</span> ($\omega_d$) matches or is very close to the system's own natural (or undamped) <span class="key-term">frequency</span> ($\omega_0$).
+            <br><br>
+            At <span class="key-term">resonance</span>, the energy transferred from the driving force to the oscillating system is maximized, leading to very large oscillations, even if the driving force itself is relatively small. The less damping present in the system, the sharper and higher the <span class="key-term">resonance</span> peak will be.
+            <br><br>
+            **Examples of Resonance:**
+            <ul class="list-disc ml-6">
+                <li><span class="key-term">Musical Instruments:</span> When you pluck a guitar string, it vibrates at its natural <span class="key-term">frequency</span>. The hollow body of the guitar is designed to resonate at these same frequencies, amplifying the sound.</li>
+                <li><span class="key-term">Radio and Television Tuning:</span> When you tune a radio, you are adjusting the natural <span class="key-term">frequency</span> of the receiver circuit to match the <span class="key-term">frequency</span> of the desired broadcasting station. This allows the receiver to resonate with and amplify the weak signal.</li>
+                <li><span class="key-term">Microwave Ovens:</span> Microwave ovens operate by generating electromagnetic waves at a <span class="key-term">frequency</span> that causes water molecules in food to resonate, efficiently absorbing energy and heating up.</li>
+                <li><span class="key-term">MRI (Magnetic Resonance Imaging):</span> This medical imaging technique uses radio waves at specific frequencies to cause the hydrogen atoms in the body to resonate, providing detailed images of internal organs and tissues.</li>
+                <li><span class="key-term">Destructive Resonance:</span> While often beneficial, <span class="key-term">resonance</span> can also be destructive. A famous example is the collapse of the Tacoma Narrows Bridge in 1940. Wind forces created oscillations at the bridge's natural <span class="key-term">frequency</span>, leading to increasingly large <span class="key-term">amplitudes</span> until structural failure occurred. Soldiers are often instructed to break step when marching across bridges to avoid setting up a <span class="key-term">resonance</span> that could damage the structure.</li>
+            </ul>
+        </p>
+
+        <h2 id="waves">8. Connection to Waves: SHM as the Source</h2>
+        <p>
+            <span class="key-term">Simple Harmonic Motion</span> is not just about individual oscillating objects; it's the fundamental building block for understanding <span class="key-term">waves</span>. A <span class="key-term">wave</span> is a disturbance that propagates through a medium (or space, in the case of electromagnetic waves), transferring energy without necessarily transferring matter.
+            <br><br>
+            At a microscopic level, many types of <span class="key-term">waves</span> arise from the <span class="key-term">Simple Harmonic Motion</span> of the particles in the medium.
+            <ul class="list-disc ml-6">
+                <li><span class="key-term">Transverse Waves:</span> Imagine a string. If you oscillate one end of the string up and down in <span class="key-term">SHM</span>, this oscillation propagates along the string as a wave. Each particle of the string undergoes <span class="key-term">SHM</span> perpendicular to the direction of wave propagation. This is how waves on water or electromagnetic waves behave.</li>
+                <li><span class="key-term">Longitudinal Waves:</span> In a slinky or a sound wave, particles oscillate back and forth in <span class="key-term">SHM</span> *parallel* to the direction of wave propagation, creating compressions and rarefactions.</li>
+            </ul>
+            The <span class="key-term">frequency</span> and <span class="key-term">period</span> of the wave are determined by the <span class="key-term">frequency</span> and <span class="key-term">period</span> of the <span class="key-term">SHM</span> of the source creating the wave. The <span class="key-term">amplitude</span> of the wave is related to the <span class="key-term">amplitude</span> of the source's oscillation. Thus, a solid grasp of <span class="key-term">Simple Harmonic Motion</span> is indispensable for comprehending the rich and varied world of <span class="key-term">wave phenomena</span>.
+        </p>
+
+        <h2 id="conclusion">9. Conclusion: The Rhythmic Pulse of the Universe</h2>
+        <p>
+            <span class="key-term">Simple Harmonic Motion (SHM)</span> is undoubtedly one of the most profound and widely applicable concepts in all of <span class="key-term">physics</span>. It provides a powerful, elegant framework for understanding and predicting a vast array of <span class="key-term">oscillatory motions</span> observed in both the natural world and engineered systems.
+        </p>
+        <p>
+            Our journey through this lesson on <span class="key-term">SHM</span> has revealed that its defining characteristic – a <span class="key-term">restoring force</span> directly proportional to <span class="key-term">displacement</span> ($F=-kx$) – gives rise to incredibly predictable periodic behavior. We've explored the quintessential examples: the <span class="key-term">mass-spring system</span>, where inertia and elasticity dance in harmony, and the <span class="key-term">simple pendulum</span>, whose graceful swing is governed by <span class="key-term">gravity</span> for small angles. The ability to precisely calculate the <span class="key-term">period</span> ($T=2\pi\sqrt{L/g}$ for pendulums and $T=2\pi\sqrt{m/k}$ for mass-springs) and <span class="key-term">frequency</span> of these systems empowers us to design and predict their behavior.
+        </p>
+        <p>
+            Furthermore, we've delved into the captivating <span class="key-term">energy transformations</span> that characterize <span class="key-term">SHM</span>, showcasing the beautiful principle of <span class="key-term">conservation of mechanical energy</span> as <span class="key-term">kinetic energy</span> and <span class="key-term">potential energy</span> continuously interchange. Beyond the ideal, we examined the realities of <span class="key-term">damped oscillations</span>, understanding how resistive forces cause amplitudes to decay, and the critical design implications of <span class="key-term">underdamped</span>, <span class="key-term">critically damped</span>, and <span class="key-term">overdamped</span> systems. Finally, the exploration of <span class="key-term">forced oscillations</span> culminated in the powerful phenomenon of <span class="key-term">resonance</span>, where synchronized external forces can amplify oscillations to astonishing and sometimes destructive magnitudes.
+        </p>
+        <p>
+            The pervasive nature of <span class="key-term">SHM</span> cannot be overstated. It is the rhythmic pulse that drives <span class="key-term">clocks</span>, generates <span class="key-term">music</span>, enables <span class="key-term">radio communication</span>, and forms the very basis for how <span class="key-term">waves</span> propagate through the universe. As you continue your mathematical and scientific journey with <span class="key-term">Whizmath</span>, the foundational understanding of <span class="key-term">Simple Harmonic Motion</span> will serve as a powerful lens through which to view and comprehend the rhythmic and dynamic intricacies of the physical world. Keep observing, keep calculating, and keep exploring the incredible elegance of physics!
+        </p>
+
+    </div>
+
+    <script>
+        // Three.js Animated Background
+        const canvas = document.getElementById('three-js-canvas');
+        const scene = new THREE.Scene();
+        // Adjust camera to potentially wider view to encompass larger particles without needing to zoom out too much
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000); // Increased far plane
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+
+        // Set up renderer size
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+
+        // Particle System
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 5000;
+        const posArray = new Float32Array(particlesCount * 3); // x, y, z for each particle
+
+        for (let i = 0; i < particlesCount * 3; i++) {
+            // Distribute particles randomly in a larger cube to give space for bigger particles
+            posArray[i] = (Math.random() - 0.5) * 4000; // between -2000 and 2000
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        // Particle Material - Make particles 10 times bigger
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 8.0, // Increased from 0.8 to 8.0 (10 times bigger)
+            color: 0x93C5FD, // Light blue particles
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false // Improves transparency rendering
+        });
+
+        const particleMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particleMesh);
+
+        // Camera position - Zoom out slightly to accommodate larger particles if they appear too close
+        camera.position.z = 10; // Slightly pulled back
+
+        // Animation loop
+        const animate = () => {
+            requestAnimationFrame(animate);
+
+            // Rotate particles slowly
+            particleMesh.rotation.x += 0.00005; // Slower rotation for larger elements
+            particleMesh.rotation.y += 0.0001;  // Slower rotation for larger elements
+
+            renderer.render(scene, camera);
+        };
+
+        // Handle window resizing
+        window.addEventListener('resize', () => {
+            // Update camera aspect ratio
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            // Update renderer size
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+        });
+
+        // Start animation when window loads
+        window.onload = function () {
+            animate();
+        }
+    </script>
+</body>
+</html>
