@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whizmath - Atomic Structure: Peering into the Heart of Matter</title>
+    <meta name="description" content="Explore the evolution of atomic models from early historical concepts (Democritus, Dalton, Thomson, Rutherford, Bohr) to the quantum mechanical view. Learn about the fundamental constituents of an atom: electrons, protons, and neutrons, their properties, and roles in atomic number, mass number, and isotopes. A comprehensive lesson from Whizmath on the building blocks of the universe.">
+    <meta name="keywords" content="atomic structure, atom, subatomic particles, electrons, protons, neutrons, atomic number, mass number, isotopes, atomic models, Democritus, Dalton, Thomson, Rutherford, Bohr, quantum mechanical model, orbital, electron configuration, periodic table, ion, ionization, Avogadro's number, nucleus, physics, chemistry, Whizmath">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujm/v+r366w5U6+y35Yv5z16b0x/r7t6uTqNqg0g0c0w0/0j0v0b0t0q0p0x0e0i0o0u0a0c0e0r0s0t0v0w0x0y0z0=" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+
+    <!-- MathJax Configuration -->
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow: hidden; /* Hide overflow from Three.js background */
+        }
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send to back */
+            background: linear-gradient(to bottom right, #1a202c, #2d3748); /* Dark gradient for background */
+        }
+        .content-overlay {
+            position: relative;
+            z-index: 1; /* Bring content to front */
+            overflow-y: auto; /* Allow content to scroll */
+            height: 100vh;
+            padding: 2rem;
+            background: rgba(17, 24, 39, 0.85); /* Slightly transparent dark background for readability */
+            backdrop-filter: blur(8px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(8px); /* For Safari */
+            color: #e2e8f0; /* Light text color */
+        }
+        h1, h2, h3, h4 {
+            color: #63b3ed; /* A pleasing blue for headings */
+            font-weight: 700;
+        }
+        h1 { font-size: 3rem; }
+        h2 { font-size: 2.25rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.25rem; }
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 10;
+            background-color: rgba(30, 41, 59, 0.8); /* Darker transparent button */
+            color: #63b3ed;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px; /* Fully rounded */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: rgba(45, 55, 72, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .section-card {
+            background-color: rgba(30, 41, 59, 0.9); /* Dark blue background for content cards */
+            border-radius: 1.5rem; /* More rounded corners */
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+        .math-equation {
+            background-color: #0f172a; /* Even darker background for equations */
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin: 1.5rem 0;
+            overflow-x: auto; /* Allow horizontal scrolling for long equations */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .key-term {
+            color: #a78bfa; /* Purple for key terms */
+            font-weight: 600;
+        }
+        .example-box {
+            background-color: #2a3447; /* Slightly lighter dark for examples */
+            border-left: 5px solid #63b3ed;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0.75rem;
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.75rem;
+            background-color: #0f172a;
+            padding: 1rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px; /* Ensure table is wide enough to avoid squishing */
+        }
+        .table-container th, .table-container td {
+            padding: 0.75rem 1rem;
+            border: 1px solid #4a5568;
+            text-align: left;
+        }
+        .table-container th {
+            background-color: #1a202c;
+            color: #63b3ed;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+        }
+        .table-container td {
+            background-color: #2a3447;
+            color: #e2e8f0;
+        }
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a202c;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #63b3ed;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 antialiased">
+    <canvas id="three-canvas"></canvas>
+
+    <a href="physics.html" class="back-button flex items-center justify-center space-x-2 text-lg">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Physics</span>
+    </a>
+
+    <div class="content-overlay max-w-4xl mx-auto py-16">
+        <header class="text-center mb-16">
+            <h1 class="text-6xl font-extrabold text-blue-400 mb-4 animate-pulse">Whizmath</h1>
+            <h2 class="text-5xl font-bold text-gray-100 mb-8 leading-tight">Atomic Structure: Peering into the Invisible Building Blocks of Everything</h2>
+            <p class="text-2xl text-gray-300 max-w-3xl mx-auto">
+                Embark on a journey to the heart of matter with <span class="key-term">Atomic Structure</span>. This comprehensive lesson will trace the captivating evolution of our understanding of the atom, from ancient philosophical ideas to modern quantum mechanics. Uncover the fundamental <span class="key-term">subatomic particles</span> – <span class="key-term">electrons</span>, <span class="key-term">protons</span>, and <span class="key-term">neutrons</span> – and grasp their profound properties. Learn about <span class="key-term">atomic number</span>, <span class="key-term">mass number</span>, and the fascinating concept of <span class="key-term">isotopes</span>, which define the very identity and behavior of elements.
+            </p>
+        </header>
+
+        <section id="introduction" class="section-card">
+            <h3 class="text-4xl mb-6">1. Introduction: The Unseen Universe Within</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                Everything around us – the air we breathe, the water we drink, the solid ground beneath our feet, and even the stars that dot the night sky – is made of tiny, fundamental units called <span class="key-term">atoms</span>. For centuries, the nature of these building blocks remained one of humanity's greatest mysteries. What are they made of? How do they interact? How can such minuscule entities give rise to the immense diversity and complexity of the macroscopic world?
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                The journey to understand the atom is a triumph of scientific inquiry, marked by groundbreaking experiments, bold theories, and a relentless pursuit of truth. It's a story of continuously refined models, each built upon the successes (and failures) of its predecessors, gradually revealing the atom's intricate internal structure. From the ancient philosophical idea of indivisible particles to the sophisticated quantum mechanical models of today, our perception of the atom has undergone profound transformations.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                This comprehensive lesson will take you on that historical and conceptual journey. We will begin with the earliest atomic ideas and proceed through the pivotal experiments and models that shaped our understanding: Dalton's solid spheres, Thomson's "plum pudding," Rutherford's revolutionary nuclear atom, and Bohr's quantized electron orbits. Each model, though eventually superseded, provided crucial insights and paved the way for the next.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                Crucially, we will identify and characterize the atom's primary constituents: the negatively charged <span class="key-term">electrons</span>, the positively charged <span class="key-term">protons</span>, and the neutral <span class="key-term">neutrons</span>. Understanding their properties, locations within the atom, and interactions is key to unlocking the secrets of chemistry and nuclear physics. We will also explore how the number of these particles defines an element (through the <span class="key-term">atomic number</span>), influences its mass (through the <span class="key-term">mass number</span>), and gives rise to <span class="key-term">isotopes</span>.
+            </p>
+            <p class="text-lg leading-relaxed">
+                A grasp of atomic structure is indispensable for fields ranging from chemistry and materials science to nuclear energy and medicine. It is the microscopic foundation for macroscopic properties. Prepare to miniaturize your perspective and delve into the astonishingly complex yet elegant structure that underpins all matter in the universe!
+            </p>
+        </section>
+
+        <section id="early-models" class="section-card">
+            <h3 class="text-4xl mb-6">2. Early Historical Models of the Atom: A Journey of Discovery</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                The concept of fundamental, indivisible particles of matter has a long history, evolving from philosophical speculation to rigorously tested scientific theories.
+            </p>
+
+            <h4 class="text-3xl mb-4">2.1. The Ancient Greek "Atomos" (4th Century BCE)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The idea of an atom originated with ancient Greek philosophers, most notably <span class="key-term">Democritus</span> (c. 460 – c. 370 BCE) and his mentor Leucippus. They proposed that all matter is composed of tiny, indivisible, unchangeable particles called "<span class="key-term">atomos</span>" (Greek for "uncuttable" or "indivisible"). They believed these atoms differed in shape, size, and arrangement, which accounted for the different properties of matter. This was purely a philosophical concept, lacking experimental evidence.
+            </p>
+
+            <h4 class="text-3xl mb-4">2.2. Dalton's Atomic Theory (Early 19th Century)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The modern atomic theory began in the early 19th century with the work of English chemist <span class="key-term">John Dalton</span> (1766–1844). Based on quantitative experimental observations (like the Law of Conservation of Mass and the Law of Definite Proportions), Dalton proposed a set of postulates that transformed the concept of the atom from philosophical to scientific.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="font-bold">Postulate 1:</span> All matter is composed of extremely small particles called atoms. (Indivisible and indestructible).
+                </li>
+                <li class="mb-2">
+                    <span class="font-bold">Postulate 2:</span> Atoms of a given element are identical in mass and properties; atoms of different elements have different masses and properties.
+                </li>
+                <li class="mb-2">
+                    <span class="font-bold">Postulate 3:</span> Atoms cannot be subdivided, created, or destroyed.
+                </li>
+                <li class="mb-2">
+                    <span class="font-bold">Postulate 4:</span> Atoms of different elements combine in simple whole-number ratios to form chemical compounds.
+                </li>
+                <li class="mb-2">
+                    <span class="font-bold">Postulate 5:</span> In chemical reactions, atoms are combined, separated, or rearranged.
+                </li>
+            </ul>
+            <p class="text-lg leading-relaxed mb-6">
+                Dalton's model depicted atoms as solid, indivisible spheres, much like tiny billiard balls. While groundbreaking, later discoveries would show that atoms are indeed divisible and composed of smaller particles.
+            </p>
+
+            <h4 class="text-3xl mb-4">2.3. Thomson's Plum Pudding Model (Late 19th Century)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The first evidence that atoms were divisible came from the discovery of the <span class="key-term">electron</span> by <span class="key-term">J.J. Thomson</span> (1856–1940) in 1897. Thomson conducted experiments with <span class="key-term">cathode rays</span>, streams of particles emitted from the cathode in a vacuum tube. By observing how these rays were deflected by electric and magnetic fields, he concluded that they were negatively charged particles much lighter than any known atom. He named these particles "corpuscles," which were later renamed electrons.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                Since atoms were known to be electrically neutral overall, Thomson proposed the "<span class="key-term">plum pudding model</span>" (or "raisin bread model") of the atom. In this model, the atom was envisioned as a uniformly distributed sphere of positively charged matter, with negatively charged electrons (the "plums" or "raisins") embedded within it, much like chocolate chips in a cookie or plums in a pudding. This model accounted for the atom's overall neutrality and the existence of negative charges.
+            </p>
+
+            <h4 class="text-3xl mb-4">2.4. Rutherford's Nuclear Model (Early 20th Century)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The plum pudding model was dramatically overturned by the groundbreaking <span class="key-term">gold foil experiment</span> conducted by <span class="key-term">Ernest Rutherford</span> (1871–1937) and his students Hans Geiger and Ernest Marsden in 1909.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="font-bold">Experimental Setup:</span> Alpha particles (positively charged, relatively heavy particles emitted by radioactive decay) were directed at a very thin sheet of gold foil. A detector screen was placed around the foil to observe where the alpha particles landed.
+                </li>
+                <li class="mb-2">
+                    <span class="font-bold">Predictions (based on Thomson's model):</span> If the atom was a uniform positive sphere with embedded electrons, the relatively heavy, fast-moving alpha particles should pass straight through the foil with only minor deflections, like bullets through tissue paper.
+                </li>
+                <li class="mb-2">
+                    <span class="font-bold">Observations:</span>
+                    <ul class="list-circle list-inside ml-8">
+                        <li class="mb-1">Most (about 99%) of the alpha particles passed straight through the gold foil with little or no deflection.</li>
+                        <li class="mb-1">A small percentage (about 1 in 8000) were deflected at very large angles, some even bouncing straight back towards the source.</li>
+                    </ul>
+                </li>
+                <li class="mb-2">
+                    <span class="font-bold">Conclusions:</span> Rutherford famously remarked that it was "almost as incredible as if you fired a 15-inch shell at a piece of tissue paper and it came back and hit you." These observations led to his revolutionary "<span class="key-term">nuclear model</span>" of the atom:
+                    <ul class="list-circle list-inside ml-8">
+                        <li class="mb-1">The atom's positive charge and most of its mass are concentrated in a tiny, dense central core called the <span class="key-term">nucleus</span>. The nucleus occupies only a minuscule fraction of the atom's total volume.</li>
+                        <li class="mb-1">The negatively charged electrons orbit this nucleus at a relatively large distance, occupying mostly empty space.</li>
+                        <li class="mb-1">The strong deflections of some alpha particles were due to direct collisions with the massive, positively charged nucleus. Most particles passed straight through because the atom is mostly empty space.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p class="text-lg leading-relaxed mb-6">
+                Rutherford's nuclear model was a monumental leap forward, establishing the atom as having a dense, positively charged nucleus surrounded by electrons. However, it had a significant flaw: classical physics predicted that orbiting electrons, being accelerated charges, should continuously radiate energy and spiral into the nucleus, causing the atom to collapse. Atoms are, in fact, stable. This problem paved the way for quantum theory.
+            </p>
+
+            <h4 class="text-3xl mb-4">2.5. Bohr's Model of the Hydrogen Atom (Early 20th Century)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                To address the instability problem of Rutherford's model and to explain the discrete <span class="key-term">line spectra</span> observed when elements emit light (each element emits light at specific, characteristic wavelengths), <span class="key-term">Niels Bohr</span> (1885–1962) proposed a revolutionary model for the hydrogen atom in 1913, incorporating ideas from quantum theory (which was just emerging).
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="font-bold">Bohr's Postulates:</span>
+                    <ul class="list-circle list-inside ml-8">
+                        <li class="mb-1">
+                            <span class="key-term">Quantized Orbits/Energy Levels:</span> Electrons can only orbit the nucleus in specific, allowed circular orbits without radiating energy. Each orbit corresponds to a fixed, discrete energy level. Electrons do not spiral into the nucleus in these "stationary states."
+                        </li>
+                        <li class="mb-1">
+                            <span class="key-term">Energy Transitions:</span> An electron can jump from one allowed energy orbit to another. When an electron jumps from a higher energy level ($E_i$) to a lower energy level ($E_f$), it emits a photon of light with energy equal to the energy difference between the levels. Conversely, it absorbs a photon to jump to a higher level.
+                            <div class="math-equation">
+                                $$\Delta E = E_i - E_f = hf = \frac{hc}{\lambda}$$
+                            </div>
+                            Where $h$ is Planck's constant, $f$ is the frequency of the photon, and $c$ is the speed of light.
+                        </li>
+                        <li class="mb-1">
+                            <span class="key-term">Quantized Angular Momentum:</span> The angular momentum of an electron in an allowed orbit is also quantized, meaning it can only take on discrete values that are integer multiples of $\hbar$ (reduced Planck's constant, $h/2\pi$).
+                            <div class="math-equation">
+                                $$L = n\hbar \quad \text{where } n = 1, 2, 3, \dots$$
+                            </div>
+                            Here, $n$ is the <span class="key-term">principal quantum number</span>, which defines the energy level and size of the orbit.
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <p class="text-lg leading-relaxed mb-6">
+                Bohr's model successfully explained the line spectrum of hydrogen and provided a quantitative description of its energy levels. The energy of an electron in a hydrogen atom's $n$-th orbit is given by:
+            </p>
+            <div class="math-equation">
+                $$E_n = -\frac{13.6 \text{ eV}}{n^2}$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                Where $-13.6 \text{ eV}$ is the ground state energy (for $n=1$), and eV (electron-volt) is a common unit of energy in atomic physics.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="font-bold">Limitations of Bohr's Model:</span>
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">It only worked for hydrogen (and other single-electron ions like He$^+$). It failed to accurately predict the spectra of multi-electron atoms.</li>
+                <li class="mb-2">It couldn't explain the varying intensities of spectral lines.</li>
+                <li class="mb-2">It couldn't explain the <span class="key-term">Zeeman effect</span> (splitting of spectral lines in a magnetic field) or the <span class="key-term">Stark effect</span> (splitting in an electric field).</li>
+                <li class="mb-2">It still treated electrons as particles orbiting in well-defined paths, which is inconsistent with later quantum mechanical insights.</li>
+            </ul>
+            <p class="text-lg leading-relaxed mb-6">
+                Despite its limitations, Bohr's model was a crucial stepping stone, introducing the fundamental idea of quantized energy levels, which remains central to modern atomic theory.
+            </p>
+        </section>
+
+        <section id="constituents-of-an-atom" class="section-card">
+            <h3 class="text-4xl mb-6">3. The Constituents of an Atom: Protons, Neutrons, and Electrons</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                Building upon Rutherford's and Bohr's insights, modern atomic theory recognizes three primary <span class="key-term">subatomic particles</span> that make up most of an atom: protons, neutrons, and electrons.
+            </p>
+
+            <h4 class="text-3xl mb-4">3.1. The Nucleus: Protons and Neutrons</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The atom's central core, the <span class="key-term">nucleus</span>, is incredibly dense and accounts for over 99.9% of the atom's mass. It contains two types of particles: protons and neutrons, collectively known as <span class="key-term">nucleons</span>.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="key-term">Protons (p$^+$):</span>
+                    <ul class="list-circle list-inside ml-8">
+                        <li class="mb-1">
+                            <span class="font-bold">Charge:</span> Positively charged, with a charge magnitude equal to the elementary charge, $+e = +1.602 \times 10^{-19} \text{ C}$.
+                        </li>
+                        <li class="mb-1">
+                            <span class="font-bold">Mass:</span> Relatively massive, approximately $1.672 \times 10^{-27} \text{ kg}$. This mass is defined as 1 <span class="key-term">atomic mass unit (amu)</span> or $1 \text{ u}$.
+                        </li>
+                        <li class="mb-1">
+                            <span class="font-bold">Location:</span> Found in the <span class="key-term">nucleus</span>.
+                        </li>
+                        <li class="mb-1">
+                            <span class="font-bold">Identity:</span> The number of protons in an atom's nucleus uniquely determines its <span class="key-term">atomic number (Z)</span>, which, in turn, defines the chemical element. Every atom of carbon, for instance, has exactly 6 protons.
+                        </li>
+                    </ul>
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Neutrons (n$^0$):</span>
+                    <ul class="list-circle list-inside ml-8">
+                        <li class="mb-1">
+                            <span class="font-bold">Charge:</span> Electrically neutral (no net charge).
+                        </li>
+                        <li class="mb-1">
+                            <span class="font-bold">Mass:</span> Approximately the same mass as a proton, slightly heavier ($1.675 \times 10^{-27} \text{ kg}$ or $\approx 1 \text{ amu}$).
+                        </li>
+                        <li class="mb-1">
+                            <span class="font-bold">Location:</span> Found in the <span class="key-term">nucleus</span>.
+                        </li>
+                        <li class="mb-1">
+                            <span class="font-bold">Role:</span> Neutrons contribute to the atom's mass but not its charge. They play a crucial role in stabilizing the nucleus (counteracting the electrostatic repulsion between protons) and in nuclear reactions. The number of neutrons can vary within atoms of the same element, leading to isotopes.
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4 class="text-3xl mb-4">3.2. The Electron Cloud: Electrons</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                Surrounding the nucleus, occupying the vast majority of the atom's volume, is the <span class="key-term">electron cloud</span>, composed of electrons.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="key-term">Electrons (e$^-$):</span>
+                    <ul class="list-circle list-inside ml-8">
+                        <li class="mb-1">
+                            <span class="font-bold">Charge:</span> Negatively charged, with a charge magnitude equal to the elementary charge, $-e = -1.602 \times 10^{-19} \text{ C}$.
+                        </li>
+                        <li class="mb-1">
+                            <span class="font-bold">Mass:</span> Extremely light, approximately $9.109 \times 10^{-31} \text{ kg}$, which is about $1/1836$ the mass of a proton. Their mass is often considered negligible when calculating atomic mass.
+                        </li>
+                        <li class="mb-1">
+                            <span class="font-bold">Location:</span> Orbit the nucleus in a probabilistic "cloud" (as per quantum mechanics).
+                        </li>
+                        <li class="mb-1">
+                            <span class="font-bold">Role:</span> Electrons determine the atom's chemical properties and its interactions with other atoms to form molecules. In a neutral atom, the number of electrons is equal to the number of protons.
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4 class="text-3xl mb-4">3.3. Summary of Subatomic Particles</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                Here's a concise summary of the key properties of the three fundamental subatomic particles:
+            </p>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Particle</th>
+                            <th>Symbol</th>
+                            <th>Charge (relative to $e$)</th>
+                            <th>Approximate Mass (amu)</th>
+                            <th>Location</th>
+                            <th>Primary Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Proton</td>
+                            <td>p$^+$</td>
+                            <td>+1</td>
+                            <td>1</td>
+                            <td>Nucleus</td>
+                            <td>Determines element identity (Z)</td>
+                        </tr>
+                        <tr>
+                            <td>Neutron</td>
+                            <td>n$^0$</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>Nucleus</td>
+                            <td>Contributes to mass, stabilizes nucleus, forms isotopes</td>
+                        </tr>
+                        <tr>
+                            <td>Electron</td>
+                            <td>e$^-$</td>
+                            <td>-1</td>
+                            <td>1/1836 (negligible)</td>
+                            <td>Electron cloud (outside nucleus)</td>
+                            <td>Determines chemical behavior, forms bonds</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                It's important to remember that atoms are mostly empty space. If an atom were expanded to the size of a football stadium, its nucleus would be roughly the size of a marble in the center, and the electrons would be like tiny dust specks orbiting miles away.
+            </p>
+        </section>
+
+        <section id="atomic-number-mass-number-isotopes" class="section-card">
+            <h3 class="text-4xl mb-6">4. Atomic Number, Mass Number, and Isotopes</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                To uniquely identify and describe different atoms, we use specific numerical designations derived from their subatomic particle composition.
+            </p>
+
+            <h4 class="text-3xl mb-4">4.1. Atomic Number ($Z$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The <span class="key-term">atomic number ($Z$)</span> is the most fundamental defining property of a chemical element. It is defined as:
+            </p>
+            <blockquote class="text-xl italic border-l-4 border-blue-500 pl-4 py-2 my-6">
+                "The number of protons in the nucleus of an atom."
+            </blockquote>
+            <p class="text-lg leading-relaxed mb-6">
+                Every atom of a specific element has the same atomic number. For example, all hydrogen atoms have $Z=1$ (1 proton), all helium atoms have $Z=2$ (2 protons), and all oxygen atoms have $Z=8$ (8 protons). The atomic number dictates the element's position on the Periodic Table. In a neutral atom, the number of electrons is equal to the atomic number.
+            </p>
+            <div class="math-equation">
+                $$\text{Atomic Number (Z)} = \text{Number of Protons}$$
+                $$\text{For a neutral atom, Number of Electrons} = \text{Number of Protons}$$
+            </div>
+
+            <h4 class="text-3xl mb-4">4.2. Mass Number ($A$)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The <span class="key-term">mass number ($A$)</span> represents the total number of nucleons (protons and neutrons) in an atom's nucleus. It is always a whole number.
+            </p>
+            <blockquote class="text-xl italic border-l-4 border-blue-500 pl-4 py-2 my-6">
+                "The sum of the number of protons and neutrons in the nucleus of an atom."
+            </blockquote>
+            <div class="math-equation">
+                $$\text{Mass Number (A)} = \text{Number of Protons} + \text{Number of Neutrons}$$
+                $$\text{Number of Neutrons} = \text{Mass Number (A)} - \text{Atomic Number (Z)}$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                The mass number is an approximate measure of the atom's mass, as protons and neutrons each have a mass of approximately 1 amu, and electrons have negligible mass.
+            </p>
+
+            <h4 class="text-3xl mb-4">4.3. Isotopes</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                <span class="key-term">Isotopes</span> are atoms of the same chemical element (and thus have the same atomic number, $Z$) but have different numbers of neutrons (and therefore different mass numbers, $A$).
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                Since isotopes of an element have the same number of protons (and electrons in a neutral atom), they exhibit nearly identical chemical properties. Their differing masses, however, lead to differences in physical properties (e.g., density, diffusion rates) and are crucial in nuclear reactions.
+            </p>
+            <div class="example-box">
+                <h4 class="text-xl font-semibold mb-2">Examples of Isotopes:</h4>
+                <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
+                    <li class="mb-2">
+                        <span class="font-bold">Hydrogen:</span>
+                        <ul class="list-circle list-inside ml-8">
+                            <li class="mb-1">
+                                <span class="key-term">Protium</span> ($^1_1 \text{H}$): 1 proton, 0 neutrons (most common hydrogen isotope).
+                            </li>
+                            <li class="mb-1">
+                                <span class="key-term">Deuterium</span> ($^2_1 \text{H}$ or $\text{D}$): 1 proton, 1 neutron (heavy hydrogen).
+                            </li>
+                            <li class="mb-1">
+                                <span class="key-term">Tritium</span> ($^3_1 \text{H}$ or $\text{T}$): 1 proton, 2 neutrons (radioactive hydrogen).
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="mb-2">
+                        <span class="font-bold">Carbon:</span>
+                        <ul class="list-circle list-inside ml-8">
+                            <li class="mb-1">
+                                <span class="key-term">Carbon-12</span> ($^{12}_6 \text{C}$): 6 protons, 6 neutrons (most common carbon isotope).
+                            </li>
+                            <li class="mb-1">
+                                <span class="key-term">Carbon-14</span> ($^{14}_6 \text{C}$): 6 protons, 8 neutrons (radioactive, used in carbon dating).
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <h4 class="text-3xl mb-4">4.4. Nuclide Notation</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                Isotopes are often represented using <span class="key-term">nuclide notation</span>:
+            </p>
+            <div class="math-equation">
+                $$^A_Z X$$
+                <p>Where:</p>
+                <ul class="list-disc list-inside ml-6">
+                    <li>$X$ is the <span class="key-term">chemical symbol</span> of the element.</li>
+                    <li>$A$ is the <span class="key-term">mass number</span> (protons + neutrons).</li>
+                    <li>$Z$ is the <span class="key-term">atomic number</span> (number of protons).</li>
+                </ul>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                Sometimes, the atomic number (Z) is omitted because the chemical symbol (X) already uniquely implies Z. For example, Carbon-12 can be written as $^{12}\text{C}$.
+            </p>
+        </section>
+
+        <section id="atomic-mass-moles" class="section-card">
+            <h3 class="text-4xl mb-6">5. Atomic Mass, Average Atomic Mass, and The Mole</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                To work with atoms in practical quantities, we need to consider their masses and macroscopic counting units.
+            </p>
+
+            <h4 class="text-3xl mb-4">5.1. Atomic Mass Unit (amu or u)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                Since atoms are incredibly small, their masses in kilograms are inconveniently tiny. Therefore, a specialized unit called the <span class="key-term">atomic mass unit (amu or u)</span> is used.
+            </p>
+            <blockquote class="text-xl italic border-l-4 border-blue-500 pl-4 py-2 my-6">
+                "One atomic mass unit (amu) is defined as exactly one-twelfth ($1/12$) the mass of a single atom of carbon-12."
+            </blockquote>
+            <p class="text-lg leading-relaxed mb-6">
+                $$1 \text{ amu} \approx 1.6605 \times 10^{-27} \text{ kg}$$
+                As noted earlier, both protons and neutrons have masses very close to 1 amu.
+            </p>
+
+            <h4 class="text-3xl mb-4">5.2. Average Atomic Mass</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The atomic masses listed on the Periodic Table are not whole numbers. This is because they represent the <span class="key-term">average atomic mass</span>, which is the weighted average of the masses of all naturally occurring isotopes of an element, based on their relative abundances.
+            </p>
+            <div class="math-equation">
+                $$\text{Average Atomic Mass} = \sum (\text{Isotopic Mass} \times \text{Fractional Abundance})$$
+            </div>
+            <div class="example-box">
+                <h4 class="text-xl font-semibold mb-2">Example: Average Atomic Mass of Chlorine</h4>
+                <p class="text-lg leading-relaxed mb-2">
+                    Naturally occurring chlorine consists of two isotopes: Chlorine-35 (mass $34.969 \text{ amu}$, abundance $75.77\%$) and Chlorine-37 (mass $36.966 \text{ amu}$, abundance $24.23\%$).
+                </p>
+                <p class="text-lg leading-relaxed">
+                    Average Atomic Mass of Cl = $(34.969 \text{ amu} \times 0.7577) + (36.966 \text{ amu} \times 0.2423)$
+                    $$ = 26.495 \text{ amu} + 8.956 \text{ amu} = 35.451 \text{ amu}$$
+                    This is why chlorine's atomic mass on the periodic table is approximately $35.45 \text{ amu}$.
+                </p>
+            </div>
+
+            <h4 class="text-3xl mb-4">5.3. The Mole and Avogadro's Number</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                Since atoms are so incredibly small, even a tiny macroscopic sample contains an enormous number of them. To deal with these vast numbers, chemists and physicists use a special counting unit called the <span class="key-term">mole (mol)</span>.
+            </p>
+            <blockquote class="text-xl italic border-l-4 border-blue-500 pl-4 py-2 my-6">
+                "A mole is defined as the amount of substance that contains as many elementary entities (atoms, molecules, ions, etc.) as there are atoms in exactly $12 \text{ grams}$ of carbon-12."
+            </blockquote>
+            <p class="text-lg leading-relaxed mb-6">
+                This number of entities is known as <span class="key-term">Avogadro's Number ($N_A$)</span>:
+            </p>
+            <div class="math-equation">
+                $$N_A = 6.022 \times 10^{23} \text{ entities/mol}$$
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                This means that $12 \text{ grams}$ of Carbon-12 contains $6.022 \times 10^{23}$ atoms of Carbon-12. Conveniently, the molar mass of an element (mass in grams of one mole of that element) is numerically equal to its average atomic mass in amu. For example, 1 mole of carbon-12 has a mass of exactly 12 grams. 1 mole of oxygen has a mass of approximately 16 grams.
+            </p>
+        </section>
+
+        <section id="quantum-mechanical-model" class="section-card">
+            <h3 class="text-4xl mb-6">6. The Quantum Mechanical Model of the Atom: Beyond Bohr</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                While Bohr's model was a brilliant step, its limitations for multi-electron atoms and inability to explain fine spectral details led to the development of the more sophisticated <span class="key-term">quantum mechanical model</span> (also known as the wave mechanical model). This model, based on the principles of quantum mechanics, provides a probabilistic and highly accurate description of electron behavior in atoms.
+            </p>
+
+            <h4 class="text-3xl mb-4">6.1. The Wave Nature of Electrons (de Broglie)</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                A key insight came from <span class="key-term">Louis de Broglie</span> (1892–1987), who proposed in 1924 that particles, including electrons, could exhibit wave-like properties. This concept of <span class="key-term">wave-particle duality</span> meant that electrons could be described not just as particles orbiting a nucleus but also as standing waves.
+            </p>
+            <div class="math-equation">
+                $$\lambda = \frac{h}{mv}$$
+                <p>Where $\lambda$ is the de Broglie wavelength, $h$ is Planck's constant, $m$ is the particle's mass, and $v$ is its velocity.</p>
+            </div>
+            <p class="text-lg leading-relaxed mb-6">
+                This wave nature naturally explained why electrons occupy discrete energy levels, similar to how only specific wavelengths can form standing waves on a string.
+            </p>
+
+            <h4 class="text-3xl mb-4">6.2. The Heisenberg Uncertainty Principle</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                Another crucial principle of quantum mechanics is the <span class="key-term">Heisenberg Uncertainty Principle</span>, formulated by <span class="key-term">Werner Heisenberg</span> (1901–1976) in 1927. It states:
+            </p>
+            <blockquote class="text-xl italic border-l-4 border-blue-500 pl-4 py-2 my-6">
+                "It is impossible to precisely determine simultaneously both the position and momentum (or velocity) of a particle."
+            </blockquote>
+            <p class="text-lg leading-relaxed mb-6">
+                This means we cannot know exactly where an electron is and exactly how fast it is moving at the same time. This fundamental limit on precision implies that the classical idea of electrons orbiting in fixed, planetary-like paths (as in Bohr's model) is incorrect. Instead, electrons' locations must be described probabilistically.
+            </p>
+
+            <h4 class="text-3xl mb-4">6.3. Schrödinger Equation and Atomic Orbitals</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                In 1926, <span class="key-term">Erwin Schrödinger</span> (1887–1961) developed a mathematical equation (the <span class="key-term">Schrödinger equation</span>) that describes the wave-like behavior of electrons in atoms. The solutions to this equation are wave functions ($\Psi$), which, when squared ($|\Psi|^2$), give the probability of finding an electron in a particular region of space around the nucleus.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                These probability distributions are called <span class="key-term">atomic orbitals</span>. An orbital is not a fixed path, but rather a three-dimensional region around the nucleus where there is a high probability (e.g., 90%) of finding an electron.
+            </p>
+
+            <h4 class="text-3xl mb-4">6.4. Quantum Numbers and Electron States</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The solutions to the Schrödinger equation introduce a set of four <span class="key-term">quantum numbers</span> that uniquely describe the state of an electron in an atom:
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="key-term">Principal Quantum Number ($n$):</span> ($n = 1, 2, 3, \dots$) Defines the main energy level (or shell) and the average distance of the electron from the nucleus. Higher $n$ means higher energy and larger orbital size. (Similar to Bohr's $n$)
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Angular Momentum (or Azimuthal) Quantum Number ($l$):</span> ($l = 0, 1, 2, \dots, n-1$) Defines the shape of the orbital and the subshell.
+                    <ul class="list-circle list-inside ml-8">
+                        <li class="mb-1">$l=0$ corresponds to an <span class="key-term">s orbital</span> (spherical shape).</li>
+                        <li class="mb-1">$l=1$ corresponds to a <span class="key-term">p orbital</span> (dumbbell shape).</li>
+                        <li class="mb-1">$l=2$ corresponds to a <span class="key-term">d orbital</span> (more complex shapes).</li>
+                        <li class="mb-1">$l=3$ corresponds to an <span class="key-term">f orbital</span>.</li>
+                    </ul>
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Magnetic Quantum Number ($m_l$):</span> ($m_l = -l, \dots, 0, \dots, +l$) Defines the orientation of the orbital in space. For example, for $l=1$ (p orbital), $m_l$ can be $-1, 0, +1$, corresponding to three different p orbitals ($p_x, p_y, p_z$).
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Spin Quantum Number ($m_s$):</span> ($m_s = +\frac{1}{2} \text{ or } -\frac{1}{2}$) Describes the intrinsic angular momentum of the electron, often called "spin" (either "spin up" or "spin down").
+                </li>
+            </ul>
+
+            <h4 class="text-3xl mb-4">6.5. Electron Configuration and the Periodic Table</h4>
+            <p class="text-lg leading-relaxed mb-6">
+                The quantum mechanical model directly explains the structure of the <span class="key-term">Periodic Table</span> and the chemical behavior of elements through the concept of <span class="key-term">electron configuration</span> – the arrangement of electrons in the atomic orbitals.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="key-term">Pauli Exclusion Principle:</span> No two electrons in an atom can have the exact same set of four quantum numbers. This means an orbital can hold a maximum of two electrons, and they must have opposite spins.
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Aufbau Principle:</span> Electrons fill atomic orbitals of the lowest available energy levels before occupying higher energy levels.
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Hund's Rule:</span> For orbitals of equal energy (degenerate orbitals, like the three p orbitals), electrons will occupy individual orbitals singly before pairing up, and these single electrons will have parallel spins.
+                </li>
+            </ul>
+            <p class="text-lg leading-relaxed mb-6">
+                The electrons in the outermost shell (valence electrons) are particularly important as they determine an atom's reactivity and how it forms chemical bonds.
+            </p>
+        </section>
+
+        <section id="ions-and-ionization" class="section-card">
+            <h3 class="text-4xl mb-6">7. Ions and Ionization</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                While neutral atoms have an equal number of protons and electrons, atoms can gain or lose electrons, becoming charged particles called <span class="key-term">ions</span>. The process of gaining or losing electrons is called <span class="key-term">ionization</span>.
+            </p>
+
+            <h4 class="text-3xl mb-4">7.1. Cations and Anions</h4>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="key-term">Cation:</span> A positively charged ion, formed when an atom loses one or more electrons. It has more protons than electrons. Example: $\text{Na}^+$ (sodium atom loses 1 electron).
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Anion:</span> A negatively charged ion, formed when an atom gains one or more electrons. It has more electrons than protons. Example: $\text{Cl}^-$ (chlorine atom gains 1 electron).
+                </li>
+            </ul>
+
+            <h4 class="text-3xl mb-4">7.2. Ionization Energy and Electron Affinity</h4>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="key-term">Ionization Energy:</span> The minimum energy required to remove the most loosely bound electron from a neutral gaseous atom to form a positive ion.
+                </li>
+                <li class="mb-2">
+                    <span class="key-term">Electron Affinity:</span> The energy change that occurs when an electron is added to a neutral gaseous atom to form a negative ion.
+                </li>
+            </ul>
+            <p class="text-lg leading-relaxed mb-6">
+                These properties help predict how readily an atom will form ions and participate in chemical reactions.
+            </p>
+        </section>
+
+        <section id="applications" class="section-card">
+            <h3 class="text-4xl mb-6">8. Applications of Atomic Structure: Shaping Our World</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                Our understanding of atomic structure is not just a theoretical pursuit; it forms the bedrock for countless modern technologies and scientific advancements.
+            </p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
+                <li class="mb-2">
+                    <span class="font-bold">Spectroscopy:</span> The study of how matter interacts with electromagnetic radiation. The unique line spectra of elements, first explained by Bohr, are used to identify elements in distant stars, analyze chemical compositions, and ensure quality control in industries. Atomic clocks, which keep extremely precise time, rely on specific atomic transitions.
+                </li>
+                <li class="mb-2">
+                    <span class="font-bold">Nuclear Energy and Weapons:</span> The understanding of the nucleus and its constituents (protons and neutrons) led to the development of nuclear fission (splitting atoms for energy or bombs) and nuclear fusion (combining atoms, as in the Sun and future clean energy). Knowledge of isotopes is critical here, especially for uranium and plutonium.
+                </li>
+                <li class="mb-2">
+                    <span class="font-bold">Medical Imaging and Treatment:</span>
+                    <ul class="list-circle list-inside ml-8">
+                        <li class="mb-1">
+                            <span class="key-term">MRI (Magnetic Resonance Imaging):</span> Exploits the magnetic properties of atomic nuclei (specifically hydrogen protons) to create detailed images of soft tissues in the body.
+                        </li>
+                        <li class="mb-1">
+                            <span class="key-term">PET (Positron Emission Tomography):</span> Uses radioactive isotopes that emit positrons to create images of metabolic activity in the body, helping diagnose diseases like cancer.
+                        </li>
+                        <li class="mb-1">
+                            <span class="key-term">Radiation Therapy:</span> Uses high-energy radiation (often from radioactive isotopes) to destroy cancer cells.
+                        </li>
+                    </ul>
+                </li>
+                <li class="mb-2">
+                    <span class="font-bold">Semiconductors and Electronics:</span> The behavior of electrons in the outermost shells of atoms (valence electrons) is fundamental to understanding semiconductors, which form the basis of transistors, integrated circuits, and all modern electronics. Doping (adding impurities) changes the electron configuration and electrical properties.
+                </li>
+                <li class="mb-2">
+                    <span class="font-bold">Materials Science:</span> Understanding how atoms bond and arrange themselves (determined by electron configurations) is crucial for designing new materials with specific properties, such as stronger alloys, more efficient catalysts, and novel polymers.
+                </li>
+                <li class="mb-2">
+                    <span class="font-bold">Carbon Dating:</span> Relies on the radioactive decay of Carbon-14 (an isotope of carbon) to determine the age of ancient organic materials.
+                </li>
+            </ul>
+            <p class="text-lg leading-relaxed mb-6">
+                The ability to manipulate and engineer materials at the atomic level has opened up entirely new fields like nanotechnology, promising revolutionary advancements in medicine, energy, and computing. The journey into the atom continues, with ongoing research into sub-subatomic particles and fundamental forces.
+            </p>
+        </section>
+
+        <section id="conclusion" class="section-card">
+            <h3 class="text-4xl mb-6">9. Conclusion: The Ever-Evolving Atom</h3>
+            <p class="text-lg leading-relaxed mb-6">
+                Our extensive exploration of <span class="key-term">atomic structure</span> has taken us on a remarkable scientific odyssey, from ancient philosophical musings to the intricate probabilistic world of quantum mechanics. We've witnessed the evolution of atomic models – from Dalton's solid spheres to Thomson's "plum pudding," Rutherford's revolutionary nuclear atom, and Bohr's quantized electron orbits – each building upon the insights of its predecessors while revealing new layers of complexity.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                At the heart of our understanding lies the identification of the atom's fundamental <span class="key-term">subatomic particles</span>: the positively charged <span class="key-term">protons</span> and neutral <span class="key-term">neutrons</span> residing in the dense <span class="key-term">nucleus</span>, and the lightweight, negatively charged <span class="key-term">electrons</span> occupying the surrounding probabilistic <span class="key-term">atomic orbitals</span>. We've learned how the number of these particles defines an element (through its <span class="key-term">atomic number</span>), influences its mass (through its <span class="key-term">mass number</span>), and gives rise to <span class="key-term">isotopes</span>.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                The transition to the <span class="key-term">quantum mechanical model</span>, driven by the wave nature of electrons and the uncertainty principle, marked a profound shift in our understanding, replacing deterministic orbits with probabilistic distributions. This modern view, governed by <span class="key-term">quantum numbers</span> and principles like the <span class="key-term">Pauli Exclusion Principle</span> and <span class="key-term">Aufbau Principle</span>, perfectly explains the chemical properties of elements and the structure of the Periodic Table.
+            </p>
+            <p class="text-lg leading-relaxed">
+                The profound knowledge gained from studying atomic structure is not merely academic; it is the invisible hand that has shaped and continues to shape our technological world. From the energy that powers our cities to the life-saving medical devices that diagnose and treat diseases, and from the powerful semiconductors that define our digital age to the new materials revolutionizing industries, the atomic realm is at the core of innovation. The atom, once thought to be the smallest and indivisible, has proven to be a universe in miniature, constantly revealing new secrets and inspiring further scientific discovery. Keep exploring, keep questioning, and keep delving into the fundamental building blocks that make up everything!
+            </p>
+        </section>
+
+        <section id="glossary" class="section-card">
+            <h3 class="text-4xl mb-6">10. Glossary of Key Terms</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-lg">
+                <div><strong class="key-term">Anion:</strong> A negatively charged ion, formed when an atom gains one or more electrons.</div>
+                <div><strong class="key-term">Atom:</strong> The basic unit of a chemical element, consisting of a nucleus surrounded by electrons.</div>
+                <div><strong class="key-term">Atomic Mass Unit (amu or u):</strong> A standard unit of mass used for atoms and molecules; defined as 1/12th the mass of a Carbon-12 atom.</div>
+                <div><strong class="key-term">Atomic Number (Z):</strong> The number of protons in the nucleus of an atom, which determines the element's identity.</div>
+                <div><strong class="key-term">Atomic Orbital:</strong> A region of space around the nucleus where there is a high probability of finding an electron.</div>
+                <div><strong class="key-term">Aufbau Principle:</strong> States that electrons fill atomic orbitals of the lowest available energy levels before occupying higher energy levels.</div>
+                <div><strong class="key-term">Avogadro's Number ($N_A$):</strong> The number of entities (atoms, molecules, etc.) in one mole of a substance, approximately $6.022 \times 10^{23}$.</div>
+                <div><strong class="key-term">Bohr Model:</strong> An early atomic model proposing that electrons orbit the nucleus in specific, quantized energy levels.</div>
+                <div><strong class="key-term">Cation:</strong> A positively charged ion, formed when an atom loses one or more electrons.</div>
+                <div><strong class="key-term">Cathode Rays:</strong> Streams of electrons observed in vacuum tubes; used by J.J. Thomson to discover the electron.</div>
+                <div><strong class="key-term">Dalton's Atomic Theory:</strong> Early 19th-century theory proposing atoms as indivisible, indestructible particles that combine in simple whole-number ratios.</div>
+                <div><strong class="key-term">De Broglie Wavelength:</strong> The wavelength associated with a moving particle, demonstrating wave-particle duality.</div>
+                <div><strong class="key-term">Democritus:</strong> Ancient Greek philosopher who proposed the concept of "atomos" (indivisible particles).</div>
+                <div><strong class="key-term">Diffraction:</strong> The spreading out of waves as they pass through an opening or around an obstacle. (Relevant for wave-particle duality of electrons).</div>
+                <div><strong class="key-term">Electron (e$^-$):</strong> A negatively charged subatomic particle that orbits the nucleus.</div>
+                <div><strong class="key-term">Electron Affinity:</strong> The energy change that occurs when an electron is added to a neutral gaseous atom.</div>
+                <div><strong class="key-term">Electron Cloud:</strong> The region surrounding the nucleus where electrons are found in probability distributions.</div>
+                <div><strong class="key-term">Electron Configuration:</strong> The arrangement of electrons in the atomic orbitals of an atom.</div>
+                <div><strong class="key-term">Energy Levels:</strong> Discrete allowed energies that electrons can possess within an atom.</div>
+                <div><strong class="key-term">Erwin Schrödinger:</strong> Developed the wave equation that describes electron behavior in atoms.</div>
+                <div><strong class="key-term">Gold Foil Experiment:</strong> Rutherford's experiment which led to the discovery of the atomic nucleus.</div>
+                <div><strong class="key-term">Harmonics (Overtones):</strong> Higher frequencies that are integer multiples of the fundamental frequency; contribute to timbre. (Mentioned in sound lesson, but relevant to quantized energy).</div>
+                <div><strong class="key-term">Heisenberg Uncertainty Principle:</strong> States that it's impossible to precisely determine both the position and momentum of a particle simultaneously.</div>
+                <div><strong class="key-term">Hund's Rule:</strong> States that electrons fill degenerate orbitals singly before pairing up, with parallel spins.</div>
+                <div><strong class="key-term">Ion:</strong> An atom or molecule that has a net electrical charge due to the loss or gain of electrons.</div>
+                <div><strong class="key-term">Ionization:</strong> The process of forming an ion by gaining or losing electrons.</div>
+                <div><strong class="key-term">Ionization Energy:</strong> The minimum energy required to remove an electron from a neutral gaseous atom.</div>
+                <div><strong class="key-term">Isotopes:</strong> Atoms of the same element (same number of protons) but with different numbers of neutrons (and thus different mass numbers).</div>
+                <div><strong class="key-term">J.J. Thomson:</strong> Discovered the electron and proposed the "plum pudding model."</div>
+                <div><strong class="key-term">John Dalton:</strong> Developed the first modern atomic theory.</div>
+                <div><strong class="key-term">Louis de Broglie:</strong> Proposed the wave-particle duality of matter.</div>
+                <div><strong class="key-term">Mass Number (A):</strong> The total number of protons and neutrons in an atom's nucleus.</div>
+                <div><strong class="key-term">Mole (mol):</strong> The SI unit for amount of substance, containing Avogadro's number of entities.</div>
+                <div><strong class="key-term">Neutron (n$^0$):</strong> A neutral subatomic particle found in the nucleus.</div>
+                <div><strong class="key-term">Niels Bohr:</strong> Proposed a quantized model for the hydrogen atom.</div>
+                <div><strong class="key-term">Nuclear Model:</strong> Rutherford's model of the atom, featuring a small, dense, positively charged nucleus.</div>
+                <div><strong class="key-term">Nucleons:</strong> Collective term for protons and neutrons within the nucleus.</div>
+                <div><strong class="key-term">Nucleus:</strong> The tiny, dense, positively charged center of an atom, containing protons and neutrons.</div>
+                <div><strong class="key-term">Nuclide Notation:</strong> A symbolic representation of an isotope, $^A_Z X$.</div>
+                <div><strong class="key-term">Pauli Exclusion Principle:</strong> States that no two electrons in an atom can have the same set of four quantum numbers.</div>
+                <div><strong class="key-term">Plum Pudding Model:</strong> Thomson's model of the atom, a sphere of positive charge with embedded electrons.</div>
+                <div><strong class="key-term">Principal Quantum Number ($n$):</strong> Defines the main energy level and size of an electron's orbital.</div>
+                <div><strong class="key-term">Proton (p$^+$):</strong> A positively charged subatomic particle found in the nucleus.</div>
+                <div><strong class="key-term">Quantum Mechanical Model:</strong> The modern atomic model, based on quantum mechanics, describing electrons in terms of probability distributions (orbitals).</div>
+                <div><strong class="key-term">Quantum Numbers:</strong> A set of numbers (n, l, m$_l$, m$_s$) that describe the state of an electron in an atom.</div>
+                <div><strong class="key-term">Rutherford, Ernest:</strong> Conducted the gold foil experiment and proposed the nuclear model.</div>
+                <div><strong class="key-term">Schrödinger Equation:</strong> A mathematical equation that describes the wave behavior of electrons in atoms.</div>
+                <div><strong class="key-term">Subatomic Particles:</strong> Particles smaller than an atom (protons, neutrons, electrons).</div>
+                <div><strong class="key-term">Wave-Particle Duality:</strong> The concept that particles (like electrons) can exhibit both wave-like and particle-like properties.</div>
+                <div><strong class="key-term">Werner Heisenberg:</strong> Formulated the Uncertainty Principle.</div>
+                <div><strong class="key-term">Zeeman Effect:</strong> The splitting of spectral lines in the presence of a magnetic field, not explained by the Bohr model.</div>
+            </div>
+        </section>
+
+        <section id="references" class="section-card">
+            <h3 class="text-4xl mb-6">11. Further Reading and References</h3>
+            <p class="text-lg leading-relaxed mb-4">To continue your deep dive into the fascinating world of atomic structure and quantum mechanics, consider these comprehensive resources:</p>
+            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
+                <li class="mb-2">Serway, R. A., & Jewett, J. W. (2018). <em>Physics for Scientists and Engineers with Modern Physics</em> (10th ed.). Cengage Learning. (Chapters on Atomic Physics and Quantum Mechanics)</li>
+                <li class="mb-2">Halliday, D., Resnick, R., & Walker, J. (2014). <em>Fundamentals of Physics</em> (10th ed.). John Wiley & Sons. (Chapters on Atoms and Quantum Physics)</li>
+                <li class="mb-2">Young, H. D., & Freedman, R. A. (2020). <em>University Physics with Modern Physics</em> (15th ed.). Pearson. (Extensive coverage of atomic structure, quantum mechanics, and nuclear physics)</li>
+                <li class="mb-2">Zumdahl, S. S., & Zumdahl, S. A. (2018). <em>Chemistry</em> (10th ed.). Cengage Learning. (Chapters on Atomic Structure and Periodicity)</li>
+                <li class="mb-2">Khan Academy: <a href="https://www.khanacademy.org/science/chemistry/atomic-structure-and-properties" target="_blank" class="text-blue-400 hover:underline">Atomic Structure and Properties Course</a> (Online video lessons and practice problems)</li>
+                <li class="mb-2">HyperPhysics: <a href="http://hyperphysics.phy-astr.gsu.edu/hbase/atom.html" target="_blank" class="text-blue-400 hover:underline">Atomic and Nuclear Physics Topics</a> (Concise explanations and concept maps)</li>
+            </ul>
+        </section>
+
+    </div>
+
+    <script>
+        // Three.js Animated Background (reused from previous lessons)
+        const canvas = document.getElementById('three-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+
+        camera.position.z = 5;
+
+        const particleCount = 1000;
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount * 3; i += 3) {
+            positions[i] = (Math.random() - 0.5) * 200;
+            positions[i + 1] = (Math.random() - 0.5) * 200;
+            positions[i + 2] = (Math.random() - 0.5) * 200;
+        }
+
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0x63b3ed,
+            size: 0.1,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            opacity: 0.7
+        });
+
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+
+        const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(0, 1, 0);
+        scene.add(directionalLight);
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+
+            particleSystem.rotation.x += 0.0005;
+            particleSystem.rotation.y += 0.001;
+
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                positions[i3 + 2] += 0.05;
+
+                if (positions[i3 + 2] > camera.position.z + 10) {
+                    positions[i3 + 2] = camera.position.z - 200;
+                }
+            }
+            particles.attributes.position.needsUpdate = true;
+
+            renderer.render(scene, camera);
+        };
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        window.onload = function() {
+            animate();
+        };
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
