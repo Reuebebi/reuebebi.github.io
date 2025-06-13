@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magnetism Basics | Whizmath - Magnetic Poles, Fields, Interactions & Materials</title>
+    <meta name="description" content="Discover the fundamental principles of magnetism on Whizmath. Explore magnetic poles, magnetic fields produced by permanent magnets, simple magnetic interactions, and the nature of magnetic materials. Comprehensive and in-depth physics lesson.">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script>
+        // Optional: Configure MathJax to process dollar signs for inline math
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Dark background for a professional look */
+            color: #e6edf3; /* Light text for contrast */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            position: relative; /* For Three.js canvas positioning */
+        }
+        #threejs-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Behind content */
+            opacity: 0.15; /* Subtle background */
+        }
+        .content-container {
+            position: relative;
+            z-index: 1; /* Above Three.js background */
+            max-width: 960px; /* Max width for readability */
+            margin: 0 auto; /* Center content */
+            padding: 4rem 1.5rem; /* Ample padding */
+            background-color: rgba(1, 4, 9, 0.7); /* Slightly transparent dark overlay for content */
+            border-radius: 1.5rem; /* Rounded corners */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Soft shadow */
+            backdrop-filter: blur(8px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(8px); /* Safari support */
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #161b22;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #30363d;
+            border-radius: 6px;
+            border: 3px solid #161b22;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #464e57;
+        }
+
+        /* Headings styling */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #58a6ff; /* A vibrant blue for headings */
+        }
+        h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+        h2 {
+            font-size: 2.5rem;
+            margin-top: 3rem;
+            border-bottom: 2px solid #21262d;
+            padding-bottom: 0.5rem;
+        }
+        h3 {
+            font-size: 2rem;
+            margin-top: 2.5rem;
+        }
+        h4 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        code {
+            background-color: #21262d;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.3rem;
+            font-family: 'Fira Code', monospace; /* A monospace font for code snippets */
+            font-size: 0.95rem;
+        }
+        pre {
+            background-color: #161b22;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        strong {
+            color: #c9d1d9; /* Lighter shade for emphasis */
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            background-color: #30363d;
+            color: #e6edf3;
+            padding: 0.75rem 1.25rem;
+            border-radius: 9999px; /* Fully rounded */
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid #484f58;
+            z-index: 10;
+        }
+        .back-button:hover {
+            background-color: #464e57;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        .back-button svg {
+            margin-right: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        .back-button:hover svg {
+            transform: translateX(-3px);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .content-container {
+                padding: 2rem 1rem;
+                margin: 2rem 1rem;
+            }
+            h1 {
+                font-size: 2.5rem;
+            }
+            h2 {
+                font-size: 2rem;
+            }
+            h3 {
+                font-size: 1.75rem;
+            }
+            p {
+                font-size: 1rem;
+            }
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            .back-button svg {
+                width: 1rem;
+                height: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="threejs-background"></canvas>
+
+    <a href="physics.html" class="back-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to Physics
+    </a>
+
+    <div class="content-container">
+        <header>
+            <h1 class="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">Whizmath</h1>
+            <h1 class="text-5xl text-blue-300 mb-6 text-center">Magnetism Basics: Unveiling the Invisible Force</h1>
+        </header>
+
+        <section id="introduction" class="mb-10">
+            <h2 class="text-blue-400">1. Introduction: The Enigma of Magnetism</h2>
+            <p>
+                From the simple compass guiding ancient mariners to the complex machinery of MRI scanners and the colossal power generators that light our cities, <strong>magnetism</strong> is an invisible yet indispensable force shaping our world. Its principles underpin countless technologies and natural phenomena, influencing everything from the behavior of tiny electrons to the vast expanse of Earth's protective magnetic shield. Yet, for many, magnetism remains a fascinating enigma, an invisible influence that seems almost magical.
+            </p>
+            <p>
+                On Whizmath, this extraordinarily comprehensive lesson will demystify the fundamental principles of magnetism. We will embark on a detailed journey, starting with the very basics: what are <strong>magnetic poles</strong>, how do they interact, and what are the characteristics of the <strong>magnetic fields</strong> they produce? We will then dive into the nature of <strong>permanent magnets</strong>, their microscopic origins, and the macroscopic forces they exert. Beyond simple interactions, we will explore the fascinating link between electricity and magnetism (electromagnetism), the various ways materials respond to magnetic fields, and the profound importance of Earth's own magnetic field. Prepare to uncover the secrets of this pervasive and powerful force, transforming your understanding of the physical universe!
+            </p>
+            <p>
+                The study of magnetism is not merely an academic exercise; it is crucial for understanding a vast array of scientific disciplines, including physics, chemistry, geology, and even biology. Its applications are ubiquitous, ranging from data storage in hard drives to magnetic levitation trains, and from particle accelerators to advanced medical diagnostics. By grasping these foundational concepts, you'll be equipped to understand the technological marvels that rely on magnetism.
+            </p>
+        </section>
+
+        <section id="magnetic-poles" class="mb-10">
+            <h2 class="text-blue-400">2. Magnetic Poles: The Fundamental Units of Magnetism</h2>
+            <p>
+                Just as electric charges are the fundamental sources of electric forces, <strong>magnetic poles</strong> are the regions of a magnet where the magnetic field is strongest and through which magnetic field lines emerge and enter. Every magnet, regardless of its size or shape, possesses two types of poles: a North-seeking pole (often simply called the North pole) and a South-seeking pole (the South pole).
+            </p>
+
+            <h3>2.1. North and South Poles</h3>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>North Pole:</strong> This is the end of a magnet that, when freely suspended, tends to point towards the Earth's geographic North Pole. This is due to the Earth acting as a giant magnet, with its magnetic south pole located near the geographic North Pole.
+                </li>
+                <li>
+                    <strong>South Pole:</strong> Conversely, this is the end of a magnet that tends to point towards the Earth's geographic South Pole (which is near the Earth's magnetic north pole).
+                </li>
+            </ul>
+            <p>
+                It is crucial to distinguish between Earth's geographic poles (based on rotation axis) and its magnetic poles (based on its magnetic field). The Earth's magnetic field lines emerge from near the geographic South Pole and enter near the geographic North Pole. Therefore, what we call the "North Pole" of a compass needle is actually attracted to the Earth's magnetic south pole. This can be a source of confusion, but the convention of North-seeking and South-seeking poles for magnets remains universally accepted.
+            </p>
+
+            <h3>2.2. The Inseparability of Poles (Magnetic Monopoles?)</h3>
+            <p>
+                One of the most profound and unique characteristics of magnetic poles, in contrast to electric charges, is their **inseparability**.
+            </p>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>No Isolated Poles:</strong> You cannot isolate a single magnetic North or South pole. If you take a bar magnet and cut it in half, you don't get a separate North pole and a separate South pole. Instead, you get two smaller magnets, each with its own North and South poles. If you keep cutting it into smaller and smaller pieces, each piece will still have both a North and a South pole. This phenomenon holds true down to the atomic level.
+                </li>
+                <li>
+                    <strong>Theoretical Magnetic Monopoles:</strong> While isolated electric charges (like a single electron or proton) exist, isolated magnetic poles, known as <strong>magnetic monopoles</strong>, have never been experimentally observed despite extensive searches. Their existence is predicted by certain grand unified theories in physics, and if found, they would revolutionize our understanding of electromagnetism. However, for all practical purposes in classical magnetism, poles always come in pairs. This implies that magnetic field lines always form closed loops, unlike electric field lines which can begin and end on charges.
+                </li>
+            </ul>
+        </section>
+
+        <section id="magnetic-fields" class="mb-10">
+            <h2 class="text-blue-400">3. Magnetic Fields: The Invisible Influence</h2>
+            <p>
+                Just as electric charges create an electric field around them, magnets create a <strong>magnetic field</strong> in the space surrounding them. A magnetic field is a region of influence where magnetic forces can be detected. It is an essential concept for understanding how magnets interact with each other and with moving electric charges.
+            </p>
+
+            <h3>3.1. Definition and Direction</h3>
+            <p>
+                A magnetic field is a vector field, meaning it has both magnitude (strength) and direction at every point in space. The direction of the magnetic field ($\vec{B}$) at any point is defined as the direction that the North pole of a tiny, freely suspended compass needle would point if placed at that location.
+            </p>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>Outside a Magnet:</strong> Magnetic field lines emerge from the North pole of a magnet and enter the South pole.
+                </li>
+                <li>
+                    <strong>Inside a Magnet:</strong> Conventionally, magnetic field lines are considered to continue from the South pole to the North pole within the magnet, forming continuous closed loops. This reinforces the idea that magnetic monopoles do not exist.
+                </li>
+            </ul>
+
+            <h3>3.2. Representing Magnetic Fields: Magnetic Field Lines</h3>
+            <p>
+                Magnetic field lines (also known as lines of magnetic force) are a powerful visual tool for representing magnetic fields. They are imaginary lines that help us visualize the direction and strength of the magnetic field.
+            </p>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>Direction:</strong> The arrows on the magnetic field lines indicate the direction of the magnetic field. They point away from North poles and towards South poles.
+                </li>
+                <li>
+                    <strong>Density (Strength):</strong> The density of the field lines (how close they are to each other) indicates the strength of the magnetic field. Where the lines are closer together, the field is stronger (e.g., near the poles). Where they are farther apart, the field is weaker.
+                </li>
+                <li>
+                    <strong>Non-Intersecting:</strong> Magnetic field lines never cross each other. If they did, it would imply that the magnetic field has two different directions at the same point, which is physically impossible.
+                </li>
+                <li>
+                    <strong>Closed Loops:</strong> Magnetic field lines always form continuous closed loops, originating from the North pole, extending into space, entering the South pole, and continuing through the magnet back to the North pole. This is a direct consequence of the non-existence of magnetic monopoles.
+                </li>
+            </ul>
+            <p>
+                You can visualize magnetic field lines by sprinkling iron filings around a magnet. The filings align themselves along the magnetic field lines, revealing the invisible pattern of the field.
+            </p>
+
+            <h3>3.3. Magnetic Field Strength (Magnetic Flux Density, $B$)</h3>
+            <p>
+                The strength of a magnetic field is quantitatively measured by the <strong>magnetic flux density</strong>, denoted by the symbol $\vec{B}$. It is a vector quantity, representing the force per unit current per unit length on a conductor perpendicular to the field.
+            </p>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>SI Unit:</strong> The SI unit for magnetic field strength ($B$) is the <strong>Tesla (T)</strong>. One Tesla is equal to one Newton per Ampere-meter ($1 \text{ N/(A}\cdot\text{m)}$).
+                </li>
+                <li>
+                    <strong>Common Unit:</strong> Another common unit, especially in older texts or for weaker fields, is the <strong>Gauss (G)</strong>. $1 \text{ Tesla} = 10^4 \text{ Gauss}$.
+                </li>
+                <li>
+                    <strong>Typical Values:</strong>
+                    <ul class="list-circle pl-6 mt-2">
+                        <li>Earth's magnetic field: $\approx 25 \text{ to } 65 \mu \text{T}$ (microteslas, or $0.25 \text{ to } 0.65 \text{ Gauss}$)</li>
+                        <li>Small bar magnet: $\approx 0.01 \text{ T}$ (100 Gauss) near its poles</li>
+                        <li>Strong Neodymium magnet: $\approx 1 \text{ T}$</li>
+                        <li>MRI scanner: $\approx 1.5 \text{ to } 3 \text{ T}$ (research scanners can be much higher)</li>
+                        <li>Surface of a neutron star: $\approx 10^8 \text{ T}$ (astronomical!)</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>
+                The concept of magnetic field strength is crucial when calculating the force exerted on moving charges or current-carrying wires within a magnetic field, as described by the Lorentz force law, which we will touch upon briefly later.
+            </p>
+        </section>
+
+        <section id="permanent-magnets" class="mb-10">
+            <h2 class="text-blue-400">4. Permanent Magnets: Natural and Artificial</h2>
+            <p>
+                A <strong>permanent magnet</strong> is a material that retains its magnetism after being magnetized, producing its own persistent magnetic field without any external power source. These are the magnets we commonly encounter in everyday life.
+            </p>
+
+            <h3>4.1. How Permanent Magnets Work: The Role of Magnetic Domains</h3>
+            <p>
+                The magnetism in permanent magnets arises from the collective alignment of atomic magnetic moments within the material. In certain materials, particularly ferromagnetic substances, this phenomenon is explained by the concept of <strong>magnetic domains</strong>.
+            </p>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>Magnetic Domains:</strong> Within a ferromagnetic material (like iron, nickel, cobalt, and their alloys), there are microscopic regions called magnetic domains. Each domain is essentially a tiny magnet itself, where the magnetic moments of the atoms (primarily due to electron spin) are aligned in the same direction, creating a strong localized magnetic field.
+                </li>
+                <li>
+                    <strong>Unmagnetized Material:</strong> In an unmagnetized piece of ferromagnetic material, these domains are randomly oriented, with their magnetic fields pointing in different directions. The net macroscopic magnetic field of the entire material is therefore zero, as the magnetic effects of the domains cancel each other out.
+                </li>
+                <li>
+                    <strong>Magnetization:</strong> When an unmagnetized ferromagnetic material is placed in an external magnetic field (or subjected to a strong electric current, as in an electromagnet), two things happen:
+                    <ul class="list-circle pl-6 mt-2">
+                        <li><strong>Domain Growth:</strong> Domains that are already aligned (or nearly aligned) with the external field grow in size at the expense of less favorably oriented domains.</li>
+                        <li><strong>Domain Rotation:</strong> Domains that are not aligned with the external field rotate to align themselves with it.</li>
+                    </ul>
+                    If the external field is strong enough, a significant number of domains become aligned in the same direction. When the external field is removed, these domains remain largely aligned, resulting in a net macroscopic magnetic field, and the material becomes a permanent magnet.
+                </li>
+                <li>
+                    <strong>Saturation:</strong> When all domains are aligned, the material is said to be magnetically saturated, and its magnetic strength cannot be further increased.
+                </li>
+            </ul>
+
+            <h3>4.2. Types of Permanent Magnets</h3>
+            <p>
+                Permanent magnets are made from various ferromagnetic materials, each with unique properties:
+            </p>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>Alnico Magnets:</strong> Alloys of Aluminum, Nickel, and Cobalt. They are strong, resistant to demagnetization by heat, but brittle. Used in motors, loudspeakers, and instruments.
+                </li>
+                <li>
+                    <strong>Ceramic (Ferrite) Magnets:</strong> Made from iron oxides and barium/strontium carbonate. They are inexpensive, corrosion-resistant, and have good resistance to demagnetization. Common in motors, craft magnets, and refrigerator magnets.
+                </li>
+                <li>
+                    <strong>Neodymium Magnets (NdFeB):</strong> The strongest type of commercially available permanent magnets, made from Neodymium, Iron, and Boron. They offer extremely high magnetic strength for their size. Used in hard drives, headphones, MRI machines, and wind turbines. They are brittle and susceptible to corrosion, often coated.
+                </li>
+                <li>
+                    <strong>Samarium Cobalt Magnets (SmCo):</strong> High-strength magnets composed of Samarium and Cobalt. They are strong and have excellent temperature stability, performing well at high temperatures where Neodymium magnets might lose strength. Used in high-performance motors, sensors, and aerospace applications.
+                </li>
+            </ul>
+
+            <h3>4.3. Properties of Permanent Magnets</h3>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>Retentivity:</strong> The ability of a material to retain its magnetism after the magnetizing field is removed. Materials with high retentivity make good permanent magnets.
+                </li>
+                <li>
+                    <strong>Coercivity:</strong> The resistance of a magnetic material to demagnetization. It's the strength of the reverse magnetic field required to reduce the magnetization of a saturated material to zero. High coercivity is desirable for permanent magnets.
+                </li>
+                <li>
+                    <strong>Curie Temperature:</strong> The temperature above which a ferromagnetic material loses its ferromagnetic properties and becomes paramagnetic. At this temperature, the thermal energy is sufficient to overcome the forces aligning the magnetic domains, causing them to randomize.
+                </li>
+                <li>
+                    <strong>Brittleness:</strong> Many strong permanent magnets (like Neodymium) are brittle and can break or chip easily.
+                </li>
+                <li>
+                    <strong>Temperature Sensitivity:</strong> The magnetic strength of permanent magnets can be affected by temperature. Some (like Neodymium) lose strength at relatively low temperatures, while others (like Samarium Cobalt) can withstand higher temperatures.
+                </li>
+            </ul>
+        </section>
+
+        <section id="magnetic-interactions" class="mb-10">
+            <h2 class="text-blue-400">5. Interaction Between Magnets: Attraction and Repulsion</h2>
+            <p>
+                The most observable property of magnets is their ability to exert forces on each other, either attracting or repelling. These interactions are governed by a simple rule, similar to Coulomb's Law for electric charges.
+            </p>
+
+            <h3>5.1. The Fundamental Rule of Magnetic Interaction</h3>
+            <p>
+                The rule for magnetic interaction is straightforward and mirrors the interaction of electric charges:
+                <ul class="list-disc pl-6">
+                    <li><strong>Like poles repel:</strong> A North pole will repel another North pole. A South pole will repel another South pole.</li>
+                    <li><strong>Unlike poles attract:</strong> A North pole will attract a South pole.</li>
+                </ul>
+            </p>
+            <p>
+                This attraction and repulsion is a manifestation of the interaction between their respective magnetic fields. When two magnets are brought close, their magnetic field lines interact. If the fields are in opposite directions (e.g., N facing S), they connect and pull the magnets together. If the fields are in the same general direction (e.g., N facing N), they push each other apart.
+            </p>
+
+            <h3>5.2. Force Between Magnetic Poles (Analogous to Coulomb's Law)</h3>
+            <p>
+                While actual isolated magnetic poles don't exist, we can conceptually describe the force between two "point poles" by an inverse square law, analogous to Coulomb's Law for electric charges. This is largely a historical concept for understanding simple interactions, as modern physics describes magnetism as arising from moving charges.
+            </p>
+            <p>
+                The magnetic force ($F$) between two magnetic poles is directly proportional to the product of their pole strengths ($p_1, p_2$) and inversely proportional to the square of the distance ($r$) between them:
+                $$ F = k_m \frac{p_1 p_2}{r^2} $$
+                Where:
+                <ul class="list-disc pl-6">
+                    <li>$F$ is the magnetic force.</li>
+                    <li>$p_1, p_2$ are the strengths of the magnetic poles (hypothetical units, often Am).</li>
+                    <li>$r$ is the distance between the poles.</li>
+                    <li>$k_m$ is the magnetic proportionality constant, often written as $\frac{\mu_0}{4\pi}$.</li>
+                    <li>$\mu_0$ is the <strong>permeability of free space</strong>, a fundamental constant in electromagnetism ($4\pi \times 10^{-7} \text{ T}\cdot\text{m/A}$).</li>
+                </ul>
+            </p>
+            <p>
+                This formula highlights the inverse square relationship, meaning that as magnets are moved farther apart, the force between them rapidly decreases. It's important to reiterate that this is a simplified model, as real magnetic forces are more accurately described by the interaction of current loops and magnetic fields.
+            </p>
+
+            <h3>5.3. Interaction with Ferromagnetic Materials (Induced Magnetism)</h3>
+            <p>
+                Permanent magnets not only interact with other magnets but also attract unmagnetized <strong>ferromagnetic materials</strong> (like iron nails, paperclips, etc.). This happens because the magnetic field of the permanent magnet induces magnetism in the ferromagnetic material.
+            </p>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>Domain Alignment:</strong> When a ferromagnetic material is brought near a permanent magnet, the external magnetic field from the permanent magnet causes the magnetic domains within the unmagnetized material to align themselves. The end of the material closest to the magnet's pole will develop an opposite (attracting) pole, and the far end will develop a like (repelling) pole.
+                </li>
+                <li>
+                    <strong>Net Attraction:</strong> Because the induced pole closer to the permanent magnet is of the opposite type, the attractive force between these unlike poles is stronger than the repulsive force between the farther, like poles (due to the inverse square law). This results in a net attractive force between the permanent magnet and the unmagnetized ferromagnetic material.
+                </li>
+                <li>
+                    <strong>Temporary Magnetization:</strong> This induced magnetism is usually temporary; once the permanent magnet is removed, the domains in the ferromagnetic material largely return to their random orientations, and the material loses most of its magnetism.
+                </li>
+            </ul>
+        </section>
+
+        <section id="sources-of-magnetism" class="mb-10">
+            <h2 class="text-blue-400">6. The Microscopic Origins of Magnetism</h2>
+            <p>
+                At its most fundamental level, magnetism is not due to "magnetic charges" or "magnetic monopoles" but is an intrinsic property of moving electric charges. This insight, solidified by James Clerk Maxwell's unification of electricity and magnetism, revolutionized physics.
+            </p>
+
+            <h3>6.1. Moving Electric Charges</h3>
+            <p>
+                The primary source of all magnetism is <strong>moving electric charges</strong>.
+                <ul class="list-disc pl-6">
+                    <li>
+                        <strong>Electric Currents:</strong> An electric current (flow of electrons) creates a magnetic field around it. This is the basis of electromagnetism, which we will explore further.
+                    </li>
+                    <li>
+                        <strong>Atomic Level:</strong> At the atomic level, the electrons orbiting the nucleus and, more importantly, their intrinsic property called <strong>spin</strong>, act as tiny current loops, generating minuscule magnetic fields.
+                    </li>
+                </ul>
+            </p>
+
+            <h3>6.2. Electron Orbital Motion and Spin</h3>
+            <p>
+                Within an atom, two primary motions contribute to its magnetic properties:
+            </p>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>Electron Orbital Motion:</strong> As electrons orbit the nucleus, they create tiny current loops, which in turn generate an orbital magnetic moment. In most atoms, these orbital moments cancel each other out due to electrons occupying various orbitals.
+                </li>
+                <li>
+                    <strong>Electron Spin:</strong> This is the most significant contributor to a material's magnetic properties. Electrons possess an intrinsic angular momentum called "spin," which creates a magnetic dipole moment. Think of an electron as a tiny spinning top, generating its own magnetic field. The spin magnetic moments of electrons are quantized, meaning they can only point in specific directions ("spin up" or "spin down").
+                </li>
+            </ul>
+            <p>
+                In most atoms, electrons pair up in orbitals with opposite spins, so their spin magnetic moments cancel each other out. This results in no net magnetic moment for the atom. However, in atoms with unpaired electrons (e.g., iron, nickel, cobalt), these unpaired electron spins can align with each other, leading to a net magnetic moment for the atom. The collective alignment of these atomic magnetic moments gives rise to the macroscopic magnetic properties of materials.
+            </p>
+        </section>
+
+        <section id="magnetic-materials" class="mb-10">
+            <h2 class="text-blue-400">7. Magnetic Materials: How Substances Respond to Fields</h2>
+            <p>
+                Materials respond to external magnetic fields in different ways, leading to their classification into distinct magnetic types. This response depends on the electronic structure of their atoms and how their individual atomic magnetic moments interact.
+            </p>
+
+            <h3>7.1. Ferromagnetism</h3>
+            <p>
+                <strong>Ferromagnetic materials</strong> are those that are strongly attracted to magnets and can be permanently magnetized. These are the materials we typically think of when we talk about magnets.
+            </p>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>Characteristics:</strong>
+                    <ul class="list-circle pl-6 mt-2">
+                        <li>Strong attraction to magnets.</li>
+                        <li>Can be permanently magnetized.</li>
+                        <li>Exhibit magnetic domains (as discussed earlier).</li>
+                        <li>High magnetic susceptibility ($\chi_m \gg 1$), meaning they concentrate magnetic field lines.</li>
+                        <li>Examples: Iron (Fe), Nickel (Ni), Cobalt (Co), and their alloys (e.g., steel, alnico, neodymium magnets).</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Mechanism:</strong> The strong magnetic properties of ferromagnetic materials arise from a quantum mechanical effect called <strong>exchange coupling</strong>. This causes the spin magnetic moments of neighboring atoms to align parallel to each other within magnetic domains. When an external field is applied, these domains align, leading to strong overall magnetization.
+                </li>
+                <li>
+                    <strong>Hysteresis:</strong> Ferromagnetic materials exhibit <strong>magnetic hysteresis</strong>, meaning their magnetization depends not only on the current applied magnetic field but also on their past magnetic history. When a ferromagnetic material is subjected to a magnetizing field and then the field is removed, it retains some of its magnetism (retentivity). To completely demagnetize it, a reverse magnetic field (coercivity) must be applied. This property is crucial for magnetic data storage (hard drives, credit cards).
+                </li>
+                <li>
+                    <strong>Soft vs. Hard Magnetic Materials:</strong>
+                    <ul class="list-circle pl-6 mt-2">
+                        <li>
+                            <strong>Soft Magnetic Materials:</strong> Easily magnetized and demagnetized (low coercivity). They are used in applications requiring frequent changes in magnetic field direction, such as electromagnets, transformer cores, and magnetic shielding. Examples: soft iron, silicon steel.
+                        </li>
+                        <li>
+                            <strong>Hard Magnetic Materials:</strong> Difficult to magnetize but retain their magnetism strongly (high coercivity). These are used to make permanent magnets. Examples: alnico, neodymium, samarium cobalt.
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>7.2. Paramagnetism</h3>
+            <p>
+                <strong>Paramagnetic materials</strong> are weakly attracted to strong magnetic fields but do not retain any magnetism when the external field is removed.
+            </p>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>Characteristics:</strong>
+                    <ul class="list-circle pl-6 mt-2">
+                        <li>Weak attraction to magnets.</li>
+                        <li>Lose magnetism when the external field is removed.</li>
+                        <li>Magnetic susceptibility is small and positive ($\chi_m > 0$, but $\chi_m \approx 1$).</li>
+                        <li>Examples: Aluminum (Al), Platinum (Pt), Oxygen (O$_2$), Sodium (Na).</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Mechanism:</strong> Paramagnetic materials contain atoms with unpaired electrons, giving each atom a small, permanent magnetic dipole moment. However, these atomic dipoles are randomly oriented due to thermal agitation. When an external magnetic field is applied, these dipoles partially align with the field, resulting in a weak net magnetization in the direction of the field. Once the external field is removed, the thermal motion randomizes the dipoles again, and the magnetism disappears.
+                </li>
+            </ul>
+
+            <h3>7.3. Diamagnetism</h3>
+            <p>
+                <strong>Diamagnetic materials</strong> are weakly repelled by magnetic fields. They cannot be permanently magnetized.
+            </p>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>Characteristics:</strong>
+                    <ul class="list-circle pl-6 mt-2">
+                        <li>Weak repulsion from magnets.</li>
+                        <li>Cannot be permanently magnetized.</li>
+                        <li>Magnetic susceptibility is small and negative ($\chi_m < 0$).</li>
+                        <li>Examples: Water (H$_2$O), Copper (Cu), Gold (Au), Silver (Ag), Carbon (C), Bismuth (Bi), most organic compounds, superconductors (perfect diamagnetism).</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Mechanism:</strong> Diamagnetism is present in all materials, but it is typically masked by paramagnetism or ferromagnetism if those properties are present. It arises from the orbital motion of electrons. When an external magnetic field is applied, it induces a tiny magnetic dipole moment in the atoms that opposes the applied field (Lenz's Law). This induced moment causes the weak repulsion. Materials that have no unpaired electrons exhibit only diamagnetism.
+                </li>
+            </ul>
+
+            <h3>7.4. Antiferromagnetism and Ferrimagnetism (Brief Mention)</h3>
+            <p>
+                Beyond these primary classifications, there are other, more complex types of magnetic behavior:
+                <ul class="list-disc pl-6">
+                    <li>
+                        <strong>Antiferromagnetism:</strong> In some materials, adjacent atomic magnetic moments align in an antiparallel fashion, cancelling each other out. This results in a very weak or zero net magnetization, even though individual atoms have magnetic moments. Example: Manganese oxide (MnO).
+                    </li>
+                    <li>
+                        <strong>Ferrimagnetism:</strong> Similar to ferromagnetism, but with opposing magnetic moments of different magnitudes, resulting in a net spontaneous magnetization. Often seen in ceramic ferrites.
+                    </li>
+                </ul>
+            </p>
+        </section>
+
+        <section id="earths-magnetic-field" class="mb-10">
+            <h2 class="text-blue-400">8. Earth's Magnetic Field: Our Planetary Shield</h2>
+            <p>
+                One of the most remarkable and vital manifestations of magnetism is Earth's own magnetic field, also known as the <strong>geomagnetic field</strong>. This vast, protective field extends thousands of kilometers into space, shielding our planet from harmful solar radiation and enabling phenomena like the aurora.
+            </p>
+
+            <h3>8.1. Origin: The Geodynamo</h3>
+            <p>
+                The Earth's magnetic field is not due to a giant bar magnet buried within its core. Instead, it is generated by a process called the <strong>geodynamo</strong>.
+                <ul class="list-disc pl-6">
+                    <li>
+                        <strong>Outer Core Convection:</strong> The Earth's core consists of a solid inner core and a liquid outer core, primarily composed of molten iron and nickel. Due to differences in temperature and pressure, this liquid outer core undergoes vigorous convection (movement of fluids due to heat transfer).
+                    </li>
+                    <li>
+                        <strong>Electrical Conductivity:</strong> Molten iron and nickel are excellent electrical conductors.
+                    </li>
+                    <li>
+                        <strong>Coriolis Effect:</strong> As the conductive fluid flows, the Earth's rotation (Coriolis effect) causes the moving charges to interact with existing magnetic fields (even small initial ones). This interaction generates electric currents, which in turn produce new magnetic fields.
+                    </li>
+                    <li>
+                        <strong>Self-Sustaining Cycle:</strong> This process forms a self-sustaining cycle where the fluid motion generates magnetic fields, and these magnetic fields then influence the fluid motion, reinforcing the magnetic field. This is the essence of the geodynamo.
+                    </li>
+                </ul>
+            </p>
+
+            <h3>8.2. Characteristics of Earth's Magnetic Field</h3>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>Magnetic Poles:</strong> As mentioned earlier, Earth's magnetic field has North and South magnetic poles. These are not perfectly aligned with the geographic poles (the axis of rotation) and slowly drift over time.
+                    <ul class="list-circle pl-6 mt-2">
+                        <li><strong>Magnetic North Pole:</strong> Currently located in the Arctic region, near the geographic North Pole. However, from a physical perspective, it is actually the Earth's magnetic south pole (the end of the magnet field lines enter).</li>
+                        <li><strong>Magnetic South Pole:</strong> Currently located in the Antarctic region, near the geographic South Pole (from where magnetic field lines emerge).</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Strength:</strong> The strength of Earth's magnetic field varies across the surface, typically ranging from about $25 \mu \text{T}$ near the equator to $65 \mu \text{T}$ near the poles.
+                </li>
+                <li>
+                    <strong>Variations:</strong> The field is not static. It undergoes continuous, slow changes (secular variation), and can also experience rapid, short-term fluctuations due to solar activity (magnetic storms).
+                </li>
+                <li>
+                    <strong>Magnetic Reversals:</strong> Historically, Earth's magnetic field has undergone numerous complete reversals, where the North and South magnetic poles swap places. These events occur irregularly, taking thousands of years to complete, and the last full reversal was about 780,000 years ago. While the exact implications for modern life during a reversal are debated, it could affect navigation and expose the Earth to more solar radiation.
+                </li>
+            </ul>
+
+            <h3>8.3. Importance of Earth's Magnetic Field</h3>
+            <p>
+                The geomagnetic field is vital for life on Earth:
+                <ul class="list-disc pl-6">
+                    <li>
+                        <strong>Protection from Solar Wind:</strong> The most critical role is shielding Earth from the constant stream of high-energy charged particles emanating from the Sun, known as the <strong>solar wind</strong>. Without this protection, the solar wind would strip away our atmosphere over time, similar to what may have happened on Mars.
+                    </li>
+                    <li>
+                        <strong>Formation of Auroras:</strong> When charged particles from the solar wind interact with Earth's magnetic field, they are channeled towards the magnetic poles. Upon entering the upper atmosphere, they excite atoms and molecules, causing them to emit light, creating the spectacular <strong>aurora borealis</strong> (Northern Lights) and <strong>aurora australis</strong> (Southern Lights).
+                    </li>
+                    <li>
+                        <strong>Navigation:</strong> For centuries, the Earth's magnetic field has been indispensable for navigation using compasses, allowing explorers, sailors, and pilots to orient themselves.
+                    </li>
+                    <li>
+                        <strong>Animal Migration:</strong> Many animals, including birds, turtles, and salmon, are believed to use Earth's magnetic field for navigation during their long migrations.
+                    </li>
+                    <li>
+                        <strong>Technological Impact:</strong> Geomagnetic storms, caused by intense solar flares or coronal mass ejections, can disrupt radio communications, GPS systems, power grids, and even satellites. Understanding and monitoring Earth's magnetic field is crucial for mitigating these impacts.
+                    </li>
+                </ul>
+            </p>
+        </section>
+
+        <section id="applications" class="mb-10">
+            <h2 class="text-blue-400">9. Applications of Magnetism: Powering Our World</h2>
+            <p>
+                The understanding and harnessing of magnetic principles have led to an astonishing array of technologies that are integral to modern life. From the simplest household items to cutting-edge scientific instruments, magnetism is ubiquitous.
+            </p>
+
+            <h3>9.1. Everyday Applications</h3>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>Compasses:</strong> The most ancient and enduring application, relying on a small permanent magnet aligning with Earth's magnetic field.
+                </li>
+                <li>
+                    <strong>Refrigerator Magnets:</strong> Simple permanent magnets used to hold notes or decorations.
+                </li>
+                <li>
+                    <strong>Loudspeakers and Microphones:</strong> These convert electrical signals into sound (and vice versa) using the interaction between magnetic fields and current-carrying coils.
+                </li>
+                <li>
+                    <strong>Electric Motors and Generators:</strong> Fundamental to modern power systems. Motors convert electrical energy into mechanical energy using magnetic forces, while generators do the reverse, converting mechanical energy into electrical energy by exploiting electromagnetic induction.
+                </li>
+                <li>
+                    <strong>Hard Drives and Magnetic Storage:</strong> Data is stored by magnetizing tiny regions on a ferromagnetic platter. Read/write heads detect and alter these magnetic orientations.
+                </li>
+                <li>
+                    <strong>Credit Cards and Bank Cards:</strong> Have a magnetic stripe that stores encoded data.
+                </li>
+                <li>
+                    <strong>Door Latches and Catches:</strong> Many cabinet doors or secure enclosures use simple permanent magnets to keep them closed.
+                </li>
+                <li>
+                    <strong>Maglev Trains:</strong> Utilize powerful electromagnets to levitate the train above the track, eliminating friction and allowing for incredibly high speeds.
+                </li>
+            </ul>
+
+            <h3>9.2. Medical Applications</h3>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>Magnetic Resonance Imaging (MRI):</strong> A revolutionary medical diagnostic tool. MRI uses powerful magnetic fields and radio waves to create detailed images of organs and soft tissues inside the body without using ionizing radiation. It relies on the magnetic moments of hydrogen nuclei (protons) in water molecules within the body.
+                </li>
+                <li>
+                    <strong>Magnetic Hyperthermia:</strong> An experimental cancer treatment where magnetic nanoparticles are heated by an oscillating magnetic field to destroy cancer cells.
+                </li>
+                <li>
+                    <strong>Targeted Drug Delivery:</strong> Magnetic nanoparticles can be attached to drugs and guided to specific areas of the body using external magnetic fields.
+                </li>
+            </ul>
+
+            <h3>9.3. Industrial and Scientific Applications</h3>
+            <ul class="list-disc pl-6">
+                <li>
+                    <strong>Magnetic Separators:</strong> Used in recycling and mining industries to separate magnetic materials from non-magnetic ones.
+                </li>
+                <li>
+                    <strong>Particle Accelerators:</strong> Use strong magnetic fields to guide and accelerate charged particles to extremely high speeds for fundamental physics research.
+                </li>
+                <li>
+                    <strong>Mass Spectrometry:</strong> Magnetic fields are used to separate ions based on their mass-to-charge ratio, aiding in chemical analysis.
+                </li>
+                <li>
+                    <strong>Fusion Reactors (e.g., Tokamaks):</strong> Use incredibly strong magnetic fields to confine superheated plasma at millions of degrees Celsius, preventing it from touching the reactor walls.
+                </li>
+                <li>
+                    <strong>Eddy Current Testing:</strong> A non-destructive testing method used to detect flaws or measure properties of conductive materials using induced magnetic fields.
+                </li>
+                <li>
+                    <strong>Geomagnetic Surveys:</strong> Used in mineral exploration and archaeological investigations to detect variations in Earth's magnetic field caused by subsurface features.
+                </li>
+            </ul>
+        </section>
+
+        <section id="electromagnetism" class="mb-10">
+            <h2 class="text-blue-400">10. The Intertwined Nature of Electricity and Magnetism: A Glimpse into Electromagnetism</h2>
+            <p>
+                While this lesson primarily focuses on basic magnetism (especially permanent magnets), it's impossible to discuss magnetism without acknowledging its profound and inseparable relationship with electricity. This unified force is known as <strong>electromagnetism</strong>.
+            </p>
+
+            <h3>10.1. Oersted's Discovery: Current Creates Magnetism</h3>
+            <p>
+                In 1820, Danish physicist Hans Christian Ørsted made a groundbreaking discovery: he found that an electric current flowing through a wire could deflect a nearby compass needle. This was the first experimental evidence that electricity and magnetism are fundamentally linked. This phenomenon is known as the <strong>magnetic effect of electric current</strong>.
+                <ul class="list-disc pl-6">
+                    <li>
+                        <strong>Right-Hand Rule:</strong> The direction of the magnetic field around a current-carrying wire can be determined using the right-hand rule: if you point your right thumb in the direction of the conventional current, your fingers curl in the direction of the magnetic field lines.
+                    </li>
+                    <li>
+                        <strong>Solenoids and Electromagnets:</strong> By coiling a wire into a solenoid, the magnetic fields from individual loops combine to create a much stronger and more uniform magnetic field inside the coil, resembling that of a bar magnet. If a ferromagnetic core (like soft iron) is placed inside the solenoid, it becomes a powerful <strong>electromagnet</strong>, which can be turned on and off by controlling the current.
+                    </li>
+                </ul>
+            </p>
+
+            <h3>10.2. Faraday's Discovery: Magnetism Creates Electricity (Electromagnetic Induction)</h3>
+            <p>
+                A decade later, Michael Faraday (and independently Joseph Henry) discovered the reverse effect: a changing magnetic field can induce an electric current in a conductor. This phenomenon is known as <strong>electromagnetic induction</strong> and is the principle behind electric generators, transformers, and many other technologies.
+                <ul class="list-disc pl-6">
+                    <li>
+                        <strong>Faraday's Law of Induction:</strong> The magnitude of the induced electromotive force (EMF, or voltage) in a circuit is directly proportional to the rate of change of magnetic flux through the circuit.
+                        $$ \mathcal{E} = -\frac{d\Phi_B}{dt} $$
+                        Where $\mathcal{E}$ is the induced EMF, and $\Phi_B$ is the magnetic flux. The negative sign (Lenz's Law) indicates that the induced current's magnetic field opposes the change in magnetic flux that produced it.
+                    </li>
+                </ul>
+            </p>
+
+            <h3>10.3. Maxwell's Equations: The Unification</h3>
+            <p>
+                It was James Clerk Maxwell who, in the 19th century, synthesized all known laws of electricity and magnetism into a coherent set of four equations, now known as <strong>Maxwell's Equations</strong>. These elegant equations elegantly describe how electric and magnetic fields are generated by charges and currents, and how they interact. A groundbreaking prediction of Maxwell's equations was the existence of <strong>electromagnetic waves</strong> (light, radio waves, X-rays), which propagate at the speed of light, demonstrating that light itself is an electromagnetic phenomenon. This unification was one of the greatest achievements in physics.
+            </p>
+            <p>
+                Understanding electromagnetism opens doors to fields like optics, radio communication, power transmission, and quantum electrodynamics, forming the bedrock of much of modern technology.
+            </p>
+        </section>
+
+        <section id="conclusion" class="mb-10">
+            <h2 class="text-blue-400">11. Conclusion: The Pervasive Power of Magnetism</h2>
+            <p>
+                Our journey through the basics of magnetism has revealed an invisible force of profound importance. From the inherent duality of North and South poles to the intricate patterns of magnetic fields, and from the fascinating alignment of atomic domains in permanent magnets to the dynamic interaction of magnetic forces, magnetism is a fundamental pillar of the physical universe.
+            </p>
+            <p>
+                We've seen how tiny electron spins contribute to the macroscopic magnetic properties of materials, leading to the diverse classifications of ferromagnetic, paramagnetic, and diamagnetic substances. The Earth's magnetic field stands as a testament to magnetism's protective power, safeguarding life from the harsh realities of space.
+            </p>
+            <p>
+                Perhaps most crucially, we've touched upon the groundbreaking realization that electricity and magnetism are not separate entities but two facets of a single, unified force: electromagnetism. This powerful concept, encapsulated in Maxwell's equations, laid the groundwork for virtually all modern electrical and electronic technologies.
+            </p>
+            <p>
+                As you continue your exploration of physics on Whizmath, let the principles of magnetism serve as a constant reminder of the unseen forces that govern our world. The ability to understand, predict, and manipulate these forces empowers us to innovate, build, and push the boundaries of what's possible. The magnetic universe, with its endless applications and mysteries, eagerly awaits your continued curiosity. Keep learning, keep exploring, and keep discovering with Whizmath!
+            </p>
+            <p>
+                This extensive exploration provides a robust foundation for deeper dives into electromagnetism, magnetic materials engineering, and advanced physics. The intricate dance between charge, motion, and magnetic fields is a cornerstone of modern science and technology.
+            </p>
+        </section>
+
+        <footer>
+            <p class="text-center text-gray-500 text-sm mt-10">
+                &copy; 2024 Whizmath. All rights reserved.
+            </p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js Background Animation - Reusing the same particle effect logic
+        window.onload = function() {
+            const canvas = document.getElementById('threejs-background');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Add a subtle ambient light
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.5); // soft white light
+            scene.add(ambientLight);
+
+            // Add a directional light for some definition
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            directionalLight.position.set(1, 1, 1).normalize();
+            scene.add(directionalLight);
+
+            // Particle system for the background - slightly different color for variety
+            const particleCount = 2000; // Increased particle count for a denser effect
+            const particles = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const velocities = new Float32Array(particleCount * 3);
+            const accelerations = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                // Random positions within a cube
+                positions[i] = (Math.random() - 0.5) * 200; // X
+                positions[i + 1] = (Math.random() - 0.5) * 200; // Y
+                positions[i + 2] = (Math.random() - 0.5) * 200; // Z
+
+                // Random initial velocities
+                velocities[i] = (Math.random() - 0.5) * 0.05;
+                velocities[i + 1] = (Math.random() - 0.5) * 0.05;
+                velocities[i + 2] = (Math.random() - 0.5) * 0.05;
+
+                // Random accelerations (for subtle drift and change)
+                accelerations[i] = (Math.random() - 0.5) * 0.0001;
+                accelerations[i + 1] = (Math.random() - 0.5) * 0.0001;
+                accelerations[i + 2] = (Math.random() - 0.5) * 0.0001;
+            }
+
+            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particles.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+            particles.setAttribute('acceleration', new THREE.BufferAttribute(accelerations, 3));
+
+            // Material for particles - subtle glow, different shade of blue/purple for variety
+            const particleMaterial = new THREE.PointsMaterial({
+                color: 0x9370DB, // Medium Purple for a distinct look
+                size: 0.6,
+                transparent: true,
+                opacity: 0.7,
+                blending: THREE.AdditiveBlending // For a glow effect
+            });
+
+            const particleMesh = new THREE.Points(particles, particleMaterial);
+            scene.add(particleMesh);
+
+            camera.position.z = 100; // Zoom out to see more particles
+
+            // Animation loop
+            const animate = () => {
+                requestAnimationFrame(animate);
+
+                const positions = particleMesh.geometry.attributes.position.array;
+                const velocities = particleMesh.geometry.attributes.velocity.array;
+                const accelerations = particleMesh.geometry.attributes.acceleration.array;
+
+                for (let i = 0; i < particleCount * 3; i += 3) {
+                    // Update velocity based on acceleration
+                    velocities[i] += accelerations[i];
+                    velocities[i + 1] += accelerations[i + 1];
+                    velocities[i + 2] += accelerations[i + 2];
+
+                    // Update position based on velocity
+                    positions[i] += velocities[i];
+                    positions[i + 1] += velocities[i + 1];
+                    positions[i + 2] += velocities[i + 2];
+
+                    // Boundary conditions: wrap particles if they go out of bounds
+                    // This creates a continuous flow effect
+                    if (positions[i] > 100) positions[i] = -100;
+                    if (positions[i] < -100) positions[i] = 100;
+                    if (positions[i + 1] > 100) positions[i + 1] = -100;
+                    if (positions[i + 1] < -100) positions[i + 1] = 100;
+                    if (positions[i + 2] > 100) positions[i + 2] = -100;
+                    if (positions[i + 2] < -100) positions[i + 2] = 100;
+                }
+
+                particleMesh.geometry.attributes.position.needsUpdate = true; // Tell Three.js to update vertex positions
+
+                renderer.render(scene, camera);
+            };
+
+            animate();
+
+            // Handle window resizing
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+    </script>
+    <script type='text/javascript' src='//pl26627928.profitableratecpm.com/dc/ed/3b/dced3b21bace3293dc34b16c68937c68.js'></script>
+</body>
+</html>
