@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>States of Matter - Whizmath</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script>
+        // Optional: Configure MathJax to process dollar signs for inline math
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll due to potential canvas overflow */
+        }
+        #three-js-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Send canvas to the background */
+            pointer-events: none; /* Allow clicks to pass through to content */
+        }
+        .content-container {
+            position: relative;
+            z-index: 1; /* Ensure content is above the canvas */
+            background: rgba(17, 24, 39, 0.9); /* Dark background with slight transparency for canvas to show */
+            padding: 2rem;
+            margin: 0 auto;
+            max-width: 90vw; /* Fluid width */
+            border-radius: 1.5rem; /* Rounded corners */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            color: #E5E7EB; /* Light grey text */
+            margin-top: 4rem; /* Space from top */
+            margin-bottom: 4rem; /* Space from bottom */
+        }
+
+        /* Responsive adjustments for content container */
+        @media (min-width: 768px) {
+            .content-container {
+                max-width: 80vw;
+            }
+        }
+        @media (min-width: 1024px) {
+            .content-container {
+                max-width: 70vw;
+            }
+        }
+        @media (min-width: 1280px) {
+            .content-container {
+                max-width: 60vw;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937; /* Darker grey */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4B5563; /* Medium grey */
+            border-radius: 10px;
+            border: 3px solid #1f2937;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6B7280; /* Lighter grey on hover */
+        }
+
+        /* Back button specific styling */
+        .back-button {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.25rem;
+            background: linear-gradient(135deg, #6366F1, #8B5CF6); /* Purple gradient */
+            color: white;
+            border-radius: 9999px; /* Fully rounded */
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.2), 0 6px 8px -4px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #4F46E5, #7C3AED);
+        }
+        .back-button svg {
+            margin-right: 0.5rem;
+        }
+
+        /* Styling for headings and paragraphs */
+        h1 {
+            font-size: 3rem; /* Larger heading */
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #93C5FD; /* Light blue */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        h2 {
+            font-size: 2.25rem;
+            font-weight: 600;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #9BD0F5; /* Slightly darker light blue */
+            border-bottom: 2px solid #3B82F6; /* Blue underline */
+            padding-bottom: 0.5rem;
+        }
+        h3 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #BEE3F8; /* Even lighter blue */
+        }
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+            font-size: 1.1rem;
+            text-align: justify;
+        }
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+            list-style-type: disc;
+        }
+        li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        code {
+            background-color: #374151; /* Darker grey for code snippets */
+            padding: 0.2em 0.4em;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            color: #D1D5DB;
+        }
+        .key-term {
+            font-weight: 600;
+            color: #FCD34D; /* Yellow for key terms */
+        }
+
+        /* Specific styling for MathJax elements */
+        .MathJax {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            overflow-x: auto; /* Allow horizontal scrolling for long equations */
+        }
+
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 min-h-screen flex flex-col items-center">
+
+    <!-- Three.js Canvas -->
+    <canvas id="three-js-canvas"></canvas>
+
+    <!-- Back Button -->
+    <a href="physics.html" class="back-button">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Physics
+    </a>
+
+    <!-- Main Content Container -->
+    <div class="content-container">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-10 leading-tight">
+            Understanding the <span class="text-blue-400">States of Matter</span>
+        </h1>
+
+        <p class="text-lg mb-8 text-center px-4">
+            Welcome to Whizmath's in-depth exploration of the fundamental <span class="key-term">States of Matter</span>. From the rigid structure of <span class="key-term">solids</span> to the free-flowing nature of <span class="key-term">liquids</span> and the expansive behavior of <span class="key-term">gases</span>, matter exists in various forms determined by its <span class="key-term">molecular arrangements</span>, <span class="key-term">intermolecular forces</span>, and <span class="key-term">kinetic energy</span>. This lesson will unveil the macroscopic properties, microscopic behaviors, and the fascinating <span class="key-term">phase transitions</span> that allow matter to transform before our eyes. Prepare to deepen your understanding of the world around you!
+        </p>
+
+        <h2 id="introduction">1. Introduction: The Dance of Particles</h2>
+        <p>
+            Everything around us, from the air we breathe to the chair we sit on, is made of <span class="key-term">matter</span>. Matter is anything that has <span class="key-term">mass</span> and takes up <span class="key-term">space</span>. A fundamental concept in <span class="key-term">chemistry</span> and <span class="key-term">physics</span>, the <span class="key-term">states of matter</span> describe the distinct forms that matter takes in response to temperature and pressure. While we commonly observe three primary states—<span class="key-term">solid</span>, <span class="key-term">liquid</span>, and <span class="key-term">gas</span>—it's crucial to understand that these distinctions arise from the arrangement and interaction of the tiny particles (atoms or molecules) that compose them.
+        </p>
+        <p>
+            At the heart of understanding the <span class="key-term">states of matter</span> lies the balance between the kinetic energy of particles (their energy of motion) and the attractive <span class="key-term">intermolecular forces (IMFs)</span> holding them together. High kinetic energy tends to push particles apart, while strong IMFs tend to pull them together. This dynamic interplay dictates whether a substance will be a solid, a liquid, or a gas under given conditions.
+        </p>
+        <p>
+            In this comprehensive lesson, we will explore:
+        </p>
+        <ul class="list-disc ml-6">
+            <li>The unique <span class="key-term">macroscopic properties</span> that characterize solids, liquids, and gases.</li>
+            <li>The underlying <span class="key-term">molecular arrangements</span> and behaviors within each state.</li>
+            <li>The critical role of <span class="key-term">intermolecular forces</span> in defining these states.</li>
+            <li>The captivating processes of <span class="key-term">phase transitions</span>, such as <span class="key-term">melting</span>, <span class="key-term">boiling</span>, and <span class="key-term">sublimation</span>, and how energy drives these changes.</li>
+        </ul>
+
+        <h2 id="solids">2. Solids: Structure, Strength, and Stability</h2>
+        <p>
+            <span class="key-term">Solids</span> represent the most ordered state of matter. Think of a diamond, a piece of ice, or a metal spoon—they all possess a definite shape and volume. This rigidity is a hallmark of the solid state, making them indispensable in construction, engineering, and countless everyday applications.
+        </p>
+
+        <h3>2.1. Macroscopic Properties of Solids</h3>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Definite Shape:</span> A solid maintains its own shape, regardless of the container it's in. A cube of ice will always be a cube, whether it's in a glass or on a plate.</li>
+            <li><span class="key-term">Definite Volume:</span> The amount of space a solid occupies remains constant under stable conditions.</li>
+            <li><span class="key-term">High Density:</span> Particles in solids are tightly packed, leading to a high mass-to-volume ratio compared to liquids and gases.</li>
+            <li><span class="key-term">Incompressibility:</span> It is extremely difficult to reduce the volume of a solid by applying pressure because its particles are already so close together.</li>
+            <li><span class="key-term">Low Rate of Diffusion:</span> While particles in solids do vibrate, their movement is extremely limited, so diffusion (mixing with other substances) is very slow, often taking years.</li>
+        </ul>
+
+        <h3>2.2. Molecular Arrangements in Solids</h3>
+        <p>
+            At the microscopic level, the particles (atoms, molecules, or ions) in a solid are arranged in a highly organized, fixed, and rigid pattern. This arrangement is often referred to as a <span class="key-term">crystal lattice</span> in crystalline solids.
+        </p>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Fixed Positions:</span> Each particle occupies a specific, nearly stationary position within the structure. They are not free to move past one another.</li>
+            <li><span class="key-term">Vibrational Motion:</span> Despite being fixed, the particles are not entirely still. They constantly vibrate about their equilibrium positions due to their inherent <span class="key-term">kinetic energy</span>. However, this kinetic energy is the lowest among the three common states of matter.</li>
+            <li><span class="key-term">Close Packing:</span> Particles are in very close proximity to each other, with minimal empty space between them.</li>
+        </ul>
+        <p>
+            There are two main types of solids based on their molecular arrangement:
+        </p>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Crystalline Solids:</span> Possess a highly ordered, repeating three-dimensional structure (e.g., salt, sugar, quartz, metals). This regularity gives them sharp melting points.</li>
+            <li><span class="key-term">Amorphous Solids:</span> Lack a long-range ordered structure; their particles are arranged randomly (e.g., glass, rubber, plastic). They soften gradually over a range of temperatures instead of having a distinct melting point.</li>
+        </ul>
+
+        <h3>2.3. Intermolecular Forces (IMFs) in Solids</h3>
+        <p>
+            The defining characteristic of solids is the presence of very <span class="key-term">strong intermolecular forces</span> that effectively overcome the kinetic energy of the particles. These forces are responsible for holding the particles rigidly in their fixed positions. The strength of these IMFs varies depending on the type of solid:
+        </p>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Ionic Bonds:</span> In ionic solids (like NaCl), strong electrostatic attractions between oppositely charged ions form a rigid lattice.</li>
+            <li><span class="key-term">Covalent Bonds:</span> In network covalent solids (like diamond or silicon dioxide), atoms are held together by an extensive network of strong covalent bonds, forming a giant molecule.</li>
+            <li><span class="key-term">Metallic Bonds:</span> In metallic solids, metal atoms are held together by a "sea" of delocalized electrons, resulting in strong metallic bonding.</li>
+            <li><span class="key-term">Hydrogen Bonds, Dipole-Dipole, London Dispersion Forces:</span> In molecular solids (like ice or sugar), weaker intermolecular forces are responsible for holding discrete molecules together in a solid structure. Even though these are weaker than ionic or covalent bonds, they are sufficiently strong to maintain the solid's structure at lower temperatures.</li>
+        </ul>
+        <p>
+            The strength of these IMFs directly impacts a solid's properties, such as its melting point, hardness, and electrical conductivity. Stronger IMFs generally lead to higher melting points and greater hardness.
+        </p>
+
+        <h2 id="liquids">3. Liquids: Fluidity, Surface Tension, and Volume</h2>
+        <p>
+            <span class="key-term">Liquids</span> occupy an intermediate state between solids and gases. Water, oil, and mercury are common examples of liquids. While they do not possess a fixed shape, they maintain a definite volume, making them suitable for measuring and transporting substances.
+        </p>
+
+        <h3>3.1. Macroscopic Properties of Liquids</h3>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Indefinite Shape (Takes Shape of Container):</span> A liquid will flow and take the shape of the container it occupies. Pour water from a bottle into a cup, and it conforms to the cup's shape.</li>
+            <li><span class="key-term">Definite Volume:</span> Despite changing shape, the volume of a liquid remains constant. 1 liter of water remains 1 liter, regardless of the container.</li>
+            <li><span class="key-term">High Density:</span> Like solids, particles in liquids are relatively close together, leading to high densities, though generally less dense than their solid counterparts (with notable exceptions like water).</li>
+            <li><span class="key-term">Slightly Compressible:</span> Liquids are nearly incompressible, meaning their volume changes very little even under significant pressure.</li>
+            <li><span class="key-term">Moderate Rate of Diffusion:</span> Particles in liquids can move past one another, allowing for diffusion at a much faster rate than in solids but slower than in gases.</li>
+            <li><span class="key-term">Surface Tension:</span> Liquids exhibit surface tension, a property caused by cohesive forces between liquid molecules that minimize surface area, making the liquid surface behave like an elastic film. This allows insects to walk on water.</li>
+            <li><span class="key-term">Viscosity:</span> This is a measure of a liquid's resistance to flow. Liquids with high viscosity (like honey) flow slowly, while those with low viscosity (like water) flow readily.</li>
+        </ul>
+
+        <h3>3.2. Molecular Arrangements in Liquids</h3>
+        <p>
+            The arrangement of particles in a liquid is less ordered than in a solid but more ordered than in a gas. Particles are still relatively close together, but they are no longer locked into fixed positions.
+        </p>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Close but Mobile:</span> Particles are closely packed, similar to solids, but they have enough <span class="key-term">kinetic energy</span> to overcome some of the intermolecular forces, allowing them to slide past each other. This "sliding" motion gives liquids their characteristic fluidity.</li>
+            <li><span class="key-term">Short-Range Order:</span> While there's no long-range crystalline structure, liquids exhibit some short-range order, meaning that a particle will generally have a few other particles clustered around it.</li>
+            <li><span class="key-term">Intermediate Kinetic Energy:</span> The average kinetic energy of liquid particles is higher than that of solids but lower than that of gases.</li>
+        </ul>
+
+        <h3>3.3. Intermolecular Forces (IMFs) in Liquids</h3>
+        <p>
+            <span class="key-term">Intermolecular forces</span> in liquids are strong enough to hold particles together and prevent them from escaping completely, but weak enough to allow them to move relative to one another. This intermediate strength is what defines the liquid state.
+        </p>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Dominant IMFs:</span> The primary intermolecular forces in liquids are typically <span class="key-term">London Dispersion Forces</span>, <span class="key-term">Dipole-Dipole interactions</span>, and <span class="key-term">Hydrogen Bonding</span>. The specific type and strength of these forces determine many of the liquid's properties, such as its boiling point, viscosity, and surface tension.</li>
+            <li><span class="key-term">Cohesive Forces:</span> These are the attractive forces between molecules of the same substance (e.g., water molecules attracting other water molecules). Cohesive forces are responsible for surface tension.</li>
+            <li><span class="key-term">Adhesive Forces:</span> These are the attractive forces between molecules of different substances (e.g., water molecules attracting glass molecules). Adhesive forces are responsible for capillary action, where liquid climbs a narrow tube.</li>
+        </ul>
+        <p>
+            The balance between cohesive and adhesive forces also plays a role in how liquids wet surfaces and form menisci in tubes.
+        </p>
+
+        <h2 id="gases">4. Gases: Expansion, Compression, and Random Motion</h2>
+        <p>
+            <span class="key-term">Gases</span> represent the most disordered state of matter. Air, oxygen, and helium are everyday examples. Unlike solids and liquids, gases have neither a definite shape nor a definite volume; they expand to fill any container they occupy.
+        </p>
+
+        <h3>4.1. Macroscopic Properties of Gases</h3>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Indefinite Shape:</span> A gas takes the shape of its container.</li>
+            <li><span class="key-term">Indefinite Volume:</span> A gas expands to completely fill the volume of its container. If you release gas into a room, it will spread to occupy the entire room.</li>
+            <li><span class="key-term">Low Density:</span> Particles in gases are very far apart, resulting in very low densities compared to solids and liquids.</li>
+            <li><span class="key-term">High Compressibility:</span> Gases are highly compressible. Due to the large empty spaces between particles, a significant amount of pressure can drastically reduce their volume. This principle is used in applications like compressed natural gas (CNG).</li>
+            <li><span class="key-term">High Rate of Diffusion:</span> Gas particles move rapidly and randomly, allowing them to mix readily with other gases. This is why you can smell perfume or cooking odors quickly from a distance.</li>
+            <li><span class="key-term">Exert Pressure:</span> Gas particles constantly collide with the walls of their container, exerting <span class="key-term">pressure</span>. This pressure is the force per unit area.</li>
+        </ul>
+
+        <h3>4.2. Molecular Arrangements in Gases</h3>
+        <p>
+            The particles in a gas are in a state of constant, rapid, and random motion, with virtually no significant interactions between them.
+        </p>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Far Apart:</span> Particles are widely separated, with large distances between them relative to their size.</li>
+            <li><span class="key-term">Random Motion:</span> Gas particles move in straight lines until they collide with other particles or the container walls. These collisions are typically elastic, meaning kinetic energy is conserved.</li>
+            <li><span class="key-term">No Order:</span> There is no discernible order or arrangement among gas particles.</li>
+            <li><span class="key-term">Highest Kinetic Energy:</span> The average kinetic energy of gas particles is the highest among the three states, enabling them to overcome any attractive forces and move freely.</li>
+        </ul>
+
+        <h3>4.3. Intermolecular Forces (IMFs) in Gases</h3>
+        <p>
+            In gases, the <span class="key-term">intermolecular forces</span> are extremely weak or virtually negligible compared to the kinetic energy of the particles. This is the primary reason gases expand to fill their containers and behave independently.
+        </p>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Negligible Attractions:</span> Particles are so far apart and moving so fast that attractive forces between them are minimal and typically ignored in ideal gas models.</li>
+            <li><span class="key-term">Kinetic Energy Dominates:</span> The high kinetic energy of gas particles overwhelms any weak attractive forces, allowing them to move independently.</li>
+        </ul>
+        <p>
+            The behavior of ideal gases is described by the <span class="key-term">Ideal Gas Law</span>, which relates pressure ($P$), volume ($V$), number of moles ($n$), and temperature ($T$):
+            $$PV = nRT$$
+            where $R$ is the ideal gas constant. This equation highlights the interdependent relationships between these macroscopic properties for gases.
+        </p>
+
+        <h2 id="phase-transitions">5. Phase Transitions: The Journey Between States</h2>
+        <p>
+            Matter can transform from one state to another under specific conditions of temperature and pressure. These transformations are known as <span class="key-term">phase transitions</span> or <span class="key-term">phase changes</span>. Each transition involves either the absorption or release of energy, typically in the form of heat, impacting the kinetic energy and arrangement of particles.
+        </p>
+
+        <h3>5.1. Energy and Phase Transitions</h3>
+        <p>
+            During a phase transition, the added or removed heat energy does not change the temperature of the substance but instead changes its potential energy by altering the arrangement of its particles. This energy is known as <span class="key-term">latent heat</span>.
+        </p>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Endothermic Processes:</span> Processes that absorb heat energy from the surroundings (e.g., melting, boiling, sublimation).</li>
+            <li><span class="key-term">Exothermic Processes:</span> Processes that release heat energy to the surroundings (e.g., freezing, condensation, deposition).</li>
+        </ul>
+
+        <h3>5.2. Common Phase Transitions</h3>
+
+        <h4>5.2.1. Melting (Solid to Liquid)</h4>
+        <p>
+            <span class="key-term">Melting</span> is the process by which a solid changes into a liquid upon absorbing heat energy. At the <span class="key-term">melting point</span>, the kinetic energy of the solid's particles becomes sufficient to overcome the strong intermolecular forces, allowing them to break free from their fixed positions and slide past one another.
+        </p>
+        <p>
+            The amount of heat required to melt a unit mass of a solid at its melting point without changing its temperature is called the <span class="key-term">latent heat of fusion</span> ($L_f$). The total heat absorbed ($Q$) during melting is given by:
+            $$Q = mL_f$$
+            where $m$ is the mass of the substance.
+        </p>
+
+        <h4>5.2.2. Freezing (Liquid to Solid)</h4>
+        <p>
+            <span class="key-term">Freezing</span> (also called solidification) is the reverse of melting, where a liquid changes into a solid by releasing heat energy. At the <span class="key-term">freezing point</span> (which is typically the same temperature as the melting point for a given substance), particles in the liquid lose enough kinetic energy to be pulled into fixed, ordered positions by their intermolecular forces.
+        </p>
+        <p>
+            The heat released during freezing is also equal to the latent heat of fusion.
+        </p>
+
+        <h4>5.2.3. Boiling / Vaporization (Liquid to Gas)</h4>
+        <p>
+            <span class="key-term">Boiling</span>, or <span class="key-term">vaporization</span>, is the process where a liquid changes into a gas (vapor) upon absorbing heat. This can occur in two ways:
+        </p>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Evaporation:</span> A slow process occurring at the surface of a liquid, below its boiling point. Only high-energy particles escape into the gas phase.</li>
+            <li><span class="key-term">Boiling:</span> A rapid process occurring throughout the liquid when its vapor pressure equals the external atmospheric pressure. Bubbles of vapor form within the liquid and rise to the surface. This occurs at the specific <span class="key-term">boiling point</span>.</li>
+        </ul>
+        <p>
+            The amount of heat required to vaporize a unit mass of a liquid at its boiling point without changing its temperature is called the <span class="key-term">latent heat of vaporization</span> ($L_v$). The total heat absorbed ($Q$) during vaporization is:
+            $$Q = mL_v$$
+        </p>
+
+        <h4>5.2.4. Condensation (Gas to Liquid)</h4>
+        <p>
+            <span class="key-term">Condensation</span> is the reverse of vaporization, where a gas changes into a liquid by releasing heat energy. As gas particles lose kinetic energy (e.g., by cooling), their intermolecular forces become strong enough to pull them closer together, forming a liquid. This is how clouds form and why dew appears on grass.
+        </p>
+
+        <h4>5.2.5. Sublimation (Solid to Gas)</h4>
+        <p>
+            <span class="key-term">Sublimation</span> is a unique phase transition where a solid directly transforms into a gas without passing through the liquid state. This occurs when the solid absorbs enough energy for its particles to completely overcome their intermolecular forces directly. Dry ice (solid carbon dioxide) is a common example of a substance that sublimes at room temperature and atmospheric pressure.
+        </p>
+
+        <h4>5.2.6. Deposition (Gas to Solid)</h4>
+        <p>
+            <span class="key-term">Deposition</span> is the reverse of sublimation, where a gas directly transforms into a solid without passing through the liquid state. This happens when gas particles lose enough kinetic energy to be directly pulled into a fixed, ordered solid structure by intermolecular forces. Frost formation on cold surfaces is an example of deposition.
+        </p>
+
+        <h3>5.3. Phase Diagrams (Brief Introduction)</h3>
+        <p>
+            A <span class="key-term">phase diagram</span> is a graphical representation that shows the stable phases of a substance at different temperatures and pressures. While we won't draw one here, understanding its key points is valuable:
+        </p>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Triple Point:</span> A specific temperature and pressure at which all three phases (solid, liquid, and gas) of a substance coexist in thermodynamic equilibrium.</li>
+            <li><span class="key-term">Critical Point:</span> The temperature and pressure above which a substance can no longer exist as a distinct liquid phase, regardless of how much pressure is applied. Beyond this point, it exists as a supercritical fluid.</li>
+        </ul>
+
+        <h2 id="imfs-details">6. Intermolecular Forces (IMFs) in Detail</h2>
+        <p>
+            As discussed, <span class="key-term">intermolecular forces</span> are crucial in determining the state of matter. These are attractive forces that exist *between* molecules, distinct from the stronger *intramolecular* forces (covalent or ionic bonds) that hold atoms *within* a molecule together. The strength of IMFs dictates melting points, boiling points, viscosity, and surface tension.
+        </p>
+
+        <h3>6.1. Types of Intermolecular Forces</h3>
+
+        <h4>6.1.1. London Dispersion Forces (LDFs)</h4>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Description:</span> Present in *all* atoms and molecules, LDFs are the weakest type of IMF. They arise from temporary, instantaneous dipoles created by the momentary uneven distribution of electrons around an atom or molecule. These temporary dipoles induce dipoles in neighboring particles, leading to a weak attraction.</li>
+            <li><span class="key-term">Strength Factors:</span>
+                <ul>
+                    <li><span class="key-term">Number of Electrons:</span> The more electrons a molecule has, the larger and more easily distorted its electron cloud (higher <span class="key-term">polarizability</span>), leading to stronger LDFs. This is why larger molecules generally have higher boiling points.</li>
+                    <li><span class="key-term">Molecular Shape:</span> Long, linear molecules can have more points of contact and stronger LDFs than compact, spherical molecules of similar size.</li>
+                </ul>
+            </li>
+            <li><span class="key-term">Significance:</span> LDFs are the *only* IMFs present in nonpolar molecules (like $O_2$, $N_2$, $CH_4$) and noble gases. They are responsible for the liquefaction of these substances at very low temperatures.</li>
+        </ul>
+
+        <h4>6.1.2. Dipole-Dipole Interactions</h4>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Description:</span> These forces occur between <span class="key-term">polar molecules</span>. Polar molecules have a permanent separation of charge, meaning one end of the molecule is slightly positive ($\delta+$) and the other end is slightly negative ($\delta-$). These oppositely charged ends attract each other.</li>
+            <li><span class="key-term">Strength:</span> Stronger than LDFs (for molecules of comparable size). The strength increases with increasing polarity of the molecule.</li>
+            <li><span class="key-term">Examples:</span> Hydrogen chloride ($\text{HCl}$), with its partial positive hydrogen and partial negative chlorine, exhibits dipole-dipole interactions.
+                Consider the electronegativity difference between H (2.20) and Cl (3.16).
+                $$ \Delta \text{EN} = |\text{EN}_{\text{Cl}} - \text{EN}_{\text{H}}| = |3.16 - 2.20| = 0.96 $$
+                This difference creates a permanent dipole, leading to attractions between $\text{HCl}$ molecules.
+            </li>
+        </ul>
+
+        <h4>6.1.3. Hydrogen Bonding</h4>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Description:</span> This is a particularly strong type of <span class="key-term">dipole-dipole interaction</span>. It occurs when a hydrogen atom (which is bonded to a highly electronegative atom like Nitrogen (N), Oxygen (O), or Fluorine (F)) is attracted to a lone pair of electrons on another highly electronegative atom in a neighboring molecule.</li>
+            <li><span class="key-term">Strength:</span> Significantly stronger than typical dipole-dipole interactions and LDFs. This strength is due to the small size of hydrogen, the high electronegativity of N, O, or F (creating a highly exposed positive charge on H), and the presence of lone pairs on the acceptor atom.</li>
+            <li><span class="key-term">Examples:</span> Water ($\text{H}_2\text{O}$), ammonia ($\text{NH}_3$), and hydrogen fluoride ($\text{HF}$) all exhibit hydrogen bonding. This is why water has unusually high boiling and melting points for its molecular weight.</li>
+        </ul>
+
+        <h3>6.2. Influence of IMFs on Macroscopic Properties</h3>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Boiling Point & Melting Point:</span> Substances with stronger IMFs require more energy (higher temperatures) to overcome these forces and transition from liquid to gas (boiling) or solid to liquid (melting). Thus, stronger IMFs lead to higher boiling and melting points.</li>
+            <li><span class="key-term">Viscosity:</span> Liquids with stronger IMFs are more viscous because the molecules are more strongly attracted to each other, making it harder for them to flow past one another.</li>
+            <li><span class="key-term">Surface Tension:</span> Stronger IMFs result in higher surface tension, as the cohesive forces among surface molecules are greater.</li>
+            <li><span class="key-term">Vapor Pressure:</span> Substances with stronger IMFs have lower vapor pressures because fewer molecules have enough kinetic energy to escape from the liquid phase into the gas phase.</li>
+        </ul>
+
+        <h2 id="kinetic-molecular-theory">7. Kinetic Molecular Theory of Matter</h2>
+        <p>
+            The <span class="key-term">Kinetic Molecular Theory (KMT)</span> provides a microscopic model to explain the macroscopic behavior of matter, particularly gases, but its principles can be extended to liquids and solids. The core idea is that all matter is composed of tiny particles that are in constant, random motion.
+        </p>
+
+        <h3>7.1. Postulates of the Kinetic Molecular Theory</h3>
+        <p>
+            For an <span class="key-term">ideal gas</span>, the KMT makes the following assumptions:
+        </p>
+        <ol class="list-decimal ml-6">
+            <li>Gases consist of a large number of particles (atoms or molecules) that are in continuous, random motion.</li>
+            <li>The volume occupied by the gas particles themselves is negligible compared to the total volume of the container they occupy. (This means most of the volume of a gas is empty space).</li>
+            <li>Attractive and repulsive forces between gas particles are negligible.</li>
+            <li>Collisions between gas particles and between particles and the container walls are perfectly elastic. This means kinetic energy is conserved during collisions; no energy is lost as heat.</li>
+            <li>The average kinetic energy of the gas particles is directly proportional to the absolute temperature (in Kelvin) of the gas. This is a crucial relationship.
+                $$ \text{KE}_{\text{avg}} = \frac{3}{2} k_B T $$
+                where $\text{KE}_{\text{avg}}$ is the average kinetic energy, $k_B$ is the Boltzmann constant ($1.38 \times 10^{-23} \text{ J/K}$), and $T$ is the absolute temperature in Kelvin.
+            </li>
+        </ol>
+
+        <h3>7.2. Applying KMT to States of Matter</h3>
+        <ul class="list-disc ml-6">
+            <li><span class="key-term">Gases:</span> KMT perfectly explains gas behavior. High kinetic energy, negligible IMFs, particles far apart, random motion, and collisions with walls creating pressure.</li>
+            <li><span class="key-term">Liquids:</span> Particles still have significant kinetic energy, but IMFs are strong enough to keep them close together. They slide past each other, explaining fluidity. The volume occupied by particles is no longer negligible.</li>
+            <li><span class="key-term">Solids:</span> Particles have the lowest kinetic energy, allowing strong IMFs to lock them into fixed, ordered positions. They vibrate about these positions but do not translate. Volume occupied by particles is significant relative to total volume.</li>
+        </ul>
+        <p>
+            Understanding KMT helps us visualize the microscopic world and connect it to the macroscopic properties we observe.
+        </p>
+
+        <h2 id="conclusion">8. Conclusion: The Dynamic Nature of Our World</h2>
+        <p>
+            The <span class="key-term">states of matter</span> – <span class="key-term">solids</span>, <span class="key-term">liquids</span>, and <span class="key-term">gases</span> – are fundamental concepts in both <span class="key-term">physics</span> and <span class="key-term">chemistry</span>, shaping our understanding of the physical world. We've explored how the distinct <span class="key-term">macroscopic properties</span> of each state are a direct consequence of the <span class="key-term">molecular arrangements</span> and the strength of <span class="key-term">intermolecular forces</span> between their constituent particles.
+        </p>
+        <p>
+            From the rigid order of a solid, where particles vibrate in fixed positions due to strong IMFs, to the fluid motion of a liquid, where particles can slide past each other, and finally to the expansive, random motion of gas particles with negligible IMFs, temperature and pressure act as the orchestrators of these transformations. The fascinating processes of <span class="key-term">phase transitions</span>—<span class="key-term">melting</span>, <span class="key-term">freezing</span>, <span class="key-term">boiling</span>, <span class="key-term">condensation</span>, <span class="key-term">sublimation</span>, and <span class="key-term">deposition</span>—highlight the dynamic interplay between energy and matter.
+        </p>
+        <p>
+            This foundational knowledge is not just academic; it underpins countless real-world phenomena and technological applications, from refrigeration and material science to atmospheric chemistry and pharmaceutical development. As you continue your journey through <span class="key-term">Whizmath</span>, remember that the seemingly simple concepts of solids, liquids, and gases reveal a rich and complex microscopic universe that is truly dynamic and ever-changing. Keep exploring!
+        </p>
+
+    </div>
+
+    <script>
+        // Three.js Animated Background
+        const canvas = document.getElementById('three-js-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+
+        // Set up renderer size
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+
+        // Particle System
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 5000;
+        const posArray = new Float32Array(particlesCount * 3); // x, y, z for each particle
+
+        for (let i = 0; i < particlesCount * 3; i++) {
+            // Distribute particles randomly in a cube
+            posArray[i] = (Math.random() - 0.5) * 2000; // between -1000 and 1000
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        // Particle Material
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.8,
+            color: 0x93C5FD, // Light blue particles
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false // Improves transparency rendering
+        });
+
+        const particleMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particleMesh);
+
+        // Camera position
+        camera.position.z = 5;
+
+        // Animation loop
+        const animate = () => {
+            requestAnimationFrame(animate);
+
+            // Rotate particles slowly
+            particleMesh.rotation.x += 0.0001;
+            particleMesh.rotation.y += 0.0002;
+
+            // Simple camera movement or background drift (optional)
+            // camera.position.x += 0.001;
+            // camera.position.y += 0.0005;
+
+            renderer.render(scene, camera);
+        };
+
+        // Handle window resizing
+        window.addEventListener('resize', () => {
+            // Update camera aspect ratio
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            // Update renderer size
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+        });
+
+        // Start animation when window loads
+        window.onload = function () {
+            animate();
+        }
+    </script>
+</body>
+</html>
