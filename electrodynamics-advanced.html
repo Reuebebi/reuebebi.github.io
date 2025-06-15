@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electrodynamics - Whizmath</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
+     crossorigin="anonymous"></script>
+    <script type="text/javascript" id="MathJax-script" async
+                      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <script>
+        // Optional: Configure MathJax to process dollar signs for inline math
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000; /* Black background */
+            color: #E0E0E0; /* Light gray text for contrast */
+            line-height: 1.75;
+        }
+        /* Custom styles for modern feel */
+        .container-padding {
+            padding: 2rem; /* Consistent padding for small screens */
+        }
+        @media (min-width: 768px) {
+            .container-padding {
+                padding: 4rem; /* Larger padding for medium and up */
+            }
+        }
+        .section-card {
+            background-color: #1A1A1A; /* Darker grey for cards */
+            border-radius: 1.5rem; /* More rounded corners */
+            padding: 2.5rem; /* Default padding for cards */
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.1); /* Subtle cyan glow */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        @media (max-width: 767px) { /* Adjust card padding for very small screens */
+            .section-card {
+                padding: 1.5rem;
+            }
+        }
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.2);
+        }
+        .text-gradient {
+            background: linear-gradient(90deg, #00C9FF, #92FE9D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .back-button {
+            background: linear-gradient(135deg, #4CAF50, #2196F3);
+            color: #1A1A1A;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .back-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            background: linear-gradient(135deg, #2196F3, #4CAF50);
+            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.6);
+        }
+        h1, h2, h3, h4 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        h1 {
+            font-size: 2.5rem; /* Default for mobile */
+            line-height: 1.2;
+            letter-spacing: -0.05em;
+        }
+        @media (min-width: 640px) { /* sm breakpoint */
+            h1 { font-size: 3.5rem; }
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            h1 { font-size: 4.5rem; }
+        }
+        @media (min-width: 1024px) { /* lg breakpoint */
+            h1 { font-size: 5.5rem; }
+        }
+        h2 {
+            font-size: 2rem; /* Default for mobile */
+            line-height: 1.3;
+        }
+        @media (min-width: 640px) {
+            h2 { font-size: 2.5rem; }
+        }
+        @media (min-width: 768px) {
+            h2 { font-size: 3rem; }
+        }
+        h3 {
+            font-size: 1.5rem; /* Default for mobile */
+            line-height: 1.4;
+            color: #00C9FF;
+        }
+        @media (min-width: 640px) {
+            h3 { font-size: 1.75rem; }
+        }
+        p {
+            font-size: 0.95rem; /* Slightly smaller for mobile readability */
+            margin-bottom: 1.25rem;
+        }
+        @media (min-width: 640px) {
+            p { font-size: 1rem; } /* Standard size for larger screens */
+        }
+        @media (min-width: 768px) {
+            p { font-size: 1.05rem; }
+        }
+
+        ul, ol {
+            list-style-type: disc;
+            margin-left: 1.25rem; /* Smaller indent for mobile */
+            margin-bottom: 1rem;
+            font-size: 0.95rem; /* Match paragraph font size */
+        }
+        @media (min-width: 640px) {
+            ul, ol {
+                margin-left: 1.5rem;
+                font-size: 1rem;
+            }
+        }
+        strong {
+            color: #92FE9D;
+        }
+        .key-term {
+            color: #00C9FF;
+            font-weight: 600;
+        }
+        code {
+            background-color: #2D2D2D;
+            padding: 0.2em 0.4em;
+            border-radius: 0.3em;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85em; /* Slightly smaller for inline code */
+        }
+        pre {
+            background-color: #2D2D2D;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto; /* Ensures code blocks are scrollable on small screens */
+            margin-bottom: 1.5rem;
+            font-size: 0.9em;
+        }
+        /* Style for keywords container */
+        .keyword-container {
+            display: flex;
+            flex-wrap: wrap; /* Allow keywords to wrap to the next line */
+            justify-content: center;
+            gap: 0.5rem; /* Space between keywords */
+            margin-top: 2rem;
+        }
+        .keyword-tag {
+            padding: 0.5rem 1rem;
+            background-color: #0A0A0A; /* Darker background for tags */
+            color: #4CAF50; /* Greenish text for tags */
+            border-radius: 9999px; /* Pill shape */
+            font-size: 0.8rem; /* Smaller font for tags */
+            box-shadow: 0 2px 8px rgba(0, 255, 255, 0.08); /* Subtle tag shadow */
+        }
+
+        /* Responsive spacing for MathJax blocks */
+        .math-block {
+            padding: 1.5rem; /* Default padding for math blocks */
+            margin: 1.5rem 0; /* Default margin for math blocks */
+        }
+        @media (max-width: 767px) {
+            .math-block {
+                padding: 1rem; /* Smaller padding on small screens */
+                margin: 1rem 0;
+            }
+        }
+
+        /* Scroll to top button */
+        #scrollToTopBtn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px; /* Adjust right for smaller screens */
+            z-index: 99;
+            border: none;
+            outline: none;
+            background-color: #00C9FF;
+            color: white;
+            cursor: pointer;
+            padding: 12px; /* Slightly smaller button for mobile */
+            border-radius: 50%;
+            font-size: 16px;
+            box-shadow: 0 5px 15px rgba(0, 201, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+        @media (min-width: 768px) {
+            #scrollToTopBtn {
+                right: 30px;
+                padding: 15px;
+                font-size: 18px;
+            }
+        }
+
+        #scrollToTopBtn:hover {
+            background-color: #92FE9D;
+            box-shadow: 0 8px 20px rgba(146, 254, 157, 0.6);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body class="bg-black text-gray-200 antialiased">
+    <div class="relative min-h-screen pb-20">
+        <a href="physics.html" class="back-button absolute top-6 left-6 sm:top-8 sm:left-8 z-10">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to Physics
+        </a>
+
+        <main class="max-w-6xl mx-auto container-padding">
+            <header class="text-center mb-10 pt-16 sm:mb-16 sm:pt-20">
+                <h1 class="text-gradient font-extrabold leading-tight mb-4 animate-fade-in-down">
+                    Electrodynamics: Unifying Electricity, Magnetism & Light
+                </h1>
+                <p class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto animate-fade-in-up">
+                    A Rigorous Treatment of Maxwell's Equations, Electromagnetic Waves, and Classical Field Theory on Whizmath.
+                </p>
+                <div class="keyword-container">
+                    <span class="keyword-tag">#Electrodynamics</span>
+                    <span class="keyword-tag">#MaxwellsEquations</span>
+                    <span class="keyword-tag">#ElectromagneticWaves</span>
+                    <span class="keyword-tag">#PoyntingVector</span>
+                    <span class="keyword-tag">#ClassicalFieldTheory</span>
+                    <span class="keyword-tag">#ElectricField</span>
+                    <span class="keyword-tag">#MagneticField</span>
+                    <span class="keyword-tag">#VectorCalculus</span>
+                    <span class="keyword-tag">#FaradaysLaw</span>
+                    <span class="keyword-tag">#AmpereMaxwellLaw</span>
+                    <span class="keyword-tag">#DisplacementCurrent</span>
+                    <span class="keyword-tag">#WavePropagation</span>
+                    <span class="keyword-tag">#SpeedOfLight</span>
+                    <span class="keyword-tag">#EnergyFlux</span>
+                    <span class="keyword-tag">#Physics</span>
+                </div>
+            </header>
+
+            <section class="section-card animate-fade-in">
+                <h2 class="text-gradient mb-6">1. Introduction to Electrodynamics: The Grand Unification</h2>
+                <p>
+                    Welcome to this rigorous and comprehensive journey into <strong>Electrodynamics</strong>, the branch of physics that studies the interactions between electric charges and currents, and the electric and magnetic fields they produce. At <strong class="text-gradient">Whizmath</strong>, we delve into the mathematical elegance and profound physical insights of this field, which represents one of the most successful theories in the history of science.
+                </p>
+                <p>
+                    The story of electrodynamics is a tale of unification. For centuries, electricity and magnetism were studied as separate phenomena. Pioneers like Coulomb, Ampère, and Faraday laid the groundwork by discovering empirical laws governing static charges, electric currents, and magnetic forces. However, it was James Clerk Maxwell in the mid-19th century who achieved a monumental synthesis. By adding a crucial "displacement current" term to Ampère's Law, Maxwell transformed a collection of disparate laws into a single, coherent, and predictive theory, encapsulated in what we now call <strong>Maxwell's Equations</strong>.
+                </p>
+                <p>
+                    Maxwell's crowning achievement was the realization that these equations naturally predicted the existence of self-propagating electromagnetic waves that travel at the speed of light. This astonishing insight confirmed that light itself is an electromagnetic phenomenon, thereby unifying optics with electricity and magnetism.
+                </p>
+                <p>
+                    In this advanced lesson, we will:
+                </p>
+                <ul>
+                    <li>Review essential **vector calculus** tools necessary for understanding the differential form of Maxwell's Equations.</li>
+                    <li>Explore each of the **four Maxwell's Equations**, discussing their physical meaning and implications.</li>
+                    <li>Derive and analyze the **electromagnetic wave equation**, understanding wave propagation in vacuum and various media.</li>
+                    <li>Examine the concepts of energy and momentum in electromagnetic fields, including the pivotal **Poynting vector**.</li>
+                    <li>Provide an introduction to the broader principles of **classical field theory**, positioning electrodynamics within this fundamental framework.</li>
+                </ul>
+                <p>
+                    Prepare to engage with the profound beauty of Maxwell's Electrodynamics, a theory that not only describes phenomena from radio waves to X-rays but also laid the conceptual foundation for modern physics, including Einstein's Special Relativity and the development of quantum field theory.
+                </p>
+
+                <h3 class="text-cyan-400 mb-4">1.2 A Brief Overview of Fields and Vector Calculus</h3>
+                <p>
+                    At the heart of electrodynamics are the concepts of electric and magnetic fields, which are **vector fields** – meaning they assign a vector (magnitude and direction) to every point in space. To describe these fields and their interactions mathematically, we utilize the powerful tools of vector calculus.
+                </p>
+                <ul>
+                    <li><strong>Electric Field ($\vec{E}$):</strong> Force per unit charge experienced by a test charge.</li>
+                    <li><strong>Magnetic Field ($\vec{B}$):</strong> Force per unit current or moving charge. Also known as magnetic induction or magnetic flux density.</li>
+                    <li><strong>Charge Density ($\rho$):</strong> Amount of electric charge per unit volume.</li>
+                    <li><strong>Current Density ($\vec{J}$):</strong> Flow of electric charge per unit area (vector indicating direction of flow).</li>
+                </ul>
+                <p>
+                    Understanding Maxwell's Equations in their differential form requires familiarity with key vector operators:
+                </p>
+                <ul>
+                    <li><strong>Gradient ($\nabla f$):</strong> For a scalar field $f$, gives a vector pointing in the direction of the steepest increase of $f$, with magnitude equal to the rate of increase.</li>
+                    <li><strong>Divergence ($\nabla \cdot \vec{A}$):</strong> For a vector field $\vec{A}$, measures the "outward flux" per unit volume at a point. It quantifies how much a vector field spreads out from (or converges to) a point. Sources have positive divergence; sinks have negative.</li>
+                    <li><strong>Curl ($\nabla \times \vec{A}$):</strong> For a vector field $\vec{A}$, measures the "circulation" or "rotation" of the field at a point. It quantifies how much the field swirls around the point.</li>
+                    <li><strong>Laplacian ($\nabla^2 f$ or $\nabla^2 \vec{A}$):</strong> A second-order differential operator, often indicating diffusion or wave propagation. For a scalar function $f$, $\nabla^2 f = \nabla \cdot (\nabla f)$.</li>
+                </ul>
+                <p>
+                    These operators are related to integral theorems:
+                </p>
+                <ul>
+                    <li><strong>Gauss's Theorem (Divergence Theorem):</strong> Relates the flux of a vector field through a closed surface to the divergence of the field within the enclosed volume.
+                        $$ \int_V (\nabla \cdot \vec{A}) dV = \oint_S \vec{A} \cdot d\vec{a} $$
+                    </li>
+                    <li><strong>Stokes' Theorem (Curl Theorem):</strong> Relates the circulation of a vector field around a closed loop to the flux of the curl of the field through any surface bounded by that loop.
+                        $$ \int_S (\nabla \times \vec{A}) \cdot d\vec{a} = \oint_C \vec{A} \cdot d\vec{l} $$
+                    </li>
+                </ul>
+                <p>
+                    These theorems provide the mathematical bridge between the integral (macroscopic) and differential (local) forms of physical laws.
+                </p>
+            </section>
+
+            <section class="section-card animate-fade-in delay-200">
+                <h2 class="text-gradient mb-6">2. Maxwell's Equations in Differential Form: The Pillars of Electromagnetism</h2>
+                <p>
+                    Maxwell's Equations are a set of four partial differential equations that, together with the Lorentz force law, form the foundation of classical electromagnetism. They describe how electric and magnetic fields are generated by charges and currents, and how they interact with each other. We will consider them in their most fundamental form, representing local relationships.
+                </p>
+
+                <h3 class="text-cyan-400 mb-4">2.1 Gauss's Law for Electricity</h3>
+                <p>
+                    <strong>Differential Form:</strong>
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-3xl font-bold text-green-400">
+                        $$ \nabla \cdot \vec{E} = \frac{\rho}{\epsilon_0} $$
+                    </div>
+                </div>
+                <p>
+                    <strong>Physical Meaning:</strong> This equation describes how electric charges create electric fields.
+                </p>
+                <ul>
+                    <li>The **divergence of the electric field** ($\nabla \cdot \vec{E}$) at any point is proportional to the **electric charge density ($\rho$)** at that point.</li>
+                    <li>It tells us that electric field lines originate from positive charges (sources) and terminate on negative charges (sinks).</li>
+                    <li>$\epsilon_0$ is the **permittivity of free space**, a fundamental constant ($\approx 8.85 \times 10^{-12} \, F/m$).</li>
+                    <li>In simple terms, electric charges are the sources and sinks of electric fields. If $\rho=0$ (no net charge), then $\nabla \cdot \vec{E} = 0$, meaning electric field lines do not start or end in that region, they just pass through.</li>
+                </ul>
+                <p>
+                    <strong>Integral Form (Gauss's Law):</strong> $\oint_S \vec{E} \cdot d\vec{a} = \frac{Q_{enc}}{\epsilon_0}$, where $Q_{enc}$ is the total charge enclosed by the surface $S$. This relates the net electric flux through a closed surface to the enclosed charge.
+                </p>
+
+                <h3 class="text-cyan-400 mb-4">2.2 Gauss's Law for Magnetism</h3>
+                <p>
+                    <strong>Differential Form:</strong>
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-3xl font-bold text-green-400">
+                        $$ \nabla \cdot \vec{B} = 0 $$
+                    </div>
+                </div>
+                <p>
+                    <strong>Physical Meaning:</strong> This equation states that there are no magnetic monopoles.
+                </p>
+                <ul>
+                    <li>The **divergence of the magnetic field** ($\nabla \cdot \vec{B}$) is always zero, everywhere.</li>
+                    <li>This implies that magnetic field lines never start or end; they always form closed loops. You cannot isolate a "north pole" or a "south pole" like you can isolate a positive or negative electric charge.</li>
+                    <li>Every magnetic north pole is accompanied by a magnetic south pole.</li>
+                </ul>
+                <p>
+                    <strong>Integral Form:</strong> $\oint_S \vec{B} \cdot d\vec{a} = 0$. This means the net magnetic flux through any closed surface is always zero.
+                </p>
+
+                <h3 class="text-cyan-400 mb-4">2.3 Faraday's Law of Induction</h3>
+                <p>
+                    <strong>Differential Form:</strong>
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-3xl font-bold text-green-400">
+                        $$ \nabla \times \vec{E} = -\frac{\partial \vec{B}}{\partial t} $$
+                    </div>
+                </div>
+                <p>
+                    <strong>Physical Meaning:</strong> This equation describes how a changing magnetic field produces an electric field.
+                </p>
+                <ul>
+                    <li>The **curl of the electric field** ($\nabla \times \vec{E}$) is equal to the negative time rate of change of the magnetic field ($-\partial \vec{B}/\partial t$).</li>
+                    <li>A time-varying magnetic field induces a circulating (non-conservative) electric field. This is the fundamental principle behind electric generators, transformers, and many other electromagnetic devices.</li>
+                    <li>The negative sign indicates Lenz's Law: the induced electric field (and thus current) creates a magnetic field that opposes the change in the original magnetic flux.</li>
+                </ul>
+                <p>
+                    <strong>Integral Form:</strong> $\oint_C \vec{E} \cdot d\vec{l} = -\frac{d\Phi_B}{dt}$, where $\Phi_B = \int_S \vec{B} \cdot d\vec{a}$ is the magnetic flux. This relates the electromotive force (EMF) around a closed loop to the rate of change of magnetic flux through the loop.
+                </p>
+
+                <h3 class="text-cyan-400 mb-4">2.4 Ampère-Maxwell Law</h3>
+                <p>
+                    <strong>Differential Form:</strong>
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-3xl font-bold text-green-400">
+                        $$ \nabla \times \vec{B} = \mu_0 \vec{J} + \mu_0 \epsilon_0 \frac{\partial \vec{E}}{\partial t} $$
+                    </div>
+                </div>
+                <p>
+                    <strong>Physical Meaning:</strong> This equation describes how both electric currents and changing electric fields produce magnetic fields.
+                </p>
+                <ul>
+                    <li>The **curl of the magnetic field** ($\nabla \times \vec{B}$) has two source terms:
+                        <ul>
+                            <li>$\mu_0 \vec{J}$: Represents the contribution from conduction current density ($\vec{J}$). This is Ampère's original law ($\mu_0$ is the **permeability of free space**, $\approx 4\pi \times 10^{-7} \, N/A^2$).</li>
+                            <li>$\mu_0 \epsilon_0 \frac{\partial \vec{E}}{\partial t}$: This is Maxwell's crucial **"displacement current"** term. It describes how a time-varying electric field also acts as a source of a magnetic field.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Importance of Displacement Current:</strong> This term was the most significant addition Maxwell made. Without it, Ampère's law would be inconsistent with charge conservation in circuits with capacitors (where conduction current stops but electric field between plates changes). Crucially, the displacement current term allows for the existence of electromagnetic waves, even in empty space where there are no actual charges or currents.</li>
+                </ul>
+                <p>
+                    <strong>Integral Form:</strong> $\oint_C \vec{B} \cdot d\vec{l} = \mu_0 I_{enc} + \mu_0 \epsilon_0 \frac{d\Phi_E}{dt}$, where $I_{enc}$ is the enclosed conduction current and $\Phi_E = \int_S \vec{E} \cdot d\vec{a}$ is the electric flux. This relates the circulation of the magnetic field around a closed loop to both the enclosed conduction current and the rate of change of electric flux.
+                </p>
+
+                <h3 class="text-cyan-400 mb-4">2.5 Summary of Maxwell's Equations (Differential Form in Vacuum)</h3>
+                <p>
+                    In vacuum, where there are no free charges ($\rho = 0$) and no free currents ($\vec{J} = 0$), Maxwell's equations simplify beautifully:
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
+                        $$ \nabla \cdot \vec{E} = 0 \quad \text{(No electric monopoles in vacuum)} $$
+                        $$ \nabla \cdot \vec{B} = 0 \quad \text{(No magnetic monopoles)} $$
+                        $$ \nabla \times \vec{E} = -\frac{\partial \vec{B}}{\partial t} \quad \text{(Faraday's Law)} $$
+                        $$ \nabla \times \vec{B} = \mu_0 \epsilon_0 \frac{\partial \vec{E}}{\partial t} \quad \text{(Ampère-Maxwell Law)} $$
+                    </div>
+                </div>
+                <p>
+                    These four equations are the complete description of classical electromagnetism. They elegantly demonstrate the deep interconnectedness of electric and magnetic fields.
+                </p>
+            </section>
+
+            <section class="section-card animate-fade-in delay-400">
+                <h2 class="text-gradient mb-6">3. Electromagnetic Wave Propagation: The Nature of Light</h2>
+                <p>
+                    One of the most spectacular triumphs of Maxwell's equations was the prediction of **electromagnetic waves**. These waves are oscillations of coupled electric and magnetic fields that propagate through space, carrying energy and momentum. Light, radio waves, microwaves, X-rays, and gamma rays are all forms of electromagnetic radiation.
+                </p>
+
+                <h3 class="text-cyan-400 mb-4">3.1 Derivation of the Wave Equation in Vacuum</h3>
+                <p>
+                    Let's derive the wave equation for the electric field from Maxwell's equations in vacuum ($\rho=0, \vec{J}=0$):
+                </p>
+                <ol>
+                    <li>Start with Faraday's Law:
+                        $$ \nabla \times \vec{E} = -\frac{\partial \vec{B}}{\partial t} $$
+                    </li>
+                    <li>Take the curl of both sides:
+                        $$ \nabla \times (\nabla \times \vec{E}) = \nabla \times \left(-\frac{\partial \vec{B}}{\partial t}\right) $$
+                    </li>
+                    <li>Use the vector identity $\nabla \times (\nabla \times \vec{A}) = \nabla(\nabla \cdot \vec{A}) - \nabla^2 \vec{A}$:
+                        $$ \nabla(\nabla \cdot \vec{E}) - \nabla^2 \vec{E} = -\frac{\partial}{\partial t}(\nabla \times \vec{B}) $$
+                    </li>
+                    <li>From Gauss's Law for Electricity in vacuum, $\nabla \cdot \vec{E} = 0$. So the first term vanishes:
+                        $$ -\nabla^2 \vec{E} = -\frac{\partial}{\partial t}(\nabla \times \vec{B}) $$
+                    </li>
+                    <li>Substitute Ampère-Maxwell Law in vacuum ($\nabla \times \vec{B} = \mu_0 \epsilon_0 \frac{\partial \vec{E}}{\partial t}$):
+                        $$ -\nabla^2 \vec{E} = -\frac{\partial}{\partial t}\left(\mu_0 \epsilon_0 \frac{\partial \vec{E}}{\partial t}\right) $$
+                        $$ \nabla^2 \vec{E} = \mu_0 \epsilon_0 \frac{\partial^2 \vec{E}}{\partial t^2} $$
+                    </li>
+                </ol>
+                <p>
+                    This is the **wave equation for the electric field in vacuum**. A similar derivation yields the wave equation for the magnetic field:
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
+                        $$ \nabla^2 \vec{E} = \mu_0 \epsilon_0 \frac{\partial^2 \vec{E}}{\partial t^2} $$
+                        $$ \nabla^2 \vec{B} = \mu_0 \epsilon_0 \frac{\partial^2 \vec{B}}{\partial t^2} $$
+                    </div>
+                </div>
+                <p>
+                    These are standard wave equations of the form $\nabla^2 f = \frac{1}{v^2} \frac{\partial^2 f}{\partial t^2}$, where $v$ is the speed of the wave. By comparing, Maxwell found that the speed of electromagnetic waves in vacuum is:
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-3xl font-bold text-green-400">
+                        $$ c = \frac{1}{\sqrt{\mu_0 \epsilon_0}} $$
+                    </div>
+                </div>
+                <p>
+                    When Maxwell calculated the value of $c$ using experimentally determined values of $\mu_0$ and $\epsilon_0$, he found a number astonishingly close to the known speed of light ($2.9979 \times 10^8 \, m/s$). This was the profound realization: **light is an electromagnetic wave.**
+                </p>
+
+                <h3 class="text-cyan-400 mb-4">3.2 Properties of Electromagnetic Waves in Vacuum</h3>
+                <p>
+                    Solutions to the wave equations reveal key properties of EM waves:
+                </p>
+                <ul>
+                    <li><strong>Transverse Waves:</strong> Both the electric field ($\vec{E}$) and magnetic field ($\vec{B}$) are perpendicular to the direction of wave propagation. There are no longitudinal components.</li>
+                    <li><strong>Perpendicular Fields:</strong> $\vec{E}$ and $\vec{B}$ fields are perpendicular to each other.</li>
+                    <li><strong>In Phase:</strong> $\vec{E}$ and $\vec{B}$ oscillate in phase (i.e., they reach their maximum and minimum values at the same points in space and time).</li>
+                    <li><strong>Constant Ratio of Magnitudes:</strong> The magnitudes of the electric and magnetic fields are related by $|\vec{B}| = |\vec{E}|/c$.</li>
+                    <li><strong>Direction of Propagation:</strong> The direction of propagation is given by the Poynting vector $\vec{S}$ (discussed later), which points in the direction of $\vec{E} \times \vec{B}$.</li>
+                </ul>
+                <p>
+                    A common representation is a **monochromatic plane wave** propagating in the $z$-direction:
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-xl font-semibold text-green-400">
+                        $$ \vec{E}(z, t) = \vec{E}_0 \cos(kz - \omega t) \quad \text{or} \quad \vec{E}(z, t) = \vec{E}_0 e^{i(kz - \omega t)} $$
+                        $$ \vec{B}(z, t) = \vec{B}_0 \cos(kz - \omega t) \quad \text{or} \quad \vec{B}(z, t) = \vec{B}_0 e^{i(kz - \omega t)} $$
+                    </div>
+                </div>
+                <p>
+                    Where $k = \omega/c$ is the wave number ($k = 2\pi/\lambda$) and $\omega = 2\pi f$ is the angular frequency.
+                </p>
+
+                <h3 class="text-cyan-400 mb-4">3.3 Electromagnetic Wave Propagation in Media</h3>
+                <p>
+                    When electromagnetic waves travel through a material medium, their behavior changes due to interactions with the atoms and molecules of the material. These interactions are characterized by the medium's **constitutive relations**, which define its macroscopic electromagnetic properties:
+                </p>
+                <ul>
+                    <li><strong>Permittivity ($\epsilon$):</strong> Measures how an electric field polarizes the material. $\epsilon = \kappa_e \epsilon_0$, where $\kappa_e$ is the dielectric constant.</li>
+                    <li><strong>Permeability ($\mu$):</strong> Measures how a magnetic field magnetizes the material. $\mu = \kappa_m \mu_0$, where $\kappa_m$ is the relative permeability.</li>
+                    <li><strong>Conductivity ($\sigma$):</strong> Measures how easily electric currents flow in response to an electric field. ($ \vec{J}_f = \sigma \vec{E} $ for free current).</li>
+                </ul>
+                <p>
+                    In linear, isotropic, homogeneous (LIH) media, Maxwell's equations are modified by replacing $\epsilon_0$ with $\epsilon$ and $\mu_0$ with $\mu$, and by including the current density $\vec{J}$.
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-xl font-semibold text-green-400">
+                        $$ \nabla \cdot \vec{D} = \rho_f \quad \text{where } \vec{D} = \epsilon \vec{E} $$
+                        $$ \nabla \cdot \vec{B} = 0 $$
+                        $$ \nabla \times \vec{E} = -\frac{\partial \vec{B}}{\partial t} $$
+                        $$ \nabla \times \vec{H} = \vec{J}_f + \frac{\partial \vec{D}}{\partial t} \quad \text{where } \vec{H} = \vec{B}/\mu $$
+                    </div>
+                </div>
+
+                <h4>3.3.1 Non-Conducting (Dielectric) Media</h4>
+                <p>
+                    In a non-conducting dielectric material ($\sigma = 0$, so $\vec{J}_f=0$), the wave equation remains the same form, but the speed of the wave changes:
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
+                        $$ v = \frac{1}{\sqrt{\mu \epsilon}} = \frac{c}{\sqrt{\kappa_e \kappa_m}} $$
+                    </div>
+                </div>
+                <p>
+                    The **refractive index ($n$)** of the medium is defined as the ratio of the speed of light in vacuum to its speed in the medium:
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
+                        $$ n = \frac{c}{v} = \sqrt{\kappa_e \kappa_m} \approx \sqrt{\kappa_e} \quad (\text{since } \kappa_m \approx 1 \text{ for most dielectrics}) $$
+                    </div>
+                </div>
+                <p>
+                    The change in speed leads to phenomena like refraction. In many materials, $\epsilon$ (and thus $n$) depends on the frequency of the light, leading to **dispersion** (e.g., prisms separating white light into colors).
+                </p>
+
+                <h4>3.3.2 Conducting Media</h4>
+                <p>
+                    In conducting media ($\sigma \ne 0$), the presence of free currents ($\vec{J}_f = \sigma \vec{E}$) profoundly affects wave propagation. The wave equation becomes a damped wave equation:
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-xl font-semibold text-green-400">
+                        $$ \nabla^2 \vec{E} - \mu \epsilon \frac{\partial^2 \vec{E}}{\partial t^2} - \mu \sigma \frac{\partial \vec{E}}{\partial t} = 0 $$
+                    </div>
+                </div>
+                <p>
+                    The solutions for plane waves are no longer simple cosines but exponentially decaying waves. The wave is **attenuated** (its amplitude decreases) as it propagates through the conductor, and it becomes dispersive (different frequencies travel at different speeds). The distance over which the amplitude falls to $1/e$ of its initial value is called the **skin depth ($\delta$)**:
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
+                        $$ \delta = \sqrt{\frac{2}{\mu \sigma \omega}} $$
+                    </div>
+                </div>
+                <p>
+                    This phenomenon explains why radio waves cannot penetrate deeply into metals and why conductors absorb light.
+                </p>
+            </section>
+
+            <section class="section-card animate-fade-in delay-600">
+                <h2 class="text-gradient mb-6">4. Energy and Momentum in Electromagnetic Fields</h2>
+                <p>
+                    Electromagnetic fields not only transport information (light, radio waves) but also carry energy and momentum. Understanding this transport is crucial for analyzing radiation, power transmission, and forces exerted by light.
+                </p>
+
+                <h3 class="text-cyan-400 mb-4">4.1 Energy Density of Electromagnetic Fields</h3>
+                <p>
+                    The energy stored per unit volume in static electric and magnetic fields is given by:
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
+                        $$ u_E = \frac{1}{2} \epsilon_0 E^2 \quad (\text{electric energy density}) $$
+                        $$ u_B = \frac{1}{2\mu_0} B^2 \quad (\text{magnetic energy density}) $$
+                    </div>
+                </div>
+                <p>
+                    For a freely propagating electromagnetic wave in vacuum, the electric and magnetic energy densities are equal ($u_E = u_B$). The total energy density of the electromagnetic field is:
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
+                        $$ u = u_E + u_B = \frac{1}{2} \epsilon_0 E^2 + \frac{1}{2\mu_0} B^2 $$
+                    </div>
+                </div>
+
+                <h3 class="text-cyan-400 mb-4">4.2 The Poynting Vector: Electromagnetic Energy Flux</h3>
+                <p>
+                    The flow of electromagnetic energy is described by the **Poynting vector ($\vec{S}$)**, named after John Henry Poynting. It represents the direction and magnitude of the energy flux (power per unit area) transported by the electromagnetic field.
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-3xl font-bold text-green-400">
+                        $$ \vec{S} = \frac{1}{\mu_0} (\vec{E} \times \vec{B}) $$
+                    </div>
+                </div>
+                <p>
+                    The units of the Poynting vector are Watts per square meter ($W/m^2$).
+                </p>
+                <ul>
+                    <li><strong>Direction:</strong> $\vec{S}$ points in the direction of energy flow. For a plane EM wave, $\vec{S}$ points in the direction of wave propagation.</li>
+                    <li><strong>Magnitude:</strong> The magnitude $|\vec{S}|$ represents the intensity of the wave, the power passing through a unit area perpendicular to the direction of propagation. For a plane wave in vacuum, $|\vec{S}| = \epsilon_0 c E^2 = \frac{1}{\mu_0 c} E^2$.</li>
+                </ul>
+
+                <h3 class="text-cyan-400 mb-4">4.3 Poynting's Theorem: Energy Conservation</h3>
+                <p>
+                    Poynting's Theorem is a statement of energy conservation for electromagnetic fields. It describes the flow of electromagnetic energy, the rate at which it is stored in fields, and the rate at which it is converted to other forms of energy (e.g., heat in a resistor).
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-xl font-semibold text-green-400">
+                        $$ -\nabla \cdot \vec{S} = \frac{\partial u}{\partial t} + \vec{J} \cdot \vec{E} $$
+                    </div>
+                </div>
+                <p>
+                    In integral form, for a volume $V$ bounded by a surface $S$:
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-xl font-semibold text-green-400">
+                        $$ \oint_S \vec{S} \cdot d\vec{a} + \frac{d}{dt} \int_V u \, dV = -\int_V (\vec{J} \cdot \vec{E}) \, dV $$
+                    </div>
+                </div>
+                <p>
+                    Each term has a clear physical interpretation:
+                </p>
+                <ul>
+                    <li>$\oint_S \vec{S} \cdot d\vec{a}$: The total electromagnetic power flowing *out* of the volume $V$ through its surface $S$.</li>
+                    <li>$\frac{d}{dt} \int_V u \, dV$: The rate of change of electromagnetic energy stored *within* the volume $V$.</li>
+                    <li>$-\int_V (\vec{J} \cdot \vec{E}) \, dV$: The rate at which electromagnetic energy is converted into other forms of energy (e.g., heat from resistive losses, $\vec{J} \cdot \vec{E} = \sigma E^2$, which is the Joule heating per unit volume), or the rate at which the field does work on charges. This term is negative if power is dissipated.</li>
+                </ul>
+                <p>
+                    In essence, Poynting's theorem states that the decrease in electromagnetic energy inside a volume is equal to the energy flowing out through its boundary plus the energy converted into other forms within the volume.
+                </p>
+
+                <h3 class="text-cyan-400 mb-4">4.4 Electromagnetic Momentum and Radiation Pressure</h3>
+                <p>
+                    Just as electromagnetic waves carry energy, they also carry **momentum**. The momentum density ($\vec{g}$) of an electromagnetic field in vacuum is given by:
+                </p>
+                <div class="flex justify-center my-6 math-block">
+                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
+                        $$ \vec{g} = \frac{1}{c^2} \vec{S} = \epsilon_0 (\vec{E} \times \vec{B}) $$
+                    </div>
+                </div>
+                <p>
+                    When an electromagnetic wave is absorbed or reflected by a surface, it transfers momentum to that surface, exerting a force known as **radiation pressure**.
+                </p>
+                <ul>
+                    <li>This pressure is small for typical light sources but becomes significant in intense laser beams or for objects in space (e.g., solar sails).</li>
+                    <li>It's a direct consequence of the field's momentum and is fundamentally tied to the concept of light as both a wave and a particle (photons).</li>
+                </ul>
+            </section>
+
+            <section class="section-card animate-fade-in delay-800">
+                <h2 class="text-gradient mb-6">5. Principles of Classical Field Theory: A Deeper Look</h2>
+                <p>
+                    Electrodynamics is the quintessential example of a **classical field theory**. A field in physics is a physical quantity that has a value for each point in space and time. Unlike particle mechanics, which deals with discrete objects, field theory describes phenomena that are continuous throughout space.
+                </p>
+
+                <h3 class="text-cyan-400 mb-4">5.1 What is a Field? Scalar vs. Vector Fields</h3>
+                <ul>
+                    <li><strong>Scalar Field:</strong> Assigns a scalar value (a single number) to each point in space. Examples include temperature distribution in a room, or electric potential ($\phi$).</li>
+                    <li><strong>Vector Field:</strong> Assigns a vector (magnitude and direction) to each point in space. Examples include the velocity of fluid flow, or the electric field ($\vec{E}$) and magnetic field ($\vec{B}$).</li>
+                </ul>
+                <p>
+                    In field theory, we are interested in how these fields evolve over time and space, typically governed by partial differential equations (like Maxwell's equations).
+                </p>
+
+                <h3 class="text-cyan-400 mb-4">5.2 The Lagrangian and Hamiltonian Formalisms for Fields (Conceptual)</h3>
+                <p>
+                    Just as in classical mechanics, where the Lagrangian and Hamiltonian formalisms provide powerful alternative approaches to Newton's laws, these formalisms can be extended to classical fields.
+                </p>
+                <ul>
+                    <li><strong>Lagrangian Field Theory:</strong> This approach focuses on the **Lagrangian density ($\mathcal{L}$)**, which is a scalar function of the fields and their derivatives. The action ($S$) of the field is the integral of the Lagrangian density over spacetime:
+                        $$ S = \int \mathcal{L} \, d^4x $$
+                        The principle of least action (or Hamilton's Principle) states that the actual path taken by the field is one that extremizes the action. Varying the action with respect to the field variables leads to the **Euler-Lagrange equations for fields**, which are the field's equations of motion. For electrodynamics, applying this formalism to the electromagnetic field yields Maxwell's equations. This approach emphasizes the symmetries of the system.
+                    </li>
+                    <li><strong>Hamiltonian Field Theory:</strong> Derived from the Lagrangian formalism, this approach focuses on the **Hamiltonian density ($\mathcal{H}$)**, which represents the energy density of the field. It is crucial for transitioning from classical field theory to quantum field theory.</li>
+                </ul>
+                <p>
+                    These formalisms provide a more elegant and unified way to describe physical systems, especially those with many degrees of freedom, and highlight fundamental symmetries and conservation laws.
+                </p>
+
+                <h3 class="text-cyan-400 mb-4">5.3 Noether's Theorem: Symmetries and Conservation Laws</h3>
+                <p>
+                    One of the most profound insights from the Lagrangian formalism of field theory comes from **Noether's Theorem**, formulated by Emmy Noether.
+                </p>
+                <p>
+                    <strong>Noether's Theorem states: For every continuous symmetry of a physical system, there is a corresponding conserved quantity.</strong>
+                </p>
+                <ul>
+                    <li><strong>Time-Translation Symmetry:</strong> If the laws of physics are independent of when an experiment is performed, then **energy** is conserved.</li>
+                    <li><strong>Spatial-Translation Symmetry:</strong> If the laws of physics are independent of where an experiment is performed, then **linear momentum** is conserved. (For EM fields, this relates to the momentum density $\vec{g}$).</li>
+                    <li><strong>Rotational Symmetry:</strong> If the laws of physics are independent of the orientation of the system, then **angular momentum** is conserved.</li>
+                </ul>
+                <p>
+                    Noether's Theorem thus provides a deep, fundamental connection between the symmetries of the universe (as described by our field theories) and the conservation laws that govern all physical processes, including those described by electrodynamics.
+                </p>
+
+                <h3 class="text-cyan-400 mb-4">5.4 From Classical to Quantum Field Theory</h3>
+                <p>
+                    Classical electrodynamics is incredibly successful in describing macroscopic electromagnetic phenomena. However, it breaks down at very small scales and very high energies, where quantum effects become dominant. The quantization of the electromagnetic field leads to **Quantum Electrodynamics (QED)**, one of the most accurate theories in physics.
+                </p>
+                <ul>
+                    <li>In QED, electromagnetic fields are quantized, meaning the energy and momentum they carry are packaged into discrete units called **photons** (the quanta of light).</li>
+                    <li>QED is the first and most successful quantum field theory, treating particles as excitations of underlying quantum fields. It elegantly combines quantum mechanics with special relativity and provides the framework for understanding particle interactions.</li>
+                </ul>
+                <p>
+                    Thus, classical electrodynamics, built upon Maxwell's equations and classical field theory principles, forms the indispensable foundation for understanding the quantum nature of light and matter interactions.
+                </p>
+            </section>
+
+            <section class="section-card animate-fade-in delay-800">
+                <h2 class="text-gradient mb-6">6. The Enduring Legacy of Electrodynamics: Conclusion</h2>
+                <p>
+                    Our rigorous exploration of <strong>Electrodynamics</strong> has taken us from the foundational principles of electric and magnetic fields to the majestic sweep of electromagnetic waves and the abstract elegance of classical field theory. We've seen how <strong>Maxwell's Equations</strong>—a quartet of profound partial differential equations—stand as the complete and consistent description of classical electromagnetic phenomena. These equations, in their differential form, reveal the intricate local relationships between charges, currents, and dynamic fields:
+                </p>
+                <ul>
+                    <li><strong>Gauss's Law for Electricity</strong> ($\nabla \cdot \vec{E} = \rho/\epsilon_0$) defines charges as sources/sinks of electric fields.</li>
+                    <li><strong>Gauss's Law for Magnetism</strong> ($\nabla \cdot \vec{B} = 0$) elegantly states the non-existence of magnetic monopoles, ensuring magnetic field lines always form closed loops.</li>
+                    <li><strong>Faraday's Law of Induction</strong> ($\nabla \times \vec{E} = -\partial \vec{B}/\partial t$) reveals how changing magnetic fields induce electric fields, underpinning modern power generation.</li>
+                    <li>The revolutionary **Ampère-Maxwell Law** ($\nabla \times \vec{B} = \mu_0 \vec{J} + \mu_0 \epsilon_0 \partial \vec{E}/\partial t$) unified electricity and magnetism, introducing the pivotal "displacement current" that allowed for the prediction of electromagnetic waves.</li>
+                </ul>
+                <p>
+                    This led us to the stunning realization that **light is an electromagnetic wave**, propagating at a speed $c = 1/\sqrt{\mu_0 \epsilon_0}$, a constant of nature. We examined the properties of these transverse waves in vacuum and explored their behavior in various media, demonstrating how material properties like permittivity, permeability, and conductivity influence wave speed, absorption, and dispersion, giving rise to phenomena like refraction and skin depth.
+                </p>
+                <p>
+                    Furthermore, we delved into the energetics of electromagnetic fields, introducing the **Poynting vector ($\vec{S} = \frac{1}{\mu_0}(\vec{E} \times \vec{B})$)** as the measure of energy flux and understanding its role in **Poynting's Theorem**, a statement of energy conservation for fields. We also briefly touched upon the momentum carried by electromagnetic waves, manifesting as **radiation pressure**.
+                </p>
+                <p>
+                    Finally, we placed electrodynamics within the broader context of **classical field theory**, hinting at the power of Lagrangian and Hamiltonian formalisms and emphasizing the profound connection between symmetries and conservation laws encapsulated by **Noether's Theorem**. This classical framework serves as the essential bedrock for understanding the quantum realm through Quantum Electrodynamics (QED).
+                </p>
+                <p>
+                    Electrodynamics is not just a theoretical construct; it is the science behind countless modern technologies, from radio and television to fiber optics, lasers, and magnetic resonance imaging. Its principles are fundamental to understanding the universe, from the behavior of light in galaxies to the design of microelectronic circuits.
+                </p>
+                <p>
+                    We hope this comprehensive and rigorous lesson on <strong class="text-gradient">Electrodynamics</strong> has illuminated the profound beauty and predictive power of Maxwell's theory, solidifying its place as a cornerstone of physics. Continue your exploration of the fundamental laws that govern our universe with <strong class="text-gradient">Whizmath</strong>!
+                </p>
+                <p class="text-center mt-12 text-gray-500 text-sm">
+                    This lesson was meticulously crafted to provide a deep and clear understanding of Electrodynamics. For further inquiries or specific examples, feel free to explore more topics on Whizmath.
+                </p>
+            </section>
+        </main>
+
+        <button id="scrollToTopBtn" title="Go to top">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+        </button>
+    </div>
+
+    <script>
+        // Smooth scroll for back button (if needed, though a direct link is used)
+        document.querySelector('.back-button').addEventListener('click', function(e) {
+            // e.preventDefault(); // Uncomment if you want to use JS for history.back()
+            // window.history.back(); // Use this for single-page apps or internal navigation
+        });
+
+        // Scroll to top button functionality
+        let scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                scrollToTopBtn.style.display = "block";
+            } else {
+                scrollToTopBtn.style.display = "none";
+            }
+        }
+
+        // When the user clicks on the button, scroll to the top of the document
+        scrollToTopBtn.addEventListener("click", function() {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+    </script>
+</body>
+</html>
