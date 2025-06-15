@@ -31,6 +31,7 @@
             --primary-light: #1976D2; /* Blue 700 */
             --primary-hover-light: #0D47A1; /* Blue 900 */
             --card-hover-light: #f0f8ff; /* Alice Blue */
+            --completed-light: #4CAF50; /* Green */
 
             /* Brighter Dark Mode Colors */
             --bg-dark: #1a0a2a; /* Deep Plum */
@@ -40,6 +41,7 @@
             --primary-dark: #64B5F6; /* Light Blue 300 */
             --primary-hover-dark: #42A5F5; /* Blue 400 */
             --card-hover-dark: #34495e; /* Slightly Lighter Dark Blue-Gray */
+            --completed-dark: #81C784; /* Light Green */
         }
 
         /* Light mode defaults */
@@ -73,6 +75,32 @@
             transform: translateY(-2px);
         }
 
+        /* Completed card styling */
+        .card.completed {
+            border-color: var(--completed-light);
+            box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3); /* Green shadow */
+            position: relative;
+            cursor: pointer; /* Indicate clickable */
+        }
+
+        .card.completed:hover {
+            background-color: var(--card-hover-light);
+            border-color: var(--completed-light); /* Keep green border on hover */
+        }
+
+        .card .completion-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            color: var(--completed-light);
+            display: none; /* Hidden by default, shown when .completed */
+        }
+
+        .card.completed .completion-indicator {
+            display: block;
+        }
+
 
         /* Dark mode styles */
         html.dark {
@@ -99,6 +127,19 @@
             background-color: var(--primary-hover-dark);
         }
 
+        /* Completed card styling in dark mode */
+        html.dark .card.completed {
+            border-color: var(--completed-dark);
+            box-shadow: 0 4px 10px rgba(129, 199, 132, 0.3); /* Light green shadow */
+        }
+        html.dark .card.completed:hover {
+            background-color: var(--card-hover-dark);
+            border-color: var(--completed-dark);
+        }
+
+        html.dark .card .completion-indicator {
+            color: var(--completed-dark);
+        }
 
         /* Three.js canvas styling */
         #three-bg {
@@ -199,6 +240,69 @@
             fill: var(--text-dark); /* Moon icon in dark mode */
         }
 
+        /* Message Box styles */
+        .message-box-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none; /* Hidden by default */
+        }
+
+        .message-box-content {
+            background-color: var(--card-bg-light);
+            color: var(--text-light);
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+            border: 1px solid var(--card-border-light);
+        }
+
+        html.dark .message-box-content {
+            background-color: var(--card-bg-dark);
+            color: var(--text-dark);
+            border: 1px solid var(--card-border-dark);
+        }
+
+        .message-box-content button {
+            margin-top: 1.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            background-color: var(--primary-light);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .message-box-content button:hover {
+            background-color: var(--primary-hover-light);
+        }
+
+        html.dark .message-box-content button {
+            background-color: var(--primary-dark);
+        }
+        html.dark .message-box-content button:hover {
+            background-color: var(--primary-hover-dark);
+        }
+
+        .user-id-display {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            padding-top: 1rem;
+            text-align: center;
+            word-break: break-all; /* Allow long IDs to break */
+        }
+
     </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
@@ -225,10 +329,11 @@
     </button>
 
     <header class="relative z-10 py-6 md:py-8">
-        <div class="container mx-auto px-4 flex justify-center items-center">
+        <div class="container mx-auto px-4 flex flex-col items-center">
             <a href="#" class="text-4xl md:text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 transition-colors duration-300">
                 Whizmath
             </a>
+            <div id="userIdDisplay" class="user-id-display mt-2"></div>
         </div>
     </header>
 
@@ -243,147 +348,173 @@
             <h2 class="text-3xl md:text-4xl font-semibold mb-8 text-center text-purple-500">Beginner Level</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Heat and Thermodynamics - Beginner -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="heat-thermodynamics-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Heat and Thermodynamics</h3>
                     <p class="opacity-70 text-sm mb-4">Explore the fundamental concepts of heat, temperature scales (Celsius, Fahrenheit, Kelvin), and the basic principles of heat transfer: conduction, convection, and radiation. Understand the initial laws governing energy flow.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="heat-lesson.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
                 <!-- Mechanics - Beginner -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="mechanics-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Mechanics</h3>
                     <p class="opacity-70 text-sm mb-4">An introduction to the study of motion. Learn about displacement, velocity, acceleration, and the three fundamental Laws of Motion proposed by Newton: $F=ma$. Covers one-dimensional kinematic equations like $v = u + at$ and $s = ut + \frac{1}{2}at^2$.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="mechanics.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
                 <!-- Projectile Motion - Beginner -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="projectile-motion-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Projectile Motion</h3>
                     <p class="opacity-70 text-sm mb-4">Analyze the two-dimensional motion of objects solely under the influence of gravity ($g \approx 9.8 \text{ m/s}^2$). Understand concepts like parabolic trajectories, horizontal range, maximum height, and time of flight without air resistance.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="projectile-motion.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
                  <!-- Momentum - Beginner -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="momentum-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Momentum</h3>
                     <p class="opacity-70 text-sm mb-4">Introduces the concept of linear momentum ($p = mv$) and impulse ($\Delta p = F\Delta t$). Learn the law of conservation of momentum for isolated systems and its application in simple collision scenarios, where total momentum $\sum p_{initial} = \sum p_{final}$.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="momentum.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
                 <!-- Work, Energy, and Power - Beginner -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="work-energy-power-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Work, Energy, & Power</h3>
                     <p class="opacity-70 text-sm mb-4">Learn about different forms of energy (kinetic energy $KE = \frac{1}{2}mv^2$, gravitational potential energy $PE = mgh$), how work ($W = Fd \cos \theta$) is done by forces, and the rate at which work is done (power $P = W/t$). Covers the work-energy theorem and the principle of conservation of mechanical energy.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="work-and-energy.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
                 <!-- Waves and Optics - Beginner -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="waves-optics-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Waves and Optics</h3>
                     <p class="opacity-70 text-sm mb-4">Understand the fundamental characteristics of waves (amplitude, wavelength $\lambda$, frequency $f$, speed $v = f\lambda$). Explore the basic properties of light, including reflection (mirrors) and refraction (lenses), and Snell's Law ($n_1 \sin \theta_1 = n_2 \sin \theta_2$).</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="waves-and-optics-beginner.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
                 <!-- Electricity - Beginner -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="electricity-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Electricity</h3>
                     <p class="opacity-70 text-sm mb-4">Introduction to electric charge ($q$), Coulomb's Law ($F = k \frac{|q_1 q_2|}{r^2}$), electric fields, and electric potential. Learn about current ($I = \Delta q / \Delta t$), voltage ($V$), resistance ($R$), and Ohm's Law ($V = IR$). Analyze simple series and parallel circuits.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="electricity.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
                 <!-- Sound - Beginner -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="sound-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Sound</h3>
                     <p class="opacity-70 text-sm mb-4">Explore the nature of sound as a longitudinal wave. Covers properties like pitch (frequency), loudness (amplitude), and quality (timbre). Discuss resonance and basic acoustics.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="sound.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
                  <!-- Gravitation - Beginner -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="gravitation-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Gravitation</h3>
                     <p class="opacity-70 text-sm mb-4">Understand Newton's Law of Universal Gravitation ($F = G \frac{m_1 m_2}{r^2}$), which describes the attractive force between any two masses. Learn about gravitational fields, weight, and the basics of planetary motion.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="gravitation.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
                 <!-- Atomic Structure - Beginner -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="atomic-structure-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Atomic Structure</h3>
                     <p class="opacity-70 text-sm mb-4">Basic models of the atom, including early historical models (Rutherford, Bohr). Learn about the constituents of an atom: electrons, protons, and neutrons, and their properties.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="atomic-structure.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
                 <!-- States of Matter - Beginner -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="states-of-matter-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">States of Matter</h3>
                     <p class="opacity-70 text-sm mb-4">Explore the macroscopic properties of solids, liquids, and gases, including their molecular arrangements, intermolecular forces, and phase transitions (melting, boiling, sublimation).</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="states-of-matter.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
                  <!-- Simple Harmonic Motion - Beginner -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="simple-harmonic-motion-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Simple Harmonic Motion</h3>
                     <p class="opacity-70 text-sm mb-4">Introduction to oscillatory motion characterized by a restoring force proportional to displacement ($F = -kx$). Study simple pendulums ($T = 2\pi\sqrt{L/g}$) and mass-spring systems ($T = 2\pi\sqrt{m/k}$), and define period and frequency.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="simple-harmonic-motion.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
                 <!-- New Beginner Topics -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="units-measurements-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Units and Measurements</h3>
                     <p class="opacity-70 text-sm mb-4">Master the International System of Units (SI), understand significant figures, scientific notation ($A \times 10^n$), and the importance of precision and accuracy in physical measurements. Covers basic error analysis.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="units-and-measurement.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="scalars-vectors-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Scalars and Vectors</h3>
                     <p class="opacity-70 text-sm mb-4">Learn to distinguish between quantities that have only magnitude (scalars like mass, time) and those with both magnitude and direction (vectors like force, velocity). Covers graphical and analytical methods for vector addition and subtraction ($\vec{A} + \vec{B}$).</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="scalars-and-vectors.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="pressure-buoyancy-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Pressure & Buoyancy</h3>
                     <p class="opacity-70 text-sm mb-4">Understand the concept of pressure ($P=F/A$) in fluids, including atmospheric pressure and hydrostatic pressure ($P=\rho gh$). Explore Archimedes' Principle and the concept of buoyancy, explaining why objects float or sink.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="pressure.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="elasticity-materials-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Elasticity of Materials</h3>
                     <p class="opacity-70 text-sm mb-4">Introduction to how materials deform under stress ($\sigma = F/A$) and strain ($\epsilon = \Delta L / L_0$). Covers Hooke's Law ($F = kx$), Young's Modulus ($E = \sigma / \epsilon$), and basic concepts of elastic and plastic deformation for solids.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="elasticity.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="magnetism-basics-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Magnetism Basics</h3>
                     <p class="opacity-70 text-sm mb-4">Discover the fundamental principles of magnetism, including magnetic poles, magnetic fields produced by permanent magnets, and the simple interaction between magnets.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="magnetism.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="light-color-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Light & Color</h3>
                     <p class="opacity-70 text-sm mb-4">Explore the nature of light as an electromagnetic wave. Understand the visible spectrum, primary and secondary colors, and how objects absorb and reflect light to appear colored.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="light-and-color.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="fluid-dynamics-basics-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Fluid Dynamics Basics</h3>
                     <p class="opacity-70 text-sm mb-4">Introduction to the principles governing fluid flow. Covers the continuity equation ($A_1v_1 = A_2v_2$) for incompressible fluids and basic applications of Bernoulli's principle for steady flow.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="fluid-dynamics.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="thermal-properties-matter-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Thermal Properties of Matter</h3>
                     <p class="opacity-70 text-sm mb-4">Examine how materials respond to heat, including concepts like specific heat capacity, thermal expansion (linear, area, volume), and thermal conductivity ($Q/t = kA\Delta T/L$).</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="thermal-properties.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="electrical-power-energy-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Electrical Power & Energy</h3>
                     <p class="opacity-70 text-sm mb-4">Calculate electrical power ($P = IV = I^2R = V^2/R$) and energy consumed by electrical devices. Discuss kilowatt-hours and basic household electricity safety.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="electrical-power.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="wave-superposition-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Wave Superposition</h3>
                     <p class="opacity-70 text-sm mb-4">Understand how two or more waves interact when they overlap, leading to phenomena like interference (constructive and destructive) and standing waves.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="wave-superposition.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="simple-machines-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Simple Machines</h3>
                     <p class="opacity-70 text-sm mb-4">Discover the six classical simple machines: lever, wheel and axle, pulley, inclined plane, wedge, and screw. Understand their mechanical advantage ($MA = \text{output force}/\text{input force}$) and efficiency.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="simple-machines.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="energy-transformations-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Energy Transformations</h3>
                     <p class="opacity-70 text-sm mb-4">Explore the conversion of energy from one form to another (e.g., potential to kinetic, chemical to electrical) and the law of conservation of energy in various systems.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="energy.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="circuits-parallel-series-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Circuits: Parallel & Series</h3>
                     <p class="opacity-70 text-sm mb-4">Deepen your understanding of how resistors behave in series ($R_{eq} = \sum R_i$) and parallel ($\frac{1}{R_{eq}} = \sum \frac{1}{R_i}$) circuits. Analyze voltage, current, and power distribution in basic circuit configurations.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="circuits.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="optics-mirrors-beginner">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Optics: Mirrors</h3>
                     <p class="opacity-70 text-sm mb-4">Focus on the principles of reflection from plane mirrors, concave mirrors, and convex mirrors. Learn to construct ray diagrams and apply the mirror equation to find image characteristics (real/virtual, inverted/upright, magnified/diminished).</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
+                    <a href="optics.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Start Lesson</a>
                 </div>
             </div>
         </section>
@@ -394,162 +525,191 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Intermediate Topic Cards -->
                 <!-- Heat and Thermodynamics - Intermediate -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="heat-thermodynamics-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Heat and Thermodynamics</h3>
                     <p class="opacity-70 text-sm mb-4">A deeper dive into the First Law of Thermodynamics ($\Delta U = Q - W$), specific heat capacity, latent heat ($Q = mL$), and phase changes. Analyze pressure-volume diagrams and different thermodynamic processes (isothermal, adiabatic).</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="heat-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
                 <!-- Mechanics - Intermediate -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="mechanics-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Mechanics</h3>
                     <p class="opacity-70 text-sm mb-4">Expands on Newton's Laws, including non-inertial frames and forces like friction and drag. Introduces rotational kinematics and dynamics, covering concepts like torque ($\tau = rF \sin \theta$), moment of inertia ($I$), and angular momentum ($L = I\omega$).</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="mechanics-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
                 <!-- Projectile Motion - Intermediate -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="projectile-motion-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Projectile Motion</h3>
                     <p class="opacity-70 text-sm mb-4">Advanced analysis including the effects of air resistance on trajectory. Explore projectile motion on inclined planes and consider varying initial conditions for maximum range or height. Involves solving coupled differential equations.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="projectile-motion-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
                 <!-- Momentum - Intermediate -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="momentum-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Momentum</h3>
                     <p class="opacity-70 text-sm mb-4">Detailed study of elastic and inelastic collisions in one and two dimensions. Apply the conservation of momentum and energy principles to solve complex collision problems involving multiple objects. Understand the coefficient of restitution.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="momentum-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
                  <!-- Fluids - Intermediate -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="fluids-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Fluids</h3>
                     <p class="opacity-70 text-sm mb-4">Explore static fluids (fluid pressure variation with depth, Pascal's principle) and dynamic fluids. Covers continuity equation ($A_1v_1 = A_2v_2$), Bernoulli's principle ($P + \rho gh + \frac{1}{2}\rho v^2 = \text{constant}$) for fluid flow, and an introduction to viscosity and surface tension.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="fluids-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
                 <!-- Magnetism - Intermediate -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="magnetism-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Magnetism</h3>
                     <p class="opacity-70 text-sm mb-4">Detailed study of magnetic fields produced by currents (Biot-Savart Law, Ampere's Law $\oint \vec{B} \cdot d\vec{l} = \mu_0 I_{enc}$). Learn about the Lorentz force ($\vec{F} = q(\vec{E} + \vec{v} \times \vec{B})$) on moving charges and current-carrying wires in magnetic fields, and applications like motors.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="magnetism-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
                 <!-- Circular Motion - Intermediate -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="circular-motion-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Circular Motion</h3>
                     <p class="opacity-70 text-sm mb-4">Analyze uniform and non-uniform circular motion. Covers centripetal force ($F_c = mv^2/r$) and acceleration ($a_c = v^2/r$), angular velocity ($\omega$), and applications in real-world scenarios like banked curves and roller coasters.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="circular-motion-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
                 <!-- Electromagnetic Induction - Intermediate -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="electromagnetic-induction-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Electromagnetic Induction</h3>
                     <p class="opacity-70 text-sm mb-4">Focuses on Faraday's Law of Induction ($\mathcal{E} = -N \frac{d\Phi_B}{dt}$), Lenz's Law, and motional EMF. Explores mutual and self-inductance ($L$) and their roles in electrical generators, transformers, and inductors.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="electromagnetic-induction-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
                 <!-- Ideal Gas Law - Intermediate -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="ideal-gas-law-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Ideal Gas Law</h3>
                     <p class="opacity-70 text-sm mb-4">In-depth study of the Ideal Gas Law ($PV=nRT$) and its relationship to macroscopic properties like pressure, volume, and temperature. Discusses applications in various thermodynamic processes and introduces real gases.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="ideal-gas-law-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
                 <!-- Kinetic Theory of Gases - Intermediate -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="kinetic-theory-gases-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Kinetic Theory of Gases</h3>
                     <p class="opacity-70 text-sm mb-4">Connects the microscopic behavior of gas particles to macroscopic properties. Derives the ideal gas law from molecular motion and discusses concepts like root-mean-square speed ($v_{rms} = \sqrt{3RT/M}$) and internal energy.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="kinetic-theory-gases-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
                 <!-- Thermal Expansion - Intermediate -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="thermal-expansion-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Thermal Expansion</h3>
                     <p class="opacity-70 text-sm mb-4">Quantify linear ($\Delta L = \alpha L_0 \Delta T$), area ($\Delta A = 2\alpha A_0 \Delta T$), and volume ($\Delta V = \beta V_0 \Delta T$) expansion of solids and liquids due to temperature changes. Understand applications in engineering and everyday phenomena.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="thermal-expansion.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
                  <!-- Optics - Intermediate -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="optics-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Optics</h3>
                     <p class="opacity-70 text-sm mb-4">Deepen understanding of reflection and refraction through ray optics. Covers mirror and lens equations ($\frac{1}{f} = \frac{1}{d_o} + \frac{1}{d_i}$), chromatic aberration, and introduces optical instruments like telescopes and microscopes.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="optics-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
                 <!-- New Intermediate Topics -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="electromagnetism-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Electromagnetism</h3>
                     <p class="opacity-70 text-sm mb-4">A unified study of electric and magnetic phenomena. Covers Maxwell's equations in their integral form, linking fundamental concepts of electric fields ($\vec{E}$), magnetic fields ($\vec{B}$), and electromagnetic waves ($c = 1/\sqrt{\mu_0 \epsilon_0}$).</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="electromagnetism-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="wave-phenomena-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Wave Phenomena</h3>
                     <p class="opacity-70 text-sm mb-4">Comprehensive study of interference (Young's double-slit experiment $d \sin \theta = m\lambda$), diffraction (single-slit, diffraction gratings), and polarization of light. Explore standing waves, beats, and the Doppler effect ($f' = f \frac{v \pm v_o}{v \mp v_s}$) for sound and light.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="wave-phenomena.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="capacitance-dielectrics-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Capacitance & Dielectrics</h3>
                     <p class="opacity-70 text-sm mb-4">Detailed analysis of capacitors in series ($\frac{1}{C_{eq}} = \sum \frac{1}{C_i}$) and parallel ($C_{eq} = \sum C_i$). Understand how dielectric materials increase capacitance ($C = \kappa C_0$) and their role in energy storage ($U = \frac{1}{2}CV^2$). Explore RC circuits and time constants ($\tau = RC$).</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="capacitance-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
-                 <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                 <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="nuclear-radiation-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Nuclear Radiation</h3>
                     <p class="opacity-70 text-sm mb-4">Study of different types of radioactive decay (alpha, beta, gamma), half-life calculations ($N = N_0 (1/2)^{t/T_{1/2}}$), and the biological effects of radiation. Introduces basic principles of nuclear stability and binding energy.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="nuclear-radiation-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="dc-circuits-analysis-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">DC Circuits Analysis</h3>
                     <p class="opacity-70 text-sm mb-4">Advanced techniques for analyzing direct current circuits, including Kirchhoff's laws (junction rule $\sum I_{in} = \sum I_{out}$, loop rule $\sum \Delta V = 0$), node voltage method, mesh current method, and superposition theorem for complex networks.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="dc-circuits-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="sound-intensity-decibels-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Sound Intensity & Decibels</h3>
                     <p class="opacity-70 text-sm mb-4">Quantify sound intensity ($I = P/A$) and learn about the decibel scale ($\beta = 10 \log_{10}(I/I_0)$). Covers the inverse square law for sound propagation and explores concepts like resonance and standing waves in pipes and strings.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="sound-intensity-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="astrophysics-basics-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Astrophysics Basics</h3>
                     <p class="opacity-70 text-sm mb-4">An introductory overview of the cosmos, including the life cycles of stars, types of galaxies, and the large-scale structure of the universe. Touches on telescopes and astronomical observation methods, including luminosity ($L = 4\pi R^2 \sigma T^4$) and apparent brightness ($b = L / (4\pi d^2)$).</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="astrophysics-basics-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="magnetic-force-fields-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Magnetic Force & Fields</h3>
                     <p class="opacity-70 text-sm mb-4">Further delve into magnetic fields generated by current loops and solenoids ($\mu_0 n I$). Explore the magnetic force on current-carrying conductors ($F = ILB \sin \theta$) and torque on current loops in magnetic fields ($\tau = NIAB \sin \phi$).</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="magnetic-force-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="resonance-damping-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Resonance & Damping</h3>
                     <p class="opacity-70 text-sm mb-4">Study the phenomenon of resonance in oscillating systems, where a driving force matches the natural frequency. Analyze the effects of damping on oscillations and their practical implications.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="resonance-and-damping-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="introduction-modern-physics-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Introduction to Modern Physics</h3>
                     <p class="opacity-70 text-sm mb-4">A bridge to advanced topics, introducing the limitations of classical physics. Covers blackbody radiation, the ultraviolet catastrophe, and the beginnings of quantum theory and relativity.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="modern-physics-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
-                 <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                 <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="ac-circuits-basics-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">AC Circuits Basics</h3>
                     <p class="opacity-70 text-sm mb-4">Introduction to alternating current (AC) circuits, including concepts of AC voltage and current, reactance of inductors ($X_L = \omega L$) and capacitors ($X_C = 1/\omega C$), and simple RL, RC, and RLC series circuits.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="ac-circuits-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="wave-particle-duality-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Wave-Particle Duality</h3>
                     <p class="opacity-70 text-sm mb-4">Explore the concept that particles can exhibit wave-like properties (e.g., de Broglie wavelength $\lambda = h/p$) and waves can exhibit particle-like properties (photons), a foundational idea in quantum mechanics.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="wave-particle-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="electromagnetic-spectrum-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Electromagnetic Spectrum</h3>
                     <p class="opacity-70 text-sm mb-4">Categorize and understand the various forms of electromagnetic radiation (radio waves, microwaves, infrared, visible light, ultraviolet, X-rays, gamma rays) based on their wavelength and frequency.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="electromagnetic-spectrum-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="heat-engines-refrigerators-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Heat Engines & Refrigerators</h3>
                     <p class="opacity-70 text-sm mb-4">Analyze the operation of heat engines (e.g., Stirling engine, Otto cycle) and refrigerators/heat pumps. Understand their efficiency (Carnot efficiency $\eta = 1 - T_C/T_H$) and the limitations imposed by the Second Law of Thermodynamics.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="heat-engines-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="fluid-viscosity-flow-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Fluid Viscosity & Flow</h3>
                     <p class="opacity-70 text-sm mb-4">Detailed study of fluid viscosity, internal friction within fluids, and its effect on fluid flow. Covers Poiseuille's Law for laminar flow and introduces concepts of turbulent flow and Reynolds number.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="fluid-viscosity-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="nuclear-fission-fusion-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Nuclear Fission & Fusion</h3>
                     <p class="opacity-70 text-sm mb-4">Explore the processes of nuclear fission (splitting atoms) and nuclear fusion (combining atoms). Understand their applications in nuclear power generation, weapons, and stellar energy production ($E=mc^2$).</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="nuclear-fission-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="acoustics-musical-instruments-intermediate">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Acoustics & Musical Instruments</h3>
                     <p class="opacity-70 text-sm mb-4">Apply principles of sound waves to understand the physics of musical instruments. Covers topics like harmonics, overtones, resonance in strings and air columns, and the production of musical notes.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
+                    <a href="acoustics-intermediate.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Continue Lesson</a>
                 </div>
             </div>
         </section>
@@ -560,162 +720,191 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Advanced Topic Cards -->
                 <!-- Heat and Thermodynamics - Advanced -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="heat-thermodynamics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Heat and Thermodynamics</h3>
                     <p class="opacity-70 text-sm mb-4">Explore the Second Law of Thermodynamics (entropy $\Delta S \ge 0$), Gibbs free energy ($G = H - TS$), and Carnot engines. Delve into statistical mechanics, connecting macroscopic properties to microscopic states using Boltzmann distribution ($P(E) \propto e^{-E/k_B T}$).</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="heat-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
                 <!-- Mechanics - Advanced -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="mechanics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Mechanics</h3>
                     <p class="opacity-70 text-sm mb-4">Advanced classical mechanics using Lagrangian ($\mathcal{L} = T - V$) and Hamiltonian ($\mathcal{H} = T + V$) formulations. Study rigid body dynamics, coupled oscillations, and an introduction to continuum mechanics and elasticity theory.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="mechanics-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
                 <!-- Projectile Motion - Advanced -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="projectile-motion-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Projectile Motion</h3>
                     <p class="opacity-70 text-sm mb-4">Examine projectile motion in more complex scenarios, including non-uniform gravitational fields and advanced air resistance models. Introduces orbital mechanics (Kepler's Laws) and the physics of spacecraft trajectories using conic sections.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="projectile-motion-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
                 <!-- Momentum - Advanced -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="momentum-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Momentum</h3>
                     <p class="opacity-70 text-sm mb-4">Advanced treatment of momentum, including relativistic momentum ($\vec{p} = \gamma m \vec{v}$) and energy ($E = \sqrt{(pc)^2 + (m_0 c^2)^2}$), and momentum in continuous systems (e.g., rocket propulsion, fluid flow). Explores advanced collision theory and scattering processes.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="momentum-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
                 <!-- Nuclear Physics - Advanced -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="nuclear-physics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Nuclear Physics</h3>
                     <p class="opacity-70 text-sm mb-4">In-depth study of nuclear structure, forces (strong nuclear force), and models (liquid drop, shell model). Covers radioactive decay rates, nuclear reactions (fission, fusion $E=mc^2$), and provides an introduction to particle accelerators and detectors.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="nuclear-physics-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
                 <!-- Quantum Mechanics - Advanced -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="quantum-mechanics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Quantum Mechanics</h3>
                     <p class="opacity-70 text-sm mb-4">Deep dive into the Schrödinger equation (time-dependent $i\hbar \frac{\partial}{\partial t}\Psi = \hat{H}\Psi$, time-independent $\hat{H}\Psi = E\Psi$), wave functions, and operators. Explore quantum phenomena like tunneling, quantum entanglement, and the basics of quantum field theory and quantum computing.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="quantum-mechanics-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
                 <!-- Relativity - Advanced -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="relativity-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Relativity</h3>
                     <p class="opacity-70 text-sm mb-4">Comprehensive study of Special Relativity (Lorentz transformations, time dilation $\Delta t' = \gamma \Delta t$, length contraction $L' = L/\gamma$, mass-energy equivalence $E=mc^2$) and an introduction to General Relativity (spacetime curvature, gravitational waves, black holes).</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="relativity-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
                 <!-- Astrophysics - Advanced -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="astrophysics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Astrophysics</h3>
                     <p class="opacity-70 text-sm mb-4">Advanced topics in stellar structure and evolution (H-R diagram), cosmology (Big Bang theory, cosmic microwave background, dark energy), and phenomena like supernovae, neutron stars, and active galactic nuclei.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="astrophysics-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
                  <!-- Electrodynamics - Advanced -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="electrodynamics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Electrodynamics</h3>
                     <p class="opacity-70 text-sm mb-4">Rigorous treatment of Maxwell's equations in differential form ($\nabla \cdot \vec{E} = \rho/\epsilon_0$, $\nabla \times \vec{E} = -\frac{\partial \vec{B}}{\partial t}$, etc.), electromagnetic wave propagation in various media, Poynting vector ($\vec{S} = \frac{1}{\mu_0}(\vec{E} \times \vec{B})$), and the principles of classical field theory.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="electrodynamics-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
                 <!-- Solid State Physics - Advanced -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="solid-state-physics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Solid State Physics</h3>
                     <p class="opacity-70 text-sm mb-4">Study of crystal structures, lattice vibrations (phonons), band theory of solids (conductors, insulators, semiconductors), and phenomena like superconductivity and magnetism in materials.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="solid-state-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
                  <!-- Photonics - Advanced -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="photonics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Photonics</h3>
                     <p class="opacity-70 text-sm mb-4">Advanced topics in laser physics (types of lasers, applications), optical fibers, waveguides, and the interaction of light with matter at a quantum level, including non-linear optics.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="photonics-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
                  <!-- Plasma Physics - Advanced -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="plasma-physics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Plasma Physics</h3>
                     <p class="opacity-70 text-sm mb-4">Study of the fourth state of matter – ionized gas. Covers plasma properties, magnetic confinement (tokamaks), inertial confinement, and its applications in fusion energy and astrophysical phenomena.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="plasma-physics-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
                 <!-- New Advanced Topics -->
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="statistical-mechanics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Statistical Mechanics</h3>
                     <p class="opacity-70 text-sm mb-4">Bridge between microscopic and macroscopic physics. Explores ensembles (microcanonical, canonical, grand canonical), partition functions ($Z$), and their use in deriving thermodynamic properties from molecular behavior.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="statistical-mechanics-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="cosmology-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Cosmology</h3>
                     <p class="opacity-70 text-sm mb-4">Detailed study of the origin, evolution, and large-scale structure of the universe, including inflation theory, dark matter, dark energy ($\Lambda$), and the fate of the cosmos based on current observational data.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="cosmology-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="general-relativity-applications-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">General Relativity Applications</h3>
                     <p class="opacity-70 text-sm mb-4">Explore the real-world implications and phenomena predicted by General Relativity, such as gravitational lensing, gravitational redshift, the physics of black holes (Schwarzschild radius $R_s = 2GM/c^2$), and neutron stars.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="general-relativity-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="particle-physics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Particle Physics</h3>
                     <p class="opacity-70 text-sm mb-4">Delve into the Standard Model of particle physics: quarks, leptons, and fundamental forces. Discuss symmetry, conservation laws, Higgs boson, and introduce concepts beyond the Standard Model like supersymmetry.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="particle-physics-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="quantum-field-theory-qft-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Quantum Field Theory (QFT)</h3>
                     <p class="opacity-70 text-sm mb-4">An advanced framework unifying quantum mechanics with special relativity. Covers concepts like quantum fields, Feynman diagrams, renormalization, and their role in understanding particle interactions and fundamental forces.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="quantum-field-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="astroparticle-physics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Astroparticle Physics</h3>
                     <p class="opacity-70 text-sm mb-4">The intersection of particle physics and cosmology. Investigates cosmic rays, neutrinos from space, dark matter and dark energy detection experiments, and the early universe's particle content.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="astroparticle-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="computational-physics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Computational Physics</h3>
                     <p class="opacity-70 text-sm mb-4">Learn numerical methods to solve complex physics problems, including finite difference, Monte Carlo simulations of physical systems, data analysis techniques, and the use of computational tools in research and engineering.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="computational-physics-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
-                 <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                 <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="quantum-optics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Quantum Optics</h3>
                     <p class="opacity-70 text-sm mb-4">Study the quantum nature of light and its interaction with matter. Covers concepts like photon statistics, quantum entanglement in optical systems, and applications in quantum communication and quantum cryptography.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="quantum-optics-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="condensed-matter-physics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Condensed Matter Physics</h3>
                     <p class="opacity-70 text-sm mb-4">Advanced study of the macroscopic and microscopic physical properties of matter, including crystal defects, electronic band structure, and exotic states like topological insulators and quantum Hall effect.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="condensed-matter-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="non-linear-dynamics-chaos-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Non-linear Dynamics & Chaos</h3>
                     <p class="opacity-70 text-sm mb-4">Explore systems whose behavior is not directly proportional to their causes. Covers concepts like phase space, fractals, strange attractors, and the unpredictable nature of chaotic systems in physics.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="non-linear-dynamics.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="cryogenics-low-temperature-physics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Cryogenics & Low Temperature Physics</h3>
                     <p class="opacity-70 text-sm mb-4">Investigate physics at extremely low temperatures, including phenomena like superconductivity, superfluidity (Bose-Einstein condensates), and the techniques used to achieve and maintain cryogenic environments.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="cryogenics-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="medical-physics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Medical Physics</h3>
                     <p class="opacity-70 text-sm mb-4">Application of physics principles to medicine, covering diagnostic imaging (X-rays, MRI, ultrasound), radiation therapy, nuclear medicine, and the physics of the human body.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="medical-physics-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="acoustic-physics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Acoustic Physics</h3>
                     <p class="opacity-70 text-sm mb-4">Advanced study of sound and vibrations, including wave propagation in different media, psychoacoustics (perception of sound), architectural acoustics, and noise control.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="acoustic-physics-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="nanophysics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Nanophysics</h3>
                     <p class="opacity-70 text-sm mb-4">Exploration of physical phenomena at the nanoscale ($10^{-9}$ meters). Covers quantum effects in nanomaterials, fabrication techniques, and applications in electronics, medicine, and energy.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="nanophysics-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
-                 <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                 <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="gauge-theory-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Gauge Theory</h3>
                     <p class="opacity-70 text-sm mb-4">Introduces the concept of gauge invariance as a principle for constructing fundamental interactions in physics, central to the Standard Model of particle physics.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="gauge-theory-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="supersymmetry-susy-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">Supersymmetry (SUSY)</h3>
                     <p class="opacity-70 text-sm mb-4">Explores a proposed extension to the Standard Model, postulating a symmetry between bosons and fermions. Discusses its implications for dark matter and grand unification theories.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="supersymmetry-advanced.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
-                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div class="card p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer" data-lesson-id="string-theory-basics-advanced">
+                    <span class="completion-indicator">&#10003;</span>
                     <h3 class="text-xl font-semibold mb-2">String Theory Basics</h3>
                     <p class="opacity-70 text-sm mb-4">An introduction to string theory, a theoretical framework that posits point-like particles are replaced by one-dimensional strings. Discusses its potential to unify all fundamental forces.</p>
-                    <a href="#" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
+                    <a href="string-theory.html" class="btn-primary inline-block px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105">Explore Further</a>
                 </div>
             </div>
         </section>
@@ -728,10 +917,44 @@
     <!-- Scroll to Top Button -->
     <button id="scrollToTopBtn" title="Go to top">↑</button>
 
-    <!-- Three.js CDN - Moved to end of body to ensure it's loaded before its usage in custom script -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Custom Message Box HTML -->
+    <div id="messageBoxOverlay" class="message-box-overlay">
+        <div class="message-box-content">
+            <p id="messageBoxText"></p>
+            <button id="messageBoxCloseBtn">OK</button>
+        </div>
+    </div>
 
-    <script>
+    <!-- Firebase SDKs - AFTER HTML elements that rely on them being present for event listeners -->
+    <!-- Changed to type="module" for modern import syntax -->
+    <script type="module">
+        // Import Firebase functions directly from their modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, setDoc, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Global Firebase Variables ---
+        let db;
+        let auth;
+        let appId;
+        let userId;
+        let userProgressRef; // Reference to the user's progress document
+        let userProgressData = {}; // Stores the fetched user progress
+
+        // --- Message Box Utility ---
+        const messageBoxOverlay = document.getElementById('messageBoxOverlay');
+        const messageBoxText = document.getElementById('messageBoxText');
+        const messageBoxCloseBtn = document.getElementById('messageBoxCloseBtn');
+
+        const showMessageBox = (message) => {
+            messageBoxText.textContent = message;
+            messageBoxOverlay.style.display = 'flex';
+        };
+
+        messageBoxCloseBtn.addEventListener('click', () => {
+            messageBoxOverlay.style.display = 'none';
+        });
+
         // --- Three.js Background Animation ---
         let scene, camera, renderer, particles, lines;
         let particleGeometry; // Make particleGeometry globally accessible
@@ -767,7 +990,6 @@
 
             // Update line material color as well
             if (lines && lines.material) { // Check if lines and its material exist
-                const isDarkMode = document.documentElement.classList.contains('dark');
                 if (isDarkMode) {
                     lines.material.color.set(0x64B5F6); // Light blue for lines in dark mode
                     lines.material.opacity = 0.15; // Slightly lower opacity for lines
@@ -806,39 +1028,42 @@
                     const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
                     if (distance < maxConnectionDistance) {
-                        // Ensure we don't write beyond the allocated buffer
-                        if (lineIndex * 3 + 2 < currentLinePositions.length && lineIndex * 3 + 2 < currentLineColors.length) {
+                        // Ensure we don't write beyond the allocated buffer (maxConnectionLines * 2 vertices per line)
+                        // This check should technically be `lineIndex * 6 + 5 < currentLinePositions.length` as we add 6 floats per connection (2 vertices * 3 coords)
+                        // However, since `maxConnectionLines` is calculated to be sufficient, we primarily guard against `lineIndex` exceeding that.
+                        // The actual buffer length used by `setDrawRange` is `lineIndex * 3` (total components).
+                        if (lineIndex * 6 + 5 < currentLinePositions.length) { // Corrected check for actual buffer write
                             // Line start (particle 1)
-                            currentLinePositions[lineIndex * 3] = p1x;
-                            currentLinePositions[lineIndex * 3 + 1] = p1y;
-                            currentLinePositions[lineIndex * 3 + 2] = p1z;
-                            currentLineColors[lineIndex * 3] = particleColors[i * 3];
-                            currentLineColors[lineIndex * 3 + 1] = particleColors[i * 3 + 1];
-                            currentLineColors[lineIndex * 3 + 2] = particleColors[i * 3 + 2];
-                            lineIndex++;
+                            currentLinePositions[lineIndex * 6 + 0] = p1x;
+                            currentLinePositions[lineIndex * 6 + 1] = p1y;
+                            currentLinePositions[lineIndex * 6 + 2] = p1z;
+                            currentLineColors[lineIndex * 6 + 0] = particleColors[i * 3];
+                            currentLineColors[lineIndex * 6 + 1] = particleColors[i * 3 + 1];
+                            currentLineColors[lineIndex * 6 + 2] = particleColors[i * 3 + 2];
 
                             // Line end (particle 2)
-                            currentLinePositions[lineIndex * 3] = p2x;
-                            currentLinePositions[lineIndex * 3 + 1] = p2y;
-                            currentLinePositions[lineIndex * 3 + 2] = p2z;
-                            currentLineColors[lineIndex * 3] = particleColors[j * 3];
-                            currentLineColors[lineIndex * 3 + 1] = particleColors[j * 3 + 1];
-                            currentLineColors[lineIndex * 3 + 2] = particleColors[j * 3 + 2];
-                            lineIndex++;
+                            currentLinePositions[lineIndex * 6 + 3] = p2x;
+                            currentLinePositions[lineIndex * 6 + 4] = p2y;
+                            currentLinePositions[lineIndex * 6 + 5] = p2z;
+                            currentLineColors[lineIndex * 6 + 3] = particleColors[j * 3];
+                            currentLineColors[lineIndex * 6 + 4] = particleColors[j * 3 + 1];
+                            currentLineColors[lineIndex * 6 + 5] = particleColors[j * 3 + 2];
+                            lineIndex++; // Increment for next line pair
                         }
                     }
                 }
             }
 
-            lines.geometry.setDrawRange(0, lineIndex * 3); // Update the number of vertices to draw
+            lines.geometry.setDrawRange(0, lineIndex * 6); // Each 'line' in three.js LineSegments is two vertices, so 6 components
             lines.geometry.attributes.position.needsUpdate = true;
             lines.geometry.attributes.color.needsUpdate = true;
         };
 
 
         const initThree = () => {
+            const canvasElement = document.getElementById('three-bg');
             // Remove existing objects from scene and dispose of resources if re-initializing
-            if (scene) {
+            if (scene && renderer) {
                 while(scene.children.length > 0){
                     const object = scene.children[0];
                     scene.remove(object);
@@ -851,12 +1076,12 @@
                         }
                     }
                 }
-                if (renderer) renderer.dispose();
+                renderer.dispose();
             }
 
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-bg'), antialias: true });
+            renderer = new THREE.WebGLRenderer({ canvas: canvasElement, antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setClearAlpha(0); // Make background transparent to show page content
@@ -893,9 +1118,14 @@
             scene.add(particles);
 
             // --- Lines ---
-            const maxConnectionLines = (particleCount * (particleCount - 1)) / 2; // Maximum possible unique lines
-            const linePositionsArray = new Float32Array(maxConnectionLines * 2 * 3); // Each line has 2 vertices, 3 coords
-            const lineColorsArray = new Float32Array(maxConnectionLines * 2 * 3); // Each vertex has 3 color components
+            // Max possible connections between N particles is N * (N-1) / 2.
+            // Each connection needs 2 vertices, and each vertex has 3 coordinates (x,y,z) and 3 color components (r,g,b).
+            const maxPossibleConnections = particleCount * (particleCount - 1) / 2;
+            // For a LineSegments object, each line is defined by 2 vertices.
+            // So, for 'maxPossibleConnections', we need 2 * maxPossibleConnections vertices.
+            // Each vertex has 3 position components and 3 color components.
+            const linePositionsArray = new Float32Array(maxPossibleConnections * 2 * 3);
+            const lineColorsArray = new Float32Array(maxPossibleConnections * 2 * 3);
 
             const lineGeometry = new THREE.BufferGeometry();
             lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositionsArray, 3));
@@ -954,10 +1184,8 @@
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
-                // No need to call initThree() here, as animateThree() handles updates
-                // and initThree() is called on load and theme toggle for full recreation.
-                // We just need to update colors on resize, in case theme changes.
-                setParticleAndLineColors(); // Update colors if theme changes on resize
+                // Only update colors if theme changes on resize (or just re-apply for consistency)
+                setParticleAndLineColors();
             }
         };
 
@@ -974,10 +1202,8 @@
             } else {
                 htmlElement.classList.remove('dark');
             }
-            // Re-initialize Three.js to apply the correct particle and line colors based on the loaded theme
-            // This is crucial for theme changes to reflect on the particles/lines
-            initThree(); // Call initThree to re-create scene with new colors
-            // No need to call animateThree explicitly here, as it's part of the init cycle and requestAnimationFrame loop
+            // Re-apply Three.js colors based on the loaded theme
+            setParticleAndLineColors();
         };
 
         const toggleTheme = () => {
@@ -988,9 +1214,8 @@
                 htmlElement.classList.add('dark');
                 localStorage.setItem('theme', 'dark');
             }
-            // Re-initialize Three.js to apply the new particle and line colors
-            initThree(); // Call initThree to re-create scene with new colors
-            // No need to call animateThree explicitly here, as it's part of the init cycle and requestAnimationFrame loop
+            // Re-apply Three.js colors based on the new theme
+            setParticleAndLineColors();
         };
 
         themeToggleBtn.addEventListener('click', toggleTheme);
@@ -1017,12 +1242,128 @@
             });
         });
 
-        // Initialize Three.js and theme on window load
-        window.onload = function() {
+        // --- Firebase Functions ---
+        const initFirebase = async () => {
+            try {
+                // Global variables __app_id, __firebase_config, __initial_auth_token are provided by the environment
+                appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+
+                if (!firebaseConfig.apiKey) {
+                    showMessageBox("Firebase configuration is missing. Progress tracking will not be available.");
+                    return;
+                }
+
+                // Use imported functions directly
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // Authenticate user
+                if (typeof __initial_auth_token !== 'undefined') {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                // Get current user ID and display it
+                userId = auth.currentUser?.uid || crypto.randomUUID();
+                document.getElementById('userIdDisplay').textContent = `Your User ID: ${userId}`;
+
+                // Set up real-time listener for user progress
+                // Private data path: /artifacts/{appId}/users/{userId}/user_progress/progress_data
+                userProgressRef = doc(db, `artifacts/${appId}/users/${userId}/user_progress/progress_data`);
+
+                onSnapshot(userProgressRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        userProgressData = docSnap.data().lessons || {};
+                    } else {
+                        userProgressData = {}; // No progress data yet
+                    }
+                    updateLessonCardsUI(); // Update UI whenever progress data changes
+                }, (error) => {
+                    console.error("Error fetching user progress:", error);
+                    showMessageBox(`Failed to load your progress: ${error.message}`);
+                });
+
+            } catch (error) {
+                console.error("Firebase initialization or authentication failed:", error);
+                showMessageBox(`Failed to initialize progress tracking: ${error.message}`);
+            }
+        };
+
+        // Function to update the visual state of lesson cards based on userProgressData
+        const updateLessonCardsUI = () => {
+            const lessonCards = document.querySelectorAll('.card[data-lesson-id]');
+            lessonCards.forEach(card => {
+                const lessonId = card.dataset.lessonId;
+                if (userProgressData[lessonId] && userProgressData[lessonId].completed) {
+                    card.classList.add('completed');
+                } else {
+                    card.classList.remove('completed');
+                }
+            });
+        };
+
+        // Function to save user progress to Firestore
+        const saveUserProgress = async () => {
+            if (!userProgressRef) {
+                console.error("Firestore reference not initialized.");
+                showMessageBox("Cannot save progress: System not ready.");
+                return;
+            }
+            try {
+                // Use imported setDoc and Timestamp directly
+                await setDoc(userProgressRef, { lessons: userProgressData }, { merge: true });
+                // console.log("Progress saved successfully!"); // For debugging
+            } catch (error) {
+                console.error("Error saving user progress:", error);
+                showMessageBox(`Failed to save progress: ${error.message}`);
+            }
+        };
+
+        // Event listener for clicking on lesson cards to toggle completion
+        const setupLessonCardListeners = () => {
+            const lessonCards = document.querySelectorAll('.card[data-lesson-id]');
+            lessonCards.forEach(card => {
+                card.addEventListener('click', async (event) => {
+                    // Prevent default action if clicking on the "Start Lesson" link
+                    if (event.target.tagName === 'A' && event.target.classList.contains('btn-primary')) {
+                        return;
+                    }
+
+                    const lessonId = card.dataset.lessonId;
+                    if (!lessonId) return;
+
+                    const isCompleted = userProgressData[lessonId]?.completed || false;
+                    userProgressData[lessonId] = {
+                        completed: !isCompleted,
+                        timestamp: Timestamp.now() // Use imported Timestamp directly
+                    };
+
+                    updateLessonCardsUI(); // Optimistically update UI
+                    await saveUserProgress(); // Save to Firestore
+                });
+            });
+        };
+
+        // --- Initialize on window load ---
+        window.onload = async function() {
+            // Initialize Firebase first
+            await initFirebase();
+
+            // Initialize Three.js
             initThree();
             animateThree(); // Start the animation loop
-            loadTheme(); // Load theme which also calls initThree and animatethree
+
+            // Load and apply theme
+            loadTheme();
+
+            // Setup lesson card listeners
+            setupLessonCardListeners();
         };
     </script>
+    <!-- Three.js CDN - Placed after custom script to ensure THREE is defined before use -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </body>
 </html>
