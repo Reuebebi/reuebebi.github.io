@@ -3,675 +3,684 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whizmath - Mechanics: Unveiling the Science of Motion and Forces</title>
-    <meta name="description" content="Explore fundamental concepts of mechanics, including displacement, velocity, acceleration, and Newton's Three Laws of Motion. Understand one-dimensional kinematic equations for constant acceleration. A comprehensive lesson from Whizmath on the study of motion and forces.">
-    <meta name="keywords" content="mechanics, motion, displacement, velocity, acceleration, Newton's Laws, kinematics, F=ma, constant acceleration, physics, force, mass, inertia, action-reaction, gravity, projectile motion, Whizmath">
+    <title>Whizmath - Mechanics: The Science of Motion and Forces</title>
+    <!-- Tailwind CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujm/v+r366w5U6+y35Yv5z16b0x/r7t6uTqNqg0g0c0w0/0j0v0b0t0q0p0x0e0i0o0u0a0c0e0r0s0t0v0w0x0y0z0=" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
-     crossorigin="anonymous"></script>
-    <!-- MathJax Configuration -->
+    <!-- Inter Font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for back arrow icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- MathJax Script for LaTeX rendering -->
     <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
+        // Optional: Configure MathJax to process dollar signs for inline math
         MathJax = {
             tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']]
+                inlineMath: [['$', '$'], ['\\(', '\\)']] // Allows single dollar signs for inline math
             },
             svg: {
                 fontCache: 'global'
             }
         };
     </script>
-    <!-- Three.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
     <style>
+        /* Custom styles for body and Three.js background */
         body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            overflow: hidden; /* Hide overflow from Three.js background */
+            font-family: 'Inter', sans-serif; /* Apply Inter font globally */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            /* Tailwind classes for background and text color are applied directly to body */
         }
-        #three-canvas {
-            position: fixed;
+        #threejs-background {
+            position: fixed; /* Fix the canvas position */
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1; /* Send to back */
-            background: linear-gradient(to bottom right, #1a202c, #2d3748); /* Dark gradient for background */
+            width: 100vw; /* Full viewport width */
+            height: 100vh; /* Full viewport height */
+            z-index: -1; /* Place behind other content */
+            background: linear-gradient(135deg, #100f2e 0%, #1e1b4f 100%); /* Subtle dark blue gradient fallback */
         }
-        .content-overlay {
-            position: relative;
-            z-index: 1; /* Bring content to front */
-            overflow-y: auto; /* Allow content to scroll */
-            height: 100vh;
-            padding: 2rem;
-            background: rgba(17, 24, 39, 0.85); /* Slightly transparent dark background for readability */
-            backdrop-filter: blur(8px); /* Frosted glass effect */
-            -webkit-backdrop-filter: blur(8px); /* For Safari */
-            color: #e2e8f0; /* Light text color */
+        .content-container {
+            position: relative; /* Ensure content is above the background */
+            z-index: 1; /* Bring content to the front */
+            /* Further styling for content container handled by Tailwind */
         }
-        h1, h2, h3, h4 {
-            color: #63b3ed; /* A pleasing blue for headings */
-            font-weight: 700;
-        }
-        h1 { font-size: 3rem; }
-        h2 { font-size: 2.25rem; }
-        h3 { font-size: 1.75rem; }
-        h4 { font-size: 1.25rem; }
-        .back-button {
-            position: absolute;
-            top: 2rem;
-            left: 2rem;
-            z-index: 10;
-            background-color: rgba(30, 41, 59, 0.8); /* Darker transparent button */
-            color: #63b3ed;
-            padding: 0.75rem 1.25rem;
-            border-radius: 9999px; /* Fully rounded */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        .back-button:hover {
-            background-color: rgba(45, 55, 72, 0.95);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
-        .section-card {
-            background-color: rgba(30, 41, 59, 0.9); /* Dark blue background for content cards */
-            border-radius: 1.5rem; /* More rounded corners */
-            padding: 2.5rem;
-            margin-bottom: 2.5rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow */
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-        .section-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-        }
-        .math-equation {
-            background-color: #0f172a; /* Even darker background for equations */
-            padding: 1.5rem;
-            border-radius: 1rem;
-            margin: 1.5rem 0;
-            overflow-x: auto; /* Allow horizontal scrolling for long equations */
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        .key-term {
-            color: #a78bfa; /* Purple for key terms */
-            font-weight: 600;
-        }
-        .example-box {
-            background-color: #2a3447; /* Slightly lighter dark for examples */
-            border-left: 5px solid #63b3ed;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            border-radius: 0.75rem;
-        }
-        /* Scrollbar styling */
+        /* Custom scrollbar for a smoother look */
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 8px; /* Width of the scrollbar */
         }
         ::-webkit-scrollbar-track {
-            background: #1a202c;
+            background: #1a202c; /* Background of the scrollbar track */
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb {
-            background: #4a5568;
-            border-radius: 10px;
+            background: #4f46e5; /* Color of the scrollbar thumb (indigo-600) */
+            border-radius: 10px; /* Rounded corners for the thumb */
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #63b3ed;
+            background: #6366f1; /* Color when hovering over the thumb (indigo-500) */
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 antialiased">
-    <canvas id="three-canvas"></canvas>
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center justify-start py-8 px-4 sm:px-6 lg:px-8">
+    <!-- Three.js background canvas -->
+    <canvas id="threejs-background"></canvas>
 
-    <a href="physics.html" class="back-button flex items-center justify-center space-x-2 text-lg">
-        <i class="fas fa-arrow-left"></i>
-        <span>Back to Physics</span>
+    <!-- Back Button -->
+    <a href="physics.html" class="absolute top-8 left-8 bg-indigo-700 hover:bg-indigo-800 text-white p-3 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75">
+        <i class="fas fa-arrow-left text-xl"></i> <!-- Font Awesome left arrow icon -->
     </a>
 
-    <div class="content-overlay max-w-4xl mx-auto py-16">
-        <header class="text-center mb-16">
-            <h1 class="text-6xl font-extrabold text-blue-400 mb-4 animate-pulse">Whizmath</h1>
-            <h2 class="text-5xl font-bold text-gray-100 mb-8 leading-tight">Mechanics: Decoding the Dance of Motion and Forces</h2>
-            <p class="text-2xl text-gray-300 max-w-3xl mx-auto">
-                Embark on a journey into the fundamental principles of <span class="key-term">mechanics</span>, the bedrock of physics. This comprehensive lesson will equip you with the tools to analyze <span class="key-term">motion</span>, understand <span class="key-term">forces</span>, and apply <span class="key-term">Newton's Laws</span> to explain the world around us. From the smallest particles to celestial bodies, motion is everywhere, and this lesson will teach you how to quantify and predict it.
-            </p>
-        </header>
+    <!-- Main content container -->
+    <div class="content-container w-full max-w-6xl mx-auto bg-gray-800 bg-opacity-80 backdrop-filter backdrop-blur-sm rounded-xl shadow-2xl p-8 sm:p-10 lg:p-12 mt-16 mb-8 border border-indigo-600">
+        <h1 class="text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-600 mb-8 sm:mb-10 leading-tight">
+            Mechanics: The Science of Motion and Forces
+        </h1>
+        <p class="text-center text-lg text-gray-300 mb-12 max-w-3xl mx-auto">
+            Welcome to Whizmath's in-depth exploration of <strong class="text-blue-300">Mechanics</strong>, the fundamental branch of <strong class="text-blue-300">physics</strong> dedicated to the <strong class="text-blue-300">study of motion</strong> and its causes. Here, you will <strong class="text-blue-300">learn about displacement, velocity, acceleration</strong>, and the profound <strong class="text-blue-300">three fundamental Laws of Motion proposed by Newton</strong>, including the iconic <strong class="text-blue-300">F=ma</strong>. We'll also cover essential <strong class="text-blue-300">one-dimensional kinematic equations</strong> like <strong class="text-blue-300">v=u+at</strong> and <strong class="text-blue-300">s=ut+1/2at^2</strong>, providing you with a robust understanding of how objects move and interact in our universe.
+        </p>
 
-        <section id="introduction" class="section-card">
-            <h3 class="text-4xl mb-6">1. Introduction to Mechanics</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                Welcome to <span class="key-term">Mechanics</span>, the branch of physics that deals with the study of <span class="key-term">motion</span> and its causes. From the simple act of walking to the complex orbits of planets, mechanics provides the fundamental framework for understanding how and why objects move. It is arguably the oldest and most fundamental branch of physics, with roots tracing back to ancient Greek philosophers and culminating in the groundbreaking work of Sir Isaac Newton. The principles of mechanics are indispensable not just in physics but also in engineering, astronomy, sports science, and countless other fields.
+        <!-- Introduction Section -->
+        <section class="mb-12">
+            <h2 class="text-4xl font-bold text-blue-400 mb-6 text-center sm:text-left">
+                1. Introduction: Unveiling the Dance of the Universe
+            </h2>
+            <p class="text-gray-200 mb-4 leading-relaxed">
+                <strong class="text-blue-300">Mechanics</strong> is the oldest and most fundamental branch of <strong class="text-blue-300">physics</strong>. It's the science that describes and predicts the <strong class="text-blue-300">conditions of rest or motion of bodies</strong> under the action of forces. From the simple act of walking to the complex orbital mechanics of planets and satellites, the principles of <strong class="text-blue-300">mechanics</strong> govern every physical interaction in our macroscopic world. Without <strong class="text-blue-300">mechanics</strong>, we wouldn't have bridges, cars, airplanes, or even roller coasters! It forms the backbone of engineering and is crucial for understanding the universe around us.
             </p>
-            <p class="text-lg leading-relaxed mb-6">
-                This extensive lesson will meticulously guide you through the core concepts of mechanics. We will begin with <span class="key-term">kinematics</span>, the pure description of motion, where we will define and explore quantities such as <span class="key-term">displacement</span>, <span class="key-term">velocity</span>, and <span class="key-term">acceleration</span>. We will then transition to the foundational <span class="key-term">one-dimensional kinematic equations</span>, powerful mathematical tools that allow us to predict future motion given initial conditions and constant acceleration.
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                Subsequently, our focus will shift to <span class="key-term">dynamics</span>, the study of the causes of motion – namely, <span class="key-term">forces</span>. Here, we will delve into <span class="key-term">Newton's Three Laws of Motion</span>, which form the cornerstone of classical mechanics. These laws not only explain why objects move as they do but also provide the basis for designing machines, predicting trajectories, and even launching spacecraft. We will examine each law in detail, providing clear explanations, relevant examples, and mathematical formulations.
-            </p>
-            <p class="text-lg leading-relaxed">
-                By the end of this lesson, you will possess a robust understanding of how to describe motion, how forces influence it, and how to apply these principles to solve a wide array of problems in the physical world. Whether you are a student just starting your physics journey, an enthusiast seeking to deepen your knowledge, or a professional looking for a concise yet thorough review, prepare to unlock the timeless elegance of mechanics!
+            <p class="text-gray-200 leading-relaxed">
+                This comprehensive lesson from Whizmath will guide you through the foundational concepts of <strong class="text-blue-300">mechanics</strong>. We will begin by dissecting <strong class="text-blue-300">kinematics</strong>, the study of <strong class="text-blue-300">motion</strong> itself, without regard to the forces causing it. Here, you will become proficient in defining and calculating <strong class="text-blue-300">displacement, velocity, and acceleration</strong> in <strong class="text-blue-300">one dimension</strong>, utilizing the powerful <strong class="text-blue-300">kinematic equations</strong>. Following this, we will dive into <strong class="text-blue-300">dynamics</strong>, where we introduce the concept of <strong class="text-blue-300">force</strong> and explore <strong class="text-blue-300">Sir Isaac Newton's three groundbreaking Laws of Motion</strong>, which provide the framework for understanding how forces cause changes in <strong class="text-blue-300">motion</strong>. Prepare to unlock the secrets of movement and interaction!
             </p>
         </section>
 
-        <section id="kinematics" class="section-card">
-            <h3 class="text-4xl mb-6">2. Kinematics: Describing Motion</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Kinematics</span> is the branch of mechanics concerned with the description of motion without reference to the forces causing it. It focuses on how an object moves rather than why it moves. To describe motion precisely, we need to define several key quantities.
+        <!-- Section 2: Kinematics: Describing Motion -->
+        <section class="mb-12">
+            <h2 class="text-4xl font-bold text-blue-400 mb-6 text-center sm:text-left">
+                2. Kinematics: Describing the Dance Without Knowing the Dancer
+            </h2>
+            <p class="text-gray-200 mb-4 leading-relaxed">
+                <strong class="text-blue-300">Kinematics</strong> is the branch of <strong class="text-blue-300">mechanics</strong> that describes <strong class="text-blue-300">motion</strong> using concepts like <strong class="text-blue-300">displacement, velocity, and acceleration</strong>. It answers "how does an object move?" rather than "why does an object move?" This section focuses on <strong class="text-blue-300">one-dimensional motion</strong> (motion along a straight line), which is simpler but provides a vital foundation for more complex scenarios.
             </p>
 
-            <h4 class="text-3xl mb-4">2.1. Position, Distance, and Displacement</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                To describe motion, we first need to specify an object's <span class="key-term">position</span>. Position is a vector quantity that specifies an object's location relative to a chosen reference point, or origin.
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2"><span class="key-term">Distance:</span> The total length of the path traveled by an object. It is a <span class="key-term">scalar quantity</span>, meaning it only has magnitude (e.g., 5 meters). Distance can never be negative.</li>
-                <li class="mb-2"><span class="key-term">Displacement ($\Delta \vec{x}$ or $\Delta \vec{r}$):</span> The change in an object's position. It is a <span class="key-term">vector quantity</span>, meaning it has both magnitude and direction (e.g., 5 meters East). Displacement is the straight-line distance and direction from the initial position to the final position, regardless of the path taken.</li>
+            <h3 class="text-3xl font-semibold text-purple-400 mb-4">
+                2.1. Position, Distance, and Displacement
+            </h3>
+            <ul class="list-disc list-inside text-gray-200 ml-4 mb-4">
+                <li class="mb-2"><strong class="text-blue-300">Position:</strong> The location of an object at a particular instant in time relative to a chosen <strong class="text-blue-300">reference point</strong> (origin). It is usually denoted by $x$ or $y$.</li>
+                <li class="mb-2"><strong class="text-blue-300">Distance:</strong> The total length of the path traveled by an object, irrespective of its direction. It is a <strong class="text-blue-300">scalar quantity</strong> (magnitude only). For example, if you walk 5 meters east and then 5 meters west, the total distance traveled is 10 meters.</li>
+                <li class="mb-2"><strong class="text-blue-300">Displacement ($\Delta x$):</strong> The change in an object's position. It is the straight-line distance and direction from the initial position to the final position. <strong class="text-blue-300">Displacement</strong> is a <strong class="text-blue-300">vector quantity</strong> (magnitude and direction). If you walk 5 meters east and then 5 meters west, your <strong class="text-blue-300">displacement</strong> is 0 meters (you ended up where you started).
+                    $$ \Delta x = x_f - x_i $$
+                    Where $x_f$ is the final position and $x_i$ is the initial position.</li>
             </ul>
-            <div class="math-equation">
-                <p>For one-dimensional motion, if an object moves from initial position $x_i$ to final position $x_f$, its displacement is:</p>
-                $$\Delta x = x_f - x_i$$
-            </div>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Distance vs. Displacement</h4>
-                <p class="text-lg leading-relaxed">
-                    A person walks 5 meters East, then 3 meters West.
+            <div class="bg-gray-700 p-6 rounded-lg mb-4 shadow-inner border border-gray-600">
+                <p class="text-gray-100 italic">
+                    <strong class="text-blue-300">Key distinction:</strong> Think of a race. The <strong class="text-blue-300">distance</strong> is the length of the track. The <strong class="text-blue-300">displacement</strong> of a runner who starts and finishes at the same point is zero, even if they ran a marathon!
                 </p>
-                <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
-                    <li class="mb-2"><span class="font-bold">Distance traveled:</span> $5 \text{ m} + 3 \text{ m} = 8 \text{ m}$.</li>
-                    <li class="mb-2"><span class="font-bold">Displacement:</span> If East is positive, $5 \text{ m} + (-3 \text{ m}) = 2 \text{ m East}$. The person ended up 2 meters East of their starting point.</li>
-                </ul>
             </div>
-            <p class="text-lg leading-relaxed mb-6">
-                The SI unit for both distance and displacement is the <span class="key-term">meter (m)</span>.
-            </p>
 
-            <h4 class="text-3xl mb-4">2.2. Speed and Velocity</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                These terms are often confused, but they describe distinct aspects of motion.
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2"><span class="key-term">Speed:</span> How fast an object is moving. It is a <span class="key-term">scalar quantity</span>, defined as the rate at which distance is covered.</li>
-                <li class="mb-2"><span class="key-term">Average Speed:</span>
-                    <div class="math-equation">
-                        $$\text{Average Speed} = \frac{\text{Total Distance}}{\text{Total Time}}$$
-                    </div>
+            <h3 class="text-3xl font-semibold text-purple-400 mb-4">
+                2.2. Speed and Velocity
+            </h3>
+            <ul class="list-disc list-inside text-gray-200 ml-4 mb-4">
+                <li class="mb-2"><strong class="text-blue-300">Speed:</strong> How fast an object is moving. It is the rate at which distance is covered. <strong class="text-blue-300">Speed</strong> is a <strong class="text-blue-300">scalar quantity</strong>.
+                    <ul class="list-circle list-inside ml-4">
+                        <li><strong class="text-blue-300">Average Speed:</strong> Total distance divided by total time.
+                            $$ \text{Average Speed} = \frac{\text{Total Distance}}{\text{Total Time}} $$
+                        </li>
+                        <li><strong class="text-blue-300">Instantaneous Speed:</strong> The speed of an object at a specific instant in time (what a speedometer reads).</li>
+                    </ul>
                 </li>
-                <li class="mb-2"><span class="key-term">Velocity ($\vec{v}$):</span> How fast an object is moving AND in what direction. It is a <span class="key-term">vector quantity</span>, defined as the rate at which displacement changes.</li>
-                <li class="mb-2"><span class="key-term">Average Velocity:</span>
-                    <div class="math-equation">
-                        $$\vec{v}_{avg} = \frac{\text{Displacement}}{\text{Time Interval}} = \frac{\Delta \vec{x}}{\Delta t}$$
-                    </div>
+                <li class="mb-2"><strong class="text-blue-300">Velocity ($\vec{v}$):</strong> How fast an object is moving AND in what direction. It is the rate of change of <strong class="text-blue-300">displacement</strong>. <strong class="text-blue-300">Velocity</strong> is a <strong class="text-blue-300">vector quantity</strong>.
+                    <ul class="list-circle list-inside ml-4">
+                        <li><strong class="text-blue-300">Average Velocity:</strong> Total <strong class="text-blue-300">displacement</strong> divided by total time.
+                            $$ \vec{v}_{\text{avg}} = \frac{\Delta \vec{x}}{\Delta t} = \frac{\vec{x}_f - \vec{x}_i}{t_f - t_i} $$
+                        </li>
+                        <li><strong class="text-blue-300">Instantaneous Velocity:</strong> The <strong class="text-blue-300">velocity</strong> of an object at a specific instant in time (the instantaneous rate of change of position).</li>
+                    </ul>
                 </li>
-                <li class="mb-2"><span class="key-term">Instantaneous Velocity:</span> The velocity of an object at a specific instant in time. This is the limit of the average velocity as the time interval approaches zero. In calculus terms, it is the derivative of position with respect to time: $\vec{v} = \frac{d\vec{x}}{dt}$.</li>
             </ul>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Speed vs. Velocity (Circular Motion)</h4>
-                <p class="text-lg leading-relaxed">
-                    A car travels around a circular track with a constant speed of 60 km/h.
-                </p>
-                <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
-                    <li class="mb-2"><span class="font-bold">Speed:</span> The car's speed is constant at 60 km/h.</li>
-                    <li class="mb-2"><span class="font-bold">Velocity:</span> The car's velocity is constantly changing because its direction of motion is continuously changing as it moves around the circle. Therefore, even with constant speed, its velocity is NOT constant.</li>
-                </ul>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                The SI unit for both speed and velocity is the <span class="key-term">meter per second (m/s)</span>.
+            <p class="text-gray-200 leading-relaxed">
+                The SI unit for both <strong class="text-blue-300">speed</strong> and <strong class="text-blue-300">velocity</strong> is meters per second ($\text{m/s}$).
             </p>
 
-            <h4 class="text-3xl mb-4">2.3. Acceleration</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Acceleration ($\vec{a}$):</span> The rate at which velocity changes. Since velocity is a vector, acceleration can involve a change in speed, a change in direction, or both. It is a <span class="key-term">vector quantity</span>.
+            <h3 class="text-3xl font-semibold text-purple-400 mb-4">
+                2.3. Acceleration
+            </h3>
+            <p class="text-gray-200 mb-4 leading-relaxed">
+                <strong class="text-blue-300">Acceleration ($\vec{a}$):</strong> The rate at which <strong class="text-blue-300">velocity</strong> changes. An object <strong class="text-blue-300">accelerates</strong> if its speed changes, its direction changes, or both. <strong class="text-blue-300">Acceleration</strong> is a <strong class="text-blue-300">vector quantity</strong>.
+                $$ \vec{a}_{\text{avg}} = \frac{\Delta \vec{v}}{\Delta t} = \frac{\vec{v}_f - \vec{v}_i}{t_f - t_i} $$
+                Where $\vec{v}_f$ is the final <strong class="text-blue-300">velocity</strong> and $\vec{v}_i$ is the initial <strong class="text-blue-300">velocity</strong>.
             </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2"><span class="key-term">Average Acceleration:</span>
-                    <div class="math-equation">
-                        $$\vec{a}_{avg} = \frac{\text{Change in Velocity}}{\text{Time Interval}} = \frac{\Delta \vec{v}}{\Delta t} = \frac{\vec{v}_f - \vec{v}_i}{\Delta t}$$
-                    </div>
+            <ul class="list-disc list-inside text-gray-200 ml-4 mb-4">
+                <li class="mb-2"><strong class="text-blue-300">Units:</strong> The SI unit for <strong class="text-blue-300">acceleration</strong> is meters per second squared ($\text{m/s}^2$).</li>
+                <li class="mb-2"><strong class="text-blue-300">Positive and Negative Acceleration:</strong>
+                    <ul class="list-circle list-inside ml-4">
+                        <li>If <strong class="text-blue-300">velocity</strong> and <strong class="text-blue-300">acceleration</strong> have the same sign (both positive or both negative), the object is speeding up.</li>
+                        <li>If <strong class="text-blue-300">velocity</strong> and <strong class="text-blue-300">acceleration</strong> have opposite signs, the object is slowing down (this is often called <strong class="text-blue-300">deceleration</strong>, but physicists prefer to use <strong class="text-blue-300">acceleration</strong> with a negative sign).</li>
+                    </ul>
                 </li>
-                <li class="mb-2"><span class="key-term">Instantaneous Acceleration:</span> The acceleration of an object at a specific instant in time. In calculus terms, it is the derivative of velocity with respect to time, or the second derivative of position with respect to time: $\vec{a} = \frac{d\vec{v}}{dt} = \frac{d^2\vec{x}}{dt^2}$.</li>
-            </ul>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Acceleration</h4>
-                <p class="text-lg leading-relaxed">
-                    A car accelerates from rest (0 m/s) to 20 m/s in 5 seconds in a straight line.
-                </p>
-                <p class="text-lg leading-relaxed">
-                    Its average acceleration is:
-                    $$\vec{a}_{avg} = \frac{20 \text{ m/s} - 0 \text{ m/s}}{5 \text{ s}} = 4 \text{ m/s}^2$$
-                </p>
-                <p class="text-lg leading-relaxed">
-                    If a car slams on its brakes, its acceleration would be in the opposite direction of its velocity, causing it to slow down (negative acceleration, also called deceleration).
-                </p>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                The SI unit for acceleration is the <span class="key-term">meter per second squared (m/s$^2$)</span>.
-            </p>
-        </section>
-
-        <section id="kinematic-equations" class="section-card">
-            <h3 class="text-4xl mb-6">3. One-Dimensional Kinematic Equations (Constant Acceleration)</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                When an object moves with <span class="key-term">constant acceleration</span> in one dimension, we can use a set of powerful equations to relate its displacement, velocity, acceleration, and time. These equations are fundamental for solving a wide variety of kinematics problems. It's crucial to remember that these equations are only valid when acceleration is constant.
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                Let's define the variables used in these equations:
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">$u$ or $v_0$: Initial velocity (m/s)</li>
-                <li class="mb-2">$v$: Final velocity (m/s)</li>
-                <li class="mb-2">$a$: Constant acceleration (m/s$^2$)</li>
-                <li class="mb-2">$t$: Time interval (s)</li>
-                <li class="mb-2">$s$ or $\Delta x$: Displacement (m)</li>
+                <li class="mb-2"><strong class="text-blue-300">Acceleration due to Gravity ($g$):</strong> Near the Earth's surface, objects in free fall experience a constant downward <strong class="text-blue-300">acceleration</strong> due to gravity, approximately $9.8 \text{ m/s}^2$.</li>
             </ul>
 
-            <h4 class="text-3xl mb-4">The Kinematic Equations:</h4>
-
-            <h5 class="text-2xl mb-3">Equation 1: Velocity as a function of time</h5>
-            <p class="text-lg leading-relaxed mb-2">
-                This equation relates the final velocity ($v$) to the initial velocity ($u$), acceleration ($a$), and time ($t$).
+            <h3 class="text-3xl font-semibold text-purple-400 mb-4">
+                2.4. One-Dimensional Kinematic Equations (Constant Acceleration)
+            </h3>
+            <p class="text-gray-200 mb-4 leading-relaxed">
+                For situations where <strong class="text-blue-300">acceleration</strong> is constant, we can use a set of powerful <strong class="text-blue-300">kinematic equations</strong> to relate <strong class="text-blue-300">displacement, initial velocity, final velocity, acceleration, and time</strong>. These equations are only valid when <strong class="text-blue-300">acceleration is constant</strong>.
             </p>
-            <div class="math-equation">
-                $$v = u + at$$
+
+            <div class="overflow-x-auto mb-6">
+                <table class="min-w-full bg-gray-700 rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-indigo-800 text-white text-left">
+                            <th class="py-3 px-4 rounded-tl-lg">Equation No.</th>
+                            <th class="py-3 px-4">Formula</th>
+                            <th class="py-3 px-4">Description</th>
+                            <th class="py-3 px-4 rounded-tr-lg">Missing Variable</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-200">
+                        <tr class="border-b border-gray-600 hover:bg-gray-600 transition-colors duration-200">
+                            <td class="py-3 px-4">1</td>
+                            <td class="py-3 px-4">$$ v = u + at $$</td>
+                            <td class="py-3 px-4">Relates final velocity, initial velocity, acceleration, and time.</td>
+                            <td class="py-3 px-4"><strong class="text-blue-300">Displacement</strong> ($s$ or $\Delta x$)</td>
+                        </tr>
+                        <tr class="border-b border-gray-600 hover:bg-gray-600 transition-colors duration-200">
+                            <td class="py-3 px-4">2</td>
+                            <td class="py-3 px-4">$$ s = ut + \frac{1}{2}at^2 $$</td>
+                            <td class="py-3 px-4">Relates displacement, initial velocity, acceleration, and time.</td>
+                            <td class="py-3 px-4"><strong class="text-blue-300">Final Velocity</strong> ($v$)</td>
+                        </tr>
+                        <tr class="border-b border-gray-600 hover:bg-gray-600 transition-colors duration-200">
+                            <td class="py-3 px-4">3</td>
+                            <td class="py-3 px-4">$$ v^2 = u^2 + 2as $$</td>
+                            <td class="py-3 px-4">Relates final velocity, initial velocity, acceleration, and displacement.</td>
+                            <td class="py-3 px-4"><strong class="text-blue-300">Time</strong> ($t$)</td>
+                        </tr>
+                        <tr class="hover:bg-gray-600 transition-colors duration-200">
+                            <td class="py-3 px-4 rounded-bl-lg">4</td>
+                            <td class="py-3 px-4">$$ s = \frac{(u+v)}{2}t $$</td>
+                            <td class="py-3 px-4">Relates displacement, average velocity, and time.</td>
+                            <td class="py-3 px-4 rounded-br-lg"><strong class="text-blue-300">Acceleration</strong> ($a$)</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <p class="text-lg leading-relaxed mb-6">
-                This directly follows from the definition of acceleration ($\Delta v = a \Delta t$).
-            </p>
 
-            <h5 class="text-2xl mb-3">Equation 2: Displacement as a function of average velocity and time</h5>
-            <p class="text-lg leading-relaxed mb-2">
-                When acceleration is constant, the average velocity is simply the average of the initial and final velocities.
-            </p>
-            <div class="math-equation">
-                $$s = \left(\frac{u + v}{2}\right)t$$
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                This equation is useful when you know both initial and final velocities.
-            </p>
-
-            <h5 class="text-2xl mb-3">Equation 3: Displacement as a function of initial velocity, acceleration, and time</h5>
-            <p class="text-lg leading-relaxed mb-2">
-                This is one of the most commonly used kinematic equations. It allows you to find the displacement without knowing the final velocity.
-            </p>
-            <div class="math-equation">
-                $$s = ut + \frac{1}{2}at^2$$
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                This equation shows that displacement grows linearly with time due to initial velocity and quadratically with time due to acceleration.
-            </p>
-
-            <h5 class="text-2xl mb-3">Equation 4: Velocity as a function of displacement and acceleration</h5>
-            <p class="text-lg leading-relaxed mb-2">
-                This equation is useful when time ($t$) is not known or not needed for the calculation.
-            </p>
-            <div class="math-equation">
-                $$v^2 = u^2 + 2as$$
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                This can be derived by combining Equations 1 and 2, eliminating time.
-            </p>
-
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Applying Kinematic Equations</h4>
-                <p class="text-lg leading-relaxed mb-2">
-                    A car starting from rest accelerates uniformly at $2.0 \text{ m/s}^2$ for $10 \text{ s}$.
-                </p>
-                <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
-                    <li class="mb-2"><span class="font-bold">a) What is its final velocity?</span>
-                        Given: $u = 0 \text{ m/s}$, $a = 2.0 \text{ m/s}^2$, $t = 10 \text{ s}$.
-                        Using $v = u + at$:
-                        $$v = 0 + (2.0 \text{ m/s}^2)(10 \text{ s}) = 20 \text{ m/s}$$
-                    </li>
-                    <li class="mb-2"><span class="font-bold">b) How far does it travel in this time?</span>
-                        Using $s = ut + \frac{1}{2}at^2$:
-                        $$s = (0 \text{ m/s})(10 \text{ s}) + \frac{1}{2}(2.0 \text{ m/s}^2)(10 \text{ s})^2$$
-                        $$s = 0 + \frac{1}{2}(2.0 \text{ m/s}^2)(100 \text{ s}^2) = 100 \text{ m}$$
-                    </li>
+            <p class="text-gray-200 mb-4 leading-relaxed">
+                Where:
+                <ul class="list-disc list-inside text-gray-200 ml-4 mb-4">
+                    <li class="mb-2">$u$ = initial <strong class="text-blue-300">velocity</strong> ($\text{m/s}$)</li>
+                    <li class="mb-2">$v$ = final <strong class="text-blue-300">velocity</strong> ($\text{m/s}$)</li>
+                    <li class="mb-2">$a$ = <strong class="text-blue-300">acceleration</strong> ($\text{m/s}^2$)</li>
+                    <li class="mb-2">$t$ = time (s)</li>
+                    <li class="mb-2">$s$ = <strong class="text-blue-300">displacement</strong> (m)</li>
                 </ul>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                These equations are the workhorses of one-dimensional kinematics and are essential for solving problems involving motion with constant acceleration, such as objects under free fall (where acceleration is due to gravity).
             </p>
+
+            <h4 class="text-2xl font-medium text-blue-300 mb-3">
+                Solving Kinematic Problems
+            </h4>
+            <p class="text-gray-200 mb-4 leading-relaxed">
+                To effectively solve <strong class="text-blue-300">kinematic problems</strong>:
+            </p>
+            <ol class="list-decimal list-inside text-gray-200 ml-4 mb-4">
+                <li class="mb-2"><strong>Read the problem carefully:</strong> Identify what is given and what needs to be found.</li>
+                <li class="mb-2"><strong>Draw a diagram:</strong> Visualizing the <strong class="text-blue-300">motion</strong> can help clarify directions and initial/final positions.</li>
+                <li class="mb-2"><strong>Choose a coordinate system:</strong> Define a positive direction (e.g., right is positive, up is positive). Be consistent with signs for <strong class="text-blue-300">displacement, velocity, and acceleration</strong>.</li>
+                <li class="mb-2"><strong>List knowns and unknowns:</strong> Write down the variables $u, v, a, t, s$ and assign values (with units and signs).</li>
+                <li class="mb-2"><strong>Select the appropriate equation:</strong> Choose the <strong class="text-blue-300">kinematic equation</strong> that includes your knowns and the single unknown you want to find. If you have two unknowns, you might need two equations.</li>
+                <li class="mb-2"><strong>Solve for the unknown:</strong> Perform the algebraic manipulation and calculation.</li>
+                <li class="mb-2"><strong>Check your answer:</strong> Does the magnitude make sense? Does the sign make sense? Are the units correct?</li>
+            </ol>
+
+            <div class="bg-gray-700 p-6 rounded-lg mb-4 shadow-inner border border-gray-600">
+                <p class="text-gray-100 italic font-bold">
+                    Example Problem:
+                    <br><br>
+                    A car accelerates uniformly from rest to $20 \text{ m/s}$ in $5.0 \text{ s}$.
+                    <br>a) What is its <strong class="text-blue-300">acceleration</strong>?
+                    <br>b) How far did it travel during this time?
+                </p>
+                <p class="text-gray-100 mt-2">
+                    <strong class="text-blue-300">Given:</strong>
+                    <ul class="list-disc list-inside text-gray-100 ml-4">
+                        <li>$u = 0 \text{ m/s}$ (starts from rest)</li>
+                        <li>$v = 20 \text{ m/s}$</li>
+                        <li>$t = 5.0 \text{ s}$</li>
+                    </ul>
+                    <strong class="text-blue-300">Unknowns:</strong> $a$, $s$
+                </p>
+                <p class="text-gray-100 mt-2">
+                    <strong class="text-blue-300">Solution:</strong>
+                    <br>a) To find <strong class="text-blue-300">acceleration</strong> ($a$), we use $v = u + at$ (Equation 1).
+                    $$ 20 = 0 + a(5.0) $$
+                    $$ a = \frac{20}{5.0} = 4.0 \text{ m/s}^2 $$
+                    <br>b) To find <strong class="text-blue-300">displacement</strong> ($s$), we can use $s = ut + \frac{1}{2}at^2$ (Equation 2).
+                    $$ s = (0)(5.0) + \frac{1}{2}(4.0)(5.0)^2 $$
+                    $$ s = 0 + \frac{1}{2}(4.0)(25) $$
+                    $$ s = 2.0 \times 25 = 50 \text{ m} $$
+                    Alternatively, using $s = \frac{(u+v)}{2}t$ (Equation 4):
+                    $$ s = \frac{(0+20)}{2} \times 5.0 $$
+                    $$ s = \frac{20}{2} \times 5.0 = 10 \times 5.0 = 50 \text{ m} $$
+                </p>
+            </div>
         </section>
 
-        <section id="newtons-laws" class="section-card">
-            <h3 class="text-4xl mb-6">4. Newton's Three Laws of Motion: The Foundations of Dynamics</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                While kinematics describes how objects move, <span class="key-term">dynamics</span> investigates why they move – i.e., the role of <span class="key-term">forces</span>. The three laws of motion formulated by Sir Isaac Newton in his 1687 work "Philosophiæ Naturalis Principia Mathematica" (Mathematical Principles of Natural Philosophy) are the bedrock of classical mechanics and explain the relationship between force, mass, and motion.
+        <!-- Section 3: Dynamics: Explaining Motion -->
+        <section class="mb-12">
+            <h2 class="text-4xl font-bold text-blue-400 mb-6 text-center sm:text-left">
+                3. Dynamics: Understanding the Causes of Motion – Newton's Laws
+            </h2>
+            <p class="text-gray-200 mb-4 leading-relaxed">
+                While <strong class="text-blue-300">kinematics</strong> describes <strong class="text-blue-300">motion</strong>, <strong class="text-blue-300">dynamics</strong> explains *why* objects move, or more precisely, why their <strong class="text-blue-300">motion</strong> changes. The cornerstone of <strong class="text-blue-300">dynamics</strong> is <strong class="text-blue-300">Sir Isaac Newton's three Laws of Motion</strong>, published in 1687. These laws form the foundation of classical <strong class="text-blue-300">mechanics</strong> and describe the relationship between an object and the forces acting upon it, and the object's <strong class="text-blue-300">motion</strong> in response to those forces.
             </p>
 
-            <h4 class="text-3xl mb-4">4.1. Newton's First Law of Motion: The Law of Inertia</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Newton's First Law of Motion</span> states:
-            </p>
-            <blockquote class="text-xl italic border-l-4 border-blue-500 pl-4 py-2 my-6">
-                "An object at rest stays at rest, and an object in motion stays in motion with the same speed and in the same direction unless acted upon by an unbalanced force."
-            </blockquote>
-            <p class="text-lg leading-relaxed mb-6">
-                This law introduces the concept of <span class="key-term">inertia</span>, which is an object's resistance to changes in its state of motion. Mass is a quantitative measure of inertia; the more massive an object, the greater its inertia, and the harder it is to change its velocity.
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">If an object is stationary, it will remain stationary unless a net force acts on it.</li>
-                <li class="mb-2">If an object is moving at a constant velocity (constant speed in a straight line), it will continue to move at that constant velocity unless a net force acts on it. This implies that if there is no net force, there is no acceleration ($\vec{a}=0$).</li>
-            </ul>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Everyday Inertia:</h4>
-                <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
-                    <li class="mb-2">When a car suddenly brakes, passengers are thrown forward due to their inertia, which tends to keep them moving at the original velocity.</li>
-                    <li class="mb-2">A hockey puck sliding across a frictionless ice rink will continue sliding indefinitely (ignoring air resistance), demonstrating constant velocity in the absence of net external forces.</li>
-                    <li class="mb-2">It takes more effort to push a heavy shopping cart than a light one because the heavy cart has more inertia.</li>
-                </ul>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                This law challenges the Aristotelian view that a force is required to maintain motion. Newton clarified that force is only required to *change* motion (i.e., cause acceleration).
-            </p>
-
-            <h4 class="text-3xl mb-4">4.2. Newton's Second Law of Motion: Force, Mass, and Acceleration</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Newton's Second Law of Motion</span> is arguably the most famous and fundamental equation in classical mechanics. It states:
-            </p>
-            <blockquote class="text-xl italic border-l-4 border-blue-500 pl-4 py-2 my-6">
-                "The acceleration of an object is directly proportional to the net force acting on it, and inversely proportional to its mass. The direction of the acceleration is in the direction of the net force."
-            </blockquote>
-            <p class="text-lg leading-relaxed mb-6">
-                Mathematically, this is expressed as:
-            </p>
-            <div class="math-equation">
-                $$\vec{F}_{net} = m\vec{a}$$
-                <p>Where:</p>
-                <ul class="list-disc list-inside ml-6">
-                    <li>$\vec{F}_{net}$ is the <span class="key-term">net force</span> (or resultant force) acting on the object (in Newtons, N). This is the vector sum of all individual forces acting on the object.</li>
-                    <li>$m$ is the <span class="key-term">mass</span> of the object (in kilograms, kg).</li>
-                    <li>$\vec{a}$ is the <span class="key-term">acceleration</span> of the object (in m/s$^2$).</li>
-                </ul>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                One Newton is defined as the force required to accelerate a 1 kg mass at 1 m/s$^2$. So, $1 \text{ N} = 1 \text{ kg} \cdot \text{m/s}^2$.
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                Key implications of the Second Law:
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">A net force is required to produce acceleration. If $\vec{F}_{net} = 0$, then $\vec{a} = 0$, which aligns with the First Law.</li>
-                <li class="mb-2">For a given net force, a more massive object will experience less acceleration.</li>
-                <li class="mb-2">For a given mass, a larger net force will produce a larger acceleration.</li>
-            </ul>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Applying Newton's Second Law</h4>
-                <p class="text-lg leading-relaxed mb-2">
-                    A $2 \text{ kg}$ block is pushed horizontally across a frictionless surface with a net force of $10 \text{ N}$. What is its acceleration?
-                </p>
-                <p class="text-lg leading-relaxed">
-                    Given: $m = 2 \text{ kg}$, $F_{net} = 10 \text{ N}$.
-                    Using $F_{net} = ma$:
-                    $$a = \frac{F_{net}}{m} = \frac{10 \text{ N}}{2 \text{ kg}} = 5 \text{ m/s}^2$$
-                </p>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                This law is crucial for understanding how objects interact and how their motion changes under the influence of forces. It forms the basis for analyzing various physical phenomena, from orbital mechanics to the design of vehicles and machinery.
-            </p>
-
-            <h4 class="text-3xl mb-4">4.3. Newton's Third Law of Motion: Action-Reaction</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Newton's Third Law of Motion</span> addresses the nature of forces themselves, emphasizing that forces always occur in pairs. It states:
-            </p>
-            <blockquote class="text-xl italic border-l-4 border-blue-500 pl-4 py-2 my-6">
-                "For every action, there is an equal and opposite reaction."
-            </blockquote>
-            <p class="text-lg leading-relaxed mb-6">
-                More formally, if object A exerts a force on object B (the "action" force), then object B simultaneously exerts an equal in magnitude and opposite in direction force on object A (the "reaction" force). These forces act on *different* objects and are therefore never balanced (they cannot cancel each other out because they don't act on the same body).
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2"><span class="font-bold">Equality:</span> The magnitude of the action force is exactly equal to the magnitude of the reaction force.</li>
-                <li class="mb-2"><span class="font-bold">Opposite Direction:</span> The action and reaction forces act in precisely opposite directions.</li>
-                <li class="mb-2"><span class="font-bold">Simultaneity:</span> These forces occur at the same time; there is no delay.</li>
-                <li class="mb-2"><span class="font-bold">Act on Different Objects:</span> This is key. The action force acts on one object, and the reaction force acts on the other object involved in the interaction.</li>
-            </ul>
-            <div class="math-equation">
-                $$\vec{F}_{AB} = -\vec{F}_{BA}$$
-                <p>Where $\vec{F}_{AB}$ is the force exerted by object A on object B, and $\vec{F}_{BA}$ is the force exerted by object B on object A.</p>
-            </div>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Everyday Action-Reaction Pairs:</h4>
-                <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
-                    <li class="mb-2">
-                        <span class="font-bold">Walking:</span> When you push backward on the ground with your foot (action), the ground pushes forward on your foot with an equal and opposite force (reaction), propelling you forward.
-                    </li>
-                    <li class="mb-2">
-                        <span class="font-bold">Rocket Propulsion:</span> A rocket expels hot gases downward (action), and the gases exert an equal and opposite force upward on the rocket (reaction), thrusting it into space.
-                    </li>
-                    <li class="mb-2">
-                        <span class="font-bold">Bird Flying:</span> A bird pushes air downward with its wings (action), and the air pushes the wings upward with an equal and opposite force (reaction), providing lift.
-                    </li>
-                    <li class="mb-2">
-                        <span class="font-bold">Book on a Table:</span> The book exerts a downward force (its weight) on the table (action), and the table exerts an equal upward normal force on the book (reaction).
-                    </li>
-                </ul>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                Newton's Third Law helps us understand the interactions between objects and is crucial for analyzing systems where multiple bodies exert forces on each other. It underlies the principles of momentum conservation and collision analysis.
-            </p>
-        </section>
-
-        <section id="applications" class="section-card">
-            <h3 class="text-4xl mb-6">5. Applications and Further Concepts in Mechanics</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                The concepts and laws we've explored form the fundamental toolkit for analyzing a vast array of physical phenomena. Here, we briefly touch upon some common applications and extensions within mechanics.
-            </p>
-
-            <h4 class="text-3xl mb-4">5.1. Free Fall and Projectile Motion</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                A classic application of constant acceleration kinematics is <span class="key-term">free fall</span>, where the only force acting on an object is gravity (neglecting air resistance). Near the Earth's surface, the acceleration due to gravity ($g$) is approximately $9.8 \text{ m/s}^2$ downwards.
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Projectile motion</span> extends this to two dimensions. When an object is launched into the air, its horizontal motion (if no air resistance) is at constant velocity, while its vertical motion is free fall (constant acceleration $g$ downwards). By treating the horizontal and vertical motions independently, using the kinematic equations, we can analyze the trajectory of anything from a thrown ball to a ballistic missile.
-            </p>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Free Fall</h4>
-                <p class="text-lg leading-relaxed mb-2">
-                    A ball is dropped from a height. Assuming no air resistance, its initial velocity is $0 \text{ m/s}$, and its acceleration is $g = 9.8 \text{ m/s}^2$ downwards. After $2 \text{ seconds}$:
-                </p>
-                <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
-                    <li class="mb-2">
-                        <span class="font-bold">Final velocity:</span> $v = u + at = 0 + (9.8 \text{ m/s}^2)(2 \text{ s}) = 19.6 \text{ m/s}$ downwards.
-                    </li>
-                    <li class="mb-2">
-                        <span class="font-bold">Distance fallen:</span> $s = ut + \frac{1}{2}at^2 = 0 + \frac{1}{2}(9.8 \text{ m/s}^2)(2 \text{ s})^2 = 19.6 \text{ m}$.
-                    </li>
-                </ul>
-            </div>
-
-            <h4 class="text-3xl mb-4">5.2. Types of Forces</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                Newton's Laws deal with <span class="key-term">net force</span>. It's important to recognize common types of forces:
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2"><span class="key-term">Gravitational Force (Weight):</span> The force of attraction between any two objects with mass. Near Earth's surface, $F_g = mg$, where $m$ is mass and $g$ is acceleration due to gravity.</li>
-                <li class="mb-2"><span class="key-term">Normal Force ($F_N$):</span> The force exerted by a surface perpendicular to the surface on an object in contact with it. Prevents objects from passing through surfaces.</li>
-                <li class="mb-2"><span class="key-term">Friction Force ($F_f$):</span> A force that opposes relative motion or tendency of motion between two surfaces in contact. It depends on the normal force and the coefficient of friction.</li>
-                <li class="mb-2"><span class="key-term">Tension Force ($F_T$):</span> The force transmitted through a rope, string, cable, or similar continuous object when pulled taut by forces acting from opposite ends.</li>
-                <li class="mb-2"><span class="key-term">Applied Force ($F_{app}$):</span> A force that is applied to an object by a person or another object.</li>
+            <h3 class="text-3xl font-semibold text-purple-400 mb-4">
+                3.1. Force, Mass, and Inertia
+            </h3>
+            <ul class="list-disc list-inside text-gray-200 ml-4 mb-4">
+                <li class="mb-2"><strong class="text-blue-300">Force ($\vec{F}$):</strong> A push or a pull that can cause a change in an object's <strong class="text-blue-300">motion</strong> (i.e., cause it to <strong class="text-blue-300">accelerate</strong>). <strong class="text-blue-300">Force</strong> is a <strong class="text-blue-300">vector quantity</strong>, possessing both magnitude and direction. The SI unit of <strong class="text-blue-300">force</strong> is the <strong class="text-blue-300">Newton (N)</strong>.
+                    <ul class="list-circle list-inside ml-4">
+                        <li><strong class="text-blue-300">Contact Forces:</strong> Require direct physical contact (e.g., push, pull, friction, normal force, tension).</li>
+                        <li><strong class="text-blue-300">Non-Contact Forces (Field Forces):</strong> Act over a distance without physical contact (e.g., gravity, electromagnetic force).</li>
+                    </ul>
+                </li>
+                <li class="mb-2"><strong class="text-blue-300">Mass ($m$):</strong> A measure of the amount of matter in an object. It is a <strong class="text-blue-300">scalar quantity</strong>. The SI unit of <strong class="text-blue-300">mass</strong> is the <strong class="text-blue-300">kilogram (kg)</strong>. Importantly, <strong class="text-blue-300">mass</strong> is also a measure of an object's <strong class="text-blue-300">inertia</strong>.</li>
+                <li class="mb-2"><strong class="text-blue-300">Inertia:</strong> The natural tendency of an object to resist changes in its state of <strong class="text-blue-300">motion</strong>. An object at rest tends to stay at rest, and an object in <strong class="text-blue-300">motion</strong> tends to stay in <strong class="text-blue-300">motion</strong> with the same <strong class="text-blue-300">velocity</strong>, unless acted upon by an external <strong class="text-blue-300">force</strong>. The more <strong class="text-blue-300">mass</strong> an object has, the greater its <strong class="text-blue-300">inertia</strong>.</li>
             </ul>
 
-            <h4 class="text-3xl mb-4">5.3. Free-Body Diagrams</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                To effectively apply Newton's Second Law, especially when multiple forces are acting on an object, we use a <span class="key-term">free-body diagram</span>. This is a visual representation that isolates a single object and shows all the external forces acting on it, with vectors indicating direction and relative magnitude. Drawing accurate free-body diagrams is a crucial step in solving dynamics problems.
-            </p>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Constructing a Free-Body Diagram</h4>
-                <p class="text-lg leading-relaxed mb-2">
-                    Imagine a block resting on a horizontal table.
+            <h3 class="text-3xl font-semibold text-purple-400 mb-4">
+                3.2. Newton's First Law of Motion: The Law of Inertia
+            </h3>
+            <div class="bg-gray-700 p-6 rounded-lg mb-4 shadow-inner border border-gray-600">
+                <p class="text-gray-100 italic font-bold">
+                    Statement of Newton's First Law:
+                    <br><br>
+                    "An object at rest stays at rest, and an object in <strong class="text-blue-300">motion</strong> stays in <strong class="text-blue-300">motion</strong> with the same speed and in the same direction unless acted upon by an unbalanced external <strong class="text-blue-300">force</strong>."
                 </p>
-                <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
-                    <li class="mb-2">Draw the block as a point mass or a simple rectangle.</li>
-                    <li class="mb-2">Draw a downward arrow representing the gravitational force (weight, $F_g = mg$).</li>
-                    <li class="mb-2">Draw an upward arrow representing the normal force ($F_N$) exerted by the table on the block.</li>
-                    <li class="mb-2">If a force is applied horizontally, draw an arrow in that direction.</li>
-                    <li class="mb-2">If there's friction, draw an arrow opposite to the direction of motion or intended motion.</li>
-                    <li class="mb-2">Label all forces clearly.</li>
+            </div>
+            <ul class="list-disc list-inside text-gray-200 ml-4 mb-4">
+                <li class="mb-2"><strong class="text-blue-300">Inertia:</strong> This law is often called the <strong class="text-blue-300">Law of Inertia</strong>, directly related to the concept of <strong class="text-blue-300">inertia</strong> discussed above.</li>
+                <li class="mb-2"><strong class="text-blue-300">Net Force:</strong> The key phrase here is "unbalanced external <strong class="text-blue-300">force</strong>." If the net (total) <strong class="text-blue-300">force</strong> acting on an object is zero, its <strong class="text-blue-300">velocity</strong> remains constant. This means if it's at rest, it stays at rest ($\vec{v}=0$). If it's moving, it continues to move at a constant <strong class="text-blue-300">velocity</strong> ($\vec{v} \neq 0$, constant magnitude and direction).
+                    $$ \sum \vec{F} = 0 \implies \vec{a} = 0 \implies \vec{v} = \text{constant} $$
+                </li>
+                <li class="mb-2"><strong class="text-blue-300">Equilibrium:</strong> When the net <strong class="text-blue-300">force</strong> on an object is zero, it is said to be in <strong class="text-blue-300">equilibrium</strong>. This can be static equilibrium (at rest) or dynamic equilibrium (moving at constant <strong class="text-blue-300">velocity</strong>).</li>
+                <li class="mb-2"><strong class="text-blue-300">Examples:</strong>
+                    <ul class="list-circle list-inside ml-4">
+                        <li>When a car suddenly stops, your body tends to continue moving forward.</li>
+                        <li>A hockey puck sliding across a frictionless ice rink would theoretically continue forever if no other forces (like air resistance or friction) acted on it.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3 class="text-3xl font-semibold text-purple-400 mb-4">
+                3.3. Newton's Second Law of Motion: Force, Mass, and Acceleration
+            </h3>
+            <div class="bg-gray-700 p-6 rounded-lg mb-4 shadow-inner border border-gray-600">
+                <p class="text-gray-100 italic font-bold">
+                    Statement of Newton's Second Law:
+                    <br><br>
+                    "The <strong class="text-blue-300">acceleration</strong> of an object is directly proportional to the net <strong class="text-blue-300">force</strong> acting on it and inversely proportional to its <strong class="text-blue-300">mass</strong>. The direction of the <strong class="text-blue-300">acceleration</strong> is in the direction of the net <strong class="text-blue-300">force</strong>."
+                </p>
+            </div>
+            <h4 class="text-2xl font-medium text-blue-300 mb-3">
+                Mathematical Formulation: <strong class="text-blue-300">F=ma</strong>
+            </h4>
+            <p class="text-gray-200 mb-4 leading-relaxed">
+                This is arguably the most famous equation in <strong class="text-blue-300">physics</strong>:
+                $$ \sum \vec{F} = m\vec{a} $$
+                Where:
+                <ul class="list-disc list-inside text-gray-200 ml-4 mb-4">
+                    <li>$\sum \vec{F}$ (or $F_{net}$) is the net (total vector sum) <strong class="text-blue-300">force</strong> acting on the object (Newtons).</li>
+                    <li>$m$ is the <strong class="text-blue-300">mass</strong> of the object (kilograms).</li>
+                    <li>$\vec{a}$ is the <strong class="text-blue-300">acceleration</strong> of the object ($\text{m/s}^2$).</li>
                 </ul>
-                <p class="text-lg leading-relaxed mt-2">
-                    Once the diagram is complete, you can sum the forces in the x and y directions separately, apply $F_{net} = ma$ for each direction, and solve for unknowns.
+            </p>
+            <ul class="list-disc list-inside text-gray-200 ml-4 mb-4">
+                <li class="mb-2"><strong class="text-blue-300">Cause and Effect:</strong> This law establishes a direct cause-and-effect relationship: an unbalanced <strong class="text-blue-300">force</strong> causes <strong class="text-blue-300">acceleration</strong>. If there's no net <strong class="text-blue-300">force</strong>, there's no <strong class="text-blue-300">acceleration</strong> (consistent with the First Law).</li>
+                <li class="mb-2"><strong class="text-blue-300">Direction:</strong> The <strong class="text-blue-300">acceleration</strong> is always in the same direction as the net <strong class="text-blue-300">force</strong>.</li>
+                <li class="mb-2"><strong class="text-blue-300">Inertia Revisited:</strong> For a given net <strong class="text-blue-300">force</strong>, a more massive object will experience less <strong class="text-blue-300">acceleration</strong> because of its greater <strong class="text-blue-300">inertia</strong>. Conversely, to achieve the same <strong class="text-blue-300">acceleration</strong>, a more massive object requires a greater net <strong class="text-blue-300">force</strong>.</li>
+            </ul>
+
+            <h4 class="text-2xl font-medium text-blue-300 mb-3">
+                Types of Forces
+            </h4>
+            <p class="text-gray-200 mb-4 leading-relaxed">
+                When applying <strong class="text-blue-300">Newton's Second Law</strong>, it's crucial to identify all individual forces acting on an object and then find their vector sum (the net <strong class="text-blue-300">force</strong>). Common forces include:
+            </p>
+            <ul class="list-disc list-inside text-gray-200 ml-4 mb-4">
+                <li class="mb-2"><strong class="text-blue-300">Weight (Force of Gravity, $F_g$ or $W$):</strong> The <strong class="text-blue-300">force</strong> exerted by a planet on an object near its surface, directed towards the center of the planet.
+                    $$ F_g = mg $$
+                    Where $m$ is <strong class="text-blue-300">mass</strong> and $g$ is the <strong class="text-blue-300">acceleration</strong> due to gravity ($\approx 9.8 \text{ m/s}^2$ on Earth).</li>
+                <li class="mb-2"><strong class="text-blue-300">Normal Force ($F_N$ or $N$):</strong> The perpendicular <strong class="text-blue-300">force</strong> exerted by a surface on an object in contact with it, preventing the object from passing through the surface.</li>
+                <li class="mb-2"><strong class="text-blue-300">Friction Force ($F_f$):</strong> A <strong class="text-blue-300">force</strong> that opposes relative <strong class="text-blue-300">motion</strong> between surfaces in contact.
+                    <ul class="list-circle list-inside ml-4">
+                        <li><strong class="text-blue-300">Static Friction:</strong> Prevents an object from starting to move.</li>
+                        <li><strong class="text-blue-300">Kinetic Friction:</strong> Opposes an object that is already in motion.</li>
+                    </ul>
+                    It often depends on the normal force and the coefficient of friction ($\mu$): $F_f = \mu F_N$.</li>
+                <li class="mb-2"><strong class="text-blue-300">Tension Force ($F_T$ or $T$):</strong> The <strong class="text-blue-300">force</strong> transmitted through a string, rope, cable, or wire when it is pulled tight by forces acting from opposite ends.</li>
+                <li class="mb-2"><strong class="text-blue-300">Applied Force ($F_{app}$):</strong> A general term for a <strong class="text-blue-300">force</strong> applied to an object by a person or another object.</li>
+                <li class="mb-2"><strong class="text-blue-300">Air Resistance/Drag:</strong> A friction-like <strong class="text-blue-300">force</strong> that opposes the <strong class="text-blue-300">motion</strong> of an object through a fluid (like air or water).</li>
+            </ul>
+
+            <h4 class="text-2xl font-medium text-blue-300 mb-3">
+                Free-Body Diagrams
+            </h4>
+            <p class="text-gray-200 mb-4 leading-relaxed">
+                To apply <strong class="text-blue-300">Newton's Second Law</strong> effectively, it is essential to draw a <strong class="text-blue-300">free-body diagram</strong>. This is a visual representation of all the external forces acting on a single object.
+            </p>
+            <ul class="list-disc list-inside text-gray-200 ml-4 mb-4">
+                <li class="mb-2"><strong>Steps to draw a Free-Body Diagram:</strong>
+                    <ol class="list-decimal list-inside ml-4">
+                        <li class="mb-1">Isolate the object of interest.</li>
+                        <li class="mb-1">Represent the object as a single dot or a simplified shape.</li>
+                        <li class="mb-1">Draw vector arrows originating from the object, representing each external <strong class="text-blue-300">force</strong> acting *on* the object. The length of the arrow should roughly indicate the magnitude of the <strong class="text-blue-300">force</strong>, and its direction should be accurate.</li>
+                        <li class="mb-1">Label each <strong class="text-blue-300">force</strong> clearly (e.g., $F_g$, $F_N$, $F_T$).</li>
+                        <li class="mb-1">Choose a coordinate system and indicate positive directions.</li>
+                    </ol>
+                </li>
+                <li class="mb-2">Once the free-body diagram is drawn, you can resolve forces into components (if necessary) and apply $\sum F_x = ma_x$ and $\sum F_y = ma_y$ for each direction.</li>
+            </ul>
+
+            <div class="bg-gray-700 p-6 rounded-lg mb-4 shadow-inner border border-gray-600">
+                <p class="text-gray-100 italic font-bold">
+                    Example Problem (Applying F=ma):
+                    <br><br>
+                    A $10 \text{ kg}$ box is pulled horizontally across a frictionless floor with a <strong class="text-blue-300">force</strong> of $50 \text{ N}$. What is its <strong class="text-blue-300">acceleration</strong>?
+                </p>
+                <p class="text-gray-100 mt-2">
+                    <strong class="text-blue-300">Given:</strong>
+                    <ul class="list-disc list-inside text-gray-100 ml-4">
+                        <li>$m = 10 \text{ kg}$</li>
+                        <li>$F_{app} = 50 \text{ N}$</li>
+                        <li>Frictionless floor means $F_f = 0$</li>
+                    </ul>
+                    <strong class="text-blue-300">Unknown:</strong> $a$
+                </p>
+                <p class="text-gray-100 mt-2">
+                    <strong class="text-blue-300">Solution:</strong>
+                    <br>1. Draw a Free-Body Diagram:
+                    <br>   - Downward: Weight ($F_g = mg$)
+                    <br>   - Upward: Normal Force ($F_N$)
+                    <br>   - Rightward: Applied Force ($F_{app} = 50 \text{ N}$)
+                    <br>   - (No friction)
+                    <br>2. Apply Newton's Second Law in the horizontal direction:
+                    $$ \sum F_x = ma_x $$
+                    $$ F_{app} = ma_x $$
+                    $$ 50 \text{ N} = (10 \text{ kg}) a_x $$
+                    $$ a_x = \frac{50 \text{ N}}{10 \text{ kg}} = 5.0 \text{ m/s}^2 $$
+                    The box accelerates at $5.0 \text{ m/s}^2$ in the direction of the applied force.
                 </p>
             </div>
-            <p class="text-lg leading-relaxed mb-6">
-                These additional concepts and tools allow us to extend our understanding of mechanics beyond simple constant acceleration scenarios, enabling the analysis of more complex, real-world situations.
-            </p>
-        </section>
 
-        <section id="conclusion" class="section-card">
-            <h3 class="text-4xl mb-6">6. Conclusion: The Ubiquity of Mechanics</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                Our journey through <span class="key-term">mechanics</span> has illuminated the fundamental principles governing <span class="key-term">motion</span> and <span class="key-term">forces</span>. We began by meticulously defining the kinematic variables – <span class="key-term">displacement</span>, <span class="key-term">velocity</span>, and <span class="key-term">acceleration</span> – learning to describe motion with precision. The <span class="key-term">one-dimensional kinematic equations</span> then provided us with powerful mathematical tools to predict the future state of objects undergoing constant acceleration, a vital skill for solving a myriad of problems.
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                Central to this lesson, we explored <span class="key-term">Newton's Three Laws of Motion</span>. The First Law introduced us to the concept of <span class="key-term">inertia</span>, an object's inherent resistance to changes in its state of motion. The Second Law, $\vec{F}_{net} = m\vec{a}$, quantifies the relationship between force, mass, and acceleration, serving as the workhorse for dynamic analysis. Finally, the Third Law, the principle of <span class="key-term">action-reaction pairs</span>, revealed the interactive nature of forces, emphasizing that forces always come in pairs acting on different objects.
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                The principles of mechanics are not confined to textbooks; they are omnipresent. They explain why a ball thrown into the air follows a parabolic path, how engineers design bridges to withstand loads, why rockets launch into space, and even how biological systems function at a macroscopic level. From designing safer vehicles to understanding the dynamics of sports, mechanics provides the analytical backbone.
-            </p>
-            <p class="text-lg leading-relaxed">
-                As you continue your exploration of physics and mathematics, remember that these foundational concepts are the stepping stones to more advanced topics such as momentum, energy, rotational motion, and oscillations. The ability to analyze motion and forces is a powerful skill that will serve you well in any scientific or engineering pursuit. Keep observing the world with a curious eye, and you will see the principles of mechanics in action everywhere!
-            </p>
-        </section>
-
-        <section id="glossary" class="section-card">
-            <h3 class="text-4xl mb-6">7. Glossary of Key Terms</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-lg">
-                <div><strong class="key-term">Acceleration ($\vec{a}$):</strong> The rate of change of velocity. A vector quantity measured in m/s$^2$.</div>
-                <div><strong class="key-term">Action-Reaction Pair:</strong> Forces described by Newton's Third Law; equal in magnitude and opposite in direction, acting on different objects.</div>
-                <div><strong class="key-term">Displacement ($\Delta \vec{x}$ or $\Delta \vec{r}$):</strong> The change in an object's position, a vector quantity measured in meters (m).</div>
-                <div><strong class="key-term">Distance:</strong> The total length of the path traveled, a scalar quantity measured in meters (m).</div>
-                <div><strong class="key-term">Dynamics:</strong> The branch of mechanics that studies the relationship between motion and the forces that cause it.</div>
-                <div><strong class="key-term">Force ($\vec{F}$):</strong> An influence that can cause an object to accelerate. A vector quantity measured in Newtons (N).</div>
-                <div><strong class="key-term">Free Fall:</strong> Motion solely under the influence of gravity, with constant acceleration $g \approx 9.8 \text{ m/s}^2$ near Earth's surface.</div>
-                <div><strong class="key-term">Free-Body Diagram:</strong> A diagram showing all external forces acting on a single isolated object.</div>
-                <div><strong class="key-term">Inertia:</strong> An object's resistance to a change in its state of motion. Proportional to mass.</div>
-                <div><strong class="key-term">Kinematics:</strong> The branch of mechanics that describes motion without considering the forces causing it.</div>
-                <div><strong class="key-term">Mass ($m$):</strong> A measure of an object's inertia and the amount of matter it contains. A scalar quantity measured in kilograms (kg).</div>
-                <div><strong class="key-term">Mechanics:</strong> The branch of physics that deals with the study of motion and its causes.</div>
-                <div><strong class="key-term">Motion:</strong> The change in position of an object over time.</div>
-                <div><strong class="key-term">Net Force ($\vec{F}_{net}$):</strong> The vector sum of all individual forces acting on an object.</div>
-                <div><strong class="key-term">Newton's First Law of Motion:</strong> An object at rest stays at rest, and an object in motion stays in motion with constant velocity, unless acted upon by a net force. (Law of Inertia)</div>
-                <div><strong class="key-term">Newton's Second Law of Motion:</strong> The acceleration of an object is directly proportional to the net force acting on it and inversely proportional to its mass ($\vec{F}_{net} = m\vec{a}$).</div>
-                <div><strong class="key-term">Newton's Third Law of Motion:</strong> For every action, there is an equal and opposite reaction. Forces always occur in pairs.</div>
-                <div><strong class="key-term">Position:</strong> An object's location relative to a chosen reference point. A vector quantity.</div>
-                <div><strong class="key-term">Projectile Motion:</strong> Two-dimensional motion under the influence of gravity only.</div>
-                <div><strong class="key-term">Scalar Quantity:</strong> A physical quantity that has magnitude but no direction (e.g., speed, distance, mass, temperature).</div>
-                <div><strong class="key-term">Speed:</strong> The rate at which distance is covered. A scalar quantity measured in m/s.</div>
-                <div><strong class="key-term">Vector Quantity:</strong> A physical quantity that has both magnitude and direction (e.g., velocity, displacement, force, acceleration).</div>
-                <div><strong class="key-term">Velocity ($\vec{v}$):</strong> The rate of change of displacement. A vector quantity measured in m/s.</div>
+            <h3 class="text-3xl font-semibold text-purple-400 mb-4">
+                3.4. Newton's Third Law of Motion: Action-Reaction Pairs
+            </h3>
+            <div class="bg-gray-700 p-6 rounded-lg mb-4 shadow-inner border border-gray-600">
+                <p class="text-gray-100 italic font-bold">
+                    Statement of Newton's Third Law:
+                    <br><br>
+                    "For every action, there is an equal and opposite reaction."
+                    <br><br>
+                    More formally: "If object A exerts a <strong class="text-blue-300">force</strong> on object B, then object B simultaneously exerts an equal in magnitude and opposite in direction <strong class="text-blue-300">force</strong> on object A."
+                </p>
             </div>
-        </section>
-
-        <section id="references" class="section-card">
-            <h3 class="text-4xl mb-6">8. Further Reading and References</h3>
-            <p class="text-lg leading-relaxed mb-4">To continue your exploration of mechanics and delve into more advanced topics, consider these resources:</p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
-                <li class="mb-2">Serway, R. A., & Jewett, J. W. (2018). <em>Physics for Scientists and Engineers with Modern Physics</em> (10th ed.). Cengage Learning. (Chapters on Mechanics)</li>
-                <li class="mb-2">Halliday, D., Resnick, R., & Walker, J. (2014). <em>Fundamentals of Physics</em> (10th ed.). John Wiley & Sons. (Chapters on Motion in 1D, Motion in 2D, and Newton's Laws)</li>
-                <li class="mb-2">Young, H. D., & Freedman, R. A. (2020). <em>University Physics with Modern Physics</em> (15th ed.). Pearson. (Comprehensive coverage of classical mechanics)</li>
-                <li class="mb-2">Khan Academy: <a href="https://www.khanacademy.org/science/physics/forces-newtons-laws" target="_blank" class="text-blue-400 hover:underline">Newton's Laws of Motion</a> (Online video lessons and practice problems)</li>
-                <li class="mb-2">HyperPhysics: <a href="http://hyperphysics.phy-astr.gsu.edu/hbase/mechan.html" target="_blank" class="text-blue-400 hover:underline">Mechanics Topics</a> (Concise explanations and concept maps)</li>
+            <ul class="list-disc list-inside text-gray-200 ml-4 mb-4">
+                <li class="mb-2"><strong class="text-blue-300">Action-Reaction Pairs:</strong> Forces always come in pairs. These pairs act on *different* objects. This is a common point of confusion. The "action" force and "reaction" force never cancel each other out because they act on different systems.</li>
+                <li class="mb-2"><strong class="text-blue-300">Simultaneous:</strong> The action and reaction forces occur at the exact same time.</li>
+                <li class="mb-2"><strong class="text-blue-300">Examples:</strong>
+                    <ul class="list-circle list-inside ml-4">
+                        <li>When you push against a wall (action), the wall pushes back on you with an equal and opposite <strong class="text-blue-300">force</strong> (reaction).</li>
+                        <li>A rocket expels hot gas downwards (action); the gas exerts an upward <strong class="text-blue-300">force</strong> on the rocket, propelling it upward (reaction).</li>
+                        <li>When you jump, your feet push down on the Earth (action); the Earth pushes up on your feet with an equal and opposite <strong class="text-blue-300">force</strong> (reaction), causing you to <strong class="text-blue-300">accelerate</strong> upwards.</li>
+                        <li>The Earth pulls on the Moon with its gravitational <strong class="text-blue-300">force</strong> (action); the Moon pulls on the Earth with an equal and opposite gravitational <strong class="text-blue-300">force</strong> (reaction).</li>
+                    </ul>
+                </li>
             </ul>
         </section>
 
+        <!-- Section 4: Further Concepts in Mechanics (Brief Introduction) -->
+        <section class="mb-12">
+            <h2 class="text-4xl font-bold text-blue-400 mb-6 text-center sm:text-left">
+                4. Further Concepts in Mechanics: Expanding Our Understanding
+            </h2>
+            <p class="text-gray-200 mb-4 leading-relaxed">
+                Beyond the foundational concepts of <strong class="text-blue-300">kinematics</strong> and <strong class="text-blue-300">Newton's Laws</strong>, <strong class="text-blue-300">mechanics</strong> encompasses several other crucial ideas that provide alternative ways to analyze <strong class="text-blue-300">motion</strong> and interactions. Here, we briefly introduce <strong class="text-blue-300">momentum</strong>, <strong class="text-blue-300">impulse</strong>, <strong class="text-blue-300">work</strong>, <strong class="text-blue-300">energy</strong>, and <strong class="text-blue-300">power</strong>.
+            </p>
+
+            <h3 class="text-3xl font-semibold text-purple-400 mb-4">
+                4.1. Momentum and Impulse
+            </h3>
+            <ul class="list-disc list-inside text-gray-200 ml-4 mb-4">
+                <li class="mb-2"><strong class="text-blue-300">Momentum ($\vec{p}$):</strong> A measure of an object's "quantity of <strong class="text-blue-300">motion</strong>." It is the product of an object's <strong class="text-blue-300">mass</strong> and its <strong class="text-blue-300">velocity</strong>. <strong class="text-blue-300">Momentum</strong> is a <strong class="text-blue-300">vector quantity</strong>.
+                    $$ \vec{p} = m\vec{v} $$
+                    Unit: $\text{kg} \cdot \text{m/s}$. A massive object moving slowly can have the same <strong class="text-blue-300">momentum</strong> as a light object moving quickly.</li>
+                <li class="mb-2"><strong class="text-blue-300">Impulse ($\vec{J}$):</strong> The change in an object's <strong class="text-blue-300">momentum</strong>. It is also defined as the product of the net <strong class="text-blue-300">force</strong> acting on an object and the time interval over which the <strong class="text-blue-300">force</strong> acts. <strong class="text-blue-300">Impulse</strong> is a <strong class="text-blue-300">vector quantity</strong>.
+                    $$ \vec{J} = \vec{F}_{net} \Delta t = \Delta \vec{p} = m\vec{v}_f - m\vec{v}_i $$
+                    Unit: $\text{N} \cdot \text{s}$ (which is equivalent to $\text{kg} \cdot \text{m/s}$). <strong class="text-blue-300">Impulse</strong> is critical in understanding collisions, where large forces act for short durations.</li>
+                <li class="mb-2"><strong class="text-blue-300">Conservation of Momentum:</strong> In an isolated system (where no net external forces act), the total <strong class="text-blue-300">momentum</strong> of the system remains constant. This principle is extremely useful for analyzing collisions and explosions.</li>
+            </ul>
+
+            <h3 class="text-3xl font-semibold text-purple-400 mb-4">
+                4.2. Work, Energy, and Power
+            </h3>
+            <p class="text-gray-200 mb-4 leading-relaxed">
+                These concepts provide an <strong class="text-blue-300">energy</strong>-based approach to <strong class="text-blue-300">mechanics</strong>, which can often simplify problem-solving, especially when forces are not constant or motion is complex.
+            </p>
+            <ul class="list-disc list-inside text-gray-200 ml-4 mb-4">
+                <li class="mb-2"><strong class="text-blue-300">Work ($W$):</strong> In <strong class="text-blue-300">physics</strong>, <strong class="text-blue-300">work</strong> is done when a <strong class="text-blue-300">force</strong> causes <strong class="text-blue-300">displacement</strong> in the direction of the <strong class="text-blue-300">force</strong>.
+                    $$ W = Fd \cos \theta $$
+                    Where $F$ is the magnitude of the <strong class="text-blue-300">force</strong>, $d$ is the magnitude of the <strong class="text-blue-300">displacement</strong>, and $\theta$ is the angle between the <strong class="text-blue-300">force</strong> and <strong class="text-blue-300">displacement</strong> vectors. Unit: <strong class="text-blue-300">Joule (J)</strong>.</li>
+                <li class="mb-2"><strong class="text-blue-300">Energy ($E$):</strong> The ability to do <strong class="text-blue-300">work</strong>. <strong class="text-blue-300">Energy</strong> comes in many forms, including:
+                    <ul class="list-circle list-inside ml-4">
+                        <li><strong class="text-blue-300">Kinetic Energy ($KE$):</strong> The <strong class="text-blue-300">energy</strong> an object possesses due to its <strong class="text-blue-300">motion</strong>.
+                            $$ KE = \frac{1}{2}mv^2 $$
+                            Unit: <strong class="text-blue-300">Joule (J)</strong>.</li>
+                        <li><strong class="text-blue-300">Potential Energy ($PE$):</strong> Stored <strong class="text-blue-300">energy</strong> due to an object's position or configuration (e.g., gravitational <strong class="text-blue-300">potential energy</strong> $PE_g = mgh$, elastic <strong class="text-blue-300">potential energy</strong> in a spring). Unit: <strong class="text-blue-300">Joule (J)</strong>.</li>
+                    </ul>
+                </li>
+                <li class="mb-2"><strong class="text-blue-300">Work-Energy Theorem:</strong> The net <strong class="text-blue-300">work</strong> done on an object is equal to the change in its <strong class="text-blue-300">kinetic energy</strong>.
+                    $$ W_{net} = \Delta KE = KE_f - KE_i $$
+                </li>
+                <li class="mb-2"><strong class="text-blue-300">Conservation of Mechanical Energy:</strong> In the absence of non-conservative forces (like friction or air resistance), the total mechanical <strong class="text-blue-300">energy</strong> (sum of <strong class="text-blue-300">kinetic</strong> and <strong class="text-blue-300">potential energy</strong>) of a system remains constant.
+                    $$ KE_i + PE_i = KE_f + PE_f $$
+                </li>
+                <li class="mb-2"><strong class="text-blue-300">Power ($P$):</strong> The rate at which <strong class="text-blue-300">work</strong> is done or <strong class="text-blue-300">energy</strong> is transferred.
+                    $$ P = \frac{W}{t} $$
+                    Unit: <strong class="text-blue-300">Watt (W)</strong> (1 Watt = 1 Joule/second).</li>
+            </ul>
+        </section>
+
+        <!-- Section 5: Real-World Applications of Mechanics -->
+        <section class="mb-12">
+            <h2 class="text-4xl font-bold text-blue-400 mb-6 text-center sm:text-left">
+                5. Real-World Applications of Mechanics: From Everyday to Outer Space
+            </h2>
+            <p class="text-gray-200 mb-4 leading-relaxed">
+                The principles of <strong class="text-blue-300">mechanics</strong> are not confined to textbooks; they are the invisible forces that shape our built environment, drive our technologies, and explain countless natural phenomena. Understanding <strong class="text-blue-300">mechanics</strong> is fundamental to almost every field of engineering and science.
+            </p>
+
+            <h3 class="text-3xl font-semibold text-purple-400 mb-4">
+                5.1. Engineering and Design
+            </h3>
+            <ul class="list-disc list-inside text-gray-200 ml-4 mb-4">
+                <li class="mb-2"><strong class="text-blue-300">Structural Engineering:</strong> Designing bridges, buildings, and other structures requires a deep understanding of <strong class="text-blue-300">forces, stresses, and strains</strong> to ensure they can withstand loads (including their own weight, wind, seismic activity) without collapsing. The principles of <strong class="text-blue-300">equilibrium</strong> (Newton's First Law) are paramount here.</li>
+                <li class="mb-2"><strong class="text-blue-300">Automotive Engineering:</strong> Everything from car engines (converting chemical <strong class="text-blue-300">energy</strong> to <strong class="text-blue-300">kinetic energy</strong>), braking systems (friction, <strong class="text-blue-300">impulse</strong>), suspension systems (springs, dampening), and safety features (crumple zones designed to increase impact time and reduce <strong class="text-blue-300">force</strong> via <strong class="text-blue-300">impulse-momentum theorem</strong>) relies on <strong class="text-blue-300">mechanical principles</strong>.</li>
+                <li class="mb-2"><strong class="text-blue-300">Aerospace Engineering:</strong> The flight of airplanes and rockets is entirely dependent on <strong class="text-blue-300">mechanics</strong>. Concepts like <strong class="text-blue-300">lift, drag, thrust, and weight</strong> (forces), as well as orbital mechanics (gravitational <strong class="text-blue-300">forces</strong> and <strong class="text-blue-300">motion</strong> in a vacuum), are all governed by <strong class="text-blue-300">Newton's Laws</strong>.</li>
+                <li class="mb-2"><strong class="text-blue-300">Robotics:</strong> The design and control of robots, from simple factory arms to complex humanoid robots, require precise calculations of <strong class="text-blue-300">forces, torques, motion, and stability</strong>.</li>
+                <li class="mb-2"><strong class="text-blue-300">Sports Science and Biomechanics:</strong> Analyzing the <strong class="text-blue-300">motion</strong> of athletes, optimizing equipment (e.g., golf clubs, running shoes), and understanding human movement (e.g., how muscles exert <strong class="text-blue-300">force</strong> to cause <strong class="text-blue-300">motion</strong>) all fall under the umbrella of <strong class="text-blue-300">mechanics</strong>.</li>
+            </ul>
+
+            <h3 class="text-3xl font-semibold text-purple-400 mb-4">
+                5.2. Natural Phenomena
+            </h3>
+            <ul class="list-disc list-inside text-gray-200 ml-4 mb-4">
+                <li class="mb-2"><strong class="text-blue-300">Planetary Motion:</strong> The orbits of planets around the sun and moons around planets are governed by <strong class="text-blue-300">Newton's Law of Universal Gravitation</strong> (a specific type of <strong class="text-blue-300">force</strong>) and his <strong class="text-blue-300">Laws of Motion</strong>. This understanding allowed us to send probes to other planets and predict astronomical events.</li>
+                <li class="mb-2"><strong class="text-blue-300">Tides:</strong> The rise and fall of ocean tides are a direct consequence of the differential gravitational <strong class="text-blue-300">forces</strong> exerted by the Moon and, to a lesser extent, the Sun, on different parts of the Earth.</li>
+                <li class="mb-2"><strong class="text-blue-300">Avalanches and Landslides:</strong> The stability of slopes and the triggering of these natural disasters are analyzed using concepts of <strong class="text-blue-300">forces</strong> (gravity, friction) and the properties of materials.</li>
+                <li class="mb-2"><strong class="text-blue-300">Fluid Dynamics:</strong> The study of how liquids and gases flow (e.g., rivers, blood flow, airflow over wings) is a vast field within <strong class="text-blue-300">mechanics</strong>, essential for designing ships, pipelines, and even understanding weather patterns.</li>
+            </ul>
+
+            <h3 class="text-3xl font-semibold text-purple-400 mb-4">
+                5.3. Everyday Life
+            </h3>
+            <ul class="list-disc list-inside text-gray-200 ml-4 mb-4">
+                <li class="mb-2"><strong class="text-blue-300">Walking and Running:</strong> Every step you take involves <strong class="text-blue-300">Newton's Third Law</strong>. Your foot pushes on the ground (action), and the ground pushes back on your foot (reaction), propelling you forward.</li>
+                <li class="mb-2"><strong class="text-blue-300">Using Tools:</strong> Hammers, levers, screws, and pulleys all operate on fundamental <strong class="text-blue-300">mechanical principles</strong>, helping us amplify forces or change their direction to make <strong class="text-blue-300">work</strong> easier.</li>
+                <li class="mb-2"><strong class="text-blue-300">Sports:</strong> From the trajectory of a thrown ball (<strong class="text-blue-300">projectile motion</strong>) to the swing of a golf club (rotation, <strong class="text-blue-300">impulse</strong>), <strong class="text-blue-300">mechanics</strong> provides the insights to optimize performance.</li>
+                <li class="mb-2"><strong class="text-blue-300">Safety Features:</strong> Seatbelts and airbags in cars work by increasing the time of impact during a collision, thereby reducing the <strong class="text-blue-300">force</strong> on the occupants, a direct application of the <strong class="text-blue-300">impulse-momentum theorem</strong>.</li>
+            </ul>
+        </section>
+
+        <!-- Conclusion Section -->
+        <section class="mb-8">
+            <h2 class="text-4xl font-bold text-blue-400 mb-6 text-center sm:text-left">
+                6. Conclusion: The Ever-Present Laws of Motion
+            </h2>
+            <p class="text-gray-200 mb-4 leading-relaxed">
+                We've embarked on an illuminating journey into the realm of <strong class="text-blue-300">Mechanics</strong>, the bedrock of classical <strong class="text-blue-300">physics</strong>. We began by mastering the language of <strong class="text-blue-300">motion</strong> through <strong class="text-blue-300">kinematics</strong>, learning to precisely define <strong class="text-blue-300">displacement, velocity, and acceleration</strong>. The elegance and utility of the <strong class="text-blue-300">one-dimensional kinematic equations</strong> ($v=u+at$, $s=ut+\frac{1}{2}at^2$, $v^2=u^2+2as$, $s=\frac{(u+v)}{2}t$) have been highlighted as essential tools for predicting the future of moving objects.
+            </p>
+            <p class="text-gray-200 mb-4 leading-relaxed">
+                Our exploration then deepened into <strong class="text-blue-300">dynamics</strong>, where we introduced the concept of <strong class="text-blue-300">force</strong> and delved into the profound wisdom of <strong class="text-blue-300">Newton's Laws of Motion</strong>. The <strong class="text-blue-300">First Law of Inertia</strong> teaches us about an object's inherent resistance to changes in its <strong class="text-blue-300">motion</strong>. The celebrated <strong class="text-blue-300">Second Law, F=ma</strong>, provided the quantitative link between <strong class="text-blue-300">force</strong> and <strong class="text-blue-300">acceleration</strong>, revealing how forces truly orchestrate changes in <strong class="text-blue-300">motion</strong>. Finally, <strong class="text-blue-300">Newton's Third Law</strong> illuminated the reciprocal nature of interactions, asserting that forces always occur in equal and opposite pairs.
+            </p>
+            <p class="text-gray-200 leading-relaxed">
+                From the intricate dance of celestial bodies to the simple act of throwing a ball, the principles of <strong class="text-blue-300">mechanics</strong> are ceaselessly at <strong class="text-blue-300">work</strong>, influencing every aspect of our physical reality. This foundational knowledge is not just for aspiring scientists; it empowers anyone to better understand the push and pull of the world around them. Continue your quest for knowledge with Whizmath, where the complex world of <strong class="text-blue-300">physics</strong> is made clear, engaging, and accessible. The universe is in <strong class="text-blue-300">motion</strong> – and now you have the tools to understand its rhythm!
+            </p>
+        </section>
     </div>
 
+    <!-- Three.js Library CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Three.js Animated Background
-        const canvas = document.getElementById('three-canvas');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true }); // alpha for transparent background
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio); // Handle high-DPI screens
+        // Three.js background animation script
+        // This script creates a subtle, animated particle background.
 
-        // Adjust camera position
-        camera.position.z = 5;
+        let scene, camera, renderer;
+        let particles, particleMaterial, particleGeometry;
+        let mouseX = 0, mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
 
-        // Create particles
-        const particleCount = 1000;
-        const particles = new THREE.BufferGeometry();
-        const positions = new Float32Array(particleCount * 3);
+        function init() {
+            // Get the canvas element
+            const canvas = document.getElementById('threejs-background');
 
-        for (let i = 0; i < particleCount * 3; i += 3) {
-            positions[i] = (Math.random() - 0.5) * 200; // x
-            positions[i + 1] = (Math.random() - 0.5) * 200; // y
-            positions[i + 2] = (Math.random() - 0.5) * 200; // z
+            // Scene setup
+            scene = new THREE.Scene();
+            // Set a dark, subtle background color for the scene
+            scene.background = new THREE.Color(0x100f2e); // A slightly different dark blue
+
+            // Camera setup
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 100; // Position camera further back to see more particles
+
+            // Renderer setup
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio); // Handle high-DPI screens
+
+            // Particle system setup
+            const particleCount = 1200; // More particles for a denser feel
+            particleGeometry = new THREE.BufferGeometry();
+            const positions = [];
+            const colors = [];
+            const color = new THREE.Color();
+
+            for (let i = 0; i < particleCount; i++) {
+                // Random positions within a larger cube for more spread
+                const x = (Math.random() * 2 - 1) * 600;
+                const y = (Math.random() * 2 - 1) * 600;
+                const z = (Math.random() * 2 - 1) * 600;
+                positions.push(x, y, z);
+
+                // Blue/purpleish pastel colors for particles, matching theme
+                const hue = 0.6 + Math.random() * 0.2; // Ranging from blue to purple (approx 0.6 to 0.8)
+                const saturation = 0.6 + Math.random() * 0.4; // 0.6 to 1
+                const lightness = 0.5 + Math.random() * 0.2; // 0.5 to 0.7
+                color.setHSL(hue, saturation, lightness);
+                colors.push(color.r, color.g, color.b);
+            }
+
+            particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            particleGeometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+            particleMaterial = new THREE.PointsMaterial({
+                size: 1.0, // Slightly larger particles
+                vertexColors: true, // Use vertex colors
+                transparent: true,
+                opacity: 0.8, // Slightly more opaque
+                blending: THREE.AdditiveBlending // Blending mode for glow effect
+            });
+
+            particles = new THREE.Points(particleGeometry, particleMaterial);
+            scene.add(particles);
+
+            // Event Listeners for responsiveness and mouse interaction
+            window.addEventListener('resize', onWindowResize, false);
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            // Add touch events for mobile responsiveness
+            document.addEventListener('touchmove', onDocumentTouchMove, { passive: false });
         }
 
-        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-        const particleMaterial = new THREE.PointsMaterial({
-            color: 0x63b3ed, // Blueish color
-            size: 0.1,
-            blending: THREE.AdditiveBlending, // For glowing effect
-            transparent: true,
-            opacity: 0.7
-        });
-
-        const particleSystem = new THREE.Points(particles, particleMaterial);
-        scene.add(particleSystem);
-
-        // Add a subtle ambient light
-        const ambientLight = new THREE.AmbientLight(0x404040, 1.5); // soft white light
-        scene.add(ambientLight);
-
-        // Add a directional light for some depth
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(0, 1, 0); // Light from top
-        scene.add(directionalLight);
-
-        // Animation loop
-        const animate = () => {
-            requestAnimationFrame(animate);
-
-            // Rotate particles slowly
-            particleSystem.rotation.x += 0.0005;
-            particleSystem.rotation.y += 0.001;
-
-            // Simple movement effect
-            for (let i = 0; i < particleCount; i++) {
-                // Get current position
-                const i3 = i * 3;
-                positions[i3 + 2] += 0.05; // Move particles forward
-
-                // If particle goes too far, reset its Z position
-                if (positions[i3 + 2] > camera.position.z + 10) {
-                    positions[i3 + 2] = camera.position.z - 200;
-                }
-            }
-            particles.attributes.position.needsUpdate = true; // Tell Three.js to update buffer
-
-            renderer.render(scene, camera);
-        };
-
-        // Handle window resize
-        window.addEventListener('resize', () => {
+        // Handle window resizing
+        function onWindowResize() {
+            windowHalfX = window.innerWidth / 2;
+            windowHalfY = window.innerHeight / 2;
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+        }
 
-        // Start animation after window loads
+        // Handle mouse movement for camera rotation
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX);
+            mouseY = (event.clientY - windowHalfY);
+        }
+
+        // Handle touch movement for camera rotation (similar to mouse)
+        function onDocumentTouchMove(event) {
+            if (event.touches.length === 1) {
+                event.preventDefault(); // Prevent scrolling
+                mouseX = (event.touches[0].clientX - windowHalfX);
+                mouseY = (event.touches[0].clientY - windowHalfY);
+            }
+        }
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Rotate particles and camera slightly
+            particles.rotation.x += 0.0008; // Slightly faster rotation
+            particles.rotation.y += 0.0015; // Slightly faster rotation
+
+            // Make particles slowly drift forward
+            const positions = particleGeometry.attributes.position.array;
+            for (let i = 0; i < positions.length; i += 3) {
+                positions[i + 2] += 0.15; // Move along Z-axis slightly faster
+
+                // If particle goes too far, reset its Z position
+                if (positions[i + 2] > 300) { // Larger reset boundary
+                    positions[i + 2] = -600;
+                }
+            }
+            particleGeometry.attributes.position.needsUpdate = true; // Tell Three.js to update buffer
+
+            // Camera subtle movement based on mouse position
+            camera.position.x += (mouseX / 800 - camera.position.x) * 0.04; // Slightly less reactive
+            camera.position.y += (-mouseY / 800 - camera.position.y) * 0.04; // Slightly less reactive
+            camera.lookAt(scene.position); // Always look at the center of the scene
+
+            renderer.render(scene, camera);
+        }
+
+        // Initialize Three.js when the window loads
         window.onload = function() {
+            init();
             animate();
         };
-
-        // Smooth scroll for internal links (if any were added)
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
     </script>
 </body>
 </html>
