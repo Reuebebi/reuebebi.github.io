@@ -3,15 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whizmath - Momentum: Understanding Force, Impulse, and Collisions</title>
-    <meta name="description" content="Explore the fundamental concepts of linear momentum (p=mv) and impulse (Δp=FΔt). Learn the law of conservation of momentum for isolated systems and its application in simple collision scenarios. A comprehensive lesson from Whizmath.">
-    <meta name="keywords" content="momentum, linear momentum, impulse, conservation of momentum, isolated system, collision, elastic collision, inelastic collision, force, mass, velocity, time, physics, p=mv, Whizmath">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujm/v+r366w5U6+y35Yv5z16b0x/r7t6uTqNqg0g0c0w0/0j0v0b0t0q0p0x0e0i0o0u0a0c0e0r0s0t0v0w0x0y0z0=" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Whizmath - Mastering Momentum: A Deep Dive into Collisions and Conservation</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
-     crossorigin="anonymous"></script>
-
     <!-- MathJax Configuration -->
     <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
@@ -24,589 +19,995 @@
             }
         };
     </script>
-    <!-- Three.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            overflow: hidden; /* Hide overflow from Three.js background */
+            font-family: 'Inter', sans-serif; /* Using Inter font as per instructions */
+            background-color: #000000; /* Black background */
+            color: #E0E0E0; /* Light gray text for contrast */
+            line-height: 1.75; /* Improved readability */
+            overflow-x: hidden; /* Prevent horizontal overflow on the entire page */
         }
-        #three-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1; /* Send to back */
-            background: linear-gradient(to bottom right, #1a202c, #2d3748); /* Dark gradient for background */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700; /* Bold headings */
+            color: #BB86FC; /* Purple accent for headings */
         }
-        .content-overlay {
-            position: relative;
-            z-index: 1; /* Bring content to front */
-            overflow-y: auto; /* Allow content to scroll */
-            height: 100vh;
-            padding: 2rem;
-            background: rgba(17, 24, 39, 0.85); /* Slightly transparent dark background for readability */
-            backdrop-filter: blur(8px); /* Frosted glass effect */
-            -webkit-backdrop-filter: blur(8px); /* For Safari */
-            color: #e2e8f0; /* Light text color */
+        a {
+            color: #03DAC6; /* Teal accent for links */
+            text-decoration: none;
         }
-        h1, h2, h3, h4 {
-            color: #63b3ed; /* A pleasing blue for headings */
-            font-weight: 700;
+        a:hover {
+            text-decoration: underline;
         }
-        h1 { font-size: 3rem; }
-        h2 { font-size: 2.25rem; }
-        h3 { font-size: 1.75rem; }
-        h4 { font-size: 1.25rem; }
-        .back-button {
-            position: absolute;
-            top: 2rem;
-            left: 2rem;
-            z-index: 10;
-            background-color: rgba(30, 41, 59, 0.8); /* Darker transparent button */
-            color: #63b3ed;
-            padding: 0.75rem 1.25rem;
-            border-radius: 9999px; /* Fully rounded */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        .back-button:hover {
-            background-color: rgba(45, 55, 72, 0.95);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        .container {
+            max-width: 90%; /* Responsive width */
+            width: 100%; /* Ensure it fills available space */
+            box-sizing: border-box; /* Include padding in width */
         }
         .section-card {
-            background-color: rgba(30, 41, 59, 0.9); /* Dark blue background for content cards */
+            background-color: #1A1A1A; /* Slightly lighter black for cards */
             border-radius: 1.5rem; /* More rounded corners */
-            padding: 2.5rem;
-            margin-bottom: 2.5rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow */
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); /* Deeper shadow for depth */
+            transition: transform 0.3s ease-in-out;
+            min-width: 0; /* Allow flex/grid items to shrink */
+            box-sizing: border-box; /* Include padding in width */
         }
         .section-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            transform: translateY(-5px); /* Subtle hover effect */
         }
-        .math-equation {
-            background-color: #0f172a; /* Even darker background for equations */
+        .back-button {
+            background-color: #6200EE; /* Deep purple for button */
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+        }
+        .back-button:hover {
+            background-color: #3700B3; /* Darker purple on hover */
+            transform: scale(1.05); /* Slight scale on hover */
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #BB86FC, #03DAC6); /* Purple to Teal gradient */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+        /* Styling for mathematical equations */
+        .MathJax_Display {
+            overflow-x: auto; /* Allow horizontal scrolling for wide equations */
+            padding: 1rem 0;
+            max-width: 100%; /* Ensure MathJax display adheres to container width */
+            box-sizing: border-box; /* Include padding in width */
+        }
+        .equation-box {
+            background-color: #2C2C2C; /* Darker grey for equation boxes */
             padding: 1.5rem;
             border-radius: 1rem;
-            margin: 1.5rem 0;
-            overflow-x: auto; /* Allow horizontal scrolling for long equations */
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #03DAC6; /* Teal border on left */
+            font-family: 'Monaco', 'Consolas', monospace; /* Monospaced font for equations */
+            color: #F0F0F0;
+            max-width: 100%; /* Ensure equation box adheres to container width */
+            overflow-x: auto; /* Add horizontal scroll for content inside if needed */
+            box-sizing: border-box; /* Include padding in width */
         }
-        .key-term {
-            color: #a78bfa; /* Purple for key terms */
-            font-weight: 600;
-        }
-        .example-box {
-            background-color: #2a3447; /* Slightly lighter dark for examples */
-            border-left: 5px solid #63b3ed;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            border-radius: 0.75rem;
-        }
-        /* Scrollbar styling */
+        /* Custom scrollbar for better aesthetics */
         ::-webkit-scrollbar {
             width: 10px;
+            height: 10px;
         }
         ::-webkit-scrollbar-track {
-            background: #1a202c;
+            background: #1A1A1A;
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb {
-            background: #4a5568;
+            background: #6200EE;
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #63b3ed;
+            background: #BB86FC;
+        }
+
+        /* Custom Alert Modal Styles */
+        .custom-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        .custom-alert-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .custom-alert-box {
+            background-color: #1A1A1A;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease-in-out;
+        }
+        .custom-alert-overlay.show .custom-alert-box {
+            transform: translateY(0);
+        }
+        .custom-alert-box h3 {
+            color: #BB86FC;
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+        .custom-alert-box p {
+            color: #E0E0E0;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .custom-alert-box button {
+            background-color: #03DAC6;
+            color: #1A1A1A;
+            font-weight: bold;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .custom-alert-box button:hover {
+            background-color: #00B09B;
+        }
+
+        /* Collision Simulator Specific Styles */
+        #collisionCanvas {
+            background-color: #0d0d0d;
+            border: 2px solid #03DAC6;
+            border-radius: 1rem;
+            display: block;
+            margin: 0 auto;
+        }
+        .slider-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .slider-group label {
+            min-width: 100px; /* Ensure labels don't wrap too much */
+        }
+        .slider-group input[type="range"] {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            height: 8px;
+            background: #4a4a4a;
+            border-radius: 5px;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+        }
+        .slider-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #BB86FC;
+            cursor: pointer;
+            border: 2px solid #000;
+        }
+        .slider-group input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #BB86FC;
+            cursor: pointer;
+            border: 2px solid #000;
+        }
+        .collision-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .collision-value {
+            font-weight: bold;
+            color: #03DAC6;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 antialiased">
-    <canvas id="three-canvas"></canvas>
+<body class="antialiased leading-relaxed min-h-screen flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8">
 
-    <a href="physics.html" class="back-button flex items-center justify-center space-x-2 text-lg">
-        <i class="fas fa-arrow-left"></i>
-        <span>Back to Physics</span>
-    </a>
+    <!-- Back Button -->
+    <div class="absolute top-8 left-8">
+        <a href="physics.html" class="back-button p-4 rounded-full shadow-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span class="sr-only">Back to Physics Home</span>
+        </a>
+    </div>
 
-    <div class="content-overlay max-w-4xl mx-auto py-16">
+    <div class="container mx-auto px-4 py-12 space-y-16">
+
         <header class="text-center mb-16">
-            <h1 class="text-6xl font-extrabold text-blue-400 mb-4 animate-pulse">Whizmath</h1>
-            <h2 class="text-5xl font-bold text-gray-100 mb-8 leading-tight">Momentum: Quantifying the Force of Motion and Collisions</h2>
-            <p class="text-2xl text-gray-300 max-w-3xl mx-auto">
-                Unpack the critical concepts of <span class="key-term">linear momentum</span> and <span class="key-term">impulse</span>. This comprehensive lesson will guide you through the fundamental <span class="key-term">conservation of momentum</span>, enabling you to analyze complex <span class="key-term">collision scenarios</span> from everyday bumps to cosmic impacts. Discover how mass and velocity combine to dictate an object's dynamic influence.
+            <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold mb-4 gradient-text leading-tight">
+                Whizmath: Mastering Momentum
+            </h1>
+            <p class="text-xl sm:text-2xl text-gray-400 max-w-3xl mx-auto">
+                Unveiling the Dynamics of Motion: A Comprehensive Guide to Momentum, Impulse, and Collisions
             </p>
         </header>
 
-        <section id="introduction" class="section-card">
-            <h3 class="text-4xl mb-6">1. Introduction to Momentum</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                In our previous explorations of mechanics, we've dissected motion in terms of displacement, velocity, and acceleration, and understood how forces cause changes in motion through Newton's Laws. Now, we introduce a concept that elegantly ties together mass and velocity: <span class="key-term">momentum</span>. Momentum is a fundamental quantity in physics that provides a more complete understanding of how objects move and interact, especially during <span class="key-term">collisions</span> and explosions.
+        <!-- Introduction Section -->
+        <section id="introduction" class="section-card p-8 md:p-12">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+                Introduction: What is Momentum?
+            </h2>
+            <p class="text-lg text-gray-300 mb-6">
+                Welcome to Whizmath, your definitive resource for deciphering the fundamental principles of physics and mathematics! In this in-depth lesson, we embark on an illuminating exploration of <strong class="text-teal-400">Linear Momentum</strong>, a pivotal concept in dynamics that quantifies the "quantity of motion" an object possesses. Beyond just how fast an object is moving, momentum also considers its mass, providing a more complete picture of its motion, especially during interactions like <strong class="text-teal-400">collisions</strong>.
             </p>
-            <p class="text-lg leading-relaxed mb-6">
-                Imagine trying to stop a small toy car versus a large truck, both moving at the same speed. Intuitively, you know the truck is much harder to stop. This "difficulty to stop" is a qualitative way of thinking about momentum. In physics, we quantify this notion. Momentum is not just about how fast an object is moving, but also about how much "stuff" is moving. This concept is crucial for analyzing interactions where forces act over very short periods, such as impacts.
+            <p class="text-lg text-gray-300 mb-6">
+                From the powerful impact of a bowling ball on pins to the intricate mechanics of billiard balls scattering across a table, the principles of momentum govern how objects behave when they interact. This lesson will introduce you to the core definition of momentum ($p = mv$), explore the concept of <strong class="text-teal-400">Impulse</strong> ($\Delta p = F \Delta t$), and most importantly, delve into the profound <strong class="text-teal-400">Law of Conservation of Momentum</strong>. This law states that for an isolated system, the total momentum remains constant, meaning $\sum p_{initial} = \sum p_{final}$.
             </p>
-            <p class="text-lg leading-relaxed mb-6">
-                This comprehensive lesson will systematically unpack the definition of <span class="key-term">linear momentum</span> and introduce its close relative, <span class="key-term">impulse</span> – the measure of how force changes momentum. We will then delve into one of the most powerful conservation laws in physics: the <span class="key-term">Law of Conservation of Momentum</span>. This law states that in an isolated system, the total momentum remains constant, allowing us to predict the outcomes of interactions without needing to know the complex details of the forces involved. Finally, we will apply these principles to various <span class="key-term">collision scenarios</span>, including elastic and inelastic collisions, which are ubiquitous in the physical world, from billiard balls to car crashes and subatomic particle interactions.
-            </p>
-            <p class="text-lg leading-relaxed">
-                Whether you're curious about why a bowling ball is more effective than a tennis ball at knocking down pins, or how astronauts maneuver in space, understanding momentum and its conservation will provide profound insights. Prepare to grasp the "oomph" factor of motion and its profound implications for interacting systems!
+            <p class="text-lg text-gray-300">
+                You will learn to apply these powerful concepts to analyze various scenarios, particularly <strong class="text-teal-400">simple collision scenarios</strong>, distinguishing between different types of collisions (elastic and inelastic). Prepare to build a robust understanding of <strong class="text-teal-400">dynamics</strong> that is indispensable in numerous scientific and engineering applications, revealing the elegant order within the apparent chaos of interacting objects.
             </p>
         </section>
 
-        <section id="linear-momentum" class="section-card">
-            <h3 class="text-4xl mb-6">2. Defining Linear Momentum</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Linear momentum</span> (often simply called momentum) is a vector quantity defined as the product of an object's mass and its velocity. It is a measure of the "quantity of motion" an object possesses.
+        <!-- Defining Linear Momentum Section -->
+        <section id="defining-momentum" class="section-card p-8 md:p-12">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+                Section 1: Defining Linear Momentum ($p = mv$)
+            </h2>
+            <p class="text-lg text-gray-300 mb-6">
+                <strong class="text-teal-400">Linear momentum</strong>, often simply called momentum, is a vector quantity that is a product of an object's mass and its velocity. It provides a measure of how much motion an object has, and in what direction. Unlike kinetic energy, which is a scalar, momentum explicitly includes direction, making it crucial for analyzing interactions.
             </p>
 
-            <h4 class="text-3xl mb-4">2.1. The Formula for Linear Momentum</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                The mathematical definition of linear momentum is:
-            </p>
-            <div class="math-equation">
-                $$\vec{p} = m\vec{v}$$
-                <p>Where:</p>
-                <ul class="list-disc list-inside ml-6">
-                    <li>$\vec{p}$ is the <span class="key-term">linear momentum</span> (a vector quantity, so it has both magnitude and direction).</li>
-                    <li>$m$ is the <span class="key-term">mass</span> of the object (a scalar quantity, in kilograms, kg).</li>
-                    <li>$\vec{v}$ is the <span class="key-term">velocity</span> of the object (a vector quantity, in meters per second, m/s).</li>
+            <h3 class="text-2xl sm:text-3xl font-semibold mb-4 text-purple-300">
+                1.1 The Momentum Equation
+            </h3>
+            <p class="text-lg text-gray-300 mb-4">
+                The definition of linear momentum is straightforward:
+                <div class="equation-box">
+                    $$ \vec{p} = m \vec{v} $$
+                </div>
+                Where:
+                <ul class="list-disc list-inside text-lg text-gray-300 mb-6 space-y-2">
+                    <li>$\vec{p}$ is the momentum vector.</li>
+                    <li>$m$ is the mass of the object (scalar, in kilograms, kg).</li>
+                    <li>$\vec{v}$ is the velocity vector of the object (in meters per second, m/s).</li>
                 </ul>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                The direction of the momentum vector is always the same as the direction of the velocity vector.
+            </p>
+            <p class="text-lg text-gray-300 mb-6">
+                The unit of momentum is <strong class="text-teal-400">kilogram-meter per second ($\text{kg} \cdot \text{m/s}$)</strong>. Since velocity is a vector, momentum is also a vector, pointing in the same direction as the velocity. This means that both the magnitude (speed) and direction of motion are important for describing momentum.
             </p>
 
-            <h4 class="text-3xl mb-4">2.2. Units of Momentum</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                From the formula $\vec{p} = m\vec{v}$, the SI unit for momentum is <span class="key-term">kilogram-meter per second (kg·m/s)</span>. There is no special name for this unit, unlike Newtons for force or Joules for energy.
-            </p>
-
-            <h4 class="text-3xl mb-4">2.3. Momentum as a Vector Quantity</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                Since velocity is a vector, momentum is also a vector. This means that when dealing with momentum in more than one dimension (e.g., collisions at angles), we must resolve momentum into its components (x-component, y-component) and treat each component separately.
-            </p>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Calculating Momentum</h4>
-                <p class="text-lg leading-relaxed mb-2">
-                    A $1000 \text{ kg}$ car travels North at $20 \text{ m/s}$. What is its momentum?
-                </p>
-                <p class="text-lg leading-relaxed">
-                    Given: $m = 1000 \text{ kg}$, $\vec{v} = 20 \text{ m/s North}$.
-                    $$\vec{p} = m\vec{v} = (1000 \text{ kg})(20 \text{ m/s North})$$
-                    $$\vec{p} = 20000 \text{ kg·m/s North}$$
-                </p>
-                <p class="text-lg leading-relaxed mt-2">
-                    Now, consider a $2000 \text{ kg}$ truck traveling South at $10 \text{ m/s}$. What is its momentum?
-                </p>
-                <p class="text-lg leading-relaxed">
-                    Given: $m = 2000 \text{ kg}$, $\vec{v} = 10 \text{ m/s South}$.
-                    $$\vec{p} = (2000 \text{ kg})(10 \text{ m/s South})$$
-                    $$\vec{p} = 20000 \text{ kg·m/s South}$$
-                </p>
-                <p class="text-lg leading-relaxed mt-2">
-                    Even though their speeds are different, both have the same *magnitude* of momentum, but in opposite directions. This highlights the importance of direction for vector quantities.
-                </p>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                Momentum is a measure of an object's "motional inertia" – its tendency to resist changes in its state of motion. The greater the mass or velocity, the greater the momentum, and thus the greater the force required to bring it to rest or change its direction.
-            </p>
-        </section>
-
-        <section id="impulse" class="section-card">
-            <h3 class="text-4xl mb-6">3. Impulse and Change in Momentum</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                When a force acts on an object over a period of time, it causes a change in the object's momentum. This effect is quantified by the concept of <span class="key-term">impulse</span>.
-            </p>
-
-            <h4 class="text-3xl mb-4">3.1. Defining Impulse</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Impulse ($\vec{J}$)</span> is defined as the product of the net force acting on an object and the time interval over which the force acts.
-            </p>
-            <div class="math-equation">
-                $$\vec{J} = \vec{F}_{net} \Delta t$$
-                <p>Where:</p>
-                <ul class="list-disc list-inside ml-6">
-                    <li>$\vec{J}$ is the <span class="key-term">impulse</span> (a vector quantity).</li>
-                    <li>$\vec{F}_{net}$ is the <span class="key-term">net force</span> acting on the object (a vector quantity, in Newtons, N).</li>
-                    <li>$\Delta t$ is the <span class="key-term">time interval</span> over which the force acts (a scalar quantity, in seconds, s).</li>
+            <h3 class="text-2xl sm:text-3xl font-semibold mb-4 text-purple-300">
+                1.2 Mass vs. Velocity in Momentum
+            </h3>
+            <p class="text-lg text-gray-300 mb-4">
+                Momentum highlights the combined effect of mass and velocity. A massive object moving slowly can have the same momentum as a light object moving very fast.
+                <ul class="list-disc list-inside text-lg text-gray-300 mb-6 space-y-2">
+                    <li>A large truck moving at a low speed has significant momentum due to its large mass.</li>
+                    <li>A small bullet moving at a very high speed also has significant momentum due to its high velocity.</li>
                 </ul>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                The direction of the impulse is the same as the direction of the net force.
+                Understanding this interplay is fundamental to analyzing collisions and interactions between objects.
+            </p>
+        </section>
+
+        <!-- Impulse Section -->
+        <section id="impulse" class="section-card p-8 md:p-12">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+                Section 2: Impulse ($\Delta p = F \Delta t$)
+            </h2>
+            <p class="text-lg text-gray-300 mb-6">
+                When a force acts on an object over a period of time, it changes the object's momentum. This change in momentum is called <strong class="text-teal-400">Impulse</strong>. Impulse is also a vector quantity, and its direction is the same as the direction of the net force causing the change.
             </p>
 
-            <h4 class="text-3xl mb-4">3.2. The Impulse-Momentum Theorem</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                The connection between impulse and momentum is formalized by the <span class="key-term">Impulse-Momentum Theorem</span>, which states that the impulse acting on an object is equal to the change in its momentum.
+            <h3 class="text-2xl sm:text-3xl font-semibold mb-4 text-purple-300">
+                2.1 The Impulse-Momentum Theorem
+            </h3>
+            <p class="text-lg text-gray-300 mb-4">
+                The relationship between impulse and momentum is formally stated by the <strong class="text-teal-400">Impulse-Momentum Theorem</strong>. This theorem is derived directly from Newton's Second Law of Motion ($F = ma$). Since $a = \Delta v / \Delta t$, we have $F = m (\Delta v / \Delta t)$. Rearranging this, we get:
+                <div class="equation-box">
+                    $$ F \Delta t = m \Delta v $$
+                </div>
+                Since $m \Delta v$ is the change in momentum ($\Delta p = p_f - p_i = mv_f - mv_i$), we can define impulse ($J$) as:
+                <div class="equation-box">
+                    $$ \vec{J} = \vec{F}_{avg} \Delta t = \Delta \vec{p} $$
+                </div>
+                Where:
+                <ul class="list-disc list-inside text-lg text-gray-300 mb-6 space-y-2">
+                    <li>$\vec{J}$ is the impulse vector.</li>
+                    <li>$\vec{F}_{avg}$ is the average net force acting on the object (in Newtons, N).</li>
+                    <li>$\Delta t$ is the time interval over which the force acts (in seconds, s).</li>
+                    <li>$\Delta \vec{p}$ is the change in momentum (in $\text{kg} \cdot \text{m/s}$).</li>
+                </ul>
             </p>
-            <p class="text-lg leading-relaxed mb-6">
-                Recall Newton's Second Law: $\vec{F}_{net} = m\vec{a}$. We also know that acceleration is $\vec{a} = \frac{\Delta \vec{v}}{\Delta t}$.
-                Substituting this into Newton's Second Law:
-            </p>
-            <div class="math-equation">
-                $$\vec{F}_{net} = m \left(\frac{\Delta \vec{v}}{\Delta t}\right)$$
-                $$\vec{F}_{net} \Delta t = m \Delta \vec{v}$$
-                $$\vec{F}_{net} \Delta t = m (\vec{v}_f - \vec{v}_i)$$
-                $$\vec{F}_{net} \Delta t = m\vec{v}_f - m\vec{v}_i$$
-                $$\vec{F}_{net} \Delta t = \vec{p}_f - \vec{p}_i$$
-                $$\vec{J} = \Delta \vec{p}$$
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                This powerful theorem shows that impulse and change in momentum are equivalent quantities. The units for impulse are N·s, which are equivalent to kg·m/s (since $1 \text{ N} = 1 \text{ kg} \cdot \text{m/s}^2$, then $1 \text{ N·s} = 1 \text{ kg} \cdot \text{m/s}^2 \cdot \text{s} = 1 \text{ kg·m/s}$).
+            <p class="text-lg text-gray-300 mb-6">
+                The unit of impulse is <strong class="text-teal-400">Newton-second ($\text{N} \cdot \text{s}$)</strong>. Since a Newton is $\text{kg} \cdot \text{m/s}^2$, then $\text{N} \cdot \text{s} = (\text{kg} \cdot \text{m/s}^2) \cdot \text{s} = \text{kg} \cdot \text{m/s}$. This confirms that impulse and change in momentum have the same units, reinforcing their equivalence.
             </p>
 
-            <h4 class="text-3xl mb-4">3.3. Practical Applications of Impulse</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                The Impulse-Momentum Theorem has profound practical implications, especially in safety design and sports. It shows that to achieve a certain change in momentum ($\Delta \vec{p}$), you can either apply a large force for a short time or a small force for a long time.
+            <h3 class="text-2xl sm:text-3xl font-semibold mb-4 text-purple-300">
+                2.2 Applications of Impulse
+            </h3>
+            <p class="text-lg text-gray-300 mb-4">
+                The impulse-momentum theorem is incredibly practical. It explains how forces affect motion over time.
+                <ul class="list-disc list-inside text-lg text-gray-300 mb-6 space-y-2">
+                    <li>
+                        <strong>Increasing Momentum:</strong> To increase an object's momentum, apply a large force for a long time (e.g., a rocket engine).
+                    </li>
+                    <li>
+                        <strong>Decreasing Momentum (Stopping):</strong> To decrease an object's momentum to zero (bring it to a stop), a force must be applied in the opposite direction of motion.
+                        <ul class="list-circle list-inside ml-6">
+                            <li>
+                                <strong>Safety Features:</strong> Car airbags, crumple zones, and padded dashboards work by increasing the time interval ($\Delta t$) over which the stopping force acts on a passenger. Since the change in momentum ($\Delta p$) is fixed (from high speed to zero), increasing $\Delta t$ effectively *decreases* the average force ($F_{avg} = \Delta p / \Delta t$) exerted on the person, thus reducing injury.
+                            </li>
+                            <li>
+                                <strong>Sports:</strong> A catcher's mitt "gives" to extend the time a baseball takes to stop, reducing the force on the hand. A golfer "follows through" to extend the time the club is in contact with the ball, maximizing the impulse and thus the change in the ball's momentum.
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">
-                    <span class="font-bold">Increasing Impact Time to Reduce Force:</span>
-                    In situations where a change in momentum is unavoidable (like a collision), increasing the time over which the force acts will reduce the magnitude of the average force. This is why:
-                    <ul class="list-circle list-inside ml-8">
-                        <li class="mb-1">Airbags in cars deploy: They increase the time of impact for the passenger, thus reducing the force exerted on the passenger's body.</li>
-                        <li class="mb-1">Crumple zones in cars: They are designed to deform and absorb energy, increasing the impact time during a crash.</li>
-                        <li class="mb-1">Landing softly: Bending your knees when landing from a jump or jumping onto a mat increases the time it takes to stop, reducing the force on your legs.</li>
-                        <li class="mb-1">Catching a baseball: Moving your hand backward as you catch a fast ball increases the time over which the ball's momentum is changed, reducing the force on your hand.</li>
+        </section>
+
+        <!-- Law of Conservation of Momentum Section -->
+        <section id="conservation-of-momentum" class="section-card p-8 md:p-12">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+                Section 3: The Law of Conservation of Momentum
+            </h2>
+            <p class="text-lg text-gray-300 mb-6">
+                The <strong class="text-teal-400">Law of Conservation of Momentum</strong> is one of the most fundamental principles in physics. It states that for an <strong class="text-teal-400">isolated system</strong>, the total linear momentum remains constant. In simpler terms, if no external forces act on a system of objects, their total momentum before an interaction (like a collision or explosion) is equal to their total momentum after the interaction.
+            </p>
+
+            <h3 class="text-2xl sm:text-3xl font-semibold mb-4 text-purple-300">
+                3.1 Isolated Systems
+            </h3>
+            <p class="text-lg text-gray-300 mb-4">
+                An <strong class="text-teal-400">isolated system</strong> is a collection of objects where no net external forces act on the system. External forces are those originating from outside the defined system. Internal forces, on the other hand, are forces between objects *within* the system (e.g., the forces between two colliding cars).
+                <ul class="list-disc list-inside text-lg text-gray-300 mb-6 space-y-2">
+                    <li>
+                        <strong>Examples of External Forces to Consider Negligible:</strong> Friction, air resistance, applied pushes/pulls from outside the system.
+                    </li>
+                    <li>
+                        <strong>Internal Forces:</strong> During a collision, the forces exerted by the colliding objects on each other are internal forces. According to Newton's Third Law, these forces are equal in magnitude and opposite in direction, so they cancel out when considering the *total* force on the system.
+                    </li>
+                </ul>
+                In reality, perfectly isolated systems are rare, but for short-duration interactions like collisions, external forces often have a negligible effect compared to the large internal forces, allowing us to treat the system as approximately isolated.
+            </p>
+
+            <h3 class="text-2xl sm:text-3xl font-semibold mb-4 text-purple-300">
+                3.2 The Conservation Law
+            </h3>
+            <p class="text-lg text-gray-300 mb-4">
+                For an isolated system containing $N$ objects, the total momentum before an interaction (e.g., initial state) is equal to the total momentum after the interaction (e.g., final state):
+                <div class="equation-box">
+                    $$ \sum \vec{p}_{\text{initial}} = \sum \vec{p}_{\text{final}} $$
+                    $$ m_1 \vec{v}_{1i} + m_2 \vec{v}_{2i} + \dots + m_N \vec{v}_{Ni} = m_1 \vec{v}_{1f} + m_2 \vec{v}_{2f} + \dots + m_N \vec{v}_{Nf} $$
+                </div>
+                Where:
+                <ul class="list-disc list-inside text-lg text-gray-300 mb-6 space-y-2">
+                    <li>$m_k$ is the mass of the $k$-th object.</li>
+                    <li>$\vec{v}_{ki}$ is the initial velocity of the $k$-th object.</li>
+                    <li>$\vec{v}_{kf}$ is the final velocity of the $k$-th object.</li>
+                </ul>
+            </p>
+            <p class="text-lg text-gray-300">
+                This conservation law is incredibly powerful because it applies even when other quantities, like kinetic energy, are not conserved (as we'll see in inelastic collisions). It simplifies the analysis of complex interactions by focusing on the states before and after, without needing to know the exact details of the forces during the interaction.
+            </p>
+        </section>
+
+        <!-- Types of Collisions Section -->
+        <section id="types-of-collisions" class="section-card p-8 md:p-12">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+                Section 4: Types of Collisions and Their Analysis
+            </h2>
+            <p class="text-lg text-gray-300 mb-6">
+                The conservation of momentum is a universal principle for isolated systems, but the behavior of kinetic energy during interactions allows us to classify collisions into different types.
+            </p>
+
+            <h3 class="text-2xl sm:text-3xl font-semibold mb-4 text-purple-300">
+                4.1 Elastic Collisions
+            </h3>
+            <p class="text-lg text-gray-300 mb-4">
+                In an <strong class="text-teal-400">elastic collision</strong>, both linear momentum and kinetic energy are conserved. This type of collision occurs when there is no net loss of kinetic energy in the system as a result of the collision. Ideal elastic collisions are rare in the macroscopic world, as some energy is always converted to heat, sound, or deformation. However, collisions between atomic and subatomic particles are often treated as elastic.
+                <div class="equation-box">
+                    $$ \sum \vec{p}_{\text{initial}} = \sum \vec{p}_{\text{final}} $$
+                    $$ \sum KE_{\text{initial}} = \sum KE_{\text{final}} $$
+                    $$ \frac{1}{2} m_1 v_{1i}^2 + \frac{1}{2} m_2 v_{2i}^2 = \frac{1}{2} m_1 v_{1f}^2 + \frac{1}{2} m_2 v_{2f}^2 $$
+                </div>
+            </p>
+
+            <h3 class="text-2xl sm:text-3xl font-semibold mb-4 text-purple-300">
+                4.2 Inelastic Collisions
+            </h3>
+            <p class="text-lg text-gray-300 mb-4">
+                In an <strong class="text-teal-400">inelastic collision</strong>, linear momentum is conserved, but kinetic energy is not conserved. Some kinetic energy is transformed into other forms of energy, such as heat, sound, or the energy of deformation (e.g., crumpling of cars). Most macroscopic collisions are inelastic.
+                <div class="equation-box">
+                    $$ \sum \vec{p}_{\text{initial}} = \sum \vec{p}_{\text{final}} $$
+                    $$ \sum KE_{\text{initial}} \neq \sum KE_{\text{final}} $$
+                </div>
+            </p>
+
+            <h4 class="text-xl sm:text-2xl font-medium mb-3 text-purple-400">
+                Perfectly Inelastic Collisions (or Completely Inelastic)
+            </h4>
+            <p class="text-lg text-gray-300 mb-4">
+                A special case of an inelastic collision is a <strong class="text-teal-400">perfectly inelastic collision</strong>. In this type, the colliding objects stick together after the collision and move as a single combined mass with a common final velocity. The loss of kinetic energy is maximized in these collisions.
+                <div class="equation-box">
+                    $$ m_1 \vec{v}_{1i} + m_2 \vec{v}_{2i} = (m_1 + m_2) \vec{v}_{f} $$
+                </div>
+                Here, $\vec{v}_{f}$ is the common final velocity of the combined mass.
+            </p>
+
+            <h3 class="text-2xl sm:text-3xl font-semibold mb-4 text-purple-300">
+                4.3 Explosions (Reverse Collisions)
+            </h3>
+            <p class="text-lg text-gray-300 mb-4">
+                Explosions are the reverse of perfectly inelastic collisions. An object (or a system of objects) initially at rest or moving together breaks apart into multiple pieces. Momentum is conserved in explosions as well. If the system is initially at rest, the total momentum before is zero, meaning the sum of the momenta of all fragments after the explosion must also be zero.
+                <div class="equation-box">
+                    $$ (m_1 + m_2 + \dots) \vec{v}_{initial} = m_1 \vec{v}_{1f} + m_2 \vec{v}_{2f} + \dots $$
+                </div>
+                If the initial velocity $\vec{v}_{initial} = 0$, then:
+                <div class="equation-box">
+                    $$ 0 = m_1 \vec{v}_{1f} + m_2 \vec{v}_{2f} + \dots $$
+                </div>
+            </p>
+        </section>
+
+        <!-- Problem-Solving Strategies Section -->
+        <section id="problem-solving" class="section-card p-8 md:p-12">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+                Section 5: Problem-Solving Strategies for Momentum & Collisions
+            </h2>
+            <p class="text-lg text-gray-300 mb-6">
+                Analyzing problems involving momentum and collisions requires a systematic approach. The key is to carefully define your system and identify whether external forces are negligible.
+            </p>
+
+            <ul class="list-decimal list-inside text-lg text-gray-300 mb-6 space-y-4">
+                <li>
+                    <strong class="text-teal-400">1. Define the System:</strong> Clearly identify all objects that are part of your system. This is crucial for determining internal vs. external forces.
+                </li>
+                <li>
+                    <strong class="text-teal-400">2. Determine if the System is Isolated:</strong> Assess whether the net external force on the system is negligible during the interaction. If so, momentum is conserved. If significant external forces are present (e.g., friction acting over a long time), then momentum might not be conserved, and you'll need to use the impulse-momentum theorem or other force-based approaches.
+                </li>
+                <li>
+                    <strong class="text-teal-400">3. Choose a Coordinate System and Define Directions:</strong> For one-dimensional collisions, clearly define positive and negative directions. For two-dimensional collisions, you'll need to consider conservation of momentum in both the x and y components independently.
+                </li>
+                <li>
+                    <strong class="text-teal-400">4. Sketch Initial and Final States:</strong> Draw simple diagrams showing the objects and their velocity vectors (with labels for mass and velocity) *before* the interaction and *after* the interaction.
+                </li>
+                <li>
+                    <strong class="text-teal-400">5. Apply Conservation of Momentum:</strong> Write down the conservation of momentum equation for your system, summing up the momentum of each object before and after. Remember to use vector notation or consider components separately.
+                    <div class="equation-box">
+                        $$ \sum \vec{p}_{\text{initial}} = \sum \vec{p}_{\text{final}} $$
+                    </div>
+                </li>
+                <li>
+                    <strong class="text-teal-400">6. Identify Collision Type (if applicable):</strong>
+                    <ul class="list-circle list-inside ml-6">
+                        <li>
+                            <strong>Perfectly Inelastic:</strong> Objects stick together ($v_{1f} = v_{2f} = v_f$). Use $(m_1+m_2)v_f$.
+                        </li>
+                        <li>
+                            <strong>Elastic:</strong> Momentum AND Kinetic Energy are conserved. You'll need two equations (momentum and KE) to solve for two unknowns (typically final velocities).
+                        </li>
+                        <li>
+                            <strong>Inelastic (general):</strong> Only momentum is conserved. If you have too many unknowns, you might need additional information (e.g., coefficient of restitution, or energy loss).
+                        </li>
                     </ul>
                 </li>
-                <li class="mb-2">
-                    <span class="font-bold">Decreasing Impact Time to Increase Force:</span>
-                    Conversely, if you want to exert a large force, you minimize the contact time for a given change in momentum. This is seen in:
-                    <ul class="list-circle list-inside ml-8">
-                        <li class="mb-1">Hammering a nail: A large force is applied over a very short time interval to drive the nail.</li>
-                        <li class="mb-1">Karate chop: A quick, forceful strike maximizes the impact force.</li>
-                        <li class="mb-1">Golf swing or tennis serve: The goal is to apply a large force to the ball over a short period to give it a large momentum.</li>
-                    </ul>
+                <li>
+                    <strong class="text-teal-400">7. Solve the Equations:</strong> Solve the system of equations for the unknown quantities. Be careful with signs for vector directions!
+                </li>
+                <li>
+                    <strong class="text-teal-400">8. Check Units and Reasonableness:</strong> As always, verify that your units are consistent and your answer makes physical sense.
                 </li>
             </ul>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Impulse Calculation</h4>
-                <p class="text-lg leading-relaxed mb-2">
-                    A $0.15 \text{ kg}$ baseball is pitched at $40 \text{ m/s}$. The batter hits it, sending it back towards the pitcher at $50 \text{ m/s}$. If the bat was in contact with the ball for $0.002 \text{ s}$, what was the average force exerted by the bat on the ball?
-                </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Given:</span>
-                    <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
-                        <li>$m = 0.15 \text{ kg}$</li>
-                        <li>Initial velocity $v_i = 40 \text{ m/s}$ (let's say positive direction)</li>
-                        <li>Final velocity $v_f = -50 \text{ m/s}$ (opposite direction, so negative)</li>
-                        <li>Time interval $\Delta t = 0.002 \text{ s}$</li>
-                    </ul>
-                </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Step 1: Calculate the change in momentum ($\Delta p$)</span>
-                    $$\Delta p = m(v_f - v_i) = 0.15 \text{ kg} (-50 \text{ m/s} - 40 \text{ m/s})$$
-                    $$\Delta p = 0.15 \text{ kg} (-90 \text{ m/s}) = -13.5 \text{ kg·m/s}$$
-                </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Step 2: Use Impulse-Momentum Theorem to find average force ($\vec{F}_{avg}$)</span>
-                    $$\vec{F}_{avg} \Delta t = \Delta \vec{p}$$
-                    $$\vec{F}_{avg} = \frac{\Delta \vec{p}}{\Delta t} = \frac{-13.5 \text{ kg·m/s}}{0.002 \text{ s}}$$
-                    $$\vec{F}_{avg} = -6750 \text{ N}$$
-                    The negative sign indicates the force is in the direction opposite to the initial velocity of the ball (i.e., towards the pitcher). The average force exerted by the bat is very large, demonstrating the short contact time.
-                </p>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                The concepts of impulse and momentum are essential for understanding how forces transfer energy and how to design systems for both effectiveness and safety in impacts.
-            </p>
         </section>
 
-        <section id="conservation-of-momentum" class="section-card">
-            <h3 class="text-4xl mb-6">4. The Law of Conservation of Momentum</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                One of the most fundamental principles in physics, on par with the conservation of energy, is the <span class="key-term">Law of Conservation of Momentum</span>. This law is extremely powerful because it allows us to analyze interactions (like collisions or explosions) without needing to know the complex internal forces involved, as long as the system is isolated.
+        <!-- Worked Examples Section -->
+        <section id="worked-examples" class="section-card p-8 md:p-12">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+                Section 6: Worked Examples - Applying Momentum & Impulse
+            </h2>
+            <p class="text-lg text-gray-300 mb-6">
+                Let's put these concepts into practice with some illustrative examples.
             </p>
 
-            <h4 class="text-3xl mb-4">4.1. Statement of the Law</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                The <span class="key-term">Law of Conservation of Momentum</span> states:
-            </p>
-            <blockquote class="text-xl italic border-l-4 border-blue-500 pl-4 py-2 my-6">
-                "For an isolated system, the total linear momentum remains constant over time."
-            </blockquote>
-            <p class="text-lg leading-relaxed mb-6">
-                Let's define what an "isolated system" means in this context:
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">
-                    <span class="key-term">Isolated System:</span> A system of objects upon which the net external force is zero. Internal forces (forces between objects within the system) can act, but they cancel out in pairs due to Newton's Third Law.
-                </li>
-            </ul>
-            <p class="text-lg leading-relaxed mb-6">
-                In mathematical terms, the conservation of momentum means:
-            </p>
-            <div class="math-equation">
-                $$\sum \vec{p}_{initial} = \sum \vec{p}_{final}$$
-                <p>or, for a system of two objects (A and B):</p>
-                $$m_A \vec{v}_{A,initial} + m_B \vec{v}_{B,initial} = m_A \vec{v}_{A,final} + m_B \vec{v}_{B,final}$$
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                This means the total momentum of the system *before* an interaction (like a collision or explosion) is equal to the total momentum of the system *after* the interaction. This is true for each dimension independently (x-momentum is conserved, y-momentum is conserved, etc.).
-            </p>
-
-            <h4 class="text-3xl mb-4">4.2. Derivation from Newton's Third Law</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                The conservation of momentum is a direct consequence of Newton's Third Law. Consider two objects, A and B, colliding. During the collision, object A exerts a force $\vec{F}_{AB}$ on B, and object B exerts an equal and opposite force $\vec{F}_{BA}$ on A:
-            </p>
-            <div class="math-equation">
-                $$\vec{F}_{AB} = -\vec{F}_{BA}$$
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                Since these forces act over the same short time interval $\Delta t$:
-            </p>
-            <div class="math-equation">
-                $$\vec{F}_{AB} \Delta t = -\vec{F}_{BA} \Delta t$$
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                By the Impulse-Momentum Theorem, this means:
-            </p>
-            <div class="math-equation">
-                $$\Delta \vec{p}_B = -\Delta \vec{p}_A$$
-                $$\Delta \vec{p}_A + \Delta \vec{p}_B = 0$$
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                This shows that the total change in momentum of the system (A + B) is zero. In other words, the total momentum of the system is conserved.
-            </p>
-
-            <h4 class="text-3xl mb-4">4.3. Isolated vs. Non-Isolated Systems</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                It's crucial to correctly identify whether a system is isolated.
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">
-                    <span class="font-bold">Isolated System Example:</span> Two billiard balls colliding on a frictionless table. The forces between the balls are internal. External forces like gravity and the normal force from the table are present, but they cancel out vertically, making the net external force horizontally zero.
-                </li>
-                <li class="mb-2">
-                    <span class="font-bold">Non-Isolated System Example:</span> A car braking on a road. The friction force from the road on the tires is an external force that changes the car's momentum. Thus, the car itself is not an isolated system.
-                </li>
-            </ul>
-            <p class="text-lg leading-relaxed mb-6">
-                Even if there are external forces, if their effect is negligible during the very short duration of an interaction (like a collision), we can often approximate the system as isolated for that brief period.
-            </p>
-        </section>
-
-        <section id="collisions" class="section-card">
-            <h3 class="text-4xl mb-6">5. Applications in Collisions</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                The conservation of momentum is particularly useful for analyzing <span class="key-term">collisions</span>, which are events where two or more objects exert forces on each other for a relatively short time. During a collision, the internal forces between the colliding objects are usually much larger than any external forces, so we can treat the colliding objects as an isolated system.
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                Collisions are generally categorized into two main types based on whether kinetic energy is conserved:
-            </p>
-
-            <h4 class="text-3xl mb-4">5.1. Elastic Collisions</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                An <span class="key-term">elastic collision</span> is a collision in which both linear momentum and <span class="key-term">kinetic energy</span> are conserved. This means that the total kinetic energy of the system before the collision is equal to the total kinetic energy after the collision.
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">
-                    <span class="font-bold">Momentum Conservation:</span>
-                    $$m_1 \vec{v}_{1i} + m_2 \vec{v}_{2i} = m_1 \vec{v}_{1f} + m_2 \vec{v}_{2f}$$
-                </li>
-                <li class="mb-2">
-                    <span class="font-bold">Kinetic Energy Conservation:</span>
-                    $$\frac{1}{2}m_1 v_{1i}^2 + \frac{1}{2}m_2 v_{2i}^2 = \frac{1}{2}m_1 v_{1f}^2 + \frac{1}{2}m_2 v_{2f}^2$$
-                </li>
-            </ul>
-            <p class="text-lg leading-relaxed mb-6">
-                In reality, perfectly elastic collisions are rare. They typically occur only at the atomic or subatomic level (e.g., collisions between ideal gas molecules). However, collisions between very hard objects like billiard balls can be approximated as elastic.
-            </p>
-
-            <h4 class="text-3xl mb-4">5.2. Inelastic Collisions</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                An <span class="key-term">inelastic collision</span> is a collision in which linear momentum is conserved, but <span class="key-term">kinetic energy is NOT conserved</span>. Some of the initial kinetic energy is converted into other forms of energy, such as heat, sound, or deformation (e.g., bending metal, breaking glass).
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">
-                    <span class="font-bold">Momentum Conservation (still holds):</span>
-                    $$m_1 \vec{v}_{1i} + m_2 \vec{v}_{2i} = m_1 \vec{v}_{1f} + m_2 \vec{v}_{2f}$$
-                </li>
-                <li class="mb-2">
-                    <span class="font-bold">Kinetic Energy (NOT conserved):</span>
-                    $$\frac{1}{2}m_1 v_{1i}^2 + \frac{1}{2}m_2 v_{2i}^2 \neq \frac{1}{2}m_1 v_{1f}^2 + \frac{1}{2}m_2 v_{2f}^2$$
-                </li>
-            </ul>
-            <p class="text-lg leading-relaxed mb-6">
-                Most real-world collisions are inelastic. A common sub-type of inelastic collision is a <span class="key-term">perfectly inelastic collision</span>, where the colliding objects stick together after the collision and move as a single combined mass with a common final velocity.
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">
-                    <span class="font-bold">Perfectly Inelastic Collision Formula:</span>
-                    $$m_1 \vec{v}_{1i} + m_2 \vec{v}_{2i} = (m_1 + m_2) \vec{v}_f$$
-                </li>
-            </ul>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Perfectly Inelastic Collision</h4>
-                <p class="text-lg leading-relaxed mb-2">
-                    A $0.5 \text{ kg}$ block slides on a frictionless surface at $2.0 \text{ m/s}$ and collides with a stationary $1.5 \text{ kg}$ block. If they stick together, what is their common final velocity?
+            <!-- Example 1: Impulse -->
+            <div class="mb-12 p-6 bg-gray-900 rounded-xl shadow-inner border border-gray-700">
+                <h3 class="text-2xl sm:text-3xl font-semibold mb-4 text-teal-300">
+                    Example 6.1: Impulse on a Baseball
+                </h3>
+                <p class="text-lg text-gray-300 mb-4">
+                    A $0.145 \text{ kg}$ baseball is pitched with a velocity of $40 \text{ m/s}$ towards the batter. The batter hits the ball, and it leaves the bat with a velocity of $50 \text{ m/s}$ in the opposite direction. If the bat is in contact with the ball for $0.0015 \text{ s}$, find:
+                    <ol class="list-alpha list-inside text-lg text-gray-300 mb-4 space-y-1">
+                        <li>The impulse imparted to the baseball.</li>
+                        <li>The average force exerted by the bat on the baseball.</li>
+                    </ol>
                 </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Given:</span>
-                    <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
-                        <li>$m_1 = 0.5 \text{ kg}$, $v_{1i} = 2.0 \text{ m/s}$</li>
-                        <li>$m_2 = 1.5 \text{ kg}$, $v_{2i} = 0 \text{ m/s}$</li>
+
+                <h4 class="text-xl sm:text-2xl font-medium mb-3 text-purple-400">Solution:</h4>
+                <p class="text-lg text-gray-300 mb-4">
+                    <strong>Define positive direction:</strong> Let's choose the initial direction of the ball (towards the batter) as positive.
+                    <br>
+                    <strong>Given:</strong>
+                    <ul class="list-disc list-inside text-lg text-gray-300 mb-4">
+                        <li>$m = 0.145 \text{ kg}$</li>
+                        <li>$v_{initial} = +40 \text{ m/s}$</li>
+                        <li>$v_{final} = -50 \text{ m/s}$ (opposite direction)</li>
+                        <li>$\Delta t = 0.0015 \text{ s}$</li>
                     </ul>
                 </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Apply Conservation of Momentum:</span>
-                    $$m_1 v_{1i} + m_2 v_{2i} = (m_1 + m_2) v_f$$
-                    $$(0.5 \text{ kg})(2.0 \text{ m/s}) + (1.5 \text{ kg})(0 \text{ m/s}) = (0.5 \text{ kg} + 1.5 \text{ kg}) v_f$$
-                    $$1.0 \text{ kg·m/s} + 0 = (2.0 \text{ kg}) v_f$$
-                    $$v_f = \frac{1.0 \text{ kg·m/s}}{2.0 \text{ kg}} = 0.5 \text{ m/s}$$
-                    The blocks stick together and move at $0.5 \text{ m/s}$ in the original direction of the first block.
+                <p class="text-lg text-gray-300 mb-4">
+                    <strong>Step 1: Calculate the change in momentum ($\Delta p$)</strong>
+                    <div class="equation-box">
+                        $$ \Delta p = p_{final} - p_{initial} = m v_{final} - m v_{initial} $$
+                        $$ \Delta p = m (v_{final} - v_{initial}) $$
+                        $$ \Delta p = 0.145 \text{ kg} (-50 \text{ m/s} - 40 \text{ m/s}) $$
+                        $$ \Delta p = 0.145 \text{ kg} (-90 \text{ m/s}) $$
+                        $$ \Delta p = -13.05 \text{ kg} \cdot \text{m/s} $$
+                    </div>
+                    The negative sign indicates the change in momentum is in the direction opposite to the initial velocity, which makes sense as the ball reverses direction.
+                </p>
+                <p class="text-lg text-gray-300 mb-4">
+                    <strong>Step 2: Calculate the impulse ($J$)</strong>
+                    From the Impulse-Momentum Theorem, $J = \Delta p$.
+                    <div class="equation-box">
+                        $$ J = -13.05 \text{ N} \cdot \text{s} $$
+                    </div>
+                </p>
+                <p class="text-lg text-gray-300 mb-4">
+                    <strong>Step 3: Calculate the average force ($F_{avg}$)</strong>
+                    Using $J = F_{avg} \Delta t$, so $F_{avg} = J / \Delta t$:
+                    <div class="equation-box">
+                        $$ F_{avg} = \frac{-13.05 \text{ N} \cdot \text{s}}{0.0015 \text{ s}} $$
+                        $$ F_{avg} = -8700 \text{ N} $$
+                    </div>
+                    The average force is very large and negative, indicating it acts in the direction opposite to the initial motion (i.e., in the direction the ball is hit back).
+                </p>
+                <p class="text-lg text-gray-300 font-bold text-teal-200">
+                    Answers: <br>
+                    a) Impulse imparted to the baseball: $-13.05 \text{ kg} \cdot \text{m/s}$ (or $-13.05 \text{ N} \cdot \text{s}$) <br>
+                    b) Average force exerted by the bat: $-8700 \text{ N}$
                 </p>
             </div>
-            <p class="text-lg leading-relaxed mb-6">
-                Understanding the differences between elastic and inelastic collisions is crucial in fields like automotive safety (designing cars to absorb impact), sports (understanding how balls behave upon impact), and even astrophysics (analyzing galactic collisions).
-            </p>
-        </section>
 
-        <section id="conclusion" class="section-card">
-            <h3 class="text-4xl mb-6">6. Conclusion: The Enduring Principle of Momentum</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                Our comprehensive journey through the world of <span class="key-term">momentum</span> has unveiled its fundamental role in understanding the dynamics of motion and interactions. We started by defining <span class="key-term">linear momentum</span> as a vector quantity linking an object's mass and velocity, giving us a measure of its "quantity of motion." This led us to the concept of <span class="key-term">impulse</span>, the force applied over a time interval that causes a measurable <span class="key-term">change in momentum</span>, a principle with vast implications for safety and efficiency in everyday life.
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                Most importantly, we explored the powerful <span class="key-term">Law of Conservation of Momentum</span>. This law, derived from Newton's Third Law, asserts that the total momentum of an <span class="key-term">isolated system</span> remains constant, regardless of the complex internal forces at play. This allows us to predict the outcomes of events like <span class="key-term">collisions</span> and explosions with remarkable accuracy, simply by comparing the total momentum before and after the interaction. We distinguished between <span class="key-term">elastic collisions</span> (where kinetic energy is conserved) and <span class="key-term">inelastic collisions</span> (where it is not), and saw how the principles apply to real-world scenarios.
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                The principles of momentum are not confined to the classroom; they are deeply woven into the fabric of our physical world. From the impact of a hammer on a nail to the intricate maneuvers of spacecraft using rocket propulsion, and from the safety features in vehicles to the analysis of complex particle physics experiments, understanding momentum is indispensable.
-            </p>
-            <p class="text-lg leading-relaxed">
-                As you continue your explorations in physics and mathematics, remember that momentum, alongside energy, forms a pair of fundamental conservation laws that are indispensable for analyzing almost any physical system. These concepts are not just abstract ideas, but practical tools that help us quantify, predict, and ultimately control the dynamic world around us. Keep building on this foundation, and you'll find the elegant simplicity behind even the most complex phenomena!
-            </p>
-        </section>
+            <!-- Example 2: Perfectly Inelastic Collision -->
+            <div class="mb-12 p-6 bg-gray-900 rounded-xl shadow-inner border border-gray-700">
+                <h3 class="text-2xl sm:text-3xl font-semibold mb-4 text-teal-300">
+                    Example 6.2: A Perfectly Inelastic Collision
+                </h3>
+                <p class="text-lg text-gray-300 mb-4">
+                    A $1500 \text{ kg}$ car traveling east at $20 \text{ m/s}$ collides with a $2500 \text{ kg}$ truck traveling east at $10 \text{ m/s}$. The two vehicles lock together and move as one after the collision. What is their common velocity immediately after the collision?
+                </p>
 
-        <section id="glossary" class="section-card">
-            <h3 class="text-4xl mb-6">7. Glossary of Key Terms</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-lg">
-                <div><strong class="key-term">Change in Momentum ($\Delta \vec{p}$):</strong> The difference between an object's final and initial momentum ($\vec{p}_f - \vec{p}_i$).</div>
-                <div><strong class="key-term">Collision:</strong> An event where two or more objects exert forces on each other for a relatively short period of time.</div>
-                <div><strong class="key-term">Conservation of Momentum:</strong> In an isolated system, the total linear momentum remains constant over time ($\sum \vec{p}_{initial} = \sum \vec{p}_{final}$).</div>
-                <div><strong class="key-term">Elastic Collision:</strong> A collision in which both linear momentum and kinetic energy are conserved.</div>
-                <div><strong class="key-term">Impulse ($\vec{J}$):</strong> The product of the net force acting on an object and the time interval over which it acts ($\vec{J} = \vec{F}_{net} \Delta t$). Also equal to the change in momentum.</div>
-                <div><strong class="key-term">Impulse-Momentum Theorem:</strong> States that the impulse acting on an object is equal to the change in its momentum ($\vec{J} = \Delta \vec{p}$).</div>
-                <div><strong class="key-term">Inelastic Collision:</strong> A collision in which linear momentum is conserved, but kinetic energy is not conserved (some is lost to other forms).</div>
-                <div><strong class="key-term">Isolated System:</strong> A system of objects upon which the net external force is zero.</div>
-                <div><strong class="key-term">Kinetic Energy:</strong> The energy of motion. For a point mass, $\frac{1}{2}mv^2$.</div>
-                <div><strong class="key-term">Linear Momentum ($\vec{p}$):</strong> A vector quantity defined as the product of an object's mass and its velocity ($\vec{p} = m\vec{v}$).</div>
-                <div><strong class="key-term">Perfectly Inelastic Collision:</strong> An inelastic collision where the colliding objects stick together after impact.</div>
+                <h4 class="text-xl sm:text-2xl font-medium mb-3 text-purple-400">Solution:</h4>
+                <p class="text-lg text-gray-300 mb-4">
+                    This is a perfectly inelastic collision in one dimension. Let east be the positive direction.
+                    <br>
+                    <strong>Given:</strong>
+                    <ul class="list-disc list-inside text-lg text-gray-300 mb-4">
+                        <li>Car: $m_c = 1500 \text{ kg}$, $v_{ci} = +20 \text{ m/s}$</li>
+                        <li>Truck: $m_t = 2500 \text{ kg}$, $v_{ti} = +10 \text{ m/s}$</li>
+                    </ul>
+                    After collision, they move together with common final velocity $v_f$.
+                </p>
+                <p class="text-lg text-gray-300 mb-4">
+                    <strong>Step 1: Apply Conservation of Momentum</strong>
+                    $$ \sum p_{initial} = \sum p_{final} $$
+                    $$ m_c v_{ci} + m_t v_{ti} = (m_c + m_t) v_f $$
+                </p>
+                <p class="text-lg text-gray-300 mb-4">
+                    <strong>Step 2: Substitute values and solve for $v_f$</strong>
+                    <div class="equation-box">
+                        $$ (1500 \text{ kg})(20 \text{ m/s}) + (2500 \text{ kg})(10 \text{ m/s}) = (1500 \text{ kg} + 2500 \text{ kg}) v_f $$
+                        $$ 30000 \text{ kg} \cdot \text{m/s} + 25000 \text{ kg} \cdot \text{m/s} = (4000 \text{ kg}) v_f $$
+                        $$ 55000 \text{ kg} \cdot \text{m/s} = (4000 \text{ kg}) v_f $$
+                        $$ v_f = \frac{55000}{4000} \text{ m/s} $$
+                        $$ v_f = 13.75 \text{ m/s} $$
+                    </div>
+                </p>
+                <p class="text-lg text-gray-300 font-bold text-teal-200">
+                    Answer: The common velocity of the combined vehicles after the collision is $13.75 \text{ m/s}$ east.
+                </p>
+            </div>
+
+            <!-- Example 3: Explosion (Recoil) -->
+            <div class="mb-12 p-6 bg-gray-900 rounded-xl shadow-inner border border-gray-700">
+                <h3 class="text-2xl sm:text-3xl font-semibold mb-4 text-teal-300">
+                    Example 6.3: Recoil of a Rifle
+                </h3>
+                <p class="text-lg text-gray-300 mb-4">
+                    A $5.0 \text{ kg}$ rifle fires a $0.010 \text{ kg}$ bullet with a velocity of $400 \text{ m/s}$ to the right. Assuming the rifle is initially at rest, what is its recoil velocity?
+                </p>
+
+                <h4 class="text-xl sm:text-2xl font-medium mb-3 text-purple-400">Solution:</h4>
+                <p class="text-lg text-gray-300 mb-4">
+                    This is an explosion problem. The system (rifle + bullet) is isolated. Let right be the positive direction.
+                    <br>
+                    <strong>Given:</strong>
+                    <ul class="list-disc list-inside text-lg text-gray-300 mb-4">
+                        <li>Rifle: $m_r = 5.0 \text{ kg}$, $v_{ri} = 0 \text{ m/s}$</li>
+                        <li>Bullet: $m_b = 0.010 \text{ kg}$, $v_{bi} = 0 \text{ m/s}$</li>
+                        <li>Bullet final: $v_{bf} = +400 \text{ m/s}$</li>
+                    </ul>
+                </p>
+                <p class="text-lg text-gray-300 mb-4">
+                    <strong>Step 1: Apply Conservation of Momentum</strong>
+                    $$ \sum p_{initial} = \sum p_{final} $$
+                    $$ m_r v_{ri} + m_b v_{bi} = m_r v_{rf} + m_b v_{bf} $$
+                </p>
+                <p class="text-lg text-gray-300 mb-4">
+                    <strong>Step 2: Substitute values and solve for $v_{rf}$</strong>
+                    Since the initial velocities are zero:
+                    <div class="equation-box">
+                        $$ 0 = m_r v_{rf} + m_b v_{bf} $$
+                        $$ 0 = (5.0 \text{ kg}) v_{rf} + (0.010 \text{ kg})(400 \text{ m/s}) $$
+                        $$ 0 = (5.0 \text{ kg}) v_{rf} + 4.0 \text{ kg} \cdot \text{m/s} $$
+                        $$ (5.0 \text{ kg}) v_{rf} = -4.0 \text{ kg} \cdot \text{m/s} $$
+                        $$ v_{rf} = \frac{-4.0}{5.0} \text{ m/s} $$
+                        $$ v_{rf} = -0.80 \text{ m/s} $$
+                    </div>
+                    The negative sign indicates the recoil velocity of the rifle is to the left, opposite to the bullet's motion.
+                </p>
+                <p class="text-lg text-gray-300 font-bold text-teal-200">
+                    Answer: The recoil velocity of the rifle is $-0.80 \text{ m/s}$ (or $0.80 \text{ m/s}$ to the left).
+                </p>
             </div>
         </section>
 
-        <section id="references" class="section-card">
-            <h3 class="text-4xl mb-6">8. Further Reading and References</h3>
-            <p class="text-lg leading-relaxed mb-4">To continue your exploration of momentum and related concepts, consider these excellent resources:</p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
-                <li class="mb-2">Serway, R. A., & Jewett, J. W. (2018). <em>Physics for Scientists and Engineers with Modern Physics</em> (10th ed.). Cengage Learning. (Chapter on Linear Momentum and Collisions)</li>
-                <li class="mb-2">Halliday, D., Resnick, R., & Walker, J. (2014). <em>Fundamentals of Physics</em> (10th ed.). John Wiley & Sons. (Chapter on Momentum, Impulse, and Collisions)</li>
-                <li class="mb-2">Young, H. D., & Freedman, R. A. (2020). <em>University Physics with Modern Physics</em> (15th ed.). Pearson. (Comprehensive coverage of momentum and collisions)</li>
-                <li class="mb-2">Khan Academy: <a href="https://www.khanacademy.org/science/physics/linear-momentum" target="_blank" class="text-blue-400 hover:underline">Linear Momentum Course</a> (Online video lessons and practice problems)</li>
-                <li class="mb-2">HyperPhysics: <a href="http://hyperphysics.phy-astr.gsu.edu/hbase/momcon.html" target="_blank" class="text-blue-400 hover:underline">Momentum and Collisions Topics</a> (Concise explanations and interactive diagrams)</li>
-            </ul>
+        <!-- Interactive Element Section (Simple Collision Simulator) -->
+        <section id="momentum-simulator" class="section-card p-8 md:p-12">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+                Section 7: Interactive Collision Simulator (1D)
+            </h2>
+            <p class="text-lg text-gray-300 mb-6">
+                Explore the conservation of momentum with this simple one-dimensional collision simulator. Adjust the masses and initial velocities of two blocks to see their final velocities and how total momentum is conserved. Assume perfectly elastic collisions.
+            </p>
+
+            <div class="bg-gray-800 p-6 rounded-lg shadow-md flex flex-col space-y-6">
+                <canvas id="collisionCanvas" width="600" height="200"></canvas>
+
+                <div class="collision-controls">
+                    <div class="flex flex-col">
+                        <h4 class="text-xl font-semibold mb-2 text-purple-400">Block 1</h4>
+                        <div class="slider-group">
+                            <label for="mass1">Mass (kg):</label>
+                            <input type="range" id="mass1" min="1" max="10" value="2" step="0.1">
+                            <span id="mass1Val" class="collision-value">2.0 kg</span>
+                        </div>
+                        <div class="slider-group">
+                            <label for="vel1">Velocity (m/s):</label>
+                            <input type="range" id="vel1" min="-10" max="10" value="5" step="0.1">
+                            <span id="vel1Val" class="collision-value">5.0 m/s</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <h4 class="text-xl font-semibold mb-2 text-purple-400">Block 2</h4>
+                        <div class="slider-group">
+                            <label for="mass2">Mass (kg):</label>
+                            <input type="range" id="mass2" min="1" max="10" value="5" step="0.1">
+                            <span id="mass2Val" class="collision-value">5.0 kg</span>
+                        </div>
+                        <div class="slider-group">
+                            <label for="vel2">Velocity (m/s):</label>
+                            <input type="range" id="vel2" min="-10" max="10" value="-2" step="0.1">
+                            <span id="vel2Val" class="collision-value">-2.0 m/s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="resetSimulationBtn"
+                        class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75">
+                    Reset Simulation
+                </button>
+
+                <div id="simulationResults" class="mt-4 p-4 bg-gray-700 rounded-lg text-gray-200">
+                    <h3 class="text-xl font-semibold mb-3 text-teal-300">Simulation Results (Initial):</h3>
+                    <p><strong>Total Initial Momentum:</strong> <span id="initialMomentumResult" class="collision-value">--</span> kg·m/s</p>
+                    <p><strong>Total Initial Kinetic Energy:</strong> <span id="initialKEResult" class="collision-value">--</span> J</p>
+                    <h3 class="text-xl font-semibold mt-4 mb-3 text-teal-300">Simulation Results (Final - after collision):</h3>
+                    <p><strong>Block 1 Final Velocity:</strong> <span id="finalVel1Result" class="collision-value">--</span> m/s</p>
+                    <p><strong>Block 2 Final Velocity:</strong> <span id="finalVel2Result" class="collision-value">--</span> m/s</p>
+                    <p><strong>Total Final Momentum:</strong> <span id="finalMomentumResult" class="collision-value">--</span> kg·m/s</p>
+                    <p><strong>Total Final Kinetic Energy:</strong> <span id="finalKEResult" class="collision-value">--</span> J</p>
+                    <p class="text-sm text-gray-400 mt-2">
+                        <em>Note: In an ideal elastic collision, total momentum and total kinetic energy are conserved. Minor rounding differences may occur.</em>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Conclusion Section -->
+        <section id="conclusion" class="section-card p-8 md:p-12 text-center">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-6">
+                Conclusion: The Enduring Power of Momentum
+            </h2>
+            <p class="text-lg text-gray-300 mb-6">
+                You have now thoroughly explored the crucial concept of <strong class="text-teal-400">Linear Momentum</strong>, its relationship with <strong class="text-teal-400">Impulse</strong>, and the foundational <strong class="text-teal-400">Law of Conservation of Momentum</strong>. Understanding how momentum is defined ($\vec{p} = m\vec{v}$) and how it changes due to impulse ($\vec{J} = \vec{F}\Delta t = \Delta \vec{p}$) provides a powerful lens through which to analyze a wide array of physical interactions.
+            </p>
+            <p class="text-lg text-gray-300 mb-6">
+                The conservation of momentum, particularly in <strong class="text-teal-400">isolated systems</strong> and during various types of <strong class="text-teal-400">collisions</strong> (elastic, inelastic, and perfectly inelastic), is a testament to the elegant symmetries underlying the universe. This principle allows us to predict the outcomes of complex interactions without needing to delve into the intricate details of the forces involved, making it an indispensable tool in physics and engineering.
+            </p>
+            <p class="text-lg text-gray-300">
+                Keep practicing problem-solving and experimenting with the interactive simulator to deepen your intuition for momentum. This foundational knowledge will serve as a springboard for further studies in advanced dynamics, rotational motion, and even quantum mechanics. Thank you for learning with <strong class="gradient-text">Whizmath</strong>. Continue your physics journey by returning to the <a href="physics.html" class="text-teal-400 hover:underline">Physics Home Page</a>.
+            </p>
         </section>
 
     </div>
 
-    
+    <!-- Scroll to Top Button (Optional but good for long pages) -->
+    <button id="scrollToTopBtn"
+            class="fixed bottom-8 right-8 bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-full shadow-lg z-50
+                   transition duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 hidden">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <!-- Custom Alert Modal Structure -->
+    <div id="customAlertModal" class="custom-alert-overlay">
+        <div class="custom-alert-box">
+            <h3>Input Error</h3>
+            <p id="alertMessage">Default message</p>
+            <button id="closeAlertBtn">OK</button>
+        </div>
+    </div>
 
     <script>
-        // Three.js Animated Background
-        const canvas = document.getElementById('three-canvas');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true }); // alpha for transparent background
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio); // Handle high-DPI screens
+        // Custom Alert Modal Functions
+        const customAlertModal = document.getElementById('customAlertModal');
+        const alertMessageElement = document.getElementById('alertMessage');
+        const closeAlertBtn = document.getElementById('closeAlertBtn');
 
-        // Adjust camera position
-        camera.position.z = 5;
-
-        // Create particles
-        const particleCount = 1000;
-        const particles = new THREE.BufferGeometry();
-        const positions = new Float32Array(particleCount * 3);
-
-        for (let i = 0; i < particleCount * 3; i += 3) {
-            positions[i] = (Math.random() - 0.5) * 200; // x
-            positions[i + 1] = (Math.random() - 0.5) * 200; // y
-            positions[i + 2] = (Math.random() - 0.5) * 200; // z
+        function showAlert(message) {
+            alertMessageElement.textContent = message;
+            customAlertModal.classList.add('show');
         }
 
-        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        function hideAlert() {
+            customAlertModal.classList.remove('show');
+        }
 
-        const particleMaterial = new THREE.PointsMaterial({
-            color: 0x63b3ed, // Blueish color
-            size: 0.1,
-            blending: THREE.AdditiveBlending, // For glowing effect
-            transparent: true,
-            opacity: 0.7
-        });
+        closeAlertBtn.addEventListener('click', hideAlert);
 
-        const particleSystem = new THREE.Points(particles, particleMaterial);
-        scene.add(particleSystem);
-
-        // Add a subtle ambient light
-        const ambientLight = new THREE.AmbientLight(0x404040, 1.5); // soft white light
-        scene.add(ambientLight);
-
-        // Add a directional light for some depth
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(0, 1, 0); // Light from top
-        scene.add(directionalLight);
-
-        // Animation loop
-        const animate = () => {
-            requestAnimationFrame(animate);
-
-            // Rotate particles slowly
-            particleSystem.rotation.x += 0.0005;
-            particleSystem.rotation.y += 0.001;
-
-            // Simple movement effect
-            for (let i = 0; i < particleCount; i++) {
-                // Get current position
-                const i3 = i * 3;
-                positions[i3 + 2] += 0.05; // Move particles forward
-
-                // If particle goes too far, reset its Z position
-                if (positions[i3 + 2] > camera.position.z + 10) {
-                    positions[i3 + 2] = camera.position.z - 200;
-                }
+        // Close modal if clicked outside (optional)
+        customAlertModal.addEventListener('click', function(event) {
+            if (event.target === customAlertModal) {
+                hideAlert();
             }
-            particles.attributes.position.needsUpdate = true; // Tell Three.js to update buffer
-
-            renderer.render(scene, camera);
-        };
-
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // Start animation after window loads
+        // JavaScript for Scroll to Top Button
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        // Show/hide button based on scroll position
+        window.onscroll = function() {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                scrollToTopBtn.classList.remove('hidden');
+            } else {
+                scrollToTopBtn.classList.add('hidden');
+            }
+        };
+
+        // Scroll to top when button is clicked
+        scrollToTopBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+
+        // Collision Simulator JavaScript
+        const canvas = document.getElementById('collisionCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const mass1Input = document.getElementById('mass1');
+        const vel1Input = document.getElementById('vel1');
+        const mass2Input = document.getElementById('mass2');
+        const vel2Input = document.getElementById('vel2');
+        const resetSimulationBtn = document.getElementById('resetSimulationBtn');
+
+        const mass1ValSpan = document.getElementById('mass1Val');
+        const vel1ValSpan = document.getElementById('vel1Val');
+        const mass2ValSpan = document.getElementById('mass2Val');
+        const vel2ValSpan = document.getElementById('vel2Val');
+
+        const initialMomentumResult = document.getElementById('initialMomentumResult');
+        const initialKEResult = document.getElementById('initialKEResult');
+        const finalVel1Result = document.getElementById('finalVel1Result');
+        const finalVel2Result = document.getElementById('finalVel2Result');
+        const finalMomentumResult = document.getElementById('finalMomentumResult');
+        const finalKEResult = document.getElementById('finalKEResult');
+
+        let block1 = { x: 100, y: canvas.height / 2, radius: 20, mass: parseFloat(mass1Input.value), vx: parseFloat(vel1Input.value) };
+        let block2 = { x: 500, y: canvas.height / 2, radius: 20, mass: parseFloat(mass2Input.value), vx: parseFloat(vel2Input.value) };
+
+        let animationFrameId;
+
+        function drawBlock(block, color) {
+            ctx.beginPath();
+            ctx.arc(block.x, block.y, block.radius, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Draw text (mass and velocity)
+            ctx.fillStyle = '#fff';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.font = '12px Inter';
+            ctx.fillText(`m=${block.mass.toFixed(1)}kg`, block.x, block.y - block.radius - 10);
+            ctx.fillText(`v=${block.vx.toFixed(1)}m/s`, block.x, block.y + block.radius + 10);
+        }
+
+        function calculateElasticCollision(m1, v1, m2, v2) {
+            // Formulas for 1D elastic collision
+            const v1f = ((m1 - m2) * v1 + 2 * m2 * v2) / (m1 + m2);
+            const v2f = ((m2 - m1) * v2 + 2 * m1 * v1) / (m1 + m2);
+            return { v1f, v2f };
+        }
+
+        function updateSimulation() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+
+            // Draw walls
+            ctx.fillStyle = '#333';
+            ctx.fillRect(0, 0, 5, canvas.height); // Left wall
+            ctx.fillRect(canvas.width - 5, 0, 5, canvas.height); // Right wall
+
+            // Update positions
+            block1.x += block1.vx;
+            block2.x += block2.vx;
+
+            // Handle collisions with walls
+            if (block1.x - block1.radius < 5 || block1.x + block1.radius > canvas.width - 5) {
+                block1.vx *= -1; // Reverse velocity
+                block1.x = Math.max(block1.radius + 5, Math.min(canvas.width - 5 - block1.radius, block1.x)); // Keep in bounds
+            }
+            if (block2.x - block2.radius < 5 || block2.x + block2.radius > canvas.width - 5) {
+                block2.vx *= -1; // Reverse velocity
+                block2.x = Math.max(block2.radius + 5, Math.min(canvas.width - 5 - block2.radius, block2.x)); // Keep in bounds
+            }
+
+            // Handle collision between blocks
+            const distance = Math.sqrt((block1.x - block2.x)**2);
+            const minDistance = block1.radius + block2.radius;
+
+            if (distance < minDistance && Math.sign(block1.vx) !== Math.sign(block2.vx)) {
+                // If they are moving towards each other and overlapping
+                // Perform collision calculations
+                const { v1f, v2f } = calculateElasticCollision(block1.mass, block1.vx, block2.mass, block2.vx);
+                block1.vx = v1f;
+                block2.vx = v2f;
+
+                // Adjust positions to prevent sticking (simple separation)
+                const overlap = minDistance - distance;
+                const totalMass = block1.mass + block2.mass;
+                block1.x -= overlap * (block2.mass / totalMass);
+                block2.x += overlap * (block1.mass / totalMass);
+
+                updateResults(); // Update results only on collision
+            } else if (distance < minDistance && Math.sign(block1.vx) == Math.sign(block2.vx)) {
+                 // If already overlapping and moving in the same direction, move them apart slowly.
+                 // This handles cases where they might get stuck due to large steps or initial overlap.
+                const overlap = minDistance - distance;
+                block1.x -= overlap * 0.1; // Small adjustment
+                block2.x += overlap * 0.1; // Small adjustment
+            }
+
+
+            drawBlock(block1, '#BB86FC'); // Purple for block 1
+            drawBlock(block2, '#03DAC6'); // Teal for block 2
+
+            animationFrameId = requestAnimationFrame(updateSimulation);
+        }
+
+        function updateResults() {
+            // Initial calculations
+            const m1 = parseFloat(mass1Input.value);
+            const v1 = parseFloat(vel1Input.value);
+            const m2 = parseFloat(mass2Input.value);
+            const v2 = parseFloat(vel2Input.value);
+
+            const initialP1 = m1 * v1;
+            const initialP2 = m2 * v2;
+            const totalInitialMomentum = initialP1 + initialP2;
+            const initialKE1 = 0.5 * m1 * v1 * v1;
+            const initialKE2 = 0.5 * m2 * v2 * v2;
+            const totalInitialKE = initialKE1 + initialKE2;
+
+            initialMomentumResult.textContent = totalInitialMomentum.toFixed(2);
+            initialKEResult.textContent = totalInitialKE.toFixed(2);
+
+            // Final velocities after potential collision (or current velocities if no collision yet)
+            // For this simulator, we directly use the block's current velocities, which are updated on collision
+            const finalP1 = block1.mass * block1.vx;
+            const finalP2 = block2.mass * block2.vx;
+            const totalFinalMomentum = finalP1 + finalP2;
+            const finalKE1 = 0.5 * block1.mass * block1.vx * block1.vx;
+            const finalKE2 = 0.5 * block2.mass * block2.vx * block2.vx;
+            const totalFinalKE = finalKE1 + finalKE2;
+
+
+            finalVel1Result.textContent = block1.vx.toFixed(2);
+            finalVel2Result.textContent = block2.vx.toFixed(2);
+            finalMomentumResult.textContent = totalFinalMomentum.toFixed(2);
+            finalKEResult.textContent = totalFinalKE.toFixed(2);
+        }
+
+        function resetSimulation() {
+            cancelAnimationFrame(animationFrameId); // Stop any ongoing animation
+
+            block1.x = 100;
+            block1.y = canvas.height / 2;
+            block1.mass = parseFloat(mass1Input.value);
+            block1.vx = parseFloat(vel1Input.value);
+
+            block2.x = 500;
+            block2.y = canvas.height / 2;
+            block2.mass = parseFloat(mass2Input.value);
+            block2.vx = parseFloat(vel2Input.value);
+
+            mass1ValSpan.textContent = `${block1.mass.toFixed(1)} kg`;
+            vel1ValSpan.textContent = `${block1.vx.toFixed(1)} m/s`;
+            mass2ValSpan.textContent = `${block2.mass.toFixed(1)} kg`;
+            vel2ValSpan.textContent = `${block2.vx.toFixed(1)} m/s`;
+
+            updateResults(); // Update results for initial state
+            animationFrameId = requestAnimationFrame(updateSimulation); // Start animation
+        }
+
+        // Event Listeners for sliders
+        mass1Input.addEventListener('input', () => {
+            block1.mass = parseFloat(mass1Input.value);
+            mass1ValSpan.textContent = `${block1.mass.toFixed(1)} kg`;
+            updateResults();
+        });
+        vel1Input.addEventListener('input', () => {
+            block1.vx = parseFloat(vel1Input.value);
+            vel1ValSpan.textContent = `${block1.vx.toFixed(1)} m/s`;
+            updateResults();
+        });
+        mass2Input.addEventListener('input', () => {
+            block2.mass = parseFloat(mass2Input.value);
+            mass2ValSpan.textContent = `${block2.mass.toFixed(1)} kg`;
+            updateResults();
+        });
+        vel2Input.addEventListener('input', () => {
+            block2.vx = parseFloat(vel2Input.value);
+            vel2ValSpan.textContent = `${block2.vx.toFixed(1)} m/s`;
+            updateResults();
+        });
+
+        resetSimulationBtn.addEventListener('click', resetSimulation);
+
+        // Initial setup
         window.onload = function() {
-            animate();
+            resetSimulation(); // Call reset to initialize everything
         };
 
-        // Smooth scroll for internal links (if any were added)
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
+        // Make canvas responsive
+        function resizeCanvas() {
+            const containerWidth = canvas.parentElement.clientWidth;
+            canvas.width = Math.min(600, containerWidth - 30); // Max 600px, but responsive
+            canvas.height = 200; // Fixed height for simplicity
+            // Redraw content after resize
+            drawBlock(block1, '#BB86FC');
+            drawBlock(block2, '#03DAC6');
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas(); // Initial resize
     </script>
 </body>
 </html>
