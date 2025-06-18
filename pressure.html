@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pressure & Buoyancy - Whizmath</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
-     crossorigin="anonymous"></script>
+    <title>Pressure & Buoyancy: Forces in Fluids - Whizmath</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- MathJax Script for LaTeX rendering -->
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
     <script>
         // Optional: Configure MathJax to process dollar signs for inline math
         MathJax = {
@@ -21,486 +23,277 @@
         };
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        /* Custom styles for smooth scrolling and font */
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden; /* Prevent horizontal scroll due to potential canvas overflow */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        #global-background-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1; /* Send canvas to the background */
-            pointer-events: none; /* Allow clicks to pass through to content */
+        /* Ensure that content with overflow-x-auto only scrolls horizontally */
+        .overflow-x-auto-scroll {
+            -webkit-overflow-scrolling: touch; /* for smoother scrolling on iOS */
         }
-        .content-container {
-            position: relative;
-            z-index: 1; /* Ensure content is above the canvas */
-            background: rgba(17, 24, 39, 0.9); /* Dark background with slight transparency for canvas to show */
-            padding: 2rem;
-            margin: 0 auto;
-            max-width: 90vw; /* Fluid width */
-            border-radius: 1.5rem; /* Rounded corners */
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            color: #E5E7EB; /* Light grey text */
-            margin-top: 4rem; /* Space from top */
-            margin-bottom: 4rem; /* Space from bottom */
-        }
-
-        /* Responsive adjustments for content container */
-        @media (min-width: 768px) {
-            .content-container {
-                max-width: 80vw;
-            }
-        }
-        @media (min-width: 1024px) {
-            .content-container {
-                max-width: 70vw;
-            }
-        }
-        @media (min-width: 1280px) {
-            .content-container {
-                max-width: 60vw;
-            }
-        }
-
-        /* Scrollbar styling */
+        /* Custom scrollbar for better aesthetics */
         ::-webkit-scrollbar {
-            width: 12px;
+            width: 8px;
+            height: 8px; /* For horizontal scrollbars */
         }
+
         ::-webkit-scrollbar-track {
-            background: #1f2937; /* Darker grey */
+            background: #2D3748; /* Darker track */
             border-radius: 10px;
         }
+
         ::-webkit-scrollbar-thumb {
-            background: #4B5563; /* Medium grey */
+            background: #63B3ED; /* Blue thumb */
             border-radius: 10px;
-            border: 3px solid #1f2937;
         }
+
         ::-webkit-scrollbar-thumb:hover {
-            background: #6B7280; /* Lighter grey on hover */
+            background: #4299E1; /* Darker blue on hover */
         }
 
-        /* Back button specific styling */
-        .back-button {
-            position: fixed;
-            top: 1.5rem;
-            left: 1.5rem;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1.25rem;
-            background: linear-gradient(135deg, #6366F1, #8B5CF6); /* Purple gradient */
-            color: white;
-            border-radius: 9999px; /* Fully rounded */
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .back-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.2), 0 6px 8px -4px rgba(0, 0, 0, 0.1);
-            background: linear-gradient(135deg, #4F46E5, #7C3AED);
-        }
-        .back-button svg {
-            margin-right: 0.5rem;
+        /* Styling for the back button SVG icon */
+        .back-button-svg {
+            transition: transform 0.2s ease-in-out;
         }
 
-        /* Styling for headings and paragraphs */
-        h1 {
-            font-size: 3rem; /* Larger heading */
-            font-weight: 700;
-            margin-bottom: 2rem;
-            text-align: center;
-            color: #93C5FD; /* Light blue */
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        .back-button:hover .back-button-svg {
+            transform: translateX(-5px);
         }
-        h2 {
-            font-size: 2.25rem;
-            font-weight: 600;
-            margin-top: 2.5rem;
-            margin-bottom: 1.5rem;
-            color: #9BD0F5; /* Slightly darker light blue */
-            border-bottom: 2px solid #3B82F6; /* Blue underline */
-            padding-bottom: 0.5rem;
-        }
-        h3 {
-            font-size: 1.75rem;
-            font-weight: 600;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            color: #BEE3F8; /* Even lighter blue */
-        }
-        p {
-            margin-bottom: 1rem;
-            line-height: 1.75;
-            font-size: 1.1rem;
-            text-align: justify;
-        }
-        ul, ol {
-            margin-left: 2rem;
-            margin-bottom: 1rem;
-            list-style-type: disc;
-        }
-        li {
-            margin-bottom: 0.5rem;
-            line-height: 1.6;
-        }
-        code {
-            background-color: #374151; /* Darker grey for code snippets */
-            padding: 0.2em 0.4em;
-            border-radius: 0.25rem;
-            font-family: monospace;
-            color: #D1D5DB;
-        }
-        .key-term {
-            font-weight: 600;
-            color: #60A5FA; /* Blue for key terms as requested */
-        }
-
-        /* Specific styling for MathJax elements */
-        .MathJax {
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-            overflow-x: auto; /* Allow horizontal scrolling for long equations */
-        }
-
     </style>
 </head>
-<body class="bg-black text-gray-200 min-h-screen flex flex-col items-center">
-
-    <!-- Three.js Canvas -->
-    <canvas id="global-background-canvas"></canvas>
+<body class="bg-black text-white antialiased">
 
     <!-- Back Button -->
-    <a href="physics.html" class="back-button">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    <a href="physics.html" class="back-button fixed top-4 left-4 sm:top-6 sm:left-6 md:top-8 md:left-8 z-50
+        inline-flex items-center px-4 py-2 rounded-full bg-gray-800 text-white shadow-lg
+        hover:bg-blue-600 focus:outline-none focus:ring-2 focus="focus:ring-blue-500 focus:ring-opacity-75 transition-all duration-300">
+        <svg class="w-5 h-5 mr-2 back-button-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
-        Back to Physics
+        <span class="hidden sm:inline">Back to Physics</span>
     </a>
 
-    <!-- Main Content Container -->
-    <div class="content-container">
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-10 leading-tight">
-            Exploring <span class="text-blue-400">Pressure & Buoyancy</span>: The Physics of Fluids
-        </h1>
+    <div class="container mx-auto px-4 py-12 md:py-16 lg:py-20 max-w-4xl pt-24 sm:pt-28 md:pt-32">
 
-        <p class="text-lg mb-8 text-center px-4">
-            Welcome to Whizmath's in-depth guide to <span class="key-term">Pressure and Buoyancy</span>, fundamental concepts in <span class="key-term">fluid mechanics</span> that explain why submarines dive, hot air balloons float, and why objects sink or rise in water. We will unravel the concept of <span class="key-term">pressure</span> ($P = F/A$), delving into <span class="key-term">atmospheric pressure</span> and <span class="key-term">hydrostatic pressure</span> ($P = \rho gh$). Crucially, we will explore <span class="key-term">Archimedes' Principle</span> and the phenomenon of <span class="key-term">buoyancy</span>, explaining how objects interact with fluids. This lesson is essential for understanding everything from hydraulic systems to oceanography. Prepare to master the invisible forces that govern the behavior of <span class="key-term">fluids</span>!
-        </p>
+        <!-- Header Section -->
+        <header class="text-center mb-12 sm:mb-16 md:mb-20">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-400 leading-tight">
+                <span class="text-white">Whizmath:</span> Understanding Pressure & Buoyancy in Fluids
+            </h1>
+            <p class="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
+                Understand the concept of <span class="text-blue-400 font-semibold">pressure</span> ($P=F/A$) in <span class="text-blue-400 font-semibold">fluids</span>, including <span class="text-blue-400 font-semibold">atmospheric pressure</span> and <span class="text-blue-400 font-semibold">hydrostatic pressure</span> ($P=\rho gh$). Explore <span class="text-blue-400 font-semibold">Archimedes' Principle</span> and the concept of <span class="text-blue-400 font-semibold">buoyancy</span>, explaining why objects <span class="text-blue-400 font-semibold">float or sink</span>.
+            </p>
+        </header>
 
-        <h2 id="introduction">1. Introduction to Fluid Mechanics: The World of Flowing Matter</h2>
-        <p>
-            The world around us is filled with <span class="key-term">fluids</span> – substances that flow and take the shape of their containers. This includes both <span class="key-term">liquids</span> (like water, oil, and blood) and <span class="key-term">gases</span> (like air, helium, and natural gas). Unlike <span class="key-term">solids</span>, which maintain a fixed shape, fluids continuously deform under applied shear stress. The study of fluids, known as <span class="key-term">fluid mechanics</span>, is a vast and crucial branch of <span class="key-term">physics</span> and <span class="key-term">engineering</span>. It helps us understand diverse phenomena, from how airplanes fly and boats float to how blood circulates in our bodies and how weather patterns form.
-        </p>
-        <p>
-            At the heart of <span class="key-term">fluid mechanics</span> are two interconnected concepts: <span class="key-term">pressure</span> and <span class="key-term">buoyancy</span>. <span class="key-term">Pressure</span> describes the force exerted by a fluid over a given area, and it's what allows hydraulic brakes to work or a diver to feel increased force at depth. <span class="key-term">Buoyancy</span>, on the other hand, is the upward force exerted by a fluid that opposes the weight of an immersed object, determining whether an object floats or sinks. These principles are not only foundational for academic understanding but also have immense practical applications in naval architecture, aerospace engineering, civil engineering, and even medicine.
-        </p>
-        <p>
-            This comprehensive Whizmath lesson on <span class="key-term">Pressure & Buoyancy</span> will provide a thorough exploration of these concepts, ensuring you gain a solid grasp of how fluids behave and interact with objects. We will meticulously examine:
-        </p>
-        <ul class="list-disc ml-6">
-            <li>The fundamental definition of <span class="key-term">pressure</span> and its units, along with practical examples.</li>
-            <li>Detailed explanations of different types of pressure, including <span class="key-term">atmospheric pressure</span> and <span class="key-term">hydrostatic pressure</span>, and how they vary with depth and altitude.</li>
-            <li>The principles governing <span class="key-term">pressure measurement</span>, including common devices like barometers and manometers.</li>
-            <li>A deep dive into <span class="key-term">Archimedes' Principle</span>, the cornerstone of <span class="key-term">buoyancy</span>.</li>
-            <li>The concept of <span class="key-term">buoyant force</span> and its role in determining whether an object floats, sinks, or remains suspended.</li>
-            <li>Practical applications of pressure and buoyancy in everyday life and various industries.</li>
-            <li>Relevant keywords for SEO optimization to ensure high-quality, discoverable educational content.</li>
-        </ul>
+        <!-- Introduction Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Introduction to Pressure and Buoyancy: The Forces within Fluids</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                Welcome to the fascinating world of <span class="text-blue-400 font-semibold">Fluid Mechanics</span>, where we explore the behavior of liquids and gases. Two fundamental concepts that govern how <span class="text-blue-400">fluids</span> exert <span class="text-blue-400">forces</span> and how objects interact with them are <span class="text-blue-400 font-semibold">Pressure</span> and <span class="text-blue-400 font-semibold">Buoyancy</span>. These principles are not just theoretical; they explain phenomena we encounter daily, from the air we breathe and the water we swim in, to the design of ships, submarines, and aircraft.
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                Have you ever wondered why your ears pop when you ascend or descend quickly, or why a heavy ship made of steel can float? These are all manifestations of <span class="text-blue-400">pressure</span> and <span class="text-blue-400">buoyancy</span> at work. Understanding these concepts is essential for fields ranging from naval architecture and aeronautical engineering to meteorology and medicine (e.g., blood pressure).
+            </p>
+            <p class="text-gray-200 leading-relaxed">
+                In this comprehensive lesson, we will begin by defining <span class="text-blue-400">pressure</span> and exploring its various forms, including the ever-present <span class="text-blue-400">atmospheric pressure</span> and the depth-dependent <span class="text-blue-400">hydrostatic pressure</span>. We will then delve into <span class="text-blue-400 font-semibold">Archimedes' Principle</span>, a cornerstone of fluid statics, which directly leads to the concept of <span class="text-blue-400">buoyancy</span>. Finally, we'll use these principles to explain the fundamental question of why some objects <span class="text-blue-400">float</span> while others <span class="text-blue-400">sink</span>. Prepare to immerse yourself in the dynamics of fluids with <span class="text-blue-400 font-bold">Whizmath</span>!
+            </p>
+        </section>
 
-        <h2 id="pressure">2. Understanding Pressure: Force Over Area</h2>
-        <p>
-            The concept of <span class="key-term">pressure</span> is critical to understanding how <span class="key-term">fluids</span> exert force. Unlike <span class="key-term">solids</span>, which can transmit force in a specific direction, fluids distribute force over an area.
-        </p>
+        <!-- Pressure Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Pressure: Force Distributed Over Area</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                In <span class="text-blue-400">physics</span>, <span class="text-blue-400 font-semibold">pressure (P)</span> is defined as the <span class="text-blue-400">force (F)</span> applied perpendicular to a surface, divided by the <span class="text-blue-400">area (A)</span> over which the <span class="text-blue-400">force</span> is distributed. It's a scalar quantity, meaning it has magnitude but no specific direction, as it acts equally in all directions within a fluid at a given point.
+            </p>
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2">Definition and Formula</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                $$ P = \frac{F}{A} $$
+                Where:
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                    <li>$P$ is <span class="text-blue-400">pressure</span>.</li>
+                    <li>$F$ is the magnitude of the perpendicular <span class="text-blue-400">force</span> (N).</li>
+                    <li>$A$ is the <span class="text-blue-400">area</span> over which the force is distributed (m$^2$).</li>
+                </ul>
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="font-semibold">Units of Pressure:</span> The SI unit of <span class="text-blue-400">pressure</span> is the <span class="text-blue-400">Pascal (Pa)</span>, defined as one Newton per square meter ($1 \, Pa = 1 \, N/m^2$). Other common units include atmospheres (atm), pounds per square inch (psi), bars, and millimeters of mercury (mmHg).
+            </p>
+            <p class="text-gray-200 leading-relaxed">
+                <span class="font-semibold">Example:</span> A person wearing snowshoes (large area) exerts less <span class="text-blue-400">pressure</span> on the snow than a person wearing high heels (small area), even if their <span class="text-blue-400">weight</span> (force) is the same. This is why snowshoes prevent sinking, while heels sink easily.
+            </p>
 
-        <h3>2.1. Definition of Pressure</h3>
-        <p>
-            <span class="key-term">Pressure (P)</span> is defined as the force (F) applied perpendicular to a surface, divided by the area (A) over which the force is distributed:
-            $$P = \frac{F}{A}$$
-            Where:
-            <ul>
-                <li>$P$ is <span class="key-term">pressure</span>, measured in Pascals (Pa).</li>
-                <li>$F$ is the perpendicular <span class="key-term">force</span>, measured in Newtons (N).</li>
-                <li>$A$ is the <span class="key-term">area</span> over which the force is distributed, measured in square meters ($\text{m}^2$).</li>
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">Atmospheric Pressure ($P_{atm}$)</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                We live at the bottom of an "ocean of air," and this air has <span class="text-blue-400">weight</span>. <span class="text-blue-400 font-semibold">Atmospheric pressure</span> is the <span class="text-blue-400">pressure</span> exerted by the <span class="text-blue-400">weight</span> of the air above a given point. It decreases with increasing altitude because there is less air above you.
+            </p>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Standard Atmospheric Pressure:</span> At sea level, the average <span class="text-blue-400">atmospheric pressure</span> is approximately:
+                    $$ 1 \, atm \approx 101,325 \, Pa \approx 101.3 \, kPa $$
+                    This is equivalent to the <span class="text-blue-400">pressure</span> exerted by a column of mercury 760 mm high.
+                </li>
+                <li><span class="font-semibold">Impact:</span> Our bodies are accustomed to this <span class="text-blue-400">pressure</span>, which acts equally from all directions. Changes in <span class="text-blue-400">atmospheric pressure</span> (e.g., during air travel or mountain climbing) can cause ears to "pop" as the <span class="text-blue-400">pressure</span> inside and outside the eardrum equalizes.</li>
             </ul>
-            One Pascal is equivalent to one Newton per square meter ($1 \text{ Pa} = 1 \text{ N/m}^2$). The Pascal is the <span class="key-term">SI unit of pressure</span>.
-        </p>
-        <p>
-            <span class="key-term">Pressure</span> is a <span class="key-term">scalar quantity</span>, meaning it only has <span class="key-term">magnitude</span>. Although force is a <span class="key-term">vector</span>, pressure is defined as force *perpendicular* to a surface, and it acts equally in all directions at a given point within a fluid (Pascal's Principle).
-        </p>
 
-        <h3>2.2. Practical Implications of Pressure</h3>
-        <p>
-            The concept of <span class="key-term">pressure</span> helps explain many everyday phenomena:
-            <ul>
-                <li>A sharp knife cuts better than a blunt one because the same force applied to a smaller area results in much higher pressure.</li>
-                <li>Snowshoes allow a person to walk on snow without sinking, as they distribute the person's weight (force) over a larger area, reducing the pressure exerted on the snow.</li>
-                <li>A pushpin has a sharp point to create high pressure on a small area, allowing it to penetrate a surface with relatively little force.</li>
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">Hydrostatic Pressure ($P_h$)</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Hydrostatic pressure</span> is the <span class="text-blue-400">pressure</span> exerted by a fluid at rest due to the <span class="text-blue-400">weight</span> of the fluid above it. This <span class="text-blue-400">pressure</span> increases with depth.
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                The formula for <span class="text-blue-400">hydrostatic pressure</span> at a certain depth ($h$) in a fluid with uniform <span class="text-blue-400">density ($\rho$, rho)</span> is:
+                $$ P_h = \rho gh $$
+                Where:
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                    <li>$P_h$ is the <span class="text-blue-400">hydrostatic pressure</span> (Pa).</li>
+                    <li>$\rho$ is the <span class="text-blue-400">density</span> of the fluid (kg/m$^3$).</li>
+                    <li>$g$ is the <span class="text-blue-400">acceleration due to gravity</span> (approx. $9.8 \, m/s^2$).</li>
+                    <li>$h$ is the depth from the surface of the fluid to the point where <span class="text-blue-400">pressure</span> is being measured (m).</li>
+                </ul>
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="font-semibold">Total Pressure:</span> If the surface of the fluid is exposed to <span class="text-blue-400">atmospheric pressure</span>, the total <span class="text-blue-400">pressure</span> at depth $h$ is the sum of <span class="text-blue-400">atmospheric pressure</span> and <span class="text-blue-400">hydrostatic pressure</span>:
+                $$ P_{total} = P_{atm} + \rho gh $$
+            </p>
+            <p class="text-gray-200 leading-relaxed">
+                <span class="font-semibold">Key Insights for Hydrostatic Pressure:</span>
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4">
+                    <li><span class="text-blue-400">Depth Dependence:</span> <span class="text-blue-400">Pressure</span> increases linearly with depth. This is why deep-sea divers experience immense <span class="text-blue-400">pressure</span>.</li>
+                    <li><span class="text-blue-400">Independent of Shape/Volume:</span> At a given depth, the <span class="text-blue-400">pressure</span> is the same, regardless of the shape or total volume of the fluid container. This is why water seeks its own level.</li>
+                    <li><span class="text-blue-400">Density Dependence:</span> Denser fluids (like mercury) exert more <span class="text-blue-400">pressure</span> at a given depth than less dense fluids (like water).</li>
+                </ul>
+            </p>
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">Pascal's Principle</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Pascal's Principle</span> states that a <span class="text-blue-400">pressure</span> change applied to an enclosed incompressible fluid is transmitted undiminished to every portion of the fluid and to the walls of the containing vessel.
+            </p>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Example:</span> Hydraulic systems (e.g., car brakes, hydraulic lifts). A small <span class="text-blue-400">force</span> applied over a small area generates a certain <span class="text-blue-400">pressure</span>. This <span class="text-blue-400">pressure</span> is transmitted throughout the fluid, and when it acts on a larger area, it can generate a much larger <span class="text-blue-400">force</span>.
+                    $$ P_1 = P_2 \Rightarrow \frac{F_1}{A_1} = \frac{F_2}{A_2} $$
+                </li>
             </ul>
-        </p>
+        </section>
 
-        <h3>2.3. Common Units of Pressure</h3>
-        <p>
-            While the Pascal is the SI unit, other units of pressure are commonly used:
-            <ul class="list-disc ml-6">
-                <li><span class="key-term">Atmosphere (atm):</span> A unit of pressure approximately equal to the average <span class="key-term">atmospheric pressure</span> at sea level. $1 \text{ atm} \approx 101,325 \text{ Pa}$.</li>
-                <li><span class="key-term">Bar (bar):</span> Very close to 1 atm, often used in meteorology. $1 \text{ bar} = 10^5 \text{ Pa}$.</li>
-                <li><span class="key-term">Pounds per square inch (psi):</span> Common in the United States, especially for tire pressure. $1 \text{ psi} \approx 6,895 \text{ Pa}$.</li>
-                <li><span class="key-term">Millimeters of mercury (mmHg) or Torr:</span> Historically used in barometers and for blood pressure measurements. $760 \text{ mmHg} = 1 \text{ atm}$.</li>
+        <!-- Archimedes' Principle & Buoyancy Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Archimedes' Principle and Buoyancy: Floating and Sinking</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                When an object is submerged in a fluid, it experiences an upward <span class="text-blue-400">force</span> from the fluid. This upward <span class="text-blue-400">force</span> is called the <span class="text-blue-400 font-semibold">buoyant force ($F_B$)</span>. The origin of this force is the difference in <span class="text-blue-400">pressure</span> acting on the top and bottom surfaces of the object submerged in the fluid (the <span class="text-blue-400">pressure</span> on the bottom is greater than on the top due to depth).
+            </p>
+
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2">Archimedes' Principle</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Archimedes' Principle</span> states that:
+            </p>
+            <p class="text-blue-400 text-xl sm:text-2xl font-semibold italic text-center leading-relaxed mb-6">
+                "The <span class="text-blue-400">buoyant force</span> on an object submerged in a fluid is equal to the <span class="text-blue-400">weight</span> of the fluid displaced by the object."
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                Mathematically, the <span class="text-blue-400">buoyant force</span> is:
+                $$ F_B = W_{fluid \, displaced} = m_{fluid \, displaced} g $$
+                Since the mass of the displaced fluid is $\rho_{fluid} V_{displaced}$ (where $\rho_{fluid}$ is the <span class="text-blue-400">density</span> of the fluid and $V_{displaced}$ is the volume of the fluid displaced by the object), we can write:
+                $$ F_B = \rho_{fluid} V_{displaced} g $$
+                Where:
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                    <li>$F_B$ is the <span class="text-blue-400">buoyant force</span> (N).</li>
+                    <li>$\rho_{fluid}$ is the <span class="text-blue-400">density</span> of the fluid (kg/m$^3$).</li>
+                    <li>$V_{displaced}$ is the volume of the fluid displaced by the object (m$^3$). Note: If an object is fully submerged, $V_{displaced}$ is equal to the object's total volume. If it is floating, $V_{displaced}$ is only the volume of the submerged part of the object.</li>
+                    <li>$g$ is the <span class="text-blue-400">acceleration due to gravity</span> ($9.8 \, m/s^2$).</li>
+                </ul>
+            </p>
+
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">Why Objects Float or Sink: The Role of Density</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                Whether an object <span class="text-blue-400">floats</span> or <span class="text-blue-400">sinks</span> depends on the relationship between the <span class="text-blue-400">buoyant force</span> acting on it and the object's own <span class="text-blue-400">weight</span>. More fundamentally, it depends on the comparison of the object's average <span class="text-blue-400">density</span> to the <span class="text-blue-400">density</span> of the fluid.
+            </p>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Floating:</span> An object <span class="text-blue-400 font-semibold">floats</span> if the <span class="text-blue-400">buoyant force</span> is equal to or greater than its <span class="text-blue-400">weight</span>. This occurs when the average <span class="text-blue-400">density</span> of the object is less than or equal to the <span class="text-blue-400">density</span> of the fluid.
+                    $$ \rho_{object} \le \rho_{fluid} $$
+                    When an object <span class="text-blue-400">floats</span>, it displaces a volume of fluid whose <span class="text-blue-400">weight</span> is exactly equal to the object's own <span class="text-blue-400">weight</span>. The object sinks until $F_B = W_{object}$, and then it equilibrates.
+                </li>
+                <li><span class="font-semibold">Sinking:</span> An object <span class="text-blue-400 font-semibold">sinks</span> if the <span class="text-blue-400">buoyant force</span> is less than its <span class="text-blue-400">weight</span> (even when fully submerged). This occurs when the average <span class="text-blue-400">density</span> of the object is greater than the <span class="text-blue-400">density</span> of the fluid.
+                    $$ \rho_{object} > \rho_{fluid} $$
+                    In this case, the object displaces its full volume of fluid, but the <span class="text-blue-400">weight</span> of this displaced fluid is less than the object's <span class="text-blue-400">weight</span>, so it accelerates downwards.
+                </li>
+                <li><span class="font-semibold">Neutral Buoyancy:</span> An object achieves <span class="text-blue-400 font-semibold">neutral buoyancy</span> if its average <span class="text-blue-400">density</span> is exactly equal to the <span class="text-blue-400">density</span> of the fluid. In this state, the <span class="text-blue-400">buoyant force</span> exactly equals the object's <span class="text-blue-400">weight</span>, and the object will remain suspended at any depth within the fluid.
+                    $$ \rho_{object} = \rho_{fluid} $$
+                </li>
             </ul>
-        </p>
+            <p class="text-gray-200 leading-relaxed">
+                <span class="font-semibold">Example:</span> A steel ship <span class="text-blue-400">floats</span> because, although steel is much denser than water, the ship's overall average <span class="text-blue-400">density</span> (due to its hollow structure containing a large volume of air) is less than that of water. A solid piece of steel, being denser than water, would <span class="text-blue-400">sink</span>.
+            </p>
+        </section>
 
-        <h2 id="atmospheric-pressure">3. Atmospheric Pressure: The Air Around Us</h2>
-        <p>
-            We live at the bottom of an ocean of air, and this air, being a <span class="key-term">fluid</span>, exerts <span class="key-term">pressure</span> on everything it surrounds. This is known as <span class="key-term">atmospheric pressure</span>.
-        </p>
-
-        <h3>3.1. What is Atmospheric Pressure?</h3>
-        <p>
-            <span class="key-term">Atmospheric pressure</span> is the <span class="key-term">pressure</span> exerted by the weight of the air column above a given point on Earth's surface. At sea level, the average <span class="key-term">atmospheric pressure</span> is approximately $1 \text{ atm}$ or $101.3 \text{ kPa}$ (kilopascals). This means that for every square meter of surface, the atmosphere is exerting a force equivalent to about $101,300 \text{ Newtons}$! We don't typically feel this immense pressure because it's exerted equally from all directions, and our bodies are adapted to it.
-        </p>
-
-        <h3>3.2. Variation with Altitude</h3>
-        <p>
-            <span class="key-term">Atmospheric pressure</span> decreases with increasing <span class="key-term">altitude</span>. This is because:
-            <ul>
-                <li>As you go higher, there is less air above you, so the weight of the air column decreases.</li>
-                <li>Air density also decreases with altitude, contributing to the lower pressure.</li>
+        <!-- Applications and Importance Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Real-World Applications of Pressure and Buoyancy</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                The principles of <span class="text-blue-400">pressure</span> and <span class="text-blue-400">buoyancy</span> are not merely academic concepts; they are fundamental to numerous natural phenomena and technological marvels that shape our world:
+            </p>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Naval Architecture:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Ships and Boats:</span> Designed to displace a sufficient volume of water such that the <span class="text-blue-400">buoyant force</span> (equal to the <span class="text-blue-400">weight</span> of displaced water) balances their total <span class="text-blue-400">weight</span>, allowing them to <span class="text-blue-400">float</span>.</li>
+                        <li><span class="text-blue-400">Submarines:</span> Utilize ballast tanks that can be flooded with water (to increase effective <span class="text-blue-400">density</span> and <span class="text-blue-400">sink</span>) or filled with air (to decrease effective <span class="text-blue-400">density</span> and rise), demonstrating precise control over <span class="text-blue-400">buoyancy</span>.</li>
+                    </ul>
+                </li>
+                <li><span class="font-semibold">Aeronautics:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Hot Air Balloons:</span> <span class="text-blue-400">Float</span> because the air inside the balloon is heated, making it less dense than the cooler surrounding air. The <span class="text-blue-400">buoyant force</span> from the displaced cooler air lifts the balloon.</li>
+                        <li><span class="text-blue-400">Airplanes:</span> While lift is primarily generated by wings moving through air (aerodynamics), the principles of <span class="text-blue-400">pressure</span> differences are critical to understanding how lift is generated.</li>
+                    </ul>
+                </li>
+                <li><span class="font-semibold">Hydraulic Systems:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Car Brakes:</span> Use <span class="text-blue-400">Pascal's Principle</span> to transmit <span class="text-blue-400">pressure</span> from the brake pedal to the brake pads, multiplying the force.</li>
+                        <li><span class="text-blue-400">Hydraulic Lifts and Jacks:</span> Leverage <span class="text-blue-400">Pascal's Principle</span> to lift heavy loads with relatively small input forces.</li>
+                    </ul>
+                </li>
+                <li><span class="font-semibold">Weather and Meteorology:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Atmospheric Pressure:</span> Variations in <span class="text-blue-400">atmospheric pressure</span> drive weather systems, creating winds and storms. Barometers are used to measure <span class="text-blue-400">pressure</span> and forecast weather.</li>
+                        <li><span class="text-blue-400">Buoyancy in Air:</span> Explains why warmer, less dense air rises, forming convection currents and leading to cloud formation and thunderstorms.</li>
+                    </ul>
+                </li>
+                <li><span class="font-semibold">Diving and Underwater Exploration:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Diving Bells/Submersibles:</span> Must be designed to withstand immense <span class="text-blue-400">hydrostatic pressure</span> at great depths.</li>
+                        <li><span class="text-blue-400">Scuba Diving:</span> Divers must manage <span class="text-blue-400">pressure</span> changes to avoid decompression sickness and control their <span class="text-blue-400">buoyancy</span>.</li>
+                    </ul>
+                </li>
+                <li><span class="font-semibold">Medical Applications:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Blood Pressure:</span> A crucial physiological measurement, fundamentally based on fluid <span class="text-blue-400">pressure</span> within the circulatory system.</li>
+                    </ul>
+                </li>
             </ul>
-            This is why mountain climbers need supplemental oxygen at high altitudes, and why your ears might pop during airplane takeoffs and landings (due to pressure differences between the inside and outside of your ear).
-        </p>
+            <p class="text-gray-200 leading-relaxed">
+                From the simplest act of floating in a swimming pool to the complex engineering of aerospace and deep-sea vehicles, the principles of <span class="text-blue-400">pressure</span> and <span class="text-blue-400">buoyancy</span> are indispensable. They reveal the hidden <span class="text-blue-400">forces</span> that <span class="text-blue-400">fluids</span> exert and how objects respond within them.
+            </p>
+        </section>
 
-        <h3>3.3. Measuring Atmospheric Pressure: The Barometer</h3>
-        <p>
-            A <span class="key-term">barometer</span> is an instrument used to measure <span class="key-term">atmospheric pressure</span>. The most common type is the mercury barometer, invented by Evangelista Torricelli.
-            <br><br>
-            A simple mercury barometer consists of an inverted tube filled with mercury, sealed at one end and open at the other, placed in a reservoir of mercury. The atmospheric pressure acting on the surface of the mercury in the reservoir supports a column of mercury in the tube. The height of this column is directly proportional to the <span class="key-term">atmospheric pressure</span>. At sea level, this column is approximately $760 \text{ mm}$ (or $29.92 \text{ inches}$) high.
-        </p>
+        <!-- Conclusion Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Conclusion</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                In this comprehensive lesson, we've explored the fundamental concepts of <span class="text-blue-400">Pressure</span> and <span class="text-blue-400">Buoyancy</span>, crucial elements in the study of <span class="text-blue-400">fluid mechanics</span>. We defined <span class="text-blue-400">pressure</span> ($P=F/A$) as <span class="text-blue-400">force</span> per unit <span class="text-blue-400">area</span>, examining both the all-encompassing <span class="text-blue-400">atmospheric pressure</span> and the depth-dependent <span class="text-blue-400">hydrostatic pressure</span> ($P=\rho gh$). <span class="text-blue-400">Pascal's Principle</span> was introduced to explain pressure transmission in enclosed <span class="text-blue-400">fluids</span>.
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                We then delved into <span class="text-blue-400 font-semibold">Archimedes' Principle</span>, a cornerstone for understanding <span class="text-blue-400">buoyancy</span>. This principle states that the <span class="text-blue-400">buoyant force</span> ($F_B = \rho_{fluid} V_{displaced} g$) on a submerged object equals the <span class="text-blue-400">weight</span> of the fluid it displaces. Using this, we precisely explained why objects <span class="text-blue-400">float</span>, <span class="text-blue-400">sink</span>, or achieve <span class="text-blue-400">neutral buoyancy</span> based on the comparison of their average <span class="text-blue-400">density</span> to that of the surrounding fluid.
+            </p>
+            <p class="text-gray-200 leading-relaxed">
+                The applications of <span class="text-blue-400">pressure</span> and <span class="text-blue-400">buoyancy</span> are pervasive, from the engineering of colossal ships and submarines to the intricate workings of hydraulic systems, the dynamics of weather, and the physiology of the human body. By mastering these concepts, you've gained a fundamental understanding of how <span class="text-blue-400">fluids</span> exert <span class="text-blue-400">forces</span> and interact with objects, opening up a deeper appreciation for the physics of our everyday world. Keep exploring the science around you with <span class="text-blue-400 font-bold">Whizmath</span>!
+            </p>
+        </section>
 
-        <h2 id="hydrostatic-pressure">4. Hydrostatic Pressure: Pressure in Liquids</h2>
-        <p>
-            While <span class="key-term">atmospheric pressure</span> applies to gases, <span class="key-term">hydrostatic pressure</span> refers to the pressure exerted by a <span class="key-term">liquid</span> at rest. It is a critical concept for understanding submerged objects, hydraulic systems, and even blood pressure.
-        </p>
-
-        <h3>4.1. Definition of Hydrostatic Pressure</h3>
-        <p>
-            The <span class="key-term">pressure</span> at a certain <span class="key-term">depth</span> within a <span class="key-term">fluid</span> at rest is called <span class="key-term">hydrostatic pressure</span>. It arises from the weight of the fluid column above that depth. The deeper you go in a fluid, the more fluid is above you, and thus the greater the pressure.
-            The formula for <span class="key-term">hydrostatic pressure</span> is:
-            $$P_h = \rho gh$$
-            Where:
-            <ul>
-                <li>$P_h$ is the <span class="key-term">hydrostatic pressure</span> (in Pascals, Pa).</li>
-                <li>$\rho$ (rho) is the <span class="key-term">density</span> of the fluid (in kilograms per cubic meter, $\text{kg/m}^3$).</li>
-                <li>$g$ is the <span class="key-term">acceleration due to gravity</span> (approximately $9.81 \text{ m/s}^2$ on Earth).</li>
-                <li>$h$ is the <span class="key-term">depth</span> or height of the fluid column above the point of measurement (in meters, m).</li>
-            </ul>
-        </p>
-
-        <h3>4.2. Characteristics of Hydrostatic Pressure</h3>
-        <ul class="list-disc ml-6">
-            <li><span class="key-term">Increases with Depth:</span> As $h$ increases, $P_h$ increases. This is why divers experience greater pressure at greater depths.</li>
-            <li><span class="key-term">Depends on Fluid Density:</span> Denser fluids (larger $\rho$) exert greater pressure at the same depth. For example, pressure increases faster in seawater than in freshwater.</li>
-            <li><span class="key-term">Independent of Container Shape or Total Volume:</span> The pressure at a certain depth only depends on the depth and the fluid's density, not on the shape of the container or the total amount of fluid present. This is a counter-intuitive but important aspect of fluid pressure.</li>
-            <li><span class="key-term">Acts in All Directions:</span> At any given point within a fluid at rest, the pressure acts equally in all directions. This is <span class="key-term">Pascal's Principle</span>, which states that a pressure change at any point in a confined incompressible fluid is transmitted throughout the fluid such that the same change occurs everywhere. This principle is fundamental to hydraulic systems (e.g., car brakes, hydraulic lifts).</li>
-        </ul>
-
-        <h3>4.3. Total Pressure</h3>
-        <p>
-            In many situations, especially open containers exposed to the atmosphere, the total pressure at a certain depth is the sum of the <span class="key-term">hydrostatic pressure</span> and the <span class="key-term">atmospheric pressure</span> acting on the surface of the liquid:
-            $$P_{total} = P_{atm} + \rho gh$$
-            This equation is vital for calculating the pressure experienced by a submerged object in an open body of water.
-        </p>
-
-        <h2 id="archimedes-principle">5. Archimedes' Principle and Buoyancy: Why Objects Float or Sink</h2>
-        <p>
-            The phenomenon of objects floating or sinking in a fluid is explained by <span class="key-term">Archimedes' Principle</span> and the concept of <span class="key-term">buoyancy</span>. This is a cornerstone of <span class="key-term">fluid statics</span>.
-        </p>
-
-        <h3>5.1. The Buoyant Force</h3>
-        <p>
-            When an object is immersed in a <span class="key-term">fluid</span>, the fluid exerts an upward force on it, called the <span class="key-term">buoyant force</span> ($F_B$). This force opposes the weight of the object.
-            <br><br>
-            The <span class="key-term">buoyant force</span> arises because the pressure in a fluid increases with depth. The bottom surface of a submerged object is at a greater depth than its top surface, meaning the fluid pressure on the bottom is greater than the pressure on the top. This pressure difference creates a net upward force on the object.
-        </p>
-
-        <h3>5.2. Archimedes' Principle</h3>
-        <p>
-            <span class="key-term">Archimedes' Principle</span> states that the <span class="key-term">buoyant force</span> on an object immersed in a fluid is equal to the weight of the fluid displaced by the object.
-            $$F_B = \text{Weight of displaced fluid}$$
-            Since weight is equal to mass times gravity ($W = mg$), and mass is equal to density times volume ($m = \rho V$), we can write the buoyant force as:
-            $$F_B = (\rho_{fluid} V_{displaced}) g$$
-            Where:
-            <ul>
-                <li>$F_B$ is the <span class="key-term">buoyant force</span> (in Newtons, N).</li>
-                <li>$\rho_{fluid}$ is the <span class="key-term">density</span> of the fluid (in $\text{kg/m}^3$).</li>
-                <li>$V_{displaced}$ is the <span class="key-term">volume of fluid displaced</span> by the object. This is equal to the volume of the submerged part of the object (in $\text{m}^3$).</li>
-                <li>$g$ is the <span class="key-term">acceleration due to gravity</span> (approximately $9.81 \text{ m/s}^2$).</li>
-            </ul>
-        </p>
-        <p>
-            This principle is fundamental to understanding flotation and the behavior of objects in fluids.
-        </p>
-
-        <h3>5.3. Why Objects Float or Sink</h3>
-        <p>
-            Whether an object floats, sinks, or remains suspended in a fluid depends on the comparison between the object's weight ($W_{object}$) and the <span class="key-term">buoyant force</span> ($F_B$) acting on it.
-            <br><br>
-            Recall that the weight of the object is $W_{object} = m_{object} g = (\rho_{object} V_{object}) g$.
-            The buoyant force is $F_B = (\rho_{fluid} V_{displaced}) g$.
-            <br><br>
-            <span class="key-term">5.3.1. Floating:</span>
-            An object <span class="key-term">floats</span> if the <span class="key-term">buoyant force</span> is greater than or equal to its weight ($F_B \ge W_{object}$).
-            This occurs when the average <span class="key-term">density</span> of the object ($\rho_{object}$) is less than or equal to the <span class="key-term">density</span> of the fluid ($\rho_{fluid}$).
-            $$\rho_{object} \le \rho_{fluid}$$
-            When an object floats, it displaces a volume of fluid whose weight is exactly equal to the object's total weight. The object will sink only until the <span class="key-term">buoyant force</span> equals its weight, meaning only a portion of its volume may be submerged.
-            <ul>
-                <li>Example: A large wooden log floats in water. Wood is less dense than water.</li>
-                <li>Example: A ship, made of steel (which is denser than water), floats because its hollow design makes its *average density* (including the air inside) less than that of water.</li>
-            </ul>
-            <span class="key-term">5.3.2. Sinking:</span>
-            An object <span class="key-term">sinks</span> if the <span class="key-term">buoyant force</span> is less than its weight ($F_B < W_{object}$).
-            This occurs when the average <span class="key-term">density</span> of the object ($\rho_{object}$) is greater than the <span class="key-term">density</span> of the fluid ($\rho_{fluid}$).
-            $$\rho_{object} > \rho_{fluid}$$
-            When an object sinks, it displaces its entire volume of fluid, but the weight of that displaced fluid is still less than the object's weight, so there is a net downward force.
-            <ul>
-                <li>Example: A rock sinks in water. Rock is denser than water.</li>
-            </ul>
-            <span class="key-term">5.3.3. Suspended (Neutrally Buoyant):</span>
-            An object is <span class="key-term">suspended</span> or neutrally buoyant if the <span class="key-term">buoyant force</span> is exactly equal to its weight ($F_B = W_{object}$).
-            This occurs when the average <span class="key-term">density</span> of the object ($\rho_{object}$) is exactly equal to the <span class="key-term">density</span> of the fluid ($\rho_{fluid}$).
-            $$\rho_{object} = \rho_{fluid}$$
-            The object will remain at any depth it is placed, neither rising nor sinking.
-            <ul>
-                <li>Example: A fish uses its swim bladder to adjust its density, allowing it to remain suspended at various depths.</li>
-                <li>Example: A submarine achieves neutral buoyancy by taking in or expelling water from ballast tanks to match its average density to that of the surrounding water.</li>
-            </ul>
-        </p>
-
-        <h2 id="applications">6. Applications of Pressure and Buoyancy</h2>
-        <p>
-            The principles of <span class="key-term">pressure and buoyancy</span> are not confined to textbooks; they are fundamental to countless technologies and natural phenomena:
-        </p>
-        <ul class="list-disc ml-6">
-            <li><span class="key-term">Hydraulic Systems:</span> <span class="key-term">Pascal's Principle</span> is the basis for hydraulic brakes, lifts, and jacks. A small force applied to a small piston creates a large pressure, which is transmitted throughout the fluid to a larger piston, generating a much larger output force.</li>
-            <li><span class="key-term">Submarines and Hot Air Balloons:</span> Submarines adjust their average density by taking in or expelling water from ballast tanks to control their buoyancy. Hot air balloons float because heating the air inside the balloon makes it less dense than the surrounding cooler air, creating an upward buoyant force.</li>
-            <li><span class="key-term">Ships and Boats:</span> As discussed, ships float because their hollow structure displaces a large volume of water, making their average density less than water. The maximum load a ship can carry is determined by the maximum buoyant force it can generate (Plimsoll line).</li>
-            <li><span class="key-term">Diving and Scuba:</span> Divers must understand <span class="key-term">hydrostatic pressure</span>, which increases rapidly with depth. They use buoyancy compensators (BCDs) to control their depth by adjusting the volume of air inside, thus changing the buoyant force.</li>
-            <li><span class="key-term">Weather and Meteorology:</span> Variations in <span class="key-term">atmospheric pressure</span> drive weather patterns. High-pressure systems typically bring clear skies, while low-pressure systems are associated with stormy weather. Barometers are crucial tools for weather forecasting.</li>
-            <li><span class="key-term">Medical Applications:</span> Blood pressure is a measure of the force exerted by blood on artery walls, a direct application of the pressure concept. Hydrotherapy uses the buoyant force of water to support patients during physical rehabilitation.</li>
-            <li><span class="key-term">Aircraft Design:</span> While buoyancy is less dominant than lift, the principles of fluid dynamics involving pressure differences are critical for understanding how wings generate lift.</li>
-        </ul>
-        <p>
-            From the macroscopic world of engineering marvels to the microscopic forces at play within our bodies, the concepts of <span class="key-term">pressure and buoyancy</span> are ubiquitous and indispensable for a comprehensive understanding of the physical universe.
-        </p>
-
-        <h2 id="conclusion">7. Conclusion: Unveiling Fluid Dynamics</h2>
-        <p>
-            Our exploration of <span class="key-term">Pressure and Buoyancy</span> has taken us deep into the fascinating realm of <span class="key-term">fluid mechanics</span>, revealing the fundamental principles that govern how <span class="key-term">liquids</span> and <span class="key-term">gases</span> behave and interact with objects. We've defined <span class="key-term">pressure</span> ($P = F/A$) as the force exerted perpendicularly over an area, understanding its widespread impact from sharp knives to snowshoes.
-        </p>
-        <p>
-            We distinguished between the pervasive <span class="key-term">atmospheric pressure</span>, the weight of the air column above us, and <span class="key-term">hydrostatic pressure</span> ($P = \rho gh$), the pressure within a fluid that increases with depth and density. <span class="key-term">Pascal's Principle</span> underscored how pressure is transmitted undiminished throughout a confined fluid, laying the groundwork for hydraulic systems.
-        </p>
-        <p>
-            Crucially, we delved into <span class="key-term">Archimedes' Principle</span>, which eloquently explains <span class="key-term">buoyancy</span>: the upward force on an immersed object is equal to the weight of the fluid it displaces. This principle clarified why objects <span class="key-term">float</span> (object's density is less than or equal to fluid's density), <span class="key-term">sink</span> (object's density is greater), or remain <span class="key-term">suspended</span> (densities are equal).
-        </p>
-        <p>
-            The profound applications of these concepts, from designing submarines and hot air balloons to understanding weather patterns and blood circulation, demonstrate their immense practical significance. As you continue your journey with <span class="key-term">Whizmath</span>, the mastery of <span class="key-term">pressure and buoyancy</span> will empower you to analyze a vast array of physical phenomena and appreciate the elegant forces at play in the fluid world around us. Keep observing, keep calculating, and keep exploring!
-        </p>
+        <!-- Footer for a clean finish -->
+        <footer class="text-center text-gray-500 text-sm mt-12 py-6 border-t border-gray-800">
+            &copy; 2025 Whizmath. All rights reserved.
+        </footer>
 
     </div>
-
-    <script>
-        let scene, camera, renderer, particles, particleMaterial;
-
-        function initThreeJS() {
-            const canvas = document.getElementById('global-background-canvas');
-
-            // Scene
-            scene = new THREE.Scene();
-
-            // Camera
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 5;
-
-            // Renderer
-            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-
-            // Particles
-            const particleCount = 12500;
-            const positions = new Float32Array(particleCount * 3);
-            const colors = new Float32Array(particleCount * 3);
-
-            const color1 = new THREE.Color(0xADD8E6); // Light blue
-            const color2 = new THREE.Color(0x87CEEB); // Sky blue
-            const color3 = new THREE.Color(0x6495ED); // Cornflower blue
-
-            for (let i = 0; i < particleCount; i++) {
-                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
-                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
-                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
-
-                const rand = Math.random();
-                let color;
-                if (rand < 0.33) {
-                    color = color1;
-                } else if (rand < 0.66) {
-                    color = color2;
-                } else {
-                    color = color3;
-                }
-                colors[i * 3] = color.r;
-                colors[i * 3 + 1] = color.g;
-                colors[i * 3 + 2] = color.b;
-            }
-
-            const geometry = new THREE.BufferGeometry();
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-            particleMaterial = new THREE.PointsMaterial({
-                size: 0.25,
-                vertexColors: true,
-                transparent: true,
-                opacity: 0.8,
-                blending: THREE.AdditiveBlending,
-            });
-
-            particles = new THREE.Points(geometry, particleMaterial);
-            scene.add(particles);
-
-            window.addEventListener('resize', onWindowResize, false);
-        }
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        function animateThreeJS() {
-            requestAnimationFrame(animateThreeJS);
-
-            if (particles) {
-                particles.rotation.x += 0.0005;
-                particles.rotation.y += 0.0007;
-                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
-            }
-
-            renderer.render(scene, camera);
-        }
-
-        window.onload = function() {
-            initThreeJS();
-            animateThreeJS();
-        };
-    </script>
-    <script type='text/javascript' src='//pl26627928.profitableratecpm.com/dc/ed/3b/dced3b21bace3293dc34b16c68937c68.js'></script>
 </body>
 </html>
