@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scalars and Vectors - Whizmath</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
-     crossorigin="anonymous"></script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- MathJax Script for LaTeX rendering -->
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
     <script>
         // Optional: Configure MathJax to process dollar signs for inline math
         MathJax = {
@@ -21,614 +23,306 @@
         };
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        /* Custom styles for smooth scrolling and font */
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden; /* Prevent horizontal scroll due to potential canvas overflow */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        #global-background-canvas { /* Updated ID here */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1; /* Send canvas to the background */
-            pointer-events: none; /* Allow clicks to pass through to content */
+        /* Ensure that content with overflow-x-auto only scrolls horizontally */
+        .overflow-x-auto-scroll {
+            -webkit-overflow-scrolling: touch; /* for smoother scrolling on iOS */
         }
-        .content-container {
-            position: relative;
-            z-index: 1; /* Ensure content is above the canvas */
-            background: rgba(17, 24, 39, 0.9); /* Dark background with slight transparency for canvas to show */
-            padding: 2rem;
-            margin: 0 auto;
-            max-width: 90vw; /* Fluid width */
-            border-radius: 1.5rem; /* Rounded corners */
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            color: #E5E7EB; /* Light grey text */
-            margin-top: 4rem; /* Space from top */
-            margin-bottom: 4rem; /* Space from bottom */
-        }
-
-        /* Responsive adjustments for content container */
-        @media (min-width: 768px) {
-            .content-container {
-                max-width: 80vw;
-            }
-        }
-        @media (min-width: 1024px) {
-            .content-container {
-                max-width: 70vw;
-            }
-        }
-        @media (min-width: 1280px) {
-            .content-container {
-                max-width: 60vw;
-            }
-        }
-
-        /* Scrollbar styling */
+        /* Custom scrollbar for better aesthetics */
         ::-webkit-scrollbar {
-            width: 12px;
+            width: 8px;
+            height: 8px; /* For horizontal scrollbars */
         }
+
         ::-webkit-scrollbar-track {
-            background: #1f2937; /* Darker grey */
+            background: #2D3748; /* Darker track */
             border-radius: 10px;
         }
+
         ::-webkit-scrollbar-thumb {
-            background: #4B5563; /* Medium grey */
+            background: #63B3ED; /* Blue thumb */
             border-radius: 10px;
-            border: 3px solid #1f2937;
         }
+
         ::-webkit-scrollbar-thumb:hover {
-            background: #6B7280; /* Lighter grey on hover */
+            background: #4299E1; /* Darker blue on hover */
         }
 
-        /* Back button specific styling */
-        .back-button {
-            position: fixed;
-            top: 1.5rem;
-            left: 1.5rem;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1.25rem;
-            background: linear-gradient(135deg, #6366F1, #8B5CF6); /* Purple gradient */
-            color: white;
-            border-radius: 9999px; /* Fully rounded */
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .back-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.2), 0 6px 8px -4px rgba(0, 0, 0, 0.1);
-            background: linear-gradient(135deg, #4F46E5, #7C3AED);
-        }
-        .back-button svg {
-            margin-right: 0.5rem;
+        /* Styling for the back button SVG icon */
+        .back-button-svg {
+            transition: transform 0.2s ease-in-out;
         }
 
-        /* Styling for headings and paragraphs */
-        h1 {
-            font-size: 3rem; /* Larger heading */
-            font-weight: 700;
-            margin-bottom: 2rem;
-            text-align: center;
-            color: #93C5FD; /* Light blue */
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        .back-button:hover .back-button-svg {
+            transform: translateX(-5px);
         }
-        h2 {
-            font-size: 2.25rem;
-            font-weight: 600;
-            margin-top: 2.5rem;
-            margin-bottom: 1.5rem;
-            color: #9BD0F5; /* Slightly darker light blue */
-            border-bottom: 2px solid #3B82F6; /* Blue underline */
-            padding-bottom: 0.5rem;
-        }
-        h3 {
-            font-size: 1.75rem;
-            font-weight: 600;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            color: #BEE3F8; /* Even lighter blue */
-        }
-        p {
-            margin-bottom: 1rem;
-            line-height: 1.75;
-            font-size: 1.1rem;
-            text-align: justify;
-        }
-        ul, ol {
-            margin-left: 2rem;
-            margin-bottom: 1rem;
-            list-style-type: disc;
-        }
-        li {
-            margin-bottom: 0.5rem;
-            line-height: 1.6;
-        }
-        code {
-            background-color: #374151; /* Darker grey for code snippets */
-            padding: 0.2em 0.4em;
-            border-radius: 0.25rem;
-            font-family: monospace;
-            color: #D1D5DB;
-        }
-        .key-term {
-            font-weight: 600;
-            color: #60A5FA; /* Blue for key terms as requested */
-        }
-
-        /* Specific styling for MathJax elements */
-        .MathJax {
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-            overflow-x: auto; /* Allow horizontal scrolling for long equations */
-        }
-
     </style>
 </head>
-<body class="bg-black text-gray-200 min-h-screen flex flex-col items-center">
-
-    <!-- Three.js Canvas -->
-    <canvas id="global-background-canvas"></canvas> <!-- Updated ID here -->
+<body class="bg-black text-white antialiased">
 
     <!-- Back Button -->
-    <a href="physics.html" class="back-button">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    <a href="physics.html" class="back-button fixed top-4 left-4 sm:top-6 sm:left-6 md:top-8 md:left-8 z-50
+        inline-flex items-center px-4 py-2 rounded-full bg-gray-800 text-white shadow-lg
+        hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-all duration-300">
+        <svg class="w-5 h-5 mr-2 back-button-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
-        Back to Physics
+        <span class="hidden sm:inline">Back to Physics</span>
     </a>
 
-    <!-- Main Content Container -->
-    <div class="content-container">
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-10 leading-tight">
-            Understanding <span class="text-blue-400">Scalars and Vectors</span>: Essential Tools for Physics
-        </h1>
+    <div class="container mx-auto px-4 py-12 md:py-16 lg:py-20 max-w-4xl pt-24 sm:pt-28 md:pt-32">
 
-        <p class="text-lg mb-8 text-center px-4">
-            Welcome to Whizmath's in-depth exploration of <span class="key-term">Scalars and Vectors</span>, two fundamental classifications of physical quantities that underpin virtually every concept in <span class="key-term">physics</span>, <span class="key-term">engineering</span>, and <span class="key-term">mathematics</span>. Grasping the distinction between quantities that possess only <span class="key-term">magnitude</span> (<span class="key-term">scalars</span> like <span class="key-term">mass</span>, <span class="key-term">time</span>, <span class="key-term">speed</span>) and those that possess both <span class="key-term">magnitude and direction</span> (<span class="key-term">vectors</span> like <span class="key-term">force</span>, <span class="key-term">velocity</span>, <span class="key-term">displacement</span>) is crucial for accurately describing and analyzing the physical world. This comprehensive lesson will guide you through the <span class="key-term">graphical and analytical methods</span> for <span class="key-term">vector addition and subtraction</span> ($\vec{A} + \vec{B}$), delve into the nuances of <span class="key-term">vector multiplication</span>, and highlight the pervasive role these concepts play in various branches of <span class="key-term">science</span>. Prepare to elevate your understanding of physical phenomena by mastering the language of <span class="key-term">scalars and vectors</span>!
-        </p>
+        <!-- Header Section -->
+        <header class="text-center mb-12 sm:mb-16 md:mb-20">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-400 leading-tight">
+                <span class="text-white">Whizmath:</span> Understanding Scalars and Vectors
+            </h1>
+            <p class="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
+                Learn to distinguish between quantities that have only <span class="text-blue-400 font-semibold">magnitude (scalars)</span> like <span class="text-blue-400 font-semibold">mass</span> and <span class="text-blue-400 font-semibold">time</span>, and those with both <span class="text-blue-400 font-semibold">magnitude and direction (vectors)</span> like <span class="text-blue-400 font-semibold">force</span> and <span class="text-blue-400 font-semibold">velocity</span>. Master graphical and analytical methods for <span class="text-blue-400 font-semibold">vector addition and subtraction</span> ($\vec{A} + \vec{B}$).
+            </p>
+        </header>
 
-        <h2 id="introduction">1. Introduction: Quantifying the Physical World</h2>
-        <p>
-            In <span class="key-term">physics</span>, we aim to describe and predict how objects move and interact. To do this effectively, we need a precise language to represent physical quantities. Not all quantities behave the same way. For example, if you say "I walked 5 kilometers," that tells us how far you walked, but it doesn't tell us where you ended up. However, if you say "I walked 5 kilometers **north**," that provides much more specific information, describing your final position relative to your starting point. This seemingly simple difference introduces the core distinction between <span class="key-term">scalars</span> and <span class="key-term">vectors</span>.
-        </p>
-        <p>
-            The concepts of <span class="key-term">scalars</span> and <span class="key-term">vectors</span> are absolutely fundamental to understanding the dynamics of motion, forces, fields, and virtually every other measurable aspect of the physical universe. Without this distinction, many physical laws and phenomena would be impossible to formulate or comprehend accurately. For instance, knowing the <span class="key-term">speed</span> of a car (a scalar) is different from knowing its <span class="key-term">velocity</span> (a vector), as <span class="key-term">velocity</span> also includes the car's direction of travel, which is critical for navigation and safety. Similarly, knowing the <span class="key-term">magnitude</span> of a <span class="key-term">force</span> (a scalar) is not enough; its <span class="key-term">direction</span> (a vector property) is equally important to determine its effect on an object.
-        </p>
-        <p>
-            This comprehensive Whizmath lesson will provide an in-depth exploration of <span class="key-term">scalars and vectors</span>, equipping you with the tools to confidently work with both types of quantities. We will meticulously examine:
-        </p>
-        <ul class="list-disc ml-6">
-            <li>A clear and concise definition of <span class="key-term">scalars</span>, accompanied by numerous illustrative examples from everyday <span class="key-term">physics</span>.</li>
-            <li>A detailed definition and explanation of <span class="key-term">vectors</span>, including how they are represented graphically (using <span class="key-term">arrows</span>) and analytically (using <span class="key-term">components</span> and <span class="key-term">unit vectors</span>).</li>
-            <li>Thorough instruction on <span class="key-term">graphical methods for vector addition and subtraction</span>, including the <span class="key-term">head-to-tail method</span> and the <span class="key-term">parallelogram method</span>.</li>
-            <li>Extensive coverage of <span class="key-term">analytical (component) methods for vector addition and subtraction</span> in two and three dimensions, which are essential for precise calculations.</li>
-            <li>A deep dive into <span class="key-term">vector multiplication</span>, differentiating between the <span class="key-term">scalar product (dot product)</span> and the <span class="key-term">vector product (cross product)</span>, along with their mathematical properties and crucial physical interpretations (e.g., <span class="key-term">work</span>, <span class="key-term">torque</span>).</li>
-            <li>Real-world applications of <span class="key-term">scalars and vectors</span> across various branches of <span class="key-term">physics</span>, including <span class="key-term">kinematics</span>, <span class="key-term">dynamics</span>, <span class="key-term">electromagnetism</span>, and <span class="key-term">fluid mechanics</span>.</li>
-        </ul>
+        <!-- Introduction Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Introduction to Scalars and Vectors: The Dimensions of Physical Quantities</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                Welcome to a fundamental concept that underpins all quantitative aspects of <span class="text-blue-400">physics</span>: the distinction between <span class="text-blue-400 font-semibold">scalars and vectors</span>. In our daily lives, we often describe quantities with just a number and a unit, such as "the temperature is $25^\circ C$" or "the car has a mass of $1200 \, kg$." These are examples of <span class="text-blue-400">scalar quantities</span>. However, in <span class="text-blue-400">physics</span>, many crucial quantities require more than just a magnitude; they also need a specified direction. For instance, knowing that a force is "10 Newtons" isn't enough; we need to know *in which direction* that <span class="text-blue-400">force</span> is applied. Such quantities are known as <span class="text-blue-400">vectors</span>.
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                Mastering the difference between <span class="text-blue-400">scalars and vectors</span>, and more importantly, knowing how to manipulate <span class="text-blue-400">vectors</span> (add, subtract, resolve them into components), is absolutely essential for solving problems in <span class="text-blue-400">mechanics</span>, <span class="text-blue-400">electricity</span>, <span class="text-blue-400">magnetism</span>, and indeed almost every area of <span class="text-blue-400">physics</span>. It allows us to accurately describe physical phenomena that occur in multiple dimensions.
+            </p>
+            <p class="text-gray-200 leading-relaxed">
+                In this comprehensive lesson, we will clearly define <span class="text-blue-400">scalar quantities</span> and provide numerous examples. We will then introduce <span class="text-blue-400">vector quantities</span>, explaining their representation and significance. A major focus will be on the methods for <span class="text-blue-400">vector addition and subtraction</span>, including both graphical techniques (like the tip-to-tail method) and the more precise analytical (component) method. Understanding these operations is vital for combining forces, velocities, and other <span class="text-blue-400">vector quantities</span> in real-world scenarios. Prepare to orient your understanding with <span class="text-blue-400 font-bold">Whizmath</span>!
+            </p>
+        </section>
 
-        <h2 id="scalars">2. Scalars: Quantities of Magnitude Only</h2>
-        <p>
-            A <span class="key-term">scalar quantity</span> is a physical quantity that is completely described by its <span class="key-term">magnitude</span> (size or amount) alone. It has no associated direction. When you express a scalar quantity, you only need a numerical value and a unit.
-        </p>
-
-        <h3>2.1. Defining Scalar Quantities</h3>
-        <p>
-            The term "magnitude" refers to the size or extent of a quantity. For example, if you say the temperature is $25^\circ\text{C}$, you don't need to specify a direction; $25^\circ\text{C}$ fully describes the temperature. Similarly, if a car travels at $60 \text{ km/h}$, its <span class="key-term">speed</span> is fully described by that value.
-        </p>
-        <p>
-            <span class="key-term">Scalar quantities</span> are straightforward to work with using ordinary arithmetic rules. You can add, subtract, multiply, and divide them just like regular numbers. For instance, if you have $2 \text{ kg}$ of apples and add $3 \text{ kg}$ of oranges, you have a total of $5 \text{ kg}$ of fruit. The direction of the fruit is irrelevant.
-        </p>
-
-        <h3>2.2. Common Examples of Scalar Quantities</h3>
-        <p>
-            Many common physical quantities are <span class="key-term">scalars</span>:
-        </p>
-        <ul class="list-disc ml-6">
-            <li><span class="key-term">Mass:</span> The amount of matter in an object (e.g., $50 \text{ kg}$). It only has a size.</li>
-            <li><span class="key-term">Time:</span> The duration of an event (e.g., $10 \text{ seconds}$). Time always moves forward, but it's not a directional quantity in the spatial sense.</li>
-            <li><span class="key-term">Distance:</span> The total path length traveled by an object (e.g., $100 \text{ meters}$). It doesn't specify the final position relative to the start.</li>
-            <li><span class="key-term">Speed:</span> The rate at which an object covers distance (e.g., $20 \text{ m/s}$). It's the magnitude of velocity.</li>
-            <li><span class="key-term">Temperature:</span> A measure of the average kinetic energy of particles (e.g., $37^\circ\text{C}$).</li>
-            <li><span class="key-term">Volume:</span> The amount of space occupied by an object (e.g., $5 \text{ liters}$).</li>
-            <li><span class="key-term">Density:</span> Mass per unit volume (e.g., $1000 \text{ kg/m}^3$).</li>
-            <li><span class="key-term">Energy:</span> The capacity to do work (e.g., $500 \text{ Joules}$).</li>
-            <li><span class="key-term">Work:</span> Energy transferred by a force (e.g., $100 \text{ Joules}$).</li>
-            <li><span class="key-term">Power:</span> The rate at which work is done (e.g., $75 \text{ Watts}$).</li>
-            <li><span class="key-term">Electric Charge:</span> A fundamental property of matter (e.g., $1.6 \times 10^{-19} \text{ Coulombs}$).</li>
-        </ul>
-        <p>
-            When performing calculations involving only <span class="key-term">scalars</span>, standard arithmetic rules apply. For example, if you have a current of $2 \text{ A}$ flowing for $5 \text{ s}$, the total charge transferred is $2 \text{ A} \times 5 \text{ s} = 10 \text{ Coulombs}$. The lack of direction makes scalar operations straightforward.
-        </p>
-
-        <h2 id="vectors">3. Vectors: Magnitude and Direction</h2>
-        <p>
-            A <span class="key-term">vector quantity</span> is a physical quantity that is completely described by both its <span class="key-term">magnitude</span> (size) and its <span class="key-term">direction</span>. To fully understand a vector quantity, you need to know "how much" and "in what orientation."
-        </p>
-
-        <h3>3.1. Defining Vector Quantities</h3>
-        <p>
-            Consider pushing a box. If you say you applied a <span class="key-term">force</span> of $10 \text{ N}$ (Newton), that's its magnitude. But without knowing the <span class="key-term">direction</span> (e.g., north, upward, at a $30^\circ$ angle), you don't know how the box will move. Hence, <span class="key-term">force</span> is a <span class="key-term">vector</span>. Similarly, knowing that an airplane has a <span class="key-term">speed</span> of $800 \text{ km/h}$ is a scalar. But to know where it's going, you need its <span class="key-term">velocity</span>, which would be $800 \text{ km/h}$ <span class="key-term">east</span> (for example).
-        </p>
-
-        <h3>3.2. Common Examples of Vector Quantities</h3>
-        <p>
-            <span class="key-term">Vector quantities</span> are crucial in describing motion, interactions, and fields:
-        </p>
-        <ul class="list-disc ml-6">
-            <li><span class="key-term">Displacement:</span> The change in an object's position, from a starting point to an ending point (e.g., $5 \text{ km}$ <span class="key-term">north</span> from the starting point). It's not just how far, but also in what direction.</li>
-            <li><span class="key-term">Velocity:</span> The rate of change of an object's position (speed with direction) (e.g., $60 \text{ km/h}$ <span class="key-term">east</span>).</li>
-            <li><span class="key-term">Acceleration:</span> The rate of change of an object's velocity (e.g., $9.8 \text{ m/s}^2$ <span class="key-term">downward</span> due to gravity).</li>
-            <li><span class="key-term">Force:</span> A push or a pull (e.g., $100 \text{ N}$ <span class="key-term">upward</span>).</li>
-            <li><span class="key-term">Momentum:</span> Mass in motion ($p = mv$) (e.g., $10 \text{ kg} \cdot \text{m/s}$ <span class="key-term">forward</span>).</li>
-            <li><span class="key-term">Weight:</span> The force of gravity on an object (e.g., $490 \text{ N}$ <span class="key-term">downward</span>).</li>
-            <li><span class="key-term">Electric Field:</span> A region where electric charges experience a force (e.g., $50 \text{ N/C}$ <span class="key-term">away from the charge</span>).</li>
-            <li><span class="key-term">Magnetic Field:</span> A region where magnetic poles experience a force (e.g., $0.5 \text{ Tesla}$ <span class="key-term">into the page</span>).</li>
-            <li><span class="key-term">Torque:</span> A force that causes rotation (e.g., $25 \text{ N} \cdot \text{m}$ <span class="key-term">clockwise</span>).</li>
-        </ul>
-
-        <h3>3.3. Representing Vectors</h3>
-        <p>
-            <span class="key-term">Vectors</span> can be represented in several ways:
-            <br><br>
-            <span class="key-term">3.3.1. Graphical Representation (Arrow Notation):</span>
-            Graphically, a <span class="key-term">vector</span> is represented by an <span class="key-term">arrow</span>.
-            <ul>
-                <li>The <span class="key-term">length</span> of the arrow represents the <span class="key-term">magnitude</span> of the vector. A longer arrow means a larger magnitude.</li>
-                <li>The <span class="key-term">direction</span> the arrow points represents the <span class="key-term">direction</span> of the vector.</li>
-                <li>The tail of the arrow is the starting point, and the head (arrowhead) is the terminal point.</li>
+        <!-- Scalars Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Scalars: Quantities of Magnitude Only</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                A <span class="text-blue-400 font-semibold">scalar quantity</span> is a physical quantity that is fully described by its <span class="text-blue-400">magnitude</span> (a numerical value) and its unit. It does not have a direction associated with it. Scalar quantities are treated with ordinary arithmetic.
+            </p>
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2">Characteristics of Scalars</h3>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Magnitude Only:</span> The defining characteristic. No directional information is needed or provided.</li>
+                <li><span class="font-semibold">Ordinary Arithmetic:</span> Scalars can be added, subtracted, multiplied, and divided using standard arithmetic rules. For example, $5 \, kg + 3 \, kg = 8 \, kg$.</li>
+                <li><span class="font-semibold">Units:</span> Always accompanied by an appropriate unit (e.g., meters, seconds, kilograms).</li>
             </ul>
-            Vectors are typically denoted by boldface letters (e.g., $\mathbf{A}$), or by letters with an arrow above them (e.g., $\vec{A}$). The magnitude of a vector $\vec{A}$ is denoted as $|\vec{A}|$ or simply $A$.
-            <br><br>
-            <span class="key-term">3.3.2. Analytical Representation (Component Form):</span>
-            In coordinate systems, <span class="key-term">vectors</span> can be broken down into their <span class="key-term">components</span> along orthogonal axes (e.g., x, y, and z axes).
-            <br><br>
-            <span class="key-term">Unit Vectors:</span> To simplify component representation, we use <span class="key-term">unit vectors</span>. A <span class="key-term">unit vector</span> is a vector with a <span class="key-term">magnitude</span> of 1, used solely to indicate a particular <span class="key-term">direction</span>.
-            <ul>
-                <li>In a 2D Cartesian coordinate system:
-                    <ul>
-                        <li>$\hat{i}$ (or $\mathbf{\hat{x}}$) represents the direction along the positive x-axis.</li>
-                        <li>$\hat{j}$ (or $\mathbf{\hat{y}}$) represents the direction along the positive y-axis.</li>
-                    </ul>
-                </li>
-                <li>In a 3D Cartesian coordinate system:
-                    <ul>
-                        <li>$\hat{k}$ (or $\mathbf{\hat{z}}$) represents the direction along the positive z-axis.</li>
+
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">Common Examples of Scalar Quantities in Physics</h3>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Mass:</span> The amount of matter in an object (e.g., $70 \, kg$).</li>
+                <li><span class="font-semibold">Time:</span> The duration of an event (e.g., $10 \, s$).</li>
+                <li><span class="font-semibold">Distance:</span> The total path length traveled by an object (e.g., $5 \, km$).</li>
+                <li><span class="font-semibold">Speed:</span> The rate at which an object covers distance (e.g., $60 \, km/h$).</li>
+                <li><span class="font-semibold">Temperature:</span> The degree of hotness or coldness of an object (e.g., $25^\circ C$).</li>
+                <li><span class="font-semibold">Energy:</span> The capacity to do work (e.g., $100 \, J$).</li>
+                <li><span class="font-semibold">Volume:</span> The amount of space an object occupies (e.g., $5 \, L$).</li>
+                <li><span class="font-semibold">Density:</span> Mass per unit volume (e.g., $1000 \, kg/m^3$).</li>
+            </ul>
+            <p class="text-gray-200 leading-relaxed">
+                When you measure any of these quantities, you only need to state the numerical value and its unit. The concept of "direction" does not apply.
+            </p>
+        </section>
+
+        <!-- Vectors Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Vectors: Quantities with Magnitude and Direction</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                A <span class="text-blue-400 font-semibold">vector quantity</span> is a physical quantity that requires both <span class="text-blue-400">magnitude</span> and <span class="text-blue-400">direction</span> for its complete description.
+            </p>
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2">Characteristics of Vectors</h3>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Magnitude and Direction:</span> Both are essential for a full description.</li>
+                <li><span class="font-semibold">Vector Addition:</span> Vectors cannot be simply added using ordinary arithmetic. They must be added using specific vector rules that account for their directions.</li>
+                <li><span class="font-semibold">Representation:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Graphically:</span> Represented by an arrow. The length of the arrow represents the <span class="text-blue-400">magnitude</span> (to scale), and the arrowhead points in the direction of the <span class="text-blue-400">vector</span>.</li>
+                        <li><span class="text-blue-400">Symbolically:</span> Often denoted by a boldface letter (e.g., $\mathbf{A}$) or a letter with an arrow above it (e.g., $\vec{A}$). The magnitude of a vector $\vec{A}$ is denoted by $|\vec{A}|$ or simply $A$.</li>
                     </ul>
                 </li>
             </ul>
-            Any vector $\vec{A}$ in two dimensions can be expressed as a sum of its components along the x and y axes:
-            $$\vec{A} = A_x \hat{i} + A_y \hat{j}$$
-            Where $A_x$ is the x-component and $A_y$ is the y-component.
-            In three dimensions:
-            $$\vec{A} = A_x \hat{i} + A_y \hat{j} + A_z \hat{k}$$
-            The <span class="key-term">magnitude</span> of a vector $\vec{A}$ in component form is found using the Pythagorean theorem:
-            $$|\vec{A}| = \sqrt{A_x^2 + A_y^2}$$
-            For 3D:
-            $$|\vec{A}| = \sqrt{A_x^2 + A_y^2 + A_z^2}$$
-            The <span class="key-term">direction</span> of a 2D vector can be specified by the angle $\theta$ it makes with the positive x-axis, typically found using trigonometry:
-            $$\tan\theta = \frac{A_y}{A_x}$$
-            $$\theta = \arctan\left(\frac{A_y}{A_x}\right)$$
-            Care must be taken to place $\theta$ in the correct quadrant based on the signs of $A_x$ and $A_y$.
-        </p>
 
-        <h2 id="vector-addition-subtraction">4. Vector Addition and Subtraction</h2>
-        <p>
-            Unlike scalars, <span class="key-term">vectors</span> cannot be simply added or subtracted arithmetically because their directions must be taken into account. Instead, we use specific <span class="key-term">graphical</span> or <span class="key-term">analytical (component) methods</span> to find the <span class="key-term">resultant vector</span>.
-        </p>
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">Common Examples of Vector Quantities in Physics</h3>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Displacement:</span> The change in an object's position, from initial to final point, including direction (e.g., $5 \, km$ east).</li>
+                <li><span class="font-semibold">Velocity:</span> The rate of change of displacement (speed in a specific direction) (e.g., $60 \, km/h$ north).</li>
+                <li><span class="font-semibold">Acceleration:</span> The rate of change of velocity (e.g., $9.8 \, m/s^2$ downwards).</li>
+                <li><span class="font-semibold">Force:</span> A push or a pull (e.g., $10 \, N$ to the right).</li>
+                <li><span class="font-semibold">Momentum:</span> Mass in motion (e.g., $100 \, kg \cdot m/s$ southwest).</li>
+                <li><span class="font-semibold">Electric Field:</span> The force per unit charge (e.g., $500 \, N/C$ away from a positive charge).</li>
+            </ul>
+            <p class="text-gray-200 leading-relaxed">
+                For these quantities, direction is as important as magnitude. For example, a <span class="text-blue-400">force</span> of $10 \, N$ applied to the right has a different effect than $10 \, N$ applied to the left.
+            </p>
+        </section>
 
-        <h3>4.1. Graphical Method of Vector Addition</h3>
-        <p>
-            The graphical method provides a visual representation of vector operations and is useful for conceptual understanding.
-            <br><br>
-            <span class="key-term">4.1.1. Head-to-Tail Method (Polygon Method):</span>
-            This method is used to add two or more vectors.
-            <ol class="list-decimal ml-6">
-                <li>Draw the first vector ($\vec{A}$) to scale in the appropriate direction.</li>
-                <li>Draw the second vector ($\vec{B}$) such that its tail starts at the head of the first vector ($\vec{A}$).</li>
-                <li>If adding more vectors ($\vec{C}$, etc.), draw each subsequent vector from the head of the previous one.</li>
-                <li>The <span class="key-term">resultant vector</span> ($\vec{R} = \vec{A} + \vec{B} + \vec{C}$) is drawn from the tail of the very first vector ($\vec{A}$) to the head of the very last vector ($\vec{C}$).</li>
-            </ol>
-            The <span class="key-term">magnitude</span> of the <span class="key-term">resultant vector</span> is the length of the <span class="key-term">resultant arrow</span>, and its <span class="key-term">direction</span> is the direction of the <span class="key-term">resultant arrow</span>. This method is illustrative but can be imprecise due to drawing inaccuracies.
-            <br><br>
-            <span class="key-term">4.1.2. Parallelogram Method:</span>
-            This method is primarily used for adding two vectors that originate from the same point.
-            <ol class="list-decimal ml-6">
-                <li>Draw both vectors ($\vec{A}$ and $\vec{B}$) to scale from a common origin.</li>
-                <li>Complete the parallelogram by drawing lines parallel to $\vec{A}$ from the head of $\vec{B}$, and parallel to $\vec{B}$ from the head of $\vec{A}$.</li>
-                <li>The <span class="key-term">resultant vector</span> ($\vec{R} = \vec{A} + \vec{B}$) is the diagonal of the parallelogram that starts from the common origin.</li>
-            </ol>
-            Similar to the head-to-tail method, this is more for conceptual understanding and less for precise quantitative results.
-        </p>
+        <!-- Vector Addition: Graphical Methods Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Vector Addition: Graphical Methods</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                When two or more <span class="text-blue-400">vectors</span> act on an object, their combined effect is represented by a single <span class="text-blue-400">resultant vector</span>. The process of finding this <span class="text-blue-400">resultant vector</span> is called <span class="text-blue-400 font-semibold">vector addition</span>. Graphical methods are useful for visualizing vector sums.
+            </p>
 
-        <h3>4.2. Graphical Method of Vector Subtraction</h3>
-        <p>
-            <span class="key-term">Vector subtraction</span> ($\vec{A} - \vec{B}$) is simply defined as the addition of the negative of the vector being subtracted ($\vec{A} + (-\vec{B})$).
-            <br><br>
-            To find $-\vec{B}$, draw a vector with the same <span class="key-term">magnitude</span> as $\vec{B}$ but pointing in the exactly opposite <span class="key-term">direction</span>. Once you have $-\vec{B}$, you can use the <span class="key-term">head-to-tail method</span> to add $\vec{A}$ and $-\vec{B}$.
-        </p>
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2">1. Tip-to-Tail (or Head-to-Tail) Method</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                This is the most common graphical method for adding any number of <span class="text-blue-400">vectors</span>.
+            </p>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Steps:</span>
+                    <ol class="list-decimal list-inside ml-4">
+                        <li>Draw the first <span class="text-blue-400">vector</span> ($\vec{A}$) to scale in the correct direction.</li>
+                        <li>From the tip (head) of the first <span class="text-blue-400">vector</span>, draw the tail of the second <span class="text-blue-400">vector</span> ($\vec{B}$) to scale in its correct direction.</li>
+                        <li>If adding more <span class="text-blue-400">vectors</span>, continue placing the tail of the next <span class="text-blue-400">vector</span> at the tip of the previous one.</li>
+                        <li>The <span class="text-blue-400">resultant vector</span> ($\vec{R} = \vec{A} + \vec{B}$) is drawn from the tail of the first <span class="text-blue-400">vector</span> to the tip of the last <span class="text-blue-400">vector</span>.</li>
+                    </ol>
+                </li>
+                <li><span class="font-semibold">Magnitude and Direction:</span> The magnitude of the <span class="text-blue-400">resultant vector</span> is measured by the length of the arrow (using the chosen scale), and its direction is measured with a protractor relative to a reference axis (e.g., East or positive x-axis).</li>
+            </ul>
+            <p class="text-gray-200 leading-relaxed">
+                <span class="font-semibold">Example:</span> If you walk $3 \, km$ East, then $4 \, km$ North, your <span class="text-blue-400">displacement</span> is $5 \, km$ Northeast. Graphically, draw a $3 \, km$ arrow East, then a $4 \, km$ arrow North from the tip of the first. The resultant is the arrow from the start of the $3 \, km$ arrow to the end of the $4 \, km$ arrow.
+            </p>
 
-        <h3>4.3. Analytical (Component) Method of Vector Addition and Subtraction</h3>
-        <p>
-            The <span class="key-term">analytical method</span>, or <span class="key-term">component method</span>, is the most accurate and widely used technique for <span class="key-term">vector addition and subtraction</span>, especially when precision is required or when dealing with three dimensions.
-            <br><br>
-            <span class="key-term">4.3.1. Steps for Vector Addition:</span>
-            To add two vectors $\vec{A}$ and $\vec{B}$ to find the <span class="key-term">resultant vector</span> $\vec{R} = \vec{A} + \vec{B}$:
-            <ol class="list-decimal ml-6">
-                <li><span class="key-term">Resolve each vector into its components:</span>
-                    <ul>
-                        <li>$\vec{A} = A_x \hat{i} + A_y \hat{j}$</li>
-                        <li>$\vec{B} = B_x \hat{i} + B_y \hat{j}$</li>
-                        <li>(For 3D, also include $A_z \hat{k}$ and $B_z \hat{k}$).</li>
-                        <li>If a vector is given by its <span class="key-term">magnitude</span> $A$ and angle $\theta$ from the positive x-axis, its components are:
-                            $$A_x = A \cos\theta$$
-                            $$A_y = A \sin\theta$$
-                        </li>
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">2. Parallelogram Method (for Two Vectors)</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                This method is useful for adding two <span class="text-blue-400">vectors</span> when they start from the same point.
+            </p>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Steps:</span>
+                    <ol class="list-decimal list-inside ml-4">
+                        <li>Draw the two <span class="text-blue-400">vectors</span> ($\vec{A}$ and $\vec{B}$) to scale with their tails at the same common origin.</li>
+                        <li>Complete the parallelogram by drawing lines parallel to each <span class="text-blue-400">vector</span> from the tip of the other <span class="text-blue-400">vector</span>.</li>
+                        <li>The diagonal of the parallelogram drawn from the common origin is the <span class="text-blue-400">resultant vector</span> ($\vec{R} = \vec{A} + \vec{B}$).</li>
+                    </ol>
+                </li>
+            </ul>
+            <p class="text-gray-200 leading-relaxed">
+                Both graphical methods provide a visual understanding of <span class="text-blue-400">vector addition</span>, but their accuracy is limited by the quality of the drawing and measurement tools.
+            </p>
+        </section>
+
+        <!-- Vector Addition and Subtraction: Analytical Methods Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Vector Addition & Subtraction: Analytical Methods (Component Method)</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                For precise calculations, especially in two or three dimensions, the <span class="text-blue-400 font-semibold">analytical (component) method</span> is preferred. Any <span class="text-blue-400">vector</span> can be broken down into its perpendicular components along the chosen coordinate axes (e.g., x and y axes).
+            </p>
+
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2">1. Resolving a Vector into Components</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                For a <span class="text-blue-400">vector</span> $\vec{A}$ with magnitude $A$ and direction $\theta$ (measured counter-clockwise from the positive x-axis):
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                    <li><span class="font-semibold">x-component ($A_x$):</span>
+                        $$ A_x = A \cos \theta $$
+                    </li>
+                    <li><span class="font-semibold">y-component ($A_y$):</span>
+                        $$ A_y = A \sin \theta $$
+                    </li>
+                </ul>
+                Conversely, if you have the components, you can find the magnitude and direction:
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                    <li><span class="font-semibold">Magnitude (Pythagorean Theorem):</span>
+                        $$ A = \sqrt{A_x^2 + A_y^2} $$
+                    </li>
+                    <li><span class="font-semibold">Direction (Inverse Tangent):</span>
+                        $$ \theta = \tan^{-1} \left( \frac{A_y}{A_x} \right) $$
+                        (Be mindful of the quadrant when finding $\theta$ from $\tan^{-1}$).
+                    </li>
+                </ul>
+            </p>
+
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">2. Adding Vectors using Components</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                To add two or more <span class="text-blue-400">vectors</span> ($\vec{R} = \vec{A} + \vec{B} + \vec{C} + ...$) using the component method:
+            </p>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Step 1: Resolve all vectors into their x and y components.</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li>$A_x, A_y$</li>
+                        <li>$B_x, B_y$</li>
+                        <li>$C_x, C_y$, etc.</li>
                     </ul>
                 </li>
-                <li><span class="key-term">Add the corresponding components:</span> The components of the <span class="key-term">resultant vector</span> $\vec{R}$ are simply the sum of the components of the individual vectors:
-                    $$R_x = A_x + B_x$$
-                    $$R_y = A_y + B_y$$
-                    $$R_z = A_z + B_z \quad \text{(for 3D)}$$
-                    So, $\vec{R} = (A_x + B_x) \hat{i} + (A_y + B_y) \hat{j} + (A_z + B_z) \hat{k}$.
+                <li><span class="font-semibold">Step 2: Sum all x-components to get the resultant x-component ($R_x$).</span>
+                    $$ R_x = A_x + B_x + C_x + ... $$
                 </li>
-                <li><span class="key-term">Calculate the magnitude of the resultant vector:</span>
-                    $$|\vec{R}| = \sqrt{R_x^2 + R_y^2}$$
-                    $$|\vec{R}| = \sqrt{R_x^2 + R_y^2 + R_z^2} \quad \text{(for 3D)}$$
+                <li><span class="font-semibold">Step 3: Sum all y-components to get the resultant y-component ($R_y$).</span>
+                    $$ R_y = A_y + B_y + C_y + ... $$
                 </li>
-                <li><span class="key-term">Calculate the direction of the resultant vector:</span> For 2D, the angle $\theta_R$ with the positive x-axis is:
-                    $$\tan\theta_R = \frac{R_y}{R_x}$$
-                    $$\theta_R = \arctan\left(\frac{R_y}{R_x}\right)$$
-                    Remember to use the signs of $R_x$ and $R_y$ to determine the correct quadrant for $\theta_R$. For example, if $R_x$ is negative and $R_y$ is positive, the vector is in the second quadrant.
+                <li><span class="font-semibold">Step 4: Calculate the magnitude of the resultant vector.</span>
+                    $$ R = \sqrt{R_x^2 + R_y^2} $$
                 </li>
-            </ol>
-            <br><br>
-            <span class="key-term">4.3.2. Steps for Vector Subtraction:</span>
-            To subtract vector $\vec{B}$ from vector $\vec{A}$ to find the <span class="key-term">resultant vector</span> $\vec{R} = \vec{A} - \vec{B}$:
-            <ol class="list-decimal ml-6">
-                <li><span class="key-term">Resolve each vector into its components</span> as in addition.</li>
-                <li><span class="key-term">Subtract the corresponding components:</span>
-                    $$R_x = A_x - B_x$$
-                    $$R_y = A_y - B_y$$
-                    $$R_z = A_z - B_z \quad \text{(for 3D)}$$
-                </li>
-                <li><span class="key-term">Calculate the magnitude and direction of the resultant vector</span> using the same formulas as for addition.</li>
-            </ol>
-            The analytical method is universally applicable and provides highly accurate results, making it indispensable for advanced <span class="key-term">physics</span> and <span class="key-term">engineering</span> problems.
-        </p>
-
-        <h2 id="vector-multiplication">5. Vector Multiplication: Beyond Simple Products</h2>
-        <p>
-            Multiplying <span class="key-term">vectors</span> is not as straightforward as multiplying scalars. There are two primary types of vector multiplication, each with a distinct mathematical definition and a unique physical interpretation: the <span class="key-term">scalar product (dot product)</span> and the <span class="key-term">vector product (cross product)</span>.
-        </p>
-
-        <h3>5.1. Scalar Product (Dot Product)</h3>
-        <p>
-            The <span class="key-term">scalar product</span> of two vectors ($\vec{A}$ and $\vec{B}$) results in a <span class="key-term">scalar quantity</span>. It is also known as the <span class="key-term">dot product</span> because of the notation used.
-            <br><br>
-            <span class="key-term">5.1.1. Definition:</span>
-            The <span class="key-term">dot product</span> of two vectors $\vec{A}$ and $\vec{B}$ is defined as the product of their magnitudes and the cosine of the angle $\theta$ between them:
-            $$\vec{A} \cdot \vec{B} = |\vec{A}||\vec{B}| \cos\theta$$
-            Where $0^\circ \le \theta \le 180^\circ$.
-            <br><br>
-            <span class="key-term">5.1.2. Properties of the Dot Product:</span>
-            <ul class="list-disc ml-6">
-                <li><span class="key-term">Commutative:</span> The order of multiplication does not matter.
-                    $$\vec{A} \cdot \vec{B} = \vec{B} \cdot \vec{A}$$
-                </li>
-                <li><span class="key-term">Distributive over addition:</span>
-                    $$\vec{A} \cdot (\vec{B} + \vec{C}) = \vec{A} \cdot \vec{B} + \vec{A} \cdot \vec{C}$$
-                </li>
-                <li><span class="key-term">Dot product with itself:</span>
-                    $$\vec{A} \cdot \vec{A} = |\vec{A}|^2$$
-                </li>
-                <li><span class="key-term">Orthogonal Vectors:</span> If two vectors are perpendicular ($\theta = 90^\circ$, so $\cos\theta = 0$), their <span class="key-term">dot product</span> is zero.
-                    $$\vec{A} \cdot \vec{B} = 0 \quad \text{if } \vec{A} \perp \vec{B}$$
-                </li>
-                <li><span class="key-term">Parallel Vectors:</span> If two vectors are parallel ($\theta = 0^\circ$, so $\cos\theta = 1$), their <span class="key-term">dot product</span> is the product of their magnitudes.
-                    $$\vec{A} \cdot \vec{B} = |\vec{A}||\vec{B}| \quad \text{if } \vec{A} || \vec{B}$$
-                    If anti-parallel ($\theta = 180^\circ$, so $\cos\theta = -1$), their <span class="key-term">dot product</span> is the negative product of their magnitudes.
+                <li><span class="font-semibold">Step 5: Calculate the direction of the resultant vector.</span>
+                    $$ \theta_R = \tan^{-1} \left( \frac{R_y}{R_x} \right) $$
+                    (Again, adjust $\theta_R$ to the correct quadrant based on the signs of $R_x$ and $R_y$).
                 </li>
             </ul>
-            <br><br>
-            <span class="key-term">5.1.3. Dot Product in Component Form:</span>
-            Given $\vec{A} = A_x \hat{i} + A_y \hat{j} + A_z \hat{k}$ and $\vec{B} = B_x \hat{i} + B_y \hat{j} + B_z \hat{k}$:
-            $$\vec{A} \cdot \vec{B} = A_x B_x + A_y B_y + A_z B_z$$
-            This is because the <span class="key-term">unit vectors</span> are orthogonal: $\hat{i} \cdot \hat{i} = 1$, $\hat{j} \cdot \hat{j} = 1$, $\hat{k} \cdot \hat{k} = 1$, while $\hat{i} \cdot \hat{j} = 0$, $\hat{i} \cdot \hat{k} = 0$, etc.
-            <br><br>
-            <span class="key-term">5.1.4. Physical Interpretation:</span>
-            The <span class="key-term">dot product</span> measures the extent to which two vectors are in the same <span class="key-term">direction</span>. It is commonly used to calculate:
-            <ul>
-                <li><span class="key-term">Work (W):</span> The work done by a constant <span class="key-term">force</span> $\vec{F}$ causing a <span class="key-term">displacement</span> $\vec{d}$ is:
-                    $$W = \vec{F} \cdot \vec{d} = |\vec{F}||\vec{d}|\cos\theta$$
-                    Where $\theta$ is the angle between the <span class="key-term">force</span> and <span class="key-term">displacement</span> vectors. This is intuitive: work is only done by the component of force along the direction of motion.</li>
-                <li><span class="key-term">Power (P):</span> The rate at which work is done, or the dot product of <span class="key-term">force</span> and <span class="key-term">velocity</span>:
-                    $$P = \vec{F} \cdot \vec{v}$$
-                </li>
-            </ul>
-        </p>
+            <p class="text-gray-200 leading-relaxed">
+                This method is precise and can be easily extended to three dimensions (by adding a z-component).
+            </p>
 
-        <h3>5.2. Vector Product (Cross Product)</h3>
-        <p>
-            The <span class="key-term">vector product</span> of two vectors ($\vec{A}$ and $\vec{B}$) results in another <span class="key-term">vector quantity</span>. It is also known as the <span class="key-term">cross product</span>.
-            <br><br>
-            <span class="key-term">5.2.1. Definition:</span>
-            The <span class="key-term">cross product</span> of two vectors $\vec{A}$ and $\vec{B}$ is defined as a new vector $\vec{C} = \vec{A} \times \vec{B}$ whose:
-            <ul>
-                <li><span class="key-term">Magnitude:</span> Is given by the product of their magnitudes and the sine of the angle $\theta$ between them:
-                    $$|\vec{C}| = |\vec{A}||\vec{B}| \sin\theta$$
-                    Where $0^\circ \le \theta \le 180^\circ$. The magnitude is equal to the area of the parallelogram formed by $\vec{A}$ and $\vec{B}$.
-                </li>
-                <li><span class="key-term">Direction:</span> Is perpendicular to both $\vec{A}$ and $\vec{B}$, and is determined by the <span class="key-term">right-hand rule</span>.</li>
-            </ul>
-            <span class="key-term">Right-Hand Rule:</span> To find the direction of $\vec{A} \times \vec{B}$, point the fingers of your right hand in the direction of $\vec{A}$, then curl them towards the direction of $\vec{B}$ through the smaller angle. Your thumb will point in the direction of $\vec{A} \times \vec{B}$.
-            <br><br>
-            <span class="key-term">5.2.2. Properties of the Cross Product:</span>
-            <ul class="list-disc ml-6">
-                <li><span class="key-term">Anti-commutative:</span> The order of multiplication matters, and reversing the order reverses the direction of the resultant vector.
-                    $$\vec{A} \times \vec{B} = -(\vec{B} \times \vec{A})$$
-                </li>
-                <li><span class="key-term">Distributive over addition:</span>
-                    $$\vec{A} \times (\vec{B} + \vec{C}) = \vec{A} \times \vec{B} + \vec{A} \times \vec{C}$$
-                </li>
-                <li><span class="key-term">Parallel Vectors:</span> If two vectors are parallel ($\theta = 0^\circ$ or $\theta = 180^\circ$, so $\sin\theta = 0$), their <span class="key-term">cross product</span> is zero.
-                    $$\vec{A} \times \vec{B} = \vec{0} \quad \text{if } \vec{A} || \vec{B}$$
-                    This means $\vec{A} \times \vec{A} = \vec{0}$.
-                </li>
-                <li><span class="key-term">Unit Vectors for Cross Product:</span>
-                    $$\hat{i} \times \hat{j} = \hat{k}$$
-                    $$\hat{j} \times \hat{k} = \hat{i}$$
-                    $$\hat{k} \times \hat{i} = \hat{j}$$
-                    (and reversing the order gives negative results, e.g., $\hat{j} \times \hat{i} = -\hat{k}$)
-                </li>
-            </ul>
-            <br><br>
-            <span class="key-term">5.2.3. Cross Product in Component Form (Determinant Method):</span>
-            Given $\vec{A} = A_x \hat{i} + A_y \hat{j} + A_z \hat{k}$ and $\vec{B} = B_x \hat{i} + B_y \hat{j} + B_z \hat{k}$:
-            $$\vec{A} \times \vec{B} = \begin{vmatrix}
-            \hat{i} & \hat{j} & \hat{k} \\
-            A_x & A_y & A_z \\
-            B_x & B_y & B_z
-            \end{vmatrix}$$
-            $$= (A_y B_z - A_z B_y)\hat{i} - (A_x B_z - A_z B_x)\hat{j} + (A_x B_y - A_y B_x)\hat{k}$$
-            This formula is particularly useful for calculations in three dimensions.
-            <br><br>
-            <span class="key-term">5.2.4. Physical Interpretation:</span>
-            The <span class="key-term">cross product</span> measures the extent to which two vectors are perpendicular. It is fundamental in describing rotational effects and quantities involving magnetic fields:
-            <ul>
-                <li><span class="key-term">Torque ($\vec{\tau}$):</span> The rotational effect of a <span class="key-term">force</span> $\vec{F}$ applied at a position $\vec{r}$ from a pivot point is:
-                    $$\vec{\tau} = \vec{r} \times \vec{F}$$
-                    The <span class="key-term">direction</span> of <span class="key-term">torque</span> is along the axis of rotation.</li>
-                <li><span class="key-term">Magnetic Force on a Moving Charge ($\vec{F}_B$):</span> The force experienced by a charge $q$ moving with <span class="key-term">velocity</span> $\vec{v}$ in a <span class="key-term">magnetic field</span> $\vec{B}$ is:
-                    $$\vec{F}_B = q(\vec{v} \times \vec{B})$$
-                    This force is always perpendicular to both <span class="key-term">velocity</span> and the <span class="key-term">magnetic field</span>.</li>
-                <li><span class="key-term">Angular Momentum ($\vec{L}$):</span> The rotational equivalent of linear momentum:
-                    $$\vec{L} = \vec{r} \times \vec{p}$$
-                    where $\vec{p}$ is the linear momentum.</li>
-            </ul>
-        </p>
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">3. Vector Subtraction ($\vec{A} - \vec{B}$)</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                Subtracting a <span class="text-blue-400">vector</span> is equivalent to adding its negative. The negative of a <span class="text-blue-400">vector</span> has the same magnitude but points in the opposite direction.
+                $$ \vec{A} - \vec{B} = \vec{A} + (-\vec{B}) $$
+                If $\vec{B}$ has components $(B_x, B_y)$, then $-\vec{B}$ has components $(-B_x, -B_y)$.
+                Then, you apply the same component addition rules:
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                    <li>$(A-B)_x = A_x - B_x$</li>
+                    <li>$(A-B)_y = A_y - B_y$</li>
+                </ul>
+            </p>
+            <p class="text-gray-200 leading-relaxed">
+                <span class="font-semibold">Example:</span> Change in velocity ($\Delta \vec{v} = \vec{v}_f - \vec{v}_i$) is a vector subtraction. If a car's velocity changes from $30 \, m/s$ East to $30 \, m/s$ North, the change in velocity is not zero, but a vector pointing Northwest.
+            </p>
+        </section>
 
-        <h2 id="applications">6. Applications of Scalars and Vectors in Physics</h2>
-        <p>
-            The distinction and application of <span class="key-term">scalars and vectors</span> are pervasive throughout all branches of <span class="key-term">physics</span>, providing the mathematical framework to precisely describe the physical world.
-        </p>
-        <ul class="list-disc ml-6">
-            <li><span class="key-term">Kinematics:</span> The study of motion without considering its causes. Here, <span class="key-term">distance</span> and <span class="key-term">speed</span> are <span class="key-term">scalars</span>, while <span class="key-term">displacement</span>, <span class="key-term">velocity</span>, and <span class="key-term">acceleration</span> are <span class="key-term">vectors</span>. Understanding their vector nature is crucial for analyzing projectile motion, relative velocity, and circular motion.</li>
-            <li><span class="key-term">Dynamics:</span> The study of motion and its causes (forces). <span class="key-term">Force</span>, <span class="key-term">momentum</span>, and <span class="key-term">impulse</span> are inherently <span class="key-term">vector quantities</span>. <span class="key-term">Newton's Laws of Motion</span> are vector equations (e.g., $\vec{F}_{net} = m\vec{a}$).</li>
-            <li><span class="key-term">Work, Energy, and Power:</span> While <span class="key-term">work</span>, <span class="key-term">energy</span>, and <span class="key-term">power</span> are <span class="key-term">scalar quantities</span>, they often involve the <span class="key-term">dot product</span> of <span class="key-term">vector quantities</span> like <span class="key-term">force</span> and <span class="key-term">displacement</span>, or <span class="key-term">force</span> and <span class="key-term">velocity</span>.</li>
-            <li><span class="key-term">Rotational Motion:</span> Quantities like <span class="key-term">angular velocity</span>, <span class="key-term">angular acceleration</span>, <span class="key-term">torque</span>, and <span class="key-term">angular momentum</span> are all <span class="key-term">vector quantities</span>, with their directions often determined by the <span class="key-term">right-hand rule</span> using the <span class="key-term">cross product</span>.</li>
-            <li><span class="key-term">Electromagnetism:</span> <span class="key-term">Electric fields</span> and <span class="key-term">magnetic fields</span> are inherently <span class="key-term">vector fields</span>, meaning they have a <span class="key-term">magnitude and direction</span> at every point in space. Forces on charges in these fields are calculated using <span class="key-term">vector products</span> (e.g., the Lorentz force).</li>
-            <li><span class="key-term">Fluid Mechanics:</span> Concepts like <span class="key-term">fluid velocity</span> at different points, <span class="key-term">pressure gradients</span>, and <span class="key-term">flow fields</span> are described using <span class="key-term">vectors</span>.</li>
-        </ul>
-        <p>
-            From the trajectory of a projectile to the complex interactions within a magnetic field, the ability to correctly identify, represent, and manipulate <span class="key-term">scalars and vectors</span> is an indispensable skill for any student or professional in <span class="key-term">science</span> and <span class="key-term">engineering</span>.
-        </p>
+        <!-- Importance and Applications Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Importance and Applications of Scalars and Vectors</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                The distinction between <span class="text-blue-400">scalars and vectors</span> is fundamental and has wide-ranging implications across all branches of <span class="text-blue-400">physics</span> and engineering:
+            </p>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Accuracy in Description:</span> Without vectors, we couldn't precisely describe physical phenomena. For example, a "speed" tells us how fast, but "velocity" tells us how fast and in what direction, which is crucial for navigation.</li>
+                <li><span class="font-semibold">Understanding Forces:</span> When multiple <span class="text-blue-400">forces</span> act on an object, their <span class="text-blue-400">vector sum</span> (net force) determines the object's acceleration. This is central to <span class="text-blue-400">Newton's Second Law</span> ($\vec{F}_{net} = m\vec{a}$).</li>
+                <li><span class="font-semibold">Motion Analysis:</span> <span class="text-blue-400">Displacement</span>, <span class="text-blue-400">velocity</span>, and <span class="text-blue-400">acceleration</span> are all <span class="text-blue-400">vectors</span>. Analyzing projectile motion or circular motion requires resolving these vectors into components.</li>
+                <li><span class="font-semibold">Electromagnetism:</span> <span class="text-blue-400">Electric fields</span>, <span class="text-blue-400">magnetic fields</span>, and the <span class="text-blue-400">forces</span> they exert are all <span class="text-blue-400">vector quantities</span>.</li>
+                <li><span class="font-semibold">Engineering Design:</span> Engineers use <span class="text-blue-400">vectors</span> extensively to analyze stresses in structures, fluid flow, and the dynamics of machines, ensuring stability and performance. For example, ensuring a bridge can withstand the various directional forces acting on it.</li>
+                <li><span class="font-semibold">Navigation:</span> Pilots and sailors use <span class="text-blue-400">vector addition</span> to calculate their true ground <span class="text-blue-400">velocity</span> by combining their airspeed <span class="text-blue-400">velocity</span> with the wind <span class="text-blue-400">velocity</span>.</li>
+            </ul>
+            <p class="text-gray-200 leading-relaxed">
+                By mastering <span class="text-blue-400">scalar and vector quantities</span>, you gain the mathematical language necessary to describe the physical world accurately and solve a vast array of problems in <span class="text-blue-400">physics</span> and beyond.
+            </p>
+        </section>
 
-        <h2 id="conclusion">7. Conclusion: The Dual Nature of Physical Quantities</h2>
-        <p>
-            The journey through <span class="key-term">Scalars and Vectors</span> has revealed the dual nature of physical quantities, highlighting why a simple numerical value is sometimes insufficient to fully describe a physical phenomenon. By distinguishing between <span class="key-term">scalars</span> (quantities with only <span class="key-term">magnitude</span>, like <span class="key-term">mass</span>, <span class="key-term">time</span>, and <span class="key-term">speed</span>) and <span class="key-term">vectors</span> (quantities with both <span class="key-term">magnitude and direction</span>, such as <span class="key-term">force</span>, <span class="key-term">velocity</span>, and <span class="key-term">displacement</span>), we gain the precision necessary to accurately model the physical world.
-        </p>
-        <p>
-            We've explored the visual intuition of <span class="key-term">graphical methods</span> for <span class="key-term">vector addition and subtraction</span> (the <span class="key-term">head-to-tail</span> and <span class="key-term">parallelogram rules</span>), and delved into the analytical power of the <span class="key-term">component method</span>, which allows for precise calculations in multi-dimensional space using <span class="key-term">unit vectors</span> ($\hat{i}, \hat{j}, \hat{k}$). Furthermore, the distinct operations of <span class="key-term">vector multiplication</span>—the <span class="key-term">scalar product (dot product)</span>, yielding a scalar measure of alignment, and the <span class="key-term">vector product (cross product)</span>, producing a new vector perpendicular to the original two—have demonstrated how these mathematical tools provide profound physical insights into concepts like <span class="key-term">work</span> and <span class="key-term">torque</span>.
-        </p>
-        <p>
-            The omnipresence of <span class="key-term">scalars and vectors</span> across <span class="key-term">kinematics</span>, <span class="key-term">dynamics</span>, <span class="key-term">electromagnetism</span>, and other domains of <span class="key-term">physics</span> underscores their indispensable role. As you continue your educational journey with <span class="key-term">Whizmath</span>, remember that mastering <span class="key-term">scalars and vectors</span> is not just about memorizing definitions and formulas; it's about developing a deeper intuition for how physical quantities interact in space and time. This mastery will unlock your ability to solve complex problems and truly comprehend the intricate workings of the universe. Keep analyzing, keep calculating, and keep exploring the directional elegance of physics!
-        </p>
+        <!-- Conclusion Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Conclusion</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                In this essential lesson, we have thoroughly distinguished between <span class="text-blue-400">scalar quantities</span>, which possess only <span class="text-blue-400">magnitude</span> (e.g., <span class="text-blue-400">mass</span>, <span class="text-blue-400">time</span>, <span class="text-blue-400">speed</span>, <span class="text-blue-400">energy</span>), and <span class="text-blue-400">vector quantities</span>, which require both <span class="text-blue-400">magnitude</span> and <span class="text-blue-400">direction</span> for their complete description (e.g., <span class="text-blue-400">force</span>, <span class="text-blue-400">velocity</span>, <span class="text-blue-400">acceleration</span>, <span class="text-blue-400">displacement</span>).
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                We explored graphical methods for <span class="text-blue-400">vector addition</span>, such as the intuitive <span class="text-blue-400">tip-to-tail method</span> and the <span class="text-blue-400">parallelogram method</span>. More importantly, we delved into the precise and versatile <span class="text-blue-400 font-semibold">analytical (component) method</span>, demonstrating how to resolve vectors into their x and y components and then sum (or subtract) these components to find the <span class="text-blue-400">resultant vector's magnitude and direction</span> ($\vec{R} = \vec{A} + \vec{B}$). <span class="text-blue-400">Vector subtraction</span> was shown to be equivalent to adding the negative of a vector.
+            </p>
+            <p class="text-gray-200 leading-relaxed">
+                The ability to effectively work with <span class="text-blue-400">scalars and vectors</span> is not just a mathematical exercise; it is a fundamental skill that empowers you to accurately describe and analyze a vast array of physical phenomena across all branches of <span class="text-blue-400">physics</span> and engineering. By mastering these foundational concepts, you are now equipped with a powerful toolkit for problem-solving in the quantitative sciences. Keep exploring the dimensions of physics with <span class="text-blue-400 font-bold">Whizmath</span>!
+            </p>
+        </section>
+
+        <!-- Footer for a clean finish -->
+        <footer class="text-center text-gray-500 text-sm mt-12 py-6 border-t border-gray-800">
+            &copy; 2025 Whizmath. All rights reserved.
+        </footer>
 
     </div>
-
-    <script>
-        let scene, camera, renderer, particles, particleMaterial;
-
-        function initThreeJS() {
-            const canvas = document.getElementById('global-background-canvas');
-
-            // Scene
-            scene = new THREE.Scene();
-
-            // Camera
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 5;
-
-            // Renderer
-            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-
-            // Particles
-            const particleCount = 12500;
-            const positions = new Float32Array(particleCount * 3);
-            const colors = new Float32Array(particleCount * 3);
-
-            const color1 = new THREE.Color(0xADD8E6); // Light blue
-            const color2 = new THREE.Color(0x87CEEB); // Sky blue
-            const color3 = new THREE.Color(0x6495ED); // Cornflower blue
-
-            for (let i = 0; i < particleCount; i++) {
-                positions[i * 3] = (Math.random() * 2 - 1) * 20; // x
-                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 20; // y
-                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 20; // z
-
-                const rand = Math.random();
-                let color;
-                if (rand < 0.33) {
-                    color = color1;
-                } else if (rand < 0.66) {
-                    color = color2;
-                } else {
-                    color = color3;
-                }
-                colors[i * 3] = color.r;
-                colors[i * 3 + 1] = color.g;
-                colors[i * 3 + 2] = color.b;
-            }
-
-            const geometry = new THREE.BufferGeometry();
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-            particleMaterial = new THREE.PointsMaterial({
-                size: 0.25,
-                vertexColors: true,
-                transparent: true,
-                opacity: 0.8,
-                blending: THREE.AdditiveBlending,
-            });
-
-            particles = new THREE.Points(geometry, particleMaterial);
-            scene.add(particles);
-
-            window.addEventListener('resize', onWindowResize, false);
-        }
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        function animateThreeJS() {
-            requestAnimationFrame(animateThreeJS);
-
-            if (particles) {
-                particles.rotation.x += 0.0005;
-                particles.rotation.y += 0.0007;
-                particles.position.z = Math.sin(Date.now() * 0.0001) * 0.5;
-            }
-
-            renderer.render(scene, camera);
-        }
-
-        window.onload = function() {
-            initThreeJS();
-            animateThreeJS();
-        };
-    </script>
-    <script type='text/javascript' src='//pl26627928.profitableratecpm.com/dc/ed/3b/dced3b21bace3293dc34b16c68937c68.js'></script>
 </body>
 </html>
