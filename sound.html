@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whizmath - Sound: Understanding Pitch, Loudness, and Acoustics</title>
-    <meta name="description" content="Explore the nature of sound as a longitudinal wave. Covers properties like pitch (frequency), loudness (amplitude), and quality (timbre). Discuss resonance, the Doppler effect, and basic acoustics. A comprehensive lesson from Whizmath on the science of sound.">
-    <meta name="keywords" content="sound, longitudinal wave, pitch, frequency, loudness, amplitude, intensity, decibel, quality, timbre, resonance, acoustics, Doppler effect, wave speed, v=fλ, standing waves, harmonics, overtones, sound production, sound perception, physics, Whizmath">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujm/v+r366w5U6+y35Yv5z16b0x/r7t6uTqNqg0g0c0w0/0j0v0b0t0q0p0x0e0i0o0u0a0c0e0r0s0t0v0w0x0y0z0=" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
-     crossorigin="anonymous"></script>
-
-    <!-- MathJax Configuration -->
-    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <title>Sound: Nature, Properties, and Acoustics - Whizmath</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- MathJax Script for LaTeX rendering -->
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
     <script>
+        // Optional: Configure MathJax to process dollar signs for inline math
         MathJax = {
             tex: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']]
@@ -24,585 +22,337 @@
             }
         };
     </script>
-    <!-- Three.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
     <style>
+        /* Custom styles for smooth scrolling and font */
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'Inter', sans-serif;
-            margin: 0;
-            overflow: hidden; /* Hide overflow from Three.js background */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-smoothing: grayscale;
         }
-        #three-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1; /* Send to back */
-            background: linear-gradient(to bottom right, #1a202c, #2d3748); /* Dark gradient for background */
+        /* Ensure that content with overflow-x-auto only scrolls horizontally */
+        .overflow-x-auto-scroll {
+            -webkit-overflow-scrolling: touch; /* for smoother scrolling on iOS */
         }
-        .content-overlay {
-            position: relative;
-            z-index: 1; /* Bring content to front */
-            overflow-y: auto; /* Allow content to scroll */
-            height: 100vh;
-            padding: 2rem;
-            background: rgba(17, 24, 39, 0.85); /* Slightly transparent dark background for readability */
-            backdrop-filter: blur(8px); /* Frosted glass effect */
-            -webkit-backdrop-filter: blur(8px); /* For Safari */
-            color: #e2e8f0; /* Light text color */
-        }
-        h1, h2, h3, h4 {
-            color: #63b3ed; /* A pleasing blue for headings */
-            font-weight: 700;
-        }
-        h1 { font-size: 3rem; }
-        h2 { font-size: 2.25rem; }
-        h3 { font-size: 1.75rem; }
-        h4 { font-size: 1.25rem; }
-        .back-button {
-            position: absolute;
-            top: 2rem;
-            left: 2rem;
-            z-index: 10;
-            background-color: rgba(30, 41, 59, 0.8); /* Darker transparent button */
-            color: #63b3ed;
-            padding: 0.75rem 1.25rem;
-            border-radius: 9999px; /* Fully rounded */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        .back-button:hover {
-            background-color: rgba(45, 55, 72, 0.95);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
-        .section-card {
-            background-color: rgba(30, 41, 59, 0.9); /* Dark blue background for content cards */
-            border-radius: 1.5rem; /* More rounded corners */
-            padding: 2.5rem;
-            margin-bottom: 2.5rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow */
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-        .section-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-        }
-        .math-equation {
-            background-color: #0f172a; /* Even darker background for equations */
-            padding: 1.5rem;
-            border-radius: 1rem;
-            margin: 1.5rem 0;
-            overflow-x: auto; /* Allow horizontal scrolling for long equations */
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        .key-term {
-            color: #a78bfa; /* Purple for key terms */
-            font-weight: 600;
-        }
-        .example-box {
-            background-color: #2a3447; /* Slightly lighter dark for examples */
-            border-left: 5px solid #63b3ed;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            border-radius: 0.75rem;
-        }
-        /* Scrollbar styling */
+        /* Custom scrollbar for better aesthetics */
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 8px;
+            height: 8px; /* For horizontal scrollbars */
         }
+
         ::-webkit-scrollbar-track {
-            background: #1a202c;
+            background: #2D3748; /* Darker track */
             border-radius: 10px;
         }
+
         ::-webkit-scrollbar-thumb {
-            background: #4a5568;
+            background: #63B3ED; /* Blue thumb */
             border-radius: 10px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
-            background: #63b3ed;
+            background: #4299E1; /* Darker blue on hover */
+        }
+
+        /* Styling for the back button SVG icon */
+        .back-button-svg {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .back-button:hover .back-button-svg {
+            transform: translateX(-5px);
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 antialiased">
-    <canvas id="three-canvas"></canvas>
+<body class="bg-black text-white antialiased">
 
-    <a href="physics.html" class="back-button flex items-center justify-center space-x-2 text-lg">
-        <i class="fas fa-arrow-left"></i>
-        <span>Back to Physics</span>
+    <!-- Back Button -->
+    <a href="physics.html" class="back-button fixed top-4 left-4 sm:top-6 sm:left-6 md:top-8 md:left-8 z-50
+        inline-flex items-center px-4 py-2 rounded-full bg-gray-800 text-white shadow-lg
+        hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-all duration-300">
+        <svg class="w-5 h-5 mr-2 back-button-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        <span class="hidden sm:inline">Back to Physics</span>
     </a>
 
-    <div class="content-overlay max-w-4xl mx-auto py-16">
-        <header class="text-center mb-16">
-            <h1 class="text-6xl font-extrabold text-blue-400 mb-4 animate-pulse">Whizmath</h1>
-            <h2 class="text-5xl font-bold text-gray-100 mb-8 leading-tight">Sound: The Invisible Vibrations That Shape Our World</h2>
-            <p class="text-2xl text-gray-300 max-w-3xl mx-auto">
-                Journey into the fascinating realm of <span class="key-term">sound</span>. This comprehensive lesson will explore its nature as a <span class="key-term">longitudinal wave</span>, unraveling its defining characteristics like <span class="key-term">pitch</span>, <span class="key-term">loudness</span>, and <span class="key-term">quality</span>. Dive into the captivating phenomena of <span class="key-term">resonance</span>, the <span class="key-term">Doppler effect</span>, and the fundamental principles of <span class="key-term">acoustics</span> that govern how we experience sound.
+    <div class="container mx-auto px-4 py-12 md:py-16 lg:py-20 max-w-4xl pt-24 sm:pt-28 md:pt-32">
+
+        <!-- Header Section -->
+        <header class="text-center mb-12 sm:mb-16 md:mb-20">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-400 leading-tight">
+                <span class="text-white">Whizmath:</span> Understanding Sound - The Physics of Hearing
+            </h1>
+            <p class="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
+                Explore the nature of <span class="text-blue-400 font-semibold">sound as a longitudinal wave</span>. Uncover properties like <span class="text-blue-400 font-semibold">pitch (frequency)</span>, <span class="text-blue-400 font-semibold">loudness (amplitude)</span>, and <span class="text-blue-400 font-semibold">quality (timbre)</span>. Delve into phenomena such as <span class="text-blue-400 font-semibold">resonance</span> and the principles of <span class="text-blue-400 font-semibold">basic acoustics</span>.
             </p>
         </header>
 
-        <section id="introduction" class="section-card">
-            <h3 class="text-4xl mb-6">1. Introduction to Sound</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                Welcome to the world of <span class="key-term">Sound</span> – an invisible yet ever-present aspect of our daily lives. From the gentle rustle of leaves to the roar of a jet engine, from the melodic notes of a musical instrument to the spoken words that convey meaning, sound allows us to interact with and understand our environment. It is the very essence of communication, a key element of art and entertainment, and a crucial phenomenon studied across numerous scientific disciplines.
+        <!-- Introduction Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Introduction to Sound: Vibrations and Perception</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                Welcome to the world of <span class="text-blue-400 font-semibold">Sound</span>, a fascinating aspect of <span class="text-blue-400">physics</span> that governs everything we hear, from the softest whisper to the loudest thunder. <span class="text-blue-400">Sound</span> is a ubiquitous phenomenon, crucial for communication, entertainment, and our perception of the environment. Understanding the nature of <span class="text-blue-400">sound</span> as a <span class="text-blue-400">wave</span> allows us to delve into its fundamental properties and how it interacts with the world around us.
             </p>
-            <p class="text-lg leading-relaxed mb-6">
-                In physics, sound is not just what we hear; it is a <span class="key-term">mechanical wave</span> – a disturbance that travels through a medium by causing its particles to vibrate. Unlike light, which can travel through the vacuum of space, sound requires a material medium (like air, water, or solids) to propagate. This lesson will precisely define sound, explore its fundamental nature as a <span class="key-term">longitudinal wave</span>, and quantify its key physical properties that directly relate to our perception.
+            <p class="text-gray-200 leading-relaxed mb-4">
+                Unlike <span class="text-blue-400">light</span>, which can travel through the vacuum of space, <span class="text-blue-400">sound</span> requires a medium (like air, water, or solids) to propagate. It is the result of vibrations that create disturbances in this medium, which then travel as <span class="text-blue-400">waves</span> to our ears. These disturbances carry <span class="text-blue-400">energy</span>, allowing us to sense the source of the vibration.
             </p>
-            <p class="text-lg leading-relaxed mb-6">
-                Our journey will meticulously cover the defining characteristics of sound waves: <span class="key-term">pitch</span> (determined by frequency), <span class="key-term">loudness</span> (related to amplitude and intensity), and <span class="key-term">quality</span> or <span class="key-term">timbre</span> (influenced by harmonics). We will then delve into fascinating wave phenomena as they apply to sound, including <span class="key-term">reflection</span> (echoes), <span class="key-term">refraction</span> (bending of sound), <span class="key-term">diffraction</span> (spreading around obstacles), and <span class="key-term">interference</span> (waves combining). A special focus will be placed on the <span class="key-term">Doppler effect</span>, which explains why the pitch of a siren changes as it passes by.
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                Furthermore, we will investigate the concept of <span class="key-term">resonance</span>, a critical phenomenon that explains why objects vibrate strongly at certain frequencies and is vital for musical instruments and structural engineering. We will also introduce the basics of <span class="key-term">acoustics</span>, the science of how sound behaves in enclosed spaces, which is essential for designing concert halls, recording studios, and even everyday rooms.
-            </p>
-            <p class="text-lg leading-relaxed">
-                Whether you're a musician, an audiophile, a budding engineer, or simply curious about the invisible vibrations that permeate our world, this comprehensive lesson will provide you with a profound understanding of the physics of sound. Prepare to listen more deeply and appreciate the intricate science behind every auditory experience!
+            <p class="text-gray-200 leading-relaxed">
+                In this comprehensive lesson, we will explore the fundamental nature of <span class="text-blue-400">sound as a longitudinal wave</span>, identifying its unique characteristics. We'll then break down the primary properties of <span class="text-blue-400">sound</span> that our ears perceive: <span class="text-blue-400">pitch</span> (related to <span class="text-blue-400">frequency</span>), <span class="text-blue-400">loudness</span> (related to <span class="text-blue-400">amplitude</span> and <span class="text-blue-400">intensity</span>), and <span class="text-blue-400">quality</span> or <span class="text-blue-400">timbre</span> (related to wave shape). We will also delve into intriguing phenomena such as <span class="text-blue-400">resonance</span> and the practical science of <span class="text-blue-400">acoustics</span>, which governs how <span class="text-blue-400">sound</span> behaves in enclosed spaces. Prepare to fine-tune your understanding with <span class="text-blue-400 font-bold">Whizmath</span>!
             </p>
         </section>
 
-        <section id="nature-of-sound-waves" class="section-card">
-            <h3 class="text-4xl mb-6">2. The Nature of Sound Waves</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                Sound is a fascinating physical phenomenon that involves the propagation of mechanical energy through a medium. Unlike light, which is an electromagnetic wave, sound requires a medium to travel.
+        <!-- Nature of Sound Waves Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">The Nature of Sound Waves: Mechanical and Longitudinal</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                To truly understand <span class="text-blue-400">sound</span>, we must first recognize its nature as a specific type of <span class="text-blue-400">wave</span>.
+            </p>
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2">Sound as a Mechanical Wave</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400">Sound waves</span> are <span class="text-blue-400 font-semibold">mechanical waves</span>. This means they require a physical medium (a substance composed of particles) through which to propagate. They cannot travel through a vacuum, which is why there is no sound in space. The medium itself does not travel with the wave; instead, the particles of the medium oscillate around their equilibrium positions, transmitting <span class="text-blue-400">energy</span> from one particle to the next.
             </p>
 
-            <h4 class="text-3xl mb-4">2.1. Sound as a Longitudinal Wave</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                Sound waves are primarily <span class="key-term">longitudinal waves</span>. This means that the particles of the medium through which the sound travels oscillate (vibrate) parallel to the direction of the wave's propagation.
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">Sound as a Longitudinal Wave</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                More specifically, <span class="text-blue-400">sound waves</span> are <span class="text-blue-400 font-semibold">longitudinal waves</span>. In a <span class="text-blue-400">longitudinal wave</span>, the particles of the medium oscillate (vibrate) parallel to the direction of wave propagation.
             </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">
-                    <span class="font-bold">Compressions:</span> Regions where the particles of the medium are crowded together, resulting in higher density and pressure. These are the peaks of the pressure wave.
-                </li>
-                <li class="mb-2">
-                    <span class="font-bold">Rarefactions:</span> Regions where the particles of the medium are spread apart, resulting in lower density and pressure. These are the troughs of the pressure wave.
-                </li>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Compressions:</span> Regions where the particles of the medium are crowded together, resulting in higher pressure and density.</li>
+                <li><span class="font-semibold">Rarefactions:</span> Regions where the particles of the medium are spread apart, resulting in lower pressure and density.</li>
             </ul>
-            <p class="text-lg leading-relaxed mb-6">
-                Sound travels as a series of these compressions and rarefactions propagating through the medium. When a sound source (like a vibrating speaker cone) pushes on the air, it creates a compression. When it pulls back, it creates a rarefaction. These pressure variations then propagate outwards.
+            <p class="text-gray-200 leading-relaxed mb-4">
+                A <span class="text-blue-400">sound wave</span>, therefore, is a series of alternating <span class="text-blue-400">compressions</span> and <span class="text-blue-400">rarefactions</span> that travel through the medium. Think of a Slinky toy pushed end-to-end: the coils bunch up and spread out along the direction the wave travels.
             </p>
 
-            <h4 class="text-3xl mb-4">2.2. Speed of Sound ($v_s$)</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                The <span class="key-term">speed of sound ($v_s$)</span> depends entirely on the properties of the medium through which it travels. It is not dependent on the source's frequency or amplitude.
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">Speed of Sound ($v_s$)</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                The <span class="text-blue-400 font-semibold">speed of sound</span> depends primarily on the properties of the medium through which it travels – specifically, its elasticity (or stiffness) and its density.
             </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">
-                    <span class="font-bold">Density and Elasticity:</span> Sound generally travels faster in denser and more elastic media. This is because particles in a denser medium are closer together, allowing vibrations to be transferred more quickly. More elastic media (which resist deformation) also transmit vibrations more efficiently.
-                </li>
-                <li class="mb-2">
-                    <span class="font-bold">Medium Comparison:</span> Sound travels fastest in solids, then liquids, and slowest in gases. For example, the speed of sound is approximately:
-                    <ul class="list-circle list-inside ml-8">
-                        <li class="mb-1">In air (at $20^\circ \text{C}$): $343 \text{ m/s}$</li>
-                        <li class="mb-1">In water (at $20^\circ \text{C}$): $1482 \text{ m/s}$</li>
-                        <li class="mb-1">In steel: $~5100 \text{ m/s}$</li>
-                    </ul>
-                </li>
-                <li class="mb-2">
-                    <span class="font-bold">Temperature:</span> For gases, the speed of sound increases with temperature. In air, for example, for every $1^\circ \text{C}$ increase in temperature, the speed of sound increases by about $0.6 \text{ m/s}$.
-                </li>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Solids:</span> Sound travels fastest in solids because their particles are tightly packed and strongly bonded, allowing vibrations to transmit quickly.</li>
+                <li><span class="font-semibold">Liquids:</span> Sound travels slower in liquids than in solids, but faster than in gases.</li>
+                <li><span class="font-semibold">Gases:</span> Sound travels slowest in gases because their particles are far apart and interact less frequently.</li>
+                <li><span class="font-semibold">Temperature:</span> For gases, the <span class="text-blue-400">speed of sound</span> increases with increasing temperature. At $0^\circ C$ in air, the <span class="text-blue-400">speed of sound</span> is approximately $331 \, m/s$. At $20^\circ C$, it's about $343 \, m/s$.</li>
             </ul>
-            <p class="text-lg leading-relaxed mb-6">
-                Like all waves, the relationship between speed, frequency, and wavelength holds true for sound:
-            </p>
-            <div class="math-equation">
-                $$v_s = f\lambda$$
-                <p>Where:</p>
-                <ul class="list-disc list-inside ml-6">
-                    <li>$v_s$ is the <span class="key-term">speed of sound</span> (in m/s).</li>
-                    <li>$f$ is the <span class="key-term">frequency</span> (in Hz).</li>
-                    <li>$\lambda$ is the <span class="key-term">wavelength</span> (in m).</li>
-                </ul>
-            </div>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Calculating Wavelength of Sound</h4>
-                <p class="text-lg leading-relaxed mb-2">
-                    A person sings a note with a frequency of $256 \text{ Hz}$ (middle C). If the speed of sound in the room is $343 \text{ m/s}$, what is the wavelength of the sound wave?
-                </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Given:</span> $f = 256 \text{ Hz}$, $v_s = 343 \text{ m/s}$.
-                </p>
-                <p class="text-lg leading-relaxed">
-                    Using $v_s = f\lambda$, rearrange to solve for $\lambda$:
-                    $$\lambda = \frac{v_s}{f}$$
-                    $$\lambda = \frac{343 \text{ m/s}}{256 \text{ Hz}} \approx 1.34 \text{ m}$$
-                    The wavelength of the middle C note is approximately $1.34 \text{ meters}$.
-                </p>
-            </div>
-        </section>
-
-        <section id="properties-of-sound" class="section-card">
-            <h3 class="text-4xl mb-6">3. Properties of Sound: What We Hear</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                While the physical properties of sound waves are objective, our perception of sound is subjective and is characterized by three main attributes: pitch, loudness, and quality (timbre). These perceptual properties are directly linked to the physical properties of the sound wave.
-            </p>
-
-            <h4 class="text-3xl mb-4">3.1. Pitch (Related to Frequency)</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Pitch</span> is our ear's interpretation of a sound's <span class="key-term">frequency</span>.
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2"><span class="font-bold">High Pitch:</span> Corresponds to a high frequency (more vibrations per second). Examples: a whistle, a high note on a piano.</li>
-                <li class="mb-2"><span class="font-bold">Low Pitch:</span> Corresponds to a low frequency (fewer vibrations per second). Examples: a foghorn, a bass guitar note.</li>
-            </ul>
-            <p class="text-lg leading-relaxed mb-6">
-                The range of human hearing typically spans from about $20 \text{ Hz}$ (low rumble) to $20,000 \text{ Hz}$ ($20 \text{ kHz}$, a very high-pitched sound).
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2"><span class="key-term">Infrasound:</span> Frequencies below $20 \text{ Hz}$ (e.g., elephant communication, seismic waves).</li>
-                <li class="mb-2"><span class="key-term">Ultrasound:</span> Frequencies above $20,000 \text{ Hz}$ (e.g., bat echolocation, medical imaging).</li>
-            </ul>
-
-            <h4 class="text-3xl mb-4">3.2. Loudness (Related to Amplitude and Intensity)</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Loudness</span> is our ear's interpretation of a sound's <span class="key-term">intensity</span>. <span class="key-term">Intensity</span> is the average rate at which energy is transmitted by a wave per unit area perpendicular to the direction of wave propagation. It is directly proportional to the square of the wave's <span class="key-term">amplitude</span>.
-            </p>
-            <div class="math-equation">
-                $$I = \frac{P}{A}$$
-                <p>Where:</p>
-                <ul class="list-disc list-inside ml-6">
-                    <li>$I$ is the <span class="key-term">intensity</span> (in Watts per square meter, W/m$^2$).</li>
-                    <li>$P$ is the <span class="key-term">power</span> of the sound source (in Watts, W).</li>
-                    <li>$A$ is the <span class="key-term">area</span> over which the sound energy spreads (in m$^2$).</li>
-                </ul>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                Our ears perceive a vast range of sound intensities, so a logarithmic scale called the <span class="key-term">decibel (dB) scale</span> is used to measure loudness. The threshold of human hearing (the quietest sound we can hear) is $0 \text{ dB}$, while loud sounds like a rock concert might be $110 \text{ dB}$. A $10 \text{ dB}$ increase represents a tenfold increase in sound intensity.
-            </p>
-
-            <h4 class="text-3xl mb-4">3.3. Quality or Timbre (Related to Waveform/Harmonics)</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Quality</span> or <span class="key-term">Timbre</span> is the characteristic that allows us to distinguish between two sounds of the same pitch and loudness produced by different sources. For example, a note played on a flute sounds different from the same note played on a clarinet.
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                Timbre is determined by the specific mixture of <span class="key-term">harmonics</span> (also known as <span class="key-term">overtones</span>) present in the sound wave. Most musical instruments produce a fundamental frequency (the lowest frequency, which determines the pitch) along with a series of higher frequencies that are integer multiples of the fundamental. The relative strengths of these harmonics give each instrument its unique "color" or quality. The shape of the overall sound wave (its waveform) is a direct reflection of this harmonic content.
+            <p class="text-gray-200 leading-relaxed">
+                The general wave equation, $v = f\lambda$, also applies to <span class="text-blue-400">sound waves</span>, where $v$ is the <span class="text-blue-400">speed of sound</span> in the medium, $f$ is the <span class="text-blue-400">frequency</span>, and $\lambda$ is the <span class="text-blue-400">wavelength</span>.
             </p>
         </section>
 
-        <section id="wave-phenomena-sound" class="section-card">
-            <h3 class="text-4xl mb-6">4. Wave Phenomena Applied to Sound</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                Like all waves, sound exhibits several key phenomena that dictate how it behaves in different environments.
+        <!-- Properties of Sound Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Properties of Sound: What Our Ears Perceive</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                Our perception of <span class="text-blue-400">sound</span> is characterized by three main subjective properties, each directly related to a physical characteristic of the <span class="text-blue-400">sound wave</span>.
             </p>
 
-            <h4 class="text-3xl mb-4">4.1. Reflection of Sound (Echoes and Reverberation)</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Reflection</span> occurs when sound waves bounce off a surface. The Law of Reflection (angle of incidence equals angle of reflection) applies to sound waves as well.
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2">1. Pitch (Related to Frequency)</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Pitch</span> is our perception of how high or low a <span class="text-blue-400">sound</span> is. It is primarily determined by the <span class="text-blue-400 font-semibold">frequency ($f$)</span> of the <span class="text-blue-400">sound wave</span>.
             </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">
-                    <span class="font-bold">Echo:</span> A distinct reflection of a sound that arrives at the listener after the direct sound. It's heard when the reflecting surface is far enough away (typically > $17 \text{ m}$ for air) for the reflected sound to be perceived as a separate event.
-                </li>
-                <li class="mb-2">
-                    <span class="font-bold">Reverberation:</span> Occurs when reflections arrive quickly and are not clearly distinguished from the direct sound. It's the persistence of sound in a space after the original sound source has stopped, caused by multiple reflections off surfaces. Too much reverberation can make speech unintelligible, while a controlled amount can enhance musical richness.
-                </li>
-            </ul>
-            <p class="text-lg leading-relaxed mb-6">
-                Sonar (Sound Navigation and Ranging) technology, used by bats, submarines, and ships, relies on the reflection of sound waves to detect objects and map environments.
-            </p>
-
-            <h4 class="text-3xl mb-4">4.2. Refraction of Sound</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Refraction</span> is the bending of sound waves as they pass from one medium to another, or even within the same medium if its properties (like temperature or density) change. Since the speed of sound changes with temperature (e.g., in air), sound waves can bend.
-            </p>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Refraction in Air</h4>
-                <p class="text-lg leading-relaxed">
-                    On a hot day, the air near the ground is warmer than the air higher up. Since sound travels faster in warmer air, sound waves traveling horizontally will bend upwards, away from the ground. This is why sound doesn't travel as far on a hot day. Conversely, on a cold night, sound travels slower near the ground, causing waves to bend downwards, making sound travel farther.
-                </p>
-            </div>
-
-            <h4 class="text-3xl mb-4">4.3. Diffraction of Sound</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Diffraction</span> is the spreading out of waves as they pass through an opening or around an obstacle. Sound waves diffract easily around everyday objects, which is why you can hear someone speaking from around a corner even if you can't see them.
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                The extent of diffraction depends on the relationship between the wavelength of the wave and the size of the opening/obstacle. Since sound waves have relatively large wavelengths (from a few centimeters to many meters), they diffract readily. This is in contrast to visible light waves, which have very small wavelengths and therefore do not diffract significantly around macroscopic objects.
-            </p>
-
-            <h4 class="text-3xl mb-4">4.4. Interference of Sound</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Interference</span> occurs when two or more sound waves overlap in space. The resulting wave's amplitude (and thus loudness) at any point is the sum of the amplitudes of the individual waves.
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">
-                    <span class="font-bold">Constructive Interference:</span> Occurs when compressions of one wave overlap with compressions of another, and rarefactions overlap with rarefactions. This results in a louder sound.
-                </li>
-                <li class="mb-2">
-                    <span class="font-bold">Destructive Interference:</span> Occurs when compressions of one wave overlap with rarefactions of another. This results in a softer sound, or even silence if the amplitudes are equal and opposite.
-                </li>
-            </ul>
-            <p class="text-lg leading-relaxed mb-6">
-                A common example is <span class="key-term">beats</span>, which are periodic variations in loudness heard when two sound waves of slightly different frequencies interfere. The beat frequency is the absolute difference between the two individual frequencies ($|f_1 - f_2|$). Interference is also utilized in noise-canceling headphones, which generate sound waves that destructively interfere with unwanted ambient noise.
-            </p>
-
-            <h4 class="text-3xl mb-4">4.5. The Doppler Effect</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                The <span class="key-term">Doppler effect</span> is the apparent change in frequency (and thus pitch) of a wave in relation to an observer who is moving relative to the wave source. You experience this every time an ambulance siren's pitch changes as it approaches and then recedes from you.
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                    <li class="mb-2">
-                        <span class="font-bold">Approaching Source/Observer:</span> When the source and observer are moving towards each other, the perceived frequency is <span class="font-bold">higher</span> than the actual source frequency. The wave crests are effectively "squished" together.
-                    </li>
-                    <li class="mb-2">
-                        <span class="font-bold">Receding Source/Observer:</span> When the source and observer are moving away from each other, the perceived frequency is <span class="font-bold">lower</span> than the actual source frequency. The wave crests are effectively "stretched" apart.
-                    </li>
-                </ul>
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                The formula for the observed frequency ($f_o$) for sound waves is:
-            </p>
-            <div class="math-equation">
-                $$f_o = f_s \left(\frac{v_s \pm v_o}{v_s \mp v_s}\right)$$
-                <p>Where:</p>
-                <ul class="list-disc list-inside ml-6">
-                    <li>$f_o$ is the <span class="key-term">observed frequency</span>.</li>
-                    <li>$f_s$ is the <span class="key-term">source frequency</span>.</li>
-                    <li>$v_s$ is the <span class="key-term">speed of sound</span> in the medium.</li>
-                    <li>$v_o$ is the <span class="key-term">speed of the observer</span>.</li>
-                    <li>$v_s$ is the <span class="key-term">speed of the source</span>.</li>
-                </ul>
-                <p>Use the top signs (plus for observer, minus for source) when they are moving <span class="font-bold">towards</span> each other, and the bottom signs (minus for observer, plus for source) when they are moving <span class="font-bold">away</span> from each other.</p>
-            </div>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Doppler Effect</h4>
-                <p class="text-lg leading-relaxed mb-2">
-                    An ambulance siren emits a sound with a frequency of $1000 \text{ Hz}$. If the ambulance is moving towards a stationary observer at $30 \text{ m/s}$ (speed of sound in air is $343 \text{ m/s}$), what frequency does the observer hear?
-                </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Given:</span> $f_s = 1000 \text{ Hz}$, $v_o = 0 \text{ m/s}$, $v_s = 343 \text{ m/s}$, $v_s = 30 \text{ m/s}$. (Source moving towards observer, so use bottom minus sign for source)
-                </p>
-                <p class="text-lg leading-relaxed">
-                    $$f_o = f_s \left(\frac{v_s}{v_s - v_{source}}\right)$$
-                    $$f_o = 1000 \text{ Hz} \left(\frac{343 \text{ m/s}}{343 \text{ m/s} - 30 \text{ m/s}}\right)$$
-                    $$f_o = 1000 \text{ Hz} \left(\frac{343}{313}\right) \approx 1095.8 \text{ Hz}$$
-                    The observer hears a higher frequency, approximately $1096 \text{ Hz}$.
-                </p>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                The Doppler effect is not just for sound; it applies to all waves, including light. It is crucial in astronomy (redshift/blueshift of galaxies), radar guns, and medical ultrasound imaging.
-            </p>
-        </section>
-
-        <section id="resonance-acoustics" class="section-card">
-            <h3 class="text-4xl mb-6">5. Resonance and Basic Acoustics</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                The interaction of sound waves with objects and enclosed spaces gives rise to important phenomena like resonance and forms the basis of acoustics.
-            </p>
-
-            <h4 class="text-3xl mb-4">5.1. Resonance and Natural Frequency</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                Every object or system has one or more <span class="key-term">natural frequencies</span> at which it tends to oscillate when disturbed. If a system is subjected to a periodic force (or incoming wave) at or near one of its natural frequencies, its amplitude of oscillation will dramatically increase. This phenomenon is called <span class="key-term">resonance</span>.
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">
-                    <span class="font-bold">Examples:</span>
-                    <ul class="list-circle list-inside ml-8">
-                        <li class="mb-1">Pushing a swing: You push at its natural frequency to make it swing higher.</li>
-                        <li class="mb-1">Breaking a wine glass with sound: If you produce a sound wave at the natural frequency of the glass, the vibrations can become so large that the glass shatters.</li>
-                        <li class="mb-1">Musical instruments: Designed to resonate at specific frequencies to produce musical notes.</li>
-                        <li class="mb-1">Bridges and buildings: Engineers must consider natural frequencies to avoid destructive resonance from wind or seismic activity.</li>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">High Frequency = High Pitch:</span> Rapid vibrations produce high-frequency waves, which we perceive as high-pitched sounds (e.g., a flute, a child's voice).</li>
+                <li><span class="font-semibold">Low Frequency = Low Pitch:</span> Slower vibrations produce low-frequency waves, perceived as low-pitched sounds (e.g., a tuba, an adult male's voice).</li>
+                <li><span class="font-semibold">Audible Range:</span> The average human ear can typically detect frequencies between approximately 20 Hz and 20,000 Hz (20 kHz).
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Infrasound:</span> Frequencies below 20 Hz (e.g., elephant communication, seismic waves).</li>
+                        <li><span class="text-blue-400">Ultrasound:</span> Frequencies above 20,000 Hz (e.g., dog whistles, medical imaging).</li>
                     </ul>
                 </li>
             </ul>
 
-            <h4 class="text-3xl mb-4">5.2. Standing Waves and Harmonics</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                When a wave is continuously reflected back and forth between two boundaries, it can interfere with itself to create a stable pattern called a <span class="key-term">standing wave</span>. In a standing wave, certain points (nodes) remain stationary, while other points (antinodes) oscillate with maximum amplitude.
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">2. Loudness (Related to Amplitude and Intensity)</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Loudness</span> is our subjective perception of the strength or intensity of a <span class="text-blue-400">sound</span>. It is primarily determined by the <span class="text-blue-400 font-semibold">amplitude (A)</span> of the <span class="text-blue-400">sound wave</span> and the <span class="text-blue-400 font-semibold">intensity (I)</span> of the sound.
             </p>
-            <p class="text-lg leading-relaxed mb-6">
-                Standing waves are particularly important in musical instruments:
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">
-                    <span class="font-bold">Vibrating Strings (e.g., guitar, piano):</span> A string fixed at both ends can form standing waves. The frequencies at which standing waves can form are called the <span class="key-term">natural frequencies</span> or <span class="key-term">harmonic frequencies</span>. The lowest natural frequency is the <span class="key-term">fundamental frequency</span>, and higher frequencies are its integer multiples (second harmonic, third harmonic, etc., also called overtones).
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Amplitude:</span> For a <span class="text-blue-400">sound wave</span>, <span class="text-blue-400">amplitude</span> refers to the maximum displacement of the particles of the medium from their equilibrium positions, or the maximum pressure variation. A larger <span class="text-blue-400">amplitude</span> means a louder <span class="text-blue-400">sound</span>.</li>
+                <li><span class="font-semibold">Intensity (I):</span> The rate at which <span class="text-blue-400">sound energy</span> flows through a unit area perpendicular to the direction of wave propagation. Intensity is proportional to the square of the amplitude ($I \propto A^2$).
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Units:</span> Watts per square meter ($W/m^2$).</li>
+                        <li>Intensity decreases with the square of the distance from the source (inverse square law), for a point source in an open space.</li>
+                    </ul>
                 </li>
-                <li class="mb-2">
-                    <span class="font-bold">Air Columns (e.g., flutes, organ pipes):</span> Air vibrating inside tubes (open at one or both ends) can also form standing waves, producing musical notes. The boundary conditions (open or closed end) determine which harmonics are present.
-                </li>
-            </ul>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Fundamental Frequency of a String</h4>
-                <p class="text-lg leading-relaxed">
-                    For a string fixed at both ends, the fundamental frequency ($f_1$) is given by:
-                    $$f_1 = \frac{v}{2L}$$
-                    Where $v$ is the wave speed on the string (which depends on tension and mass density) and $L$ is the length of the string.
-                    The higher harmonics are $f_n = n \cdot f_1$, where $n=2, 3, 4, \dots$.
-                </p>
-            </div>
-
-            <h4 class="text-3xl mb-4">5.3. Basic Acoustics</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Acoustics</span> is the science concerned with the production, control, transmission, reception, and effects of sound. In building design, acoustics focuses on optimizing the sound quality within a space.
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">
-                    <span class="font-bold">Sound Absorption:</span> Materials like curtains, carpets, and acoustic panels absorb sound energy, reducing reflections and reverberation.
-                </li>
-                <li class="mb-2">
-                    <span class="font-bold">Sound Reflection:</span> Hard, smooth surfaces (e.g., concrete, glass) reflect sound. Strategic placement of reflective surfaces can direct sound where it's needed (e.g., stage shells in concert halls).
-                </li>
-                <li class="mb-2">
-                    <span class="font-bold">Sound Diffusion:</span> Irregular surfaces (e.g., diffusers) scatter sound in many directions, preventing echoes and creating a more uniform sound field.
-                </li>
-                <li class="mb-2">
-                    <span class="font-bold">Noise Control:</span> Strategies to reduce unwanted sound, including insulation, soundproofing, and active noise cancellation.
+                <li><span class="font-semibold">Decibel Scale (dB):</span> Because the human ear can detect a vast range of <span class="text-blue-400">sound intensities</span>, a logarithmic scale called the <span class="text-blue-400">decibel scale</span> is used to measure <span class="text-blue-400">sound intensity level ($\beta$)</span>.
+                    $$ \beta = 10 \log_{10} \left( \frac{I}{I_0} \right) $$
+                    Where $I_0$ is the reference intensity, typically the threshold of hearing ($10^{-12} \, W/m^2$). Each 10 dB increase represents a tenfold increase in <span class="text-blue-400">sound intensity</span>.
                 </li>
             </ul>
-            <p class="text-lg leading-relaxed mb-6">
-                Good acoustic design is crucial for concert halls, recording studios, classrooms, and offices, ensuring clarity of speech and richness of music while minimizing distracting noise.
-            </p>
-        </section>
 
-        <section id="conclusion" class="section-card">
-            <h3 class="text-4xl mb-6">6. Conclusion: The Rich Tapestry of Sound</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                Our extensive exploration of <span class="key-term">sound</span> has revealed its intricate nature as a <span class="key-term">longitudinal wave</span> and its profound impact on our lives. We've defined its core physical characteristics – <span class="key-term">frequency</span>, <span class="key-term">wavelength</span>, and <span class="key-term">speed</span> – and understood how these translate into our subjective perceptions of <span class="key-term">pitch</span>, <span class="key-term">loudness</span>, and <span class="key-term">quality (timbre)</span>. The fundamental relationship $v=f\lambda$ stands as a testament to the elegant simplicity underlying wave phenomena.
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">3. Quality (Timbre, Related to Waveform/Overtones)</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Quality</span> or <span class="text-blue-400 font-semibold">Timbre</span> (pronounced "tam-ber") is what allows us to distinguish between two different <span class="text-blue-400">sound</span> sources producing the same <span class="text-blue-400">pitch</span> and <span class="text-blue-400">loudness</span>. For instance, a piano and a flute playing the same note at the same volume sound different because of their distinct <span class="text-blue-400">timbre</span>.
             </p>
-            <p class="text-lg leading-relaxed mb-6">
-                We then ventured into the captivating world of wave interactions, dissecting how sound exhibits <span class="key-term">reflection</span> (echoes and reverberation), <span class="key-term">refraction</span> (bending due to medium changes), <span class="key-term">diffraction</span> (spreading around obstacles), and <span class="key-term">interference</span> (constructive and destructive combinations). The remarkable <span class="key-term">Doppler effect</span> provided insight into apparent frequency shifts due to relative motion, with wide-ranging applications from traffic enforcement to astronomy.
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                Finally, we explored <span class="key-term">resonance</span>, explaining why objects vibrate with amplified intensity at their <span class="key-term">natural frequencies</span>, a principle critical to musical instruments and structural integrity. We also introduced the basics of <span class="key-term">acoustics</span>, highlighting how sound behaves in enclosed spaces and how its properties can be controlled for optimal auditory experiences.
-            </p>
-            <p class="text-lg leading-relaxed">
-                The physics of sound is not just a theoretical exercise; it is an omnipresent force that shapes our perception, enables communication, and underpins countless technologies. From medical ultrasound to noise cancellation, from the harmonious blend of an orchestra to the careful design of concert halls, the principles of sound are constantly at play. As you continue your journey in physics, engineering, or simply engage with the world around you, remember to listen closely. The symphony of the universe is always playing, and now you have a deeper understanding of its intricate score. Keep exploring, keep questioning, and keep tuning into the wonders of sound!
-            </p>
-        </section>
-
-        <section id="glossary" class="section-card">
-            <h3 class="text-4xl mb-6">7. Glossary of Key Terms</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-lg">
-                <div><strong class="key-term">Acoustics:</strong> The science concerned with the production, control, transmission, reception, and effects of sound.</div>
-                <div><strong class="key-term">Amplitude ($A$):</strong> The maximum displacement of a wave from its equilibrium position; related to loudness.</div>
-                <div><strong class="key-term">Beats:</strong> Periodic variations in loudness resulting from the interference of two sound waves of slightly different frequencies.</div>
-                <div><strong class="key-term">Compressions:</strong> Regions of higher density and pressure in a longitudinal wave.</div>
-                <div><strong class="key-term">Constructive Interference:</strong> When waves combine in phase, resulting in a larger amplitude (louder sound).</div>
-                <div><strong class="key-term">Decibel (dB) Scale:</strong> A logarithmic scale used to measure sound intensity level (loudness).</div>
-                <div><strong class="key-term">Destructive Interference:</strong> When waves combine out of phase, resulting in a smaller amplitude (softer sound).</div>
-                <div><strong class="key-term">Diffraction:</strong> The bending of waves around obstacles or spreading through openings.</div>
-                <div><strong class="key-term">Doppler Effect:</strong> The apparent change in frequency of a wave due to relative motion between the source and observer.</div>
-                <div><strong class="key-term">Frequency ($f$):</strong> The number of wave cycles per unit time; perceived as pitch. Measured in Hertz (Hz).</div>
-                <div><strong class="key-term">Fundamental Frequency:</strong> The lowest natural frequency of a vibrating object.</div>
-                <div><strong class="key-term">Harmonics (Overtones):</strong> Frequencies that are integer multiples of the fundamental frequency; contribute to timbre.</div>
-                <div><strong class="key-term">Infrasound:</strong> Sound frequencies below the human hearing range ($<20 \text{ Hz}$).</div>
-                <div><strong class="key-term">Intensity ($I$):</strong> Average rate of energy transmission per unit area by a wave; related to loudness. Measured in W/m$^2$.</div>
-                <div><strong class="key-term">Interference:</strong> The phenomenon where two or more waves overlap and combine.</div>
-                <div><strong class="key-term">Longitudinal Wave:</strong> A wave in which particles of the medium oscillate parallel to the direction of wave propagation (e.g., sound).</div>
-                <div><strong class="key-term">Loudness:</strong> Our subjective perception of sound intensity/amplitude.</div>
-                <div><strong class="key-term">Mechanical Wave:</strong> A wave that requires a medium to travel (e.g., sound).</div>
-                <div><strong class="key-term">Natural Frequency:</strong> The frequency at which an object or system naturally tends to oscillate when disturbed.</div>
-                <div><strong class="key-term">Pitch:</strong> Our subjective perception of sound frequency.</div>
-                <div><strong class="key-term">Quality (Timbre):</strong> The characteristic of a sound that distinguishes different sources, determined by harmonic content.</div>
-                <div><strong class="key-term">Rarefactions:</strong> Regions of lower density and pressure in a longitudinal wave.</div>
-                <div><strong class="key-term">Reflection:</strong> The bouncing back of a wave from a surface.</div>
-                <div><strong class="key-term">Refraction:</strong> The bending of a wave as it passes from one medium to another due to a change in speed.</div>
-                <div><strong class="key-term">Resonance:</strong> A phenomenon where a system's amplitude of oscillation greatly increases when driven at its natural frequency.</div>
-                <div><strong class="key-term">Reverberation:</strong> The persistence of sound in a space due to multiple reflections.</div>
-                <div><strong class="key-term">Sound:</strong> A mechanical, longitudinal wave that results from vibrations propagating through a medium.</div>
-                <div><strong class="key-term">Speed of Sound ($v_s$):</strong> The speed at which sound propagates through a medium ($v_s = f\lambda$).</div>
-                <div><strong class="key-term">Standing Wave:</strong> A stable wave pattern formed by the interference of two identical waves traveling in opposite directions.</div>
-                <div><strong class="key-term">Ultrasound:</strong> Sound frequencies above the human hearing range ($>20,000 \text{ Hz}$).</div>
-                <div><strong class="key-term">Wave:</strong> A disturbance that propagates through space and time, transferring energy.</div>
-                <div><strong class="key-term">Wavelength ($\lambda$):</strong> The spatial period of a wave, the distance between two consecutive corresponding points on a wave. Measured in meters (m).</div>
-            </div>
-        </section>
-
-        <section id="references" class="section-card">
-            <h3 class="text-4xl mb-6">8. Further Reading and References</h3>
-            <p class="text-lg leading-relaxed mb-4">To further deepen your understanding of sound and acoustics, consider these recommended resources:</p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
-                <li class="mb-2">Serway, R. A., & Jewett, J. W. (2018). <em>Physics for Scientists and Engineers with Modern Physics</em> (10th ed.). Cengage Learning. (Chapters on Wave Motion, Sound Waves, and Acoustics)</li>
-                <li class="mb-2">Halliday, D., Resnick, R., & Walker, J. (2014). <em>Fundamentals of Physics</em> (10th ed.). John Wiley & Sons. (Chapters on Sound, Interference, and Doppler Effect)</li>
-                <li class="mb-2">Young, H. D., & Freedman, R. A. (2020). <em>University Physics with Modern Physics</em> (15th ed.). Pearson. (Comprehensive coverage of sound, waves, and acoustics)</li>
-                <li class="mb-2">Khan Academy: <a href="https://www.khanacademy.org/science/physics/mechanical-waves-and-sound" target="_blank" class="text-blue-400 hover:underline">Mechanical Waves and Sound Course</a> (Online video lessons and exercises)</li>
-                <li class="mb-2">HyperPhysics: <a href="http://hyperphysics.phy-astr.gsu.edu/hbase/sound/souncon.html" target="_blank" class="text-blue-400 hover:underline">Sound and Hearing Topics</a> (Concise explanations and concept maps)</li>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Overtones/Harmonics:</span> Most musical instruments produce not just a single fundamental <span class="text-blue-400">frequency</span>, but also a series of higher <span class="text-blue-400">frequencies</span> called <span class="text-blue-400">overtones</span> or <span class="text-blue-400">harmonics</span>. These <span class="text-blue-400">overtones</span> are integer multiples of the fundamental <span class="text-blue-400">frequency</span>.</li>
+                <li><span class="font-semibold">Waveform:</span> The relative intensities of these <span class="text-blue-400">overtones</span>, combined with the attack and decay of the <span class="text-blue-400">sound</span>, create a unique <span class="text-blue-400">waveform</span> for each instrument or voice. This complex <span class="text-blue-400">waveform</span> is what determines the <span class="text-blue-400">timbre</span>.</li>
             </ul>
         </section>
+
+        <!-- Wave Phenomena Applied to Sound Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Wave Phenomena Applied to Sound</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                Just like <span class="text-blue-400">light waves</span> and other types of waves, <span class="text-blue-400">sound waves</span> exhibit several important phenomena.
+            </p>
+
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2">1. Reflection (Echoes and Reverberation)</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Reflection</span> of <span class="text-blue-400">sound</span> occurs when <span class="text-blue-400">sound waves</span> bounce off a surface.
+            </p>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Echo:</span> A distinct reflected <span class="text-blue-400">sound</span> heard after the original <span class="text-blue-400">sound</span> has stopped. It occurs when the reflecting surface is far enough away for the reflected <span class="text-blue-400">sound</span> to return significantly later.</li>
+                <li><span class="font-semibold">Reverberation:</span> The persistence of <span class="text-blue-400">sound</span> in a particular space after the original <span class="text-blue-400">sound</span> is produced, caused by multiple reflections. It's like many overlapping echoes, creating a continuous "tail" of sound.</li>
+            </ul>
+            <p class="text-gray-200 leading-relaxed">
+                <span class="font-semibold">Examples:</span> Shouting in a large, empty hall causes echoes. A concert hall is designed to have a certain amount of optimal reverberation to enhance music.
+            </p>
+
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">2. Refraction (Bending of Sound)</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Refraction</span> of <span class="text-blue-400">sound</span> occurs when <span class="text-blue-400">sound waves</span> change direction as they pass from one medium into another, or when they pass through a medium with varying properties (like temperature or density gradients). This change in direction happens because the <span class="text-blue-400">speed of sound</span> changes in different parts of the medium.
+            </p>
+            <p class="text-gray-200 leading-relaxed">
+                <span class="font-semibold">Example:</span> On a hot day, the air near the ground is warmer and <span class="text-blue-400">sound</span> travels faster there. As <span class="text-blue-400">sound waves</span> travel upwards into cooler, slower air, they bend upwards. At night, when the ground is cooler, sound waves tend to bend downwards, allowing sound to travel further.
+            </p>
+
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">3. Diffraction (Bending Around Obstacles)</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Diffraction</span> of <span class="text-blue-400">sound</span> is the phenomenon where <span class="text-blue-400">sound waves</span> spread out as they pass through an opening or around an obstacle.
+            </p>
+            <p class="text-gray-200 leading-relaxed">
+                <span class="font-semibold">Example:</span> You can hear someone speaking from around a corner even if you can't see them. This is because <span class="text-blue-400">sound waves</span> have relatively long wavelengths (compared to common obstacles) and easily diffract, bending around the corner. If it were <span class="text-blue-400">light</span> (which has very short wavelengths), it would travel in a straight line, and you wouldn't be able to see them.
+            </p>
+
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">4. Interference (Combining Waves)</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Interference</span> occurs when two or more <span class="text-blue-400">sound waves</span> meet and superpose. This can lead to regions of enhanced or diminished <span class="text-blue-400">sound</span>.
+            </p>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Constructive Interference:</span> When compressions meet compressions (or rarefactions meet rarefactions), the amplitudes add up, resulting in a louder sound.</li>
+                <li><span class="font-semibold">Destructive Interference:</span> When a compression meets a rarefaction, the amplitudes cancel out, resulting in a quieter sound or even silence.</li>
+                <li><span class="font-semibold">Beats:</span> When two <span class="text-blue-400">sound waves</span> of slightly different <span class="text-blue-400">frequencies</span> interfere, they produce a periodic variation in <span class="text-blue-400">loudness</span> known as beats. The beat <span class="text-blue-400">frequency</span> is the absolute difference between the two original <span class="text-blue-400">frequencies</span>: $f_{beat} = |f_1 - f_2|$.</li>
+            </ul>
+            <p class="text-gray-200 leading-relaxed">
+                <span class="font-semibold">Examples:</span> Noise-canceling headphones use <span class="text-blue-400">destructive interference</span> to reduce unwanted noise. In auditoriums, poorly designed acoustics can lead to "dead spots" where <span class="text-blue-400">sound</span> waves destructively interfere.
+            </p>
+        </section>
+
+        <!-- Resonance Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Resonance: Amplifying Vibrations</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Resonance</span> is a phenomenon that occurs when an oscillating system (like a string, air column, or even a bridge) is driven by an external <span class="text-blue-400">force</span> at its <span class="text-blue-400 font-semibold">natural frequency</span>. When this happens, the amplitude of the oscillations dramatically increases, leading to a much larger response.
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                Every object or system has one or more <span class="text-blue-400 font-semibold">natural frequencies</span> at which it prefers to vibrate. If an external <span class="text-blue-400">force</span> or <span class="text-blue-400">sound wave</span> provides regular impulses at precisely one of these <span class="text-blue-400">natural frequencies</span>, the system will accumulate <span class="text-blue-400">energy</span> and vibrate with increasing <span class="text-blue-400">amplitude</span>.
+            </p>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Examples of Resonance:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Musical Instruments:</span> The strings or air columns in musical instruments are designed to resonate at specific <span class="text-blue-400">natural frequencies</span>, producing musical notes. The body of a guitar or violin acts as a resonator to amplify the <span class="text-blue-400">sound</span> from the vibrating strings.</li>
+                        <li><span class="text-blue-400">Singing in the Shower:</span> The enclosed space resonates certain <span class="text-blue-400">frequencies</span> of your voice, making it sound fuller and louder.</li>
+                        <li><span class="text-blue-400">Shattering a Glass:</span> A singer can sometimes shatter a glass by singing a note at the glass's <span class="text-blue-400">natural frequency</span>. The <span class="text-blue-400">sound waves</span> cause the glass to resonate and vibrate with such a large <span class="text-blue-400">amplitude</span> that it eventually breaks.</li>
+                        <li><span class="text-blue-400">Tacoma Narrows Bridge:</span> A famous example of structural failure due to <span class="text-blue-400">resonance</span>. Wind forces acted at one of the bridge's <span class="text-blue-400">natural frequencies</span>, causing destructive oscillations that eventually led to its collapse in 1940.</li>
+                        <li><span class="text-blue-400">Radio and TV Tuning:</span> Tuning a radio or TV involves adjusting its electronic circuit to resonate at the <span class="text-blue-400">frequency</span> of the desired broadcasting station, amplifying that particular signal.</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Basic Acoustics Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Basic Acoustics: The Science of Sound in Spaces</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Acoustics</span> is the branch of <span class="text-blue-400">physics</span> concerned with the study of <span class="text-blue-400">sound</span>, including its production, control, transmission, reception, and effects. In practical terms, it often refers to the way <span class="text-blue-400">sound</span> behaves within an enclosed space, such as a room, concert hall, or auditorium. Good <span class="text-blue-400">acoustics</span> are essential for clear speech and enjoyable music.
+            </p>
+
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2">Controlling Sound in Spaces</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                The behavior of <span class="text-blue-400">sound</span> in a room is influenced by the materials present and the geometry of the space. Designers consider several factors to achieve desired <span class="text-blue-400">acoustics</span>:
+            </p>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Sound Absorption:</span> Materials that absorb <span class="text-blue-400">sound energy</span> reduce reflections and reverberation. Soft, porous materials like carpets, curtains, acoustic panels, and upholstered furniture are good absorbers. This reduces echoes and makes speech clearer.</li>
+                <li><span class="font-semibold">Sound Reflection:</span> Hard, smooth surfaces (like concrete, glass, or bare walls) reflect <span class="text-blue-400">sound energy</span>. While too much reflection can lead to excessive reverberation and muddy sound, controlled reflection can be used to direct sound to the audience in a concert hall.</li>
+                <li><span class="font-semibold">Sound Diffusion:</span> Uneven or irregular surfaces (diffusers) scatter <span class="text-blue-400">sound waves</span> in many directions, rather than just reflecting them directly. This helps to distribute <span class="text-blue-400">sound</span> more evenly throughout a space, avoiding "hot spots" or "dead spots" and creating a more natural and enveloping sound experience.</li>
+                <li><span class="font-semibold">Reverberation Time:</span> A key metric in <span class="text-blue-400">acoustics</span>, it's the time it takes for the <span class="text-blue-400">sound intensity level</span> to decay by 60 dB after the source has stopped. Different spaces require different optimal reverberation times (e.g., shorter for speech, longer for orchestral music).</li>
+                <li><span class="font-semibold">Soundproofing vs. Acoustic Treatment:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Soundproofing:</span> Aims to prevent <span class="text-blue-400">sound</span> from entering or leaving a space (e.g., thick walls, specialized doors/windows).</li>
+                        <li><span class="text-blue-400">Acoustic Treatment:</span> Aims to improve the quality of <span class="text-blue-400">sound</span> *within* a space (e.g., using absorbers, diffusers to control reflections).</li>
+                    </ul>
+                </li>
+            </ul>
+            <p class="text-gray-200 leading-relaxed">
+                The principles of <span class="text-blue-400">acoustics</span> are vital for the design of concert halls, recording studios, classrooms, and offices, ensuring optimal listening environments.
+            </p>
+        </section>
+
+        <!-- Applications and Importance Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Real-World Applications of Sound Physics</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                The principles of <span class="text-blue-400">sound</span> and <span class="text-blue-400">acoustics</span> are deeply embedded in our daily lives and are critical to numerous fields:
+            </p>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Medical Imaging:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Ultrasound:</span> Uses high-frequency <span class="text-blue-400">sound waves</span> to create images of internal organs, fetuses, and blood flow, without using harmful radiation.</li>
+                        <li><span class="text-blue-400">Sonography:</span> Employed for non-invasive diagnostic purposes.</li>
+                    </ul>
+                </li>
+                <li><span class="font-semibold">Navigation and Ranging:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">SONAR (Sound Navigation and Ranging):</span> Used by submarines and ships to detect objects underwater by emitting <span class="text-blue-400">sound waves</span> and measuring the time it takes for the echoes to return.</li>
+                        <li><span class="text-blue-400">Echolocation:</span> Used by bats and dolphins to navigate and hunt in darkness or murky waters, by emitting <span class="text-blue-400">ultrasound waves</span> and interpreting the reflected echoes.</li>
+                    </ul>
+                </li>
+                <li><span class="font-semibold">Music and Audio Engineering:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Instrument Design:</span> Understanding <span class="text-blue-400">resonance</span>, standing <span class="text-blue-400">waves</span>, and vibrating strings/air columns is essential.</li>
+                        <li><span class="text-blue-400">Recording and Playback:</span> Microphones convert <span class="text-blue-400">sound waves</span> into electrical signals, and speakers convert them back. Audio engineers manipulate these signals using principles of <span class="text-blue-400">frequency</span>, <span class="text-blue-400">amplitude</span>, and <span class="text-blue-400">timbre</span> to produce desired audio effects.</li>
+                        <li><span class="text-blue-400">Concert Hall Design:</span> Applying <span class="text-blue-400">acoustics</span> principles to ensure optimal sound distribution and quality.</li>
+                    </ul>
+                </li>
+                <li><span class="font-semibold">Noise Control:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Soundproofing:</span> Techniques used in buildings, vehicles, and industrial settings to reduce unwanted noise transmission.</li>
+                        <li><span class="text-blue-400">Noise-Canceling Technology:</span> Utilizes <span class="text-blue-400">destructive interference</span> of <span class="text-blue-400">sound waves</span> to reduce ambient noise.</li>
+                    </ul>
+                </li>
+                <li><span class="font-semibold">Geophysics:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Seismology:</span> Studying seismic <span class="text-blue-400">waves</span> (a type of <span class="text-blue-400">sound wave</span>) to understand Earth's interior structure and detect earthquakes.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p class="text-gray-200 leading-relaxed">
+                From the way we communicate to advanced diagnostic tools, the understanding of <span class="text-blue-400">sound waves</span> and their interactions continues to drive innovation and enhance our lives.
+            </p>
+        </section>
+
+        <!-- Conclusion Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Conclusion</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                In this comprehensive lesson, we've explored the fascinating world of <span class="text-blue-400">Sound</span>, understanding its nature as a <span class="text-blue-400">longitudinal mechanical wave</span>. We delved into the fundamental properties that define our auditory experience: <span class="text-blue-400">pitch</span> (determined by <span class="text-blue-400">frequency</span>), <span class="text-blue-400">loudness</span> (determined by <span class="text-blue-400">amplitude</span> and <span class="text-blue-400">intensity</span>, measured in <span class="text-blue-400">decibels</span>), and <span class="text-blue-400">quality</span> or <span class="text-blue-400">timbre</span> (shaped by <span class="text-blue-400">overtones</span> and <span class="text-blue-400">waveform</span>).
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                We also examined how <span class="text-blue-400">sound waves</span> exhibit common wave phenomena, including <span class="text-blue-400">reflection</span> (echoes and reverberation), <span class="text-blue-400">refraction</span>, <span class="text-blue-400">diffraction</span>, and <span class="text-blue-400">interference</span> (constructive, destructive, and beats). A significant portion of our discussion focused on <span class="text-blue-400 font-semibold">resonance</span>, where external vibrations at an object's <span class="text-blue-400">natural frequency</span> can lead to amplified oscillations, with examples ranging from musical instruments to structural failures. Finally, we explored <span class="text-blue-400 font-semibold">basic acoustics</span>, understanding how <span class="text-blue-400">sound</span> behaves in enclosed spaces through <span class="text-blue-400">absorption</span>, <span class="text-blue-400">reflection</span>, and <span class="text-blue-400">diffusion</span>, and its importance in designing optimal listening environments.
+            </p>
+            <p class="text-gray-200 leading-relaxed">
+                The principles of <span class="text-blue-400">sound</span> are not just theoretical; they are integral to fields as diverse as medical diagnostics, navigation, music production, and environmental noise control. By mastering these concepts, you gain a profound appreciation for the intricate physics behind every sound you hear. Keep listening closely and exploring the vibrations of knowledge with <span class="text-blue-400 font-bold">Whizmath</span>!
+            </p>
+        </section>
+
+        <!-- Footer for a clean finish -->
+        <footer class="text-center text-gray-500 text-sm mt-12 py-6 border-t border-gray-800">
+            &copy; 2025 Whizmath. All rights reserved.
+        </footer>
 
     </div>
-
-    <script>
-        // Three.js Animated Background (reused from previous lessons)
-        const canvas = document.getElementById('three-canvas');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-
-        camera.position.z = 5;
-
-        const particleCount = 1000;
-        const particles = new THREE.BufferGeometry();
-        const positions = new Float32Array(particleCount * 3);
-
-        for (let i = 0; i < particleCount * 3; i += 3) {
-            positions[i] = (Math.random() - 0.5) * 200;
-            positions[i + 1] = (Math.random() - 0.5) * 200;
-            positions[i + 2] = (Math.random() - 0.5) * 200;
-        }
-
-        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-        const particleMaterial = new THREE.PointsMaterial({
-            color: 0x63b3ed,
-            size: 0.1,
-            blending: THREE.AdditiveBlending,
-            transparent: true,
-            opacity: 0.7
-        });
-
-        const particleSystem = new THREE.Points(particles, particleMaterial);
-        scene.add(particleSystem);
-
-        const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
-        scene.add(ambientLight);
-
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(0, 1, 0);
-        scene.add(directionalLight);
-
-        const animate = () => {
-            requestAnimationFrame(animate);
-
-            particleSystem.rotation.x += 0.0005;
-            particleSystem.rotation.y += 0.001;
-
-            for (let i = 0; i < particleCount; i++) {
-                const i3 = i * 3;
-                positions[i3 + 2] += 0.05;
-
-                if (positions[i3 + 2] > camera.position.z + 10) {
-                    positions[i3 + 2] = camera.position.z - 200;
-                }
-            }
-            particles.attributes.position.needsUpdate = true;
-
-            renderer.render(scene, camera);
-        };
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        window.onload = function() {
-            animate();
-        };
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
 </body>
 </html>
