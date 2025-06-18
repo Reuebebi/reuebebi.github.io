@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whizmath - Work, Energy, & Power: Understanding Energy Transformations</title>
-    <meta name="description" content="Explore different forms of energy (kinetic KE=1/2mv^2, gravitational potential PE=mgh), how work (W=Fdcosθ) is done by forces, and the rate at which work is done (power P=W/t). Covers the work-energy theorem and the principle of conservation of mechanical energy. A comprehensive lesson from Whizmath.">
-    <meta name="keywords" content="work, energy, power, kinetic energy, potential energy, gravitational potential energy, elastic potential energy, work-energy theorem, conservation of energy, mechanical energy, force, displacement, time, Joules, Watts, physics, KE=1/2mv^2, PE=mgh, W=Fdcosθ, P=W/t, Whizmath">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujm/v+r366w5U6+y35Yv5z16b0x/r7t6uTqNqg0g0c0w0/0j0v0b0t0q0p0x0e0i0o0u0a0c0e0r0s0t0v0w0x0y0z0=" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
-     crossorigin="anonymous"></script>
-
-    <!-- MathJax Configuration -->
-    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <title>Work, Energy, & Power - Whizmath</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- MathJax Script for LaTeX rendering -->
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
     <script>
+        // Optional: Configure MathJax to process dollar signs for inline math
         MathJax = {
             tex: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']]
@@ -24,636 +22,434 @@
             }
         };
     </script>
-    <!-- Three.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
     <style>
+        /* Custom styles for smooth scrolling and font */
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'Inter', sans-serif;
-            margin: 0;
-            overflow: hidden; /* Hide overflow from Three.js background */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        #three-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1; /* Send to back */
-            background: linear-gradient(to bottom right, #1a202c, #2d3748); /* Dark gradient for background */
+        /* Ensure that content with overflow-x-auto only scrolls horizontally */
+        .overflow-x-auto-scroll {
+            -webkit-overflow-scrolling: touch; /* for smoother scrolling on iOS */
         }
-        .content-overlay {
-            position: relative;
-            z-index: 1; /* Bring content to front */
-            overflow-y: auto; /* Allow content to scroll */
-            height: 100vh;
-            padding: 2rem;
-            background: rgba(17, 24, 39, 0.85); /* Slightly transparent dark background for readability */
-            backdrop-filter: blur(8px); /* Frosted glass effect */
-            -webkit-backdrop-filter: blur(8px); /* For Safari */
-            color: #e2e8f0; /* Light text color */
-        }
-        h1, h2, h3, h4 {
-            color: #63b3ed; /* A pleasing blue for headings */
-            font-weight: 700;
-        }
-        h1 { font-size: 3rem; }
-        h2 { font-size: 2.25rem; }
-        h3 { font-size: 1.75rem; }
-        h4 { font-size: 1.25rem; }
-        .back-button {
-            position: absolute;
-            top: 2rem;
-            left: 2rem;
-            z-index: 10;
-            background-color: rgba(30, 41, 59, 0.8); /* Darker transparent button */
-            color: #63b3ed;
-            padding: 0.75rem 1.25rem;
-            border-radius: 9999px; /* Fully rounded */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        .back-button:hover {
-            background-color: rgba(45, 55, 72, 0.95);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
-        .section-card {
-            background-color: rgba(30, 41, 59, 0.9); /* Dark blue background for content cards */
-            border-radius: 1.5rem; /* More rounded corners */
-            padding: 2.5rem;
-            margin-bottom: 2.5rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow */
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-        .section-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-        }
-        .math-equation {
-            background-color: #0f172a; /* Even darker background for equations */
-            padding: 1.5rem;
-            border-radius: 1rem;
-            margin: 1.5rem 0;
-            overflow-x: auto; /* Allow horizontal scrolling for long equations */
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        .key-term {
-            color: #a78bfa; /* Purple for key terms */
-            font-weight: 600;
-        }
-        .example-box {
-            background-color: #2a3447; /* Slightly lighter dark for examples */
-            border-left: 5px solid #63b3ed;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            border-radius: 0.75rem;
-        }
-        /* Scrollbar styling */
+        /* Custom scrollbar for better aesthetics */
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 8px;
+            height: 8px; /* For horizontal scrollbars */
         }
+
         ::-webkit-scrollbar-track {
-            background: #1a202c;
+            background: #2D3748; /* Darker track */
             border-radius: 10px;
         }
+
         ::-webkit-scrollbar-thumb {
-            background: #4a5568;
+            background: #63B3ED; /* Blue thumb */
             border-radius: 10px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
-            background: #63b3ed;
+            background: #4299E1; /* Darker blue on hover */
+        }
+
+        /* Styling for the back button SVG icon */
+        .back-button-svg {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .back-button:hover .back-button-svg {
+            transform: translateX(-5px);
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 antialiased">
-    <canvas id="three-canvas"></canvas>
+<body class="bg-black text-white antialiased">
 
-    <a href="physics.html" class="back-button flex items-center justify-center space-x-2 text-lg">
-        <i class="fas fa-arrow-left"></i>
-        <span>Back to Physics</span>
+    <!-- Back Button -->
+    <a href="physics.html" class="back-button fixed top-4 left-4 sm:top-6 sm:left-6 md:top-8 md:left-8 z-50
+        inline-flex items-center px-4 py-2 rounded-full bg-gray-800 text-white shadow-lg
+        hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-all duration-300">
+        <svg class="w-5 h-5 mr-2 back-button-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        <span class="hidden sm:inline">Back to Physics</span>
     </a>
 
-    <div class="content-overlay max-w-4xl mx-auto py-16">
-        <header class="text-center mb-16">
-            <h1 class="text-6xl font-extrabold text-blue-400 mb-4 animate-pulse">Whizmath</h1>
-            <h2 class="text-5xl font-bold text-gray-100 mb-8 leading-tight">Work, Energy, & Power: Understanding the Fuel of the Universe</h2>
-            <p class="text-2xl text-gray-300 max-w-3xl mx-auto">
-                Embark on an illuminating journey into the fundamental concepts of <span class="key-term">work</span>, the diverse <span class="key-term">forms of energy</span> that govern all phenomena, and the critical concept of <span class="key-term">power</span>. This comprehensive lesson will unveil the interconnectedness of these quantities, from the basic definition of energy to the profound <span class="key-term">conservation of mechanical energy</span>, enabling you to analyze dynamic systems with precision.
+    <div class="container mx-auto px-4 py-12 md:py-16 lg:py-20 max-w-4xl pt-24 sm:pt-28 md:pt-32">
+
+        <!-- Header Section -->
+        <header class="text-center mb-12 sm:mb-16 md:mb-20">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-400 leading-tight">
+                <span class="text-white">Whizmath:</span> Understanding Work, Energy, & Power
+            </h1>
+            <p class="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
+                Explore the fundamental concepts of <span class="text-blue-400 font-semibold">work</span> ($W=Fd\cos\theta$), different forms of <span class="text-blue-400 font-semibold">energy</span> like <span class="text-blue-400 font-semibold">kinetic energy</span> ($KE=\frac{1}{2}mv^2$) and <span class="text-blue-400 font-semibold">gravitational potential energy</span> ($PE=mgh$), and the rate at which work is done, <span class="text-blue-400 font-semibold">power</span> ($P=W/t$). Delve into the <span class="text-blue-400 font-semibold">work-energy theorem</span> and the powerful <span class="text-blue-400 font-semibold">principle of conservation of mechanical energy</span>.
             </p>
         </header>
 
-        <section id="introduction" class="section-card">
-            <h3 class="text-4xl mb-6">1. Introduction to Work, Energy, and Power</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                In physics, the concepts of <span class="key-term">work</span>, <span class="key-term">energy</span>, and <span class="key-term">power</span> are intimately linked and form the bedrock for understanding how motion occurs, how forces interact, and how machines function. These concepts transcend specific forces or objects, providing a universal language to describe the transformation and transfer of dynamic influence. From the simple act of lifting an object to the complex operation of a power plant, energy is constantly being transformed and transferred, and the study of these concepts helps us quantify and predict these transformations.
+        <!-- Introduction Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Introduction to Work, Energy, and Power: The Dynamics of Change</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                Welcome to a pivotal area of <span class="text-blue-400">physics</span>: <span class="text-blue-400 font-semibold">Work, Energy, and Power</span>. These interconnected concepts provide a powerful framework for understanding how <span class="text-blue-400">forces</span> cause changes in motion and how <span class="text-blue-400">energy</span> transforms from one form to another. While <span class="text-blue-400">Newton's Laws</span> focus on forces and acceleration, the <span class="text-blue-400">work-energy approach</span> often simplifies complex problems by looking at the energy state of a system rather than the detailed forces acting over time.
             </p>
-            <p class="text-lg leading-relaxed mb-6">
-                While we've already explored forces and motion through Newton's Laws and kinematics, sometimes analyzing systems using direct forces can be complex, especially when forces are variable or paths are complicated. Work and energy provide an alternative, often simpler, approach to solving dynamic problems, particularly those involving changes in speed and position.
+            <p class="text-gray-200 leading-relaxed mb-4">
+                From launching a rocket to simply walking upstairs, or from the intricate workings of a clock to the immense power of a waterfall, the principles of <span class="text-blue-400">work</span>, <span class="text-blue-400">energy</span>, and <span class="text-blue-400">power</span> are at play. They are fundamental to virtually every branch of science and engineering, enabling us to design machines, understand natural phenomena, and harness the capabilities of our physical world.
             </p>
-            <p class="text-lg leading-relaxed mb-6">
-                This comprehensive lesson will systematically introduce each of these vital concepts. We will begin by defining <span class="key-term">work</span> in its precise physical sense, examining how forces do work and how its sign influences energy changes. Next, we will delve into the various <span class="key-term">forms of energy</span>, focusing on <span class="key-term">kinetic energy</span> (the energy of motion) and <span class="key-term">potential energy</span> (stored energy, particularly gravitational and elastic). A cornerstone of this exploration will be the <span class="key-term">Work-Energy Theorem</span>, which beautifully connects work done to changes in kinetic energy. We will then uncover the powerful <span class="key-term">Principle of Conservation of Mechanical Energy</span>, a fundamental law that simplifies the analysis of many physical systems. Finally, we will define <span class="key-term">power</span> as the rate at which work is done or energy is transferred, providing a measure of how quickly energy transformations occur.
-            </p>
-            <p class="text-lg leading-relaxed">
-                Whether you're an aspiring engineer, a curious student of the physical world, or simply want to understand the mechanics behind everyday actions, mastering work, energy, and power will equip you with indispensable tools for analyzing the dynamic interactions that shape our universe. Let's begin to unlock the secrets of energy!
+            <p class="text-gray-200 leading-relaxed">
+                In this comprehensive lesson, we will meticulously define <span class="text-blue-400">work</span>, differentiating between positive, negative, and zero work. We'll then explore various forms of <span class="text-blue-400">energy</span>, with a particular focus on <span class="text-blue-400">kinetic energy</span> and <span class="text-blue-400">gravitational potential energy</span>. A core concept, the <span class="text-blue-400 font-semibold">work-energy theorem</span>, will reveal the direct relationship between work done and the change in an object's <span class="text-blue-400">kinetic energy</span>. We will then discuss <span class="text-blue-400">power</span>, the rate at which <span class="text-blue-400">work</span> is done or <span class="text-blue-400">energy</span> is transferred. Finally, we will delve into the profound <span class="text-blue-400 font-semibold">principle of conservation of mechanical energy</span>, a cornerstone of physics that provides immense problem-solving power. Get ready to energize your understanding with <span class="text-blue-400 font-bold">Whizmath</span>!
             </p>
         </section>
 
-        <section id="work" class="section-card">
-            <h3 class="text-4xl mb-6">2. Work Done by a Force</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                In everyday language, "work" can mean anything from solving a math problem to a job. In physics, however, <span class="key-term">Work ($W$)</span> has a very specific definition: it is the energy transferred to or from an object by means of a force acting on that object through a displacement. For work to be done, two conditions must be met:
+        <!-- Work Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Work: Force, Displacement, and the Transfer of Energy</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                In <span class="text-blue-400">physics</span>, the definition of <span class="text-blue-400 font-semibold">work (W)</span> is very specific and differs from its everyday usage. <span class="text-blue-400">Work</span> is done when a <span class="text-blue-400">force</span> causes a <span class="text-blue-400">displacement</span> of an object in the direction of the force. If there's no displacement, or if the force is perpendicular to the displacement, no work is done.
             </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">A <span class="key-term">force</span> must be applied to an object.</li>
-                <li class="mb-2">The object must experience a <span class="key-term">displacement</span> in the direction of (or opposite to) the force.</li>
-            </ul>
-            <p class="text-lg leading-relaxed mb-6">
-                If either of these conditions is not met, no work is done. For instance, if you push against a wall, you exert a force, but if the wall doesn't move, you do no work on the wall (in the physical sense). Similarly, if you carry a heavy bag horizontally at a constant velocity, you are exerting an upward force against gravity, but your displacement is horizontal, so no work is done against gravity.
-            </p>
-
-            <h4 class="text-3xl mb-4">2.1. Work Done by a Constant Force</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                When a constant force $\vec{F}$ acts on an object, causing a displacement $\vec{d}$, the work done by that force is given by the dot product of the force and displacement vectors. If the force and displacement are in the same direction, the formula simplifies. If there is an angle between them, we use the cosine of that angle.
-            </p>
-            <div class="math-equation">
-                $$W = \vec{F} \cdot \vec{d} = Fd \cos(\theta)$$
-                <p>Where:</p>
-                <ul class="list-disc list-inside ml-6">
-                    <li>$W$ is the <span class="key-term">work done</span> (a scalar quantity, in Joules, J).</li>
-                    <li>$F$ is the magnitude of the <span class="key-term">force</span> (in Newtons, N).</li>
-                    <li>$d$ is the magnitude of the <span class="key-term">displacement</span> (in meters, m).</li>
-                    <li>$\theta$ (theta) is the <span class="key-term">angle</span> between the force vector and the displacement vector.</li>
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2">Definition and Formula</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                Mathematically, the <span class="text-blue-400">work done</span> by a constant force is given by the dot product of the <span class="text-blue-400">force vector</span> and the <span class="text-blue-400">displacement vector</span>:
+                $$ W = \vec{F} \cdot \vec{d} = Fd \cos \theta $$
+                Where:
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                    <li>$W$ is the <span class="text-blue-400">work done</span>, a scalar quantity, measured in <span class="text-blue-400">Joules (J)</span> in the SI system.</li>
+                    <li>$F$ is the magnitude of the <span class="text-blue-400">force</span> applied, measured in <span class="text-blue-400">Newtons (N)</span>.</li>
+                    <li>$d$ is the magnitude of the <span class="text-blue-400">displacement</span> of the object, measured in <span class="text-blue-400">meters (m)</span>.</li>
+                    <li>$\theta$ (theta) is the angle between the <span class="text-blue-400">force vector</span> and the <span class="text-blue-400">displacement vector</span>.</li>
                 </ul>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                The SI unit for work is the <span class="key-term">Joule (J)</span>. One Joule is defined as the work done when a force of one Newton causes a displacement of one meter in the direction of the force: $1 \text{ J} = 1 \text{ N} \cdot \text{m}$.
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                One Joule is defined as the work done when a force of one Newton acts over a displacement of one meter: $1 J = 1 N \cdot m$.
             </p>
 
-            <h4 class="text-3xl mb-4">2.2. Positive, Negative, and Zero Work</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                The value of $\cos(\theta)$ determines whether the work done is positive, negative, or zero:
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">
-                    <span class="font-bold">Positive Work ($\theta < 90^\circ$):</span> When the force acts in the same general direction as the displacement. The force adds energy to the object.
-                    <div class="example-box">
-                        <p class="text-lg leading-relaxed">
-                            Pushing a box across a floor in the direction of its motion. Gravity doing work on a falling object.
-                        </p>
-                    </div>
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">Types of Work</h3>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Positive Work ($\theta < 90^\circ$):</span> When the <span class="text-blue-400">force</span> has a component in the same direction as the <span class="text-blue-400">displacement</span>. This increases the object's <span class="text-blue-400">kinetic energy</span>.
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="font-semibold">Example:</span> Pushing a box across the floor in the direction it moves.</li>
+                    </ul>
                 </li>
-                <li class="mb-2">
-                    <span class="font-bold">Negative Work ($\theta > 90^\circ$):</span> When the force acts in the opposite general direction to the displacement. The force removes energy from the object.
-                    <div class="example-box">
-                        <p class="text-lg leading-relaxed">
-                            Friction acting on a sliding object (friction opposes motion). You doing work on an object as you lower it slowly (your upward force is opposite to the downward displacement).
-                        </p>
-                    </div>
+                <li><span class="font-semibold">Negative Work ($90^\circ < \theta \le 180^\circ$):</span> When the <span class="text-blue-400">force</span> has a component opposite to the direction of the <span class="text-blue-400">displacement</span>. This decreases the object's <span class="text-blue-400">kinetic energy</span>.
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="font-semibold">Example:</span> Friction acting on a sliding object (always opposite to motion), or braking a car.</li>
+                    </ul>
                 </li>
-                <li class="mb-2">
-                    <span class="font-bold">Zero Work ($\theta = 90^\circ$):</span> When the force is perpendicular to the displacement. The force neither adds nor removes energy from the object in terms of its motion along the displacement.
-                    <div class="example-box">
-                        <p class="text-lg leading-relaxed">
-                            The normal force on a horizontally moving object. Gravity doing work on a satellite in a circular orbit (if speed is constant). The centripetal force on an object moving in a circle.
-                        </p>
-                    </div>
+                <li><span class="font-semibold">Zero Work ($\theta = 90^\circ$):</span> When the <span class="text-blue-400">force</span> is perpendicular to the <span class="text-blue-400">displacement</span>. No energy is transferred by this force into or out of the object's motion.
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="font-semibold">Example:</span> Carrying a heavy bag horizontally at a constant speed (the upward force you exert is perpendicular to the horizontal displacement). <span class="text-blue-400">Gravity</span> doing work on an object moving horizontally. The centripetal force on an object in uniform circular motion does no work.</li>
+                    </ul>
                 </li>
             </ul>
 
-            <h4 class="text-3xl mb-4">2.3. Work Done by a Variable Force (Brief Mention)</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                If the force is not constant, or if the path is curved, the calculation of work requires calculus. The work done is the integral of the force with respect to displacement:
+            <p class="text-gray-200 leading-relaxed">
+                It's crucial to distinguish between the physics definition of <span class="text-blue-400">work</span> and the everyday meaning. Lifting a heavy object straight up involves work because the force is in the direction of displacement. Holding that heavy object stationary above your head, however tiring it might be, involves no work in the physics sense, as there is no displacement.
             </p>
-            <div class="math-equation">
-                $$W = \int_{x_i}^{x_f} F(x) \ dx$$
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                Graphically, this integral represents the area under the force-displacement curve. This is particularly relevant for forces like that of a spring, which varies with displacement.
-            </p>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Calculating Work</h4>
-                <p class="text-lg leading-relaxed mb-2">
-                    A person pushes a box $5 \text{ m}$ across a floor with a constant force of $20 \text{ N}$ at an angle of $30^\circ$ below the horizontal. Calculate the work done by the pushing force.
-                </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Given:</span> $F = 20 \text{ N}$, $d = 5 \text{ m}$, $\theta = 30^\circ$.
-                </p>
-                <p class="text-lg leading-relaxed">
-                    $$W = Fd \cos(\theta) = (20 \text{ N})(5 \text{ m}) \cos(30^\circ)$$
-                    $$W = 100 \text{ J} \times 0.866 \approx 86.6 \text{ J}$$
-                    The work done by the pushing force is approximately $86.6 \text{ J}$.
-                </p>
-            </div>
         </section>
 
-        <section id="energy" class="section-card">
-            <h3 class="text-4xl mb-6">3. Energy: The Capacity to Do Work</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Energy</span> is one of the most fundamental concepts in all of science. It can be defined as the <span class="key-term">capacity to do work</span>. Whenever work is done on an object, its energy changes. Energy exists in many forms – mechanical, thermal, electrical, chemical, nuclear, radiant, etc. In mechanics, we primarily focus on <span class="key-term">mechanical energy</span>, which includes kinetic and potential energy.
+        <!-- Energy Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Energy: The Capacity to Do Work</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Energy</span> is defined as the capacity to do <span class="text-blue-400">work</span>. Whenever <span class="text-blue-400">work</span> is done, <span class="text-blue-400">energy</span> is either transferred or transformed. <span class="text-blue-400">Energy</span> exists in many forms: <span class="text-blue-400">kinetic</span>, <span class="text-blue-400">potential</span> (gravitational, elastic), <span class="text-blue-400">thermal</span>, <span class="text-blue-400">chemical</span>, <span class="text-blue-400">electrical</span>, <span class="text-blue-400">nuclear</span>, and so on. In <span class="text-blue-400">mechanics</span>, we primarily focus on <span class="text-blue-400">kinetic</span> and <span class="text-blue-400">potential energy</span>, which together constitute <span class="text-blue-400">mechanical energy</span>.
             </p>
-            <p class="text-lg leading-relaxed mb-6">
-                The SI unit for energy is also the <span class="key-term">Joule (J)</span>, emphasizing its direct relationship with work.
-            </p>
-
-            <h4 class="text-3xl mb-4">3.1. Kinetic Energy ($KE$)</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Kinetic energy (KE)</span> is the energy an object possesses due to its motion. Any object that is moving has kinetic energy.
-            </p>
-            <div class="math-equation">
-                $$KE = \frac{1}{2}mv^2$$
-                <p>Where:</p>
-                <ul class="list-disc list-inside ml-6">
-                    <li>$KE$ is the <span class="key-term">kinetic energy</span> (in Joules, J).</li>
-                    <li>$m$ is the <span class="key-term">mass</span> of the object (in kilograms, kg).</li>
-                    <li>$v$ is the <span class="key-term">speed</span> of the object (in meters per second, m/s). Note that kinetic energy depends on speed ($v^2$), not velocity (direction doesn't matter for KE).</li>
-                </ul>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                Kinetic energy is a scalar quantity and is always non-negative (since $m$ is positive and $v^2$ is always positive or zero).
-            </p>
-
-            <h4 class="text-3xl mb-4">3.2. Work-Energy Theorem</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                The <span class="key-term">Work-Energy Theorem</span> is a profound principle that directly links the net work done on an object to its change in kinetic energy. It states:
-            </p>
-            <blockquote class="text-xl italic border-l-4 border-blue-500 pl-4 py-2 my-6">
-                "The net work done on an object is equal to the change in its kinetic energy."
-            </blockquote>
-            <div class="math-equation">
-                $$W_{net} = \Delta KE = KE_f - KE_i = \frac{1}{2}mv_f^2 - \frac{1}{2}mv_i^2$$
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                This theorem implies that:
-            </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">If $W_{net}$ is positive, the object's kinetic energy increases (it speeds up).</li>
-                <li class="mb-2">If $W_{net}$ is negative, the object's kinetic energy decreases (it slows down).</li>
-                <li class="mb-2">If $W_{net}$ is zero, the object's kinetic energy remains constant (its speed does not change).</li>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Units of Energy:</span> Like <span class="text-blue-400">work</span>, <span class="text-blue-400">energy</span> is measured in <span class="text-blue-400">Joules (J)</span>.</li>
             </ul>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Work-Energy Theorem</h4>
-                <p class="text-lg leading-relaxed mb-2">
-                    A $2 \text{ kg}$ object is initially moving at $3 \text{ m/s}$. A net force does $16 \text{ J}$ of work on it. What is the object's final speed?
-                </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Given:</span> $m = 2 \text{ kg}$, $v_i = 3 \text{ m/s}$, $W_{net} = 16 \text{ J}$.
-                </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Step 1: Calculate initial kinetic energy ($KE_i$)</span>
-                    $$KE_i = \frac{1}{2}mv_i^2 = \frac{1}{2}(2 \text{ kg})(3 \text{ m/s})^2 = \frac{1}{2}(2)(9) = 9 \text{ J}$$
-                </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Step 2: Use Work-Energy Theorem to find final kinetic energy ($KE_f$)</span>
-                    $$W_{net} = KE_f - KE_i$$
-                    $$16 \text{ J} = KE_f - 9 \text{ J}$$
-                    $$KE_f = 16 \text{ J} + 9 \text{ J} = 25 \text{ J}$$
-                </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Step 3: Calculate final speed ($v_f$) from $KE_f$</span>
-                    $$KE_f = \frac{1}{2}mv_f^2$$
-                    $$25 \text{ J} = \frac{1}{2}(2 \text{ kg})v_f^2$$
-                    $$25 = v_f^2$$
-                    $$v_f = \sqrt{25} = 5 \text{ m/s}$$
-                    The object's final speed is $5 \text{ m/s}$.
-                </p>
-            </div>
 
-            <h4 class="text-3xl mb-4">3.3. Potential Energy ($PE$)</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Potential energy (PE)</span> is stored energy an object possesses due to its position or configuration. This energy has the "potential" to be converted into kinetic energy or do work.
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">1. Kinetic Energy ($KE$)</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Kinetic energy</span> is the <span class="text-blue-400">energy of motion</span>. Any object that is moving possesses <span class="text-blue-400">kinetic energy</span>. The faster an object moves and the more mass it has, the greater its <span class="text-blue-400">kinetic energy</span>.
             </p>
-
-            <h5 class="text-2xl mb-3">3.3.1. Gravitational Potential Energy ($PE_g$)</h5>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Gravitational potential energy</span> is the energy stored in an object due to its position in a gravitational field, specifically its height relative to a reference level.
-            </p>
-            <div class="math-equation">
-                $$PE_g = mgh$$
-                <p>Where:</p>
-                <ul class="list-disc list-inside ml-6">
-                    <li>$PE_g$ is the <span class="key-term">gravitational potential energy</span> (in Joules, J).</li>
-                    <li>$m$ is the <span class="key-term">mass</span> of the object (in kilograms, kg).</li>
-                    <li>$g$ is the <span class="key-term">acceleration due to gravity</span> (approximately $9.8 \text{ m/s}^2$ near Earth's surface).</li>
-                    <li>$h$ is the <span class="key-term">height</span> of the object relative to a chosen reference level (in meters, m).</li>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                The formula for <span class="text-blue-400">kinetic energy</span> is:
+                $$ KE = \frac{1}{2}mv^2 $$
+                Where:
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                    <li>$KE$ is the <span class="text-blue-400">kinetic energy</span>, measured in <span class="text-blue-400">Joules (J)</span>.</li>
+                    <li>$m$ is the <span class="text-blue-400">mass</span> of the object, measured in <span class="text-blue-400">kilograms (kg)</span>.</li>
+                    <li>$v$ is the magnitude of the <span class="text-blue-400">velocity</span> (speed) of the object, measured in <span class="text-blue-400">meters per second (m/s)</span>.</li>
                 </ul>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                The choice of the zero reference level for $h$ is arbitrary, but it must be consistent throughout a problem. Only changes in potential energy are physically significant.
             </p>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Gravitational Potential Energy</h4>
-                <p class="text-lg leading-relaxed">
-                    A $5 \text{ kg}$ object is lifted $3 \text{ m}$ vertically. How much gravitational potential energy does it gain?
-                </p>
-                <p class="text-lg leading-relaxed">
-                    Given: $m = 5 \text{ kg}$, $h = 3 \text{ m}$, $g = 9.8 \text{ m/s}^2$.
-                    $$\Delta PE_g = mgh = (5 \text{ kg})(9.8 \text{ m/s}^2)(3 \text{ m})$$
-                    $$\Delta PE_g = 147 \text{ J}$$
-                    The object gains $147 \text{ J}$ of gravitational potential energy.
-                </p>
-            </div>
-
-            <h5 class="text-2xl mb-3">3.3.2. Elastic Potential Energy ($PE_s$)</h5>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Elastic potential energy</span> is the energy stored in an elastic object (like a spring or a stretched rubber band) when it is deformed (stretched or compressed) from its equilibrium position.
-            </p>
-            <div class="math-equation">
-                $$PE_s = \frac{1}{2}kx^2$$
-                <p>Where:</p>
-                <ul class="list-disc list-inside ml-6">
-                    <li>$PE_s$ is the <span class="key-term">elastic potential energy</span> (in Joules, J).</li>
-                    <li>$k$ is the <span class="key-term">spring constant</span> (a measure of the spring's stiffness, in N/m).</li>
-                    <li>$x$ is the <span class="key-term">displacement</span> of the spring from its equilibrium position (in meters, m).</li>
+            <p class="text-gray-200 leading-relaxed">
+                <span class="font-semibold">Key Insights for Kinetic Energy:</span>
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4">
+                    <li><span class="text-blue-400">Scalar Quantity:</span> Although velocity is a vector, $v^2$ makes <span class="text-blue-400">kinetic energy</span> a scalar quantity; it only has magnitude, no direction.</li>
+                    <li><span class="text-blue-400">Squared Dependence on Velocity:</span> Doubling the speed of an object quadruples its <span class="text-blue-400">kinetic energy</span>. This exponential relationship is crucial in many practical scenarios, such as the destructive power of high-speed collisions.</li>
+                    <li><span class="text-blue-400">Never Negative:</span> Since mass is always positive and velocity is squared, <span class="text-blue-400">kinetic energy</span> is always non-negative.</li>
                 </ul>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                This type of potential energy is crucial for understanding oscillations, shock absorbers, and slingshots.
             </p>
 
-            <h4 class="text-3xl mb-4">3.4. Conservative and Non-Conservative Forces (Brief Mention)</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                Forces can be categorized based on how they affect mechanical energy:
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">2. Potential Energy ($PE$)</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Potential energy</span> is stored energy that an object possesses due to its position or configuration. This stored energy has the potential to be converted into <span class="text-blue-400">kinetic energy</span> or do <span class="text-blue-400">work</span>.
             </p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed mb-4">
-                <li class="mb-2">
-                    <span class="key-term">Conservative Forces:</span> Forces for which the work done in moving an object between two points is independent of the path taken. The work done by a conservative force can be expressed as a change in potential energy. Examples include gravity and the spring force.
+            <p class="text-gray-200 leading-relaxed mb-4">
+                There are various forms of <span class="text-blue-400">potential energy</span>. In <span class="text-blue-400">mechanics</span>, the most common is <span class="text-blue-400">gravitational potential energy</span>.
+            </p>
+
+            <h4 class="text-lg sm:text-xl font-medium text-blue-300 mb-2">Gravitational Potential Energy ($PE_g$)</h4>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Gravitational potential energy</span> is the <span class="text-blue-400">energy</span> an object possesses due to its position in a gravitational field. The higher an object is, the more <span class="text-blue-400">gravitational potential energy</span> it has relative to a chosen reference level (e.g., the ground).
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                The formula for <span class="text-blue-400">gravitational potential energy</span> (near Earth's surface) is:
+                $$ PE_g = mgh $$
+                Where:
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                    <li>$PE_g$ is the <span class="text-blue-400">gravitational potential energy</span>, measured in <span class="text-blue-400">Joules (J)</span>.</li>
+                    <li>$m$ is the <span class="text-blue-400">mass</span> of the object (kg).</li>
+                    <li>$g$ is the <span class="text-blue-400">acceleration due to gravity</span> (approximately $9.8 \, m/s^2$ on Earth).</li>
+                    <li>$h$ is the vertical <span class="text-blue-400">height</span> of the object relative to a chosen zero reference level (m).</li>
+                </ul>
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="font-semibold">Reference Level:</span> The choice of the zero reference level for <span class="text-blue-400">potential energy</span> is arbitrary, as only *changes* in <span class="text-blue-400">potential energy</span> are physically significant. For example, $h$ could be measured from the ground, from a tabletop, or from sea level, as long as it's consistent throughout a problem.
+            </p>
+
+            <h4 class="text-lg sm:text-xl font-medium text-blue-300 mb-2 mt-8">Elastic Potential Energy ($PE_e$)</h4>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                Another important form of <span class="text-blue-400">potential energy</span> is <span class="text-blue-400 font-semibold">elastic potential energy</span>, stored in elastic materials (like springs or stretched rubber bands) when they are compressed or stretched from their equilibrium position.
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                The formula for <span class="text-blue-400">elastic potential energy</span> stored in an ideal spring is:
+                $$ PE_e = \frac{1}{2}kx^2 $$
+                Where:
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                    <li>$PE_e$ is the <span class="text-blue-400">elastic potential energy</span> (J).</li>
+                    <li>$k$ is the <span class="text-blue-400">spring constant</span> (a measure of the spring's stiffness, N/m).</li>
+                    <li>$x$ is the <span class="text-blue-400">displacement</span> (stretch or compression) from the spring's equilibrium position (m).</li>
+                </ul>
+            </p>
+            <p class="text-gray-200 leading-relaxed">
+                The concepts of <span class="text-blue-400">kinetic</span> and <span class="text-blue-400">potential energy</span> are central to understanding transformations within a system.
+            </p>
+        </section>
+
+        <!-- Work-Energy Theorem Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">The Work-Energy Theorem: Linking Work to Kinetic Energy Change</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                The <span class="text-blue-400 font-semibold">Work-Energy Theorem</span> is a fundamental principle that directly links the <span class="text-blue-400">net work</span> done on an object to the change in its <span class="text-blue-400">kinetic energy</span>. It is a powerful alternative to using <span class="text-blue-400">Newton's Second Law</span> for analyzing motion.
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                The theorem states:
+                <span class="text-blue-400 text-xl sm:text-2xl font-semibold italic block text-center mt-4 mb-6">
+                    "The net work done on an object equals the change in its kinetic energy."
+                </span>
+                Mathematically:
+                $$ W_{net} = \Delta KE = KE_f - KE_i $$
+                $$ W_{net} = \frac{1}{2}mv_f^2 - \frac{1}{2}mv_i^2 $$
+                Where:
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                    <li>$W_{net}$ is the <span class="text-blue-400">net work</span> done on the object (the work done by the net force).</li>
+                    <li>$\Delta KE$ is the change in <span class="text-blue-400">kinetic energy</span>.</li>
+                    <li>$KE_f$ is the final <span class="text-blue-400">kinetic energy</span>.</li>
+                    <li>$KE_i$ is the initial <span class="text-blue-400">kinetic energy</span>.</li>
+                </ul>
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="font-semibold">Implications of the Work-Energy Theorem:</span>
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                    <li>If <span class="text-blue-400">net work</span> is positive, the object's <span class="text-blue-400">kinetic energy</span> increases (it speeds up).</li>
+                    <li>If <span class="text-blue-400">net work</span> is negative, the object's <span class="text-blue-400">kinetic energy</span> decreases (it slows down).</li>
+                    <li>If <span class="text-blue-400">net work</span> is zero, the object's <span class="text-blue-400">kinetic energy</span> remains constant (it moves at a constant speed or stays at rest).</li>
+                </ul>
+            </p>
+            <p class="text-gray-200 leading-relaxed">
+                <span class="font-semibold">Example:</span> If a car accelerates from rest, the <span class="text-blue-400">net work</span> done by the engine and road forces is positive, increasing the car's <span class="text-blue-400">kinetic energy</span>. If a car brakes, the <span class="text-blue-400">net work</span> done by the braking forces (friction) is negative, decreasing its <span class="text-blue-400">kinetic energy</span> until it stops.
+            </p>
+        </section>
+
+        <!-- Power Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Power: The Rate of Doing Work or Transferring Energy</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                While <span class="text-blue-400">work</span> tells us how much <span class="text-blue-400">energy</span> is transferred or transformed, <span class="text-blue-400 font-semibold">power (P)</span> tells us *how fast* that <span class="text-blue-400">work</span> is done or <span class="text-blue-400">energy</span> is transferred. It's a measure of the rate of energy consumption or production.
+            </p>
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2">Definition and Formula</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400">Average power</span> is defined as the <span class="text-blue-400">work done ($W$)</span> divided by the <span class="text-blue-400">time interval ($\Delta t$)</span> over which the work is done:
+                $$ P_{avg} = \frac{W}{\Delta t} $$
+                Alternatively, if <span class="text-blue-400">energy</span> is transferred, it's the <span class="text-blue-400">energy transferred ($\Delta E$)</span> per unit time:
+                $$ P_{avg} = \frac{\Delta E}{\Delta t} $$
+                Where:
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                    <li>$P$ is <span class="text-blue-400">power</span>, measured in <span class="text-blue-400">Watts (W)</span> in the SI system.</li>
+                    <li>$W$ is <span class="text-blue-400">work</span> (J).</li>
+                    <li>$\Delta E$ is change in <span class="text-blue-400">energy</span> (J).</li>
+                    <li>$\Delta t$ is the <span class="text-blue-400">time interval</span> (s).</li>
+                </ul>
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                One Watt is defined as one Joule of work done per second: $1 W = 1 J/s$.
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="font-semibold">Instantaneous power</span>, for a constant force acting on an object moving with velocity $\vec{v}$, can also be expressed as:
+                $$ P = \vec{F} \cdot \vec{v} = Fv \cos \theta $$
+                Where $F$ is the force, $v$ is the velocity, and $\theta$ is the angle between the force and velocity vectors.
+            </p>
+
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">Significance of Power</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400">Power</span> is a critical concept in engineering and everyday life:
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4">
+                    <li><span class="text-blue-400">Engine Performance:</span> The power rating of a car engine (e.g., in horsepower, where 1 hp $\approx$ 746 W) indicates how quickly it can do work (accelerate the car or climb hills). A more powerful engine can achieve the same speed in less time, or a higher speed in the same time, compared to a less powerful one.</li>
+                    <li><span class="text-blue-400">Electrical Appliances:</span> The wattage of appliances (e.g., a 100 W light bulb, a 1500 W hairdryer) tells you how much electrical <span class="text-blue-400">energy</span> they consume (and convert to other forms like light and <span class="text-blue-400">heat</span>) per second.</li>
+                    <li><span class="text-blue-400">Human Activity:</span> An athlete who can run up a flight of stairs quickly demonstrates more <span class="text-blue-400">power</span> than someone who takes a long time to do the same amount of <span class="text-blue-400">work</span>.</li>
+                </ul>
+            </p>
+        </section>
+
+        <!-- Conservation of Mechanical Energy Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Conservation of Mechanical Energy: A Powerful Principle</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                The <span class="text-blue-400 font-semibold">principle of conservation of mechanical energy</span> is a specific application of the broader <span class="text-blue-400">law of conservation of energy</span>. It states that:
+            </p>
+            <p class="text-blue-400 text-xl sm:text-2xl font-semibold italic text-center leading-relaxed mb-6">
+                "If only <span class="text-blue-400 font-bold">conservative forces</span> do work on a system, the total <span class="text-blue-400 font-bold">mechanical energy</span> of the system remains constant."
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                <span class="text-blue-400 font-semibold">Mechanical energy ($E_{mech}$)</span> is the sum of an object's <span class="text-blue-400">kinetic energy</span> and its <span class="text-blue-400">potential energy</span>:
+                $$ E_{mech} = KE + PE $$
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                Therefore, the <span class="text-blue-400">conservation of mechanical energy</span> can be written as:
+                $$ KE_i + PE_i = KE_f + PE_f $$
+                $$ \frac{1}{2}mv_i^2 + mgh_i = \frac{1}{2}mv_f^2 + mgh_f $$
+                Where 'i' denotes initial state and 'f' denotes final state.
+            </p>
+
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">Conservative vs. Non-Conservative Forces</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                The distinction between <span class="text-blue-400">conservative</span> and <span class="text-blue-400">non-conservative forces</span> is crucial for applying this principle:
+            </p>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Conservative Forces:</span> Forces for which the <span class="text-blue-400">work done</span> in moving an object between two points is independent of the path taken. This also means the <span class="text-blue-400">work done</span> by a <span class="text-blue-400">conservative force</span> over any closed path is zero.
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Examples:</span> <span class="text-blue-400">Gravitational force</span>, <span class="text-blue-400">elastic (spring) force</span>, electrostatic force.</li>
+                        <li>For these forces, we can define a corresponding <span class="text-blue-400">potential energy</span>.</li>
+                    </ul>
                 </li>
-                <li class="mb-2">
-                    <span class="key-term">Non-Conservative Forces:</span> Forces for which the work done depends on the path taken. These forces typically dissipate mechanical energy from a system, often converting it into thermal energy. Examples include friction, air resistance, and applied forces from engines.
+                <li><span class="font-semibold">Non-Conservative Forces:</span> Forces for which the <span class="text-blue-400">work done</span> depends on the path taken. These forces typically dissipate mechanical energy into other forms, such as <span class="text-blue-400">thermal energy</span>.
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Examples:</span> <span class="text-blue-400">Friction</span>, <span class="text-blue-400">air resistance</span>, applied push/pull forces from an external agent, tension (often).</li>
+                        <li>If <span class="text-blue-400">non-conservative forces</span> do work, then <span class="text-blue-400">mechanical energy is not conserved</span>. The work done by <span class="text-blue-400">non-conservative forces</span> ($W_{nc}$) equals the change in total <span class="text-blue-400">mechanical energy</span>:
+                            $$ W_{nc} = \Delta E_{mech} = (KE_f + PE_f) - (KE_i + PE_i) $$
+                        </li>
+                    </ul>
                 </li>
             </ul>
-        </section>
 
-        <section id="conservation-of-mechanical-energy" class="section-card">
-            <h3 class="text-4xl mb-6">4. Conservation of Mechanical Energy</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                The concept of energy truly shines when we consider its conservation. The <span class="key-term">Principle of Conservation of Mechanical Energy</span> is a powerful tool for analyzing systems where only conservative forces are doing work.
-            </p>
-
-            <h4 class="text-3xl mb-4">4.1. Defining Mechanical Energy</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Mechanical energy ($E$)</span> is the sum of an object's (or system's) kinetic energy and potential energy.
-            </p>
-            <div class="math-equation">
-                $$E = KE + PE$$
-                <p>or</p>
-                $$E = \frac{1}{2}mv^2 + mgh \quad \text{(for gravitational potential energy)}$$
-                $$E = \frac{1}{2}mv^2 + \frac{1}{2}kx^2 \quad \text{(for elastic potential energy)}$$
-            </div>
-
-            <h4 class="text-3xl mb-4">4.2. The Principle of Conservation of Mechanical Energy</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                The <span class="key-term">Principle of Conservation of Mechanical Energy</span> states:
-            </p>
-            <blockquote class="text-xl italic border-l-4 border-blue-500 pl-4 py-2 my-6">
-                "If only conservative forces do work on a system, the total mechanical energy of the system remains constant."
-            </blockquote>
-            <p class="text-lg leading-relaxed mb-6">
-                Mathematically, this means:
-            </p>
-            <div class="math-equation">
-                $$E_{initial} = E_{final}$$
-                $$KE_i + PE_i = KE_f + PE_f$$
-                $$\frac{1}{2}mv_i^2 + mgh_i = \frac{1}{2}mv_f^2 + mgh_f$$
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                This implies that mechanical energy can transform back and forth between kinetic and potential forms, but the total amount remains the same. For example, as a pendulum swings, its gravitational potential energy at the peak of its swing converts to kinetic energy at the bottom, and then back to potential energy as it rises again.
-            </p>
-
-            <h4 class="text-3xl mb-4">4.3. Systems with Non-Conservative Forces</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                When non-conservative forces (like friction or air resistance) do work, mechanical energy is no longer conserved. These forces either add or remove mechanical energy from the system, converting it into other forms, most commonly thermal energy (heat).
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                The generalized work-energy principle accounts for non-conservative forces:
-            </p>
-            <div class="math-equation">
-                $$W_{nc} = \Delta E = E_f - E_i = (KE_f + PE_f) - (KE_i + PE_i)$$
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                Where $W_{nc}$ is the work done by non-conservative forces. If $W_{nc}$ is negative (e.g., due to friction), mechanical energy is lost from the system. If $W_{nc}$ is positive (e.g., a push from an external source), mechanical energy is added.
-            </p>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Conservation of Mechanical Energy</h4>
-                <p class="text-lg leading-relaxed mb-2">
-                    A $0.5 \text{ kg}$ ball is dropped from a height of $10 \text{ m}$ above the ground. What is its speed just before it hits the ground? (Neglect air resistance, $g = 9.8 \text{ m/s}^2$).
-                </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Given:</span> $m = 0.5 \text{ kg}$, $h_i = 10 \text{ m}$, $v_i = 0 \text{ m/s}$ (dropped from rest), $h_f = 0 \text{ m}$.
-                </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Apply Conservation of Mechanical Energy:</span>
-                    $$KE_i + PE_i = KE_f + PE_f$$
-                    $$\frac{1}{2}mv_i^2 + mgh_i = \frac{1}{2}mv_f^2 + mgh_f$$
-                    $$\frac{1}{2}(0.5)(0)^2 + (0.5)(9.8)(10) = \frac{1}{2}(0.5)v_f^2 + (0.5)(9.8)(0)$$
-                    $$0 + 49 = 0.25v_f^2 + 0$$
-                    $$49 = 0.25v_f^2$$
-                    $$v_f^2 = \frac{49}{0.25} = 196$$
-                    $$v_f = \sqrt{196} = 14 \text{ m/s}$$
-                    The ball's speed just before hitting the ground is $14 \text{ m/s}$. Notice that the mass $m$ cancels out if we are only looking for velocity, which is a common characteristic of energy conservation problems involving gravity.
-                </p>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                The conservation of energy is one of the most fundamental and universally applicable laws in all of science, extending far beyond just mechanical systems to encompass all forms of energy transformations in the universe.
-            </p>
-        </section>
-
-        <section id="power" class="section-card">
-            <h3 class="text-4xl mb-6">5. Power: The Rate of Doing Work</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                While work and energy tell us how much energy is transferred or transformed, they don't tell us how quickly this happens. This is where the concept of <span class="key-term">power</span> comes in.
-            </p>
-
-            <h4 class="text-3xl mb-4">5.1. Defining Power</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                <span class="key-term">Power ($P$)</span> is the rate at which work is done or energy is transferred.
-            </p>
-            <div class="math-equation">
-                $$P_{avg} = \frac{W}{\Delta t}$$
-                <p>Where:</p>
-                <ul class="list-disc list-inside ml-6">
-                    <li>$P_{avg}$ is the <span class="key-term">average power</span>.</li>
-                    <li>$W$ is the <span class="key-term">work done</span> (or energy transferred) (in Joules, J).</li>
-                    <li>$\Delta t$ is the <span class="key-term">time interval</span> over which the work is done (in seconds, s).</li>
+            <h3 class="text-xl sm:text-2xl font-medium text-blue-300 mb-2 mt-8">Applications of Conservation of Mechanical Energy</h3>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                This principle is incredibly useful for solving problems without needing to know intermediate forces or times, only initial and final states.
+                <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                    <li><span class="font-semibold">Falling Object:</span> As a ball falls from a height, its <span class="text-blue-400">gravitational potential energy</span> converts into <span class="text-blue-400">kinetic energy</span>. If <span class="text-blue-400">air resistance</span> is ignored, $PE_i + KE_i = PE_f + KE_f$. The speed just before hitting the ground can be found solely from the initial height.</li>
+                    <li><span class="font-semibold">Pendulum:</span> A swinging pendulum continuously converts <span class="text-blue-400">potential energy</span> (highest points) into <span class="text-blue-400">kinetic energy</span> (lowest point) and vice versa. If there's no air resistance or friction at the pivot, its <span class="text-blue-400">mechanical energy</span> is conserved, and it will swing to the same height on each side.</li>
+                    <li><span class="font-semibold">Roller Coasters:</span> Designed to utilize the conversion between <span class="text-blue-400">potential</span> and <span class="text-blue-400">kinetic energy</span>. A large initial drop provides the necessary <span class="text-blue-400">kinetic energy</span> for the rest of the ride.</li>
+                    <li><span class="font-semibold">Bungee Jumping:</span> The jumper's initial <span class="text-blue-400">gravitational potential energy</span> is converted into <span class="text-blue-400">kinetic energy</span> as they fall, then into <span class="text-blue-400">elastic potential energy</span> in the stretched bungee cord, and finally back into kinetic energy as they rebound.</li>
                 </ul>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                The SI unit for power is the <span class="key-term">Watt (W)</span>. One Watt is defined as one Joule of work done per second: $1 \text{ W} = 1 \text{ J/s}$. Another common unit, especially for engines, is horsepower (hp), where $1 \text{ hp} \approx 746 \text{ W}$.
             </p>
-
-            <h4 class="text-3xl mb-4">5.2. Instantaneous Power</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                For situations where power might vary, we can define <span class="key-term">instantaneous power</span> as the limit of average power as the time interval approaches zero. In calculus terms, it is the derivative of work with respect to time:
-            </p>
-            <div class="math-equation">
-                $$P = \frac{dW}{dt}$$
-            </div>
-
-            <h4 class="text-3xl mb-4">5.3. Power in terms of Force and Velocity</h4>
-            <p class="text-lg leading-relaxed mb-6">
-                Power can also be expressed as the dot product of force and velocity. If a force $\vec{F}$ is applied to an object moving with velocity $\vec{v}$, the instantaneous power delivered by that force is:
-            </p>
-            <div class="math-equation">
-                $$P = \vec{F} \cdot \vec{v} = Fv \cos(\theta)$$
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                Where $\theta$ is the angle between the force and velocity vectors. This formula is particularly useful in analyzing systems where force is continuously applied to maintain or change motion, like the power output of an engine or the power dissipated by friction.
-            </p>
-            <div class="example-box">
-                <h4 class="text-xl font-semibold mb-2">Example: Calculating Power</h4>
-                <p class="text-lg leading-relaxed mb-2">
-                    A person lifts a $50 \text{ kg}$ barbell $2 \text{ m}$ vertically in $1.5 \text{ s}$ at a constant velocity. What power does the person exert? ($g = 9.8 \text{ m/s}^2$).
-                </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Given:</span> $m = 50 \text{ kg}$, $d = 2 \text{ m}$, $\Delta t = 1.5 \text{ s}$.
-                </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Step 1: Calculate the work done ($W$) by the person.</span>
-                    To lift at constant velocity, the person must apply a force equal to the barbell's weight: $F = mg$.
-                    $$F = (50 \text{ kg})(9.8 \text{ m/s}^2) = 490 \text{ N}$$
-                    Since the force is in the same direction as displacement ($\theta = 0^\circ$, $\cos(0^\circ) = 1$):
-                    $$W = Fd \cos(\theta) = (490 \text{ N})(2 \text{ m})(1) = 980 \text{ J}$$
-                </p>
-                <p class="text-lg leading-relaxed mb-2">
-                    <span class="font-bold">Step 2: Calculate the power ($P$)</span>
-                    $$P = \frac{W}{\Delta t} = \frac{980 \text{ J}}{1.5 \text{ s}} \approx 653.3 \text{ W}$$
-                    The person exerts approximately $653.3 \text{ Watts}$ of power.
-                </p>
-            </div>
-            <p class="text-lg leading-relaxed mb-6">
-                Power is a crucial concept in engineering, where it's used to quantify the performance of engines, motors, and electrical devices. In daily life, we encounter power ratings on everything from light bulbs to cars, signifying how quickly they can convert or utilize energy.
+            <p class="text-gray-200 leading-relaxed">
+                Even when <span class="text-blue-400">mechanical energy</span> is not conserved due to <span class="text-blue-400">non-conservative forces</span>, the broader <span class="text-blue-400">law of conservation of energy</span> always holds: total <span class="text-blue-400">energy</span> of an <span class="text-blue-400">isolated system</span> is constant, it just transforms into other forms (like <span class="text-blue-400">heat</span>).
             </p>
         </section>
 
-        <section id="conclusion" class="section-card">
-            <h3 class="text-4xl mb-6">6. Conclusion: Energy - The Driving Force</h3>
-            <p class="text-lg leading-relaxed mb-6">
-                Our extensive journey through the concepts of <span class="key-term">work</span>, <span class="key-term">energy</span>, and <span class="key-term">power</span> has illuminated the fundamental ways in which physical systems interact and transform. We began by defining <span class="key-term">work</span> as the precise physical mechanism for transferring energy, emphasizing its dependence on force and displacement. This led us to the vital concept of <span class="key-term">energy</span> itself, the capacity to do work, which manifests in various forms.
+        <!-- Problem-Solving Strategies for Work, Energy, Power -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Problem-Solving Strategies for Work, Energy, and Power</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                A systematic approach helps in tackling problems related to <span class="text-blue-400">work</span>, <span class="text-blue-400">energy</span>, and <span class="text-blue-400">power</span>:
             </p>
-            <p class="text-lg leading-relaxed mb-6">
-                We thoroughly explored <span class="key-term">kinetic energy</span>, the energy of motion, and its direct connection to work through the powerful <span class="key-term">Work-Energy Theorem</span>. Our understanding deepened with an examination of <span class="key-term">potential energy</span>, specifically <span class="key-term">gravitational potential energy</span> (stored due to height) and <span class="key-term">elastic potential energy</span> (stored due to deformation). The distinction between conservative and non-conservative forces provided context for the profound <span class="key-term">Principle of Conservation of Mechanical Energy</span>, which simplifies the analysis of many systems by stating that total mechanical energy remains constant in the absence of non-conservative work. Finally, we introduced <span class="key-term">power</span> as the rate at which work is done or energy is transferred, a critical measure of performance and efficiency.
-            </p>
-            <p class="text-lg leading-relaxed mb-6">
-                These concepts are not mere theoretical constructs; they are the bedrock upon which much of modern science and engineering is built. They allow us to quantify phenomena ranging from the flight of an airplane to the generation of electricity, the design of efficient engines, and even the metabolic processes within living organisms. Every action, every change, every interaction in the universe can be analyzed through the lens of work, energy, and power.
-            </p>
-            <p class="text-lg leading-relaxed">
-                As you continue your explorations in physics and mathematics, remember the interconnectedness of these concepts. They provide an elegant and often simpler alternative to force-based analyses, empowering you to solve a wider array of complex problems. The universe is a grand theater of energy transformations, and with this knowledge, you are now better equipped to understand its magnificent drama. Keep questioning, keep analyzing, and keep discovering the power of physics!
+            <ol class="list-decimal list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Draw a Clear Diagram:</span> Sketch the initial and final states of the object(s). Label positions, velocities, and forces.</li>
+                <li><span class="font-semibold">Choose a System and Reference Level:</span> Define what constitutes your system. For <span class="text-blue-400">potential energy</span>, choose a convenient zero reference level (e.g., lowest point of motion).</li>
+                <li><span class="font-semibold">Identify Forces:</span> Determine all <span class="text-blue-400">forces</span> acting on the object. Classify them as <span class="text-blue-400">conservative</span> (gravity, spring) or <span class="text-blue-400">non-conservative</span> (friction, applied forces).</li>
+                <li><span class="font-semibold">Determine the Best Approach:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li>If only <span class="text-blue-400">conservative forces</span> are doing work, use <span class="text-blue-400">Conservation of Mechanical Energy</span>: $KE_i + PE_i = KE_f + PE_f$. This is often the simplest method.</li>
+                        <li>If <span class="text-blue-400">non-conservative forces</span> are doing work, use the <span class="text-blue-400">Work-Energy Theorem</span>: $W_{nc} = \Delta E_{mech}$, or directly calculate $W_{net}$ and use $W_{net} = \Delta KE$.</li>
+                        <li>To find the rate of energy transfer, use the <span class="text-blue-400">power</span> formulas.</li>
+                    </ul>
+                </li>
+                <li><span class="font-semibold">Apply Formulas and Solve:</span> Substitute known values into the chosen equations and solve for the unknowns. Pay attention to signs for work and direction for velocity when calculating kinetic energy.</li>
+                <li><span class="font-semibold">Check Units and Reasonableness:</span> Verify units are consistent and the answer makes physical sense.</li>
+            </ol>
+            <p class="text-gray-200 leading-relaxed">
+                The beauty of the <span class="text-blue-400">energy approach</span> is that it deals with scalar quantities (<span class="text-blue-400">energy</span> and <span class="text-blue-400">work</span>, except for power when considering its vector form $F \cdot v$), simplifying calculations compared to vector-based force problems, especially in complex paths.
             </p>
         </section>
 
-        <section id="glossary" class="section-card">
-            <h3 class="text-4xl mb-6">7. Glossary of Key Terms</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-lg">
-                <div><strong class="key-term">Conservative Force:</strong> A force for which the work done is independent of the path taken (e.g., gravity, spring force).</div>
-                <div><strong class="key-term">Elastic Potential Energy ($PE_s$):</strong> Energy stored in an elastic object due to its deformation from equilibrium ($PE_s = \frac{1}{2}kx^2$).</div>
-                <div><strong class="key-term">Energy:</strong> The capacity to do work. Measured in Joules (J).</div>
-                <div><strong class="key-term">Gravitational Potential Energy ($PE_g$):</strong> Energy stored in an object due to its height in a gravitational field ($PE_g = mgh$).</div>
-                <div><strong class="key-term">Joule (J):</strong> The SI unit of work and energy. $1 \text{ J} = 1 \text{ N} \cdot \text{m}$.</div>
-                <div><strong class="key-term">Kinetic Energy ($KE$):</strong> Energy an object possesses due to its motion ($KE = \frac{1}{2}mv^2$).</div>
-                <div><strong class="key-term">Mechanical Energy ($E$):</strong> The sum of an object's kinetic and potential energy ($E = KE + PE$).</div>
-                <div><strong class="key-term">Non-Conservative Force:</strong> A force for which the work done depends on the path taken (e.g., friction, air resistance).</div>
-                <div><strong class="key-term">Power ($P$):</strong> The rate at which work is done or energy is transferred ($P = W/\Delta t$). Measured in Watts (W).</div>
-                <div><strong class="key-term">Potential Energy ($PE$):</strong> Stored energy an object possesses due to its position or configuration.</div>
-                <div><strong class="key-term">Principle of Conservation of Mechanical Energy:</strong> States that if only conservative forces do work, the total mechanical energy of a system remains constant ($KE_i + PE_i = KE_f + PE_f$).</div>
-                <div><strong class="key-term">Watt (W):</strong> The SI unit of power. $1 \text{ W} = 1 \text{ J/s}$.</div>
-                <div><strong class="key-term">Work ($W$):</strong> Energy transferred by a force acting over a displacement ($W = Fd \cos(\theta)$). Measured in Joules (J).</div>
-                <div><strong class="key-term">Work-Energy Theorem:</strong> States that the net work done on an object equals its change in kinetic energy ($W_{net} = \Delta KE$).</div>
-            </div>
-        </section>
-
-        <section id="references" class="section-card">
-            <h3 class="text-4xl mb-6">8. Further Reading and References</h3>
-            <p class="text-lg leading-relaxed mb-4">For those wishing to delve deeper into work, energy, and power, here are some recommended resources:</p>
-            <ul class="list-disc list-inside ml-6 text-lg leading-relaxed">
-                <li class="mb-2">Serway, R. A., & Jewett, J. W. (2018). <em>Physics for Scientists and Engineers with Modern Physics</em> (10th ed.). Cengage Learning. (Chapters on Work and Energy)</li>
-                <li class="mb-2">Halliday, D., Resnick, R., & Walker, J. (2014). <em>Fundamentals of Physics</em> (10th ed.). John Wiley & Sons. (Chapters on Work & Kinetic Energy, and Potential Energy & Conservation of Energy)</li>
-                <li class="mb-2">Young, H. D., & Freedman, R. A. (2020). <em>University Physics with Modern Physics</em> (15th ed.). Pearson. (Comprehensive coverage of work, energy, and power)</li>
-                <li class="mb-2">Khan Academy: <a href="https://www.khanacademy.org/science/physics/work-and-energy" target="_blank" class="text-blue-400 hover:underline">Work & Energy Course</a> (Online video lessons and exercises)</li>
-                <li class="mb-2">HyperPhysics: <a href="http://hyperphysics.phy-astr.gsu.edu/hbase/work.html" target="_blank" class="text-blue-400 hover:underline">Work and Energy Topics</a> (Concise explanations and concept maps)</li>
+        <!-- Applications and Importance Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Real-World Applications of Work, Energy, and Power</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                The concepts of <span class="text-blue-400">work</span>, <span class="text-blue-400">energy</span>, and <span class="text-blue-400">power</span> are not just academic topics; they are fundamental to virtually every aspect of our technological world and natural understanding:
+            </p>
+            <ul class="list-disc list-inside text-gray-200 leading-relaxed ml-4 mb-4">
+                <li><span class="font-semibold">Mechanical Engineering:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Engine Design:</span> Efficiency of engines (converting chemical <span class="text-blue-400">energy</span> into <span class="text-blue-400">mechanical work</span>), power output, and fuel consumption are directly related to these principles.</li>
+                        <li><span class="text-blue-400">Machine Design:</span> Designing levers, pulleys, gears, and other simple machines to amplify <span class="text-blue-400">force</span> or change direction, while conserving <span class="text-blue-400">energy</span> (ignoring friction).</li>
+                        <li><span class="text-blue-400">Robotics:</span> Understanding the <span class="text-blue-400">energy</span> requirements and power delivery for robotic arms and movements.</li>
+                    </ul>
+                </li>
+                <li><span class="font-semibold">Electrical Engineering:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Power Generation:</span> Hydroelectric dams converting <span class="text-blue-400">gravitational potential energy</span> of water into <span class="text-blue-400">kinetic energy</span>, then into electrical <span class="text-blue-400">energy</span> via turbines.</li>
+                        <li><span class="text-blue-400">Circuit Analysis:</span> Understanding power consumption of electronic components (e.g., $P = IV$).</li>
+                    </ul>
+                </li>
+                <li><span class="font-semibold">Sports Science & Biomechanics:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Athletic Performance:</span> Analyzing the <span class="text-blue-400">power</span> output of athletes in activities like weightlifting, jumping, or sprinting. A high <span class="text-blue-400">power</span> output signifies both strength and speed.</li>
+                        <li><span class="text-blue-400">Injury Prevention:</span> Understanding the <span class="text-blue-400">work</span> done on joints and muscles during impact to design safer training methods and equipment.</li>
+                    </ul>
+                </li>
+                <li><span class="font-semibold">Climate Science & Renewable Energy:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Wind Turbines:</span> Harnessing the <span class="text-blue-400">kinetic energy</span> of wind to generate electricity.</li>
+                        <li><span class="text-blue-400">Solar Panels:</span> Converting light <span class="text-blue-400">energy</span> into electrical <span class="text-blue-400">energy</span>.</li>
+                        <li><span class="text-blue-400">Earth's Energy Balance:</span> Understanding the flow and transformation of <span class="text-blue-400">energy</span> within the Earth's climate system (solar <span class="text-blue-400">energy</span>, <span class="text-blue-400">thermal energy</span>).</li>
+                    </ul>
+                </li>
+                <li><span class="font-semibold">Everyday Phenomena:</span>
+                    <ul class="list-circle list-inside ml-4">
+                        <li><span class="text-blue-400">Bicycles:</span> Pedaling uphill increases <span class="text-blue-400">gravitational potential energy</span>, while downhill converts <span class="text-blue-400">potential energy</span> to <span class="text-blue-400">kinetic energy</span>.</li>
+                        <li><span class="text-blue-400">Roller Coasters:</span> A quintessential example of <span class="text-blue-400">conservation of mechanical energy</span> (ignoring friction).</li>
+                        <li><span class="text-blue-400">Spring-loaded Toys:</span> Stored <span class="text-blue-400">elastic potential energy</span> is converted into <span class="text-blue-400">kinetic energy</span> when released.</li>
+                    </ul>
+                </li>
             </ul>
+            <p class="text-gray-200 leading-relaxed">
+                By understanding <span class="text-blue-400">work</span>, <span class="text-blue-400">energy</span>, and <span class="text-blue-400">power</span>, you gain a profound insight into the mechanisms that drive physical processes, from the smallest interactions to global systems. These concepts are indispensable for problem-solving in <span class="text-blue-400">physics</span> and offer a deep appreciation for the efficiency and transformations of <span class="text-blue-400">energy</span> that define our universe.
+            </p>
         </section>
+
+        <!-- Conclusion Section -->
+        <section class="mb-10 p-6 bg-gray-900 rounded-lg shadow-xl border border-gray-800">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-blue-400 mb-4">Conclusion</h2>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                In this comprehensive lesson, we've explored the foundational concepts of <span class="text-blue-400">Work, Energy, and Power</span>, essential for a deeper understanding of <span class="text-blue-400">mechanics</span> and the broader field of <span class="text-blue-400">physics</span>. We rigorously defined <span class="text-blue-400">work</span> ($W=Fd\cos\theta$), distinguishing its physics definition from common usage, and classified it into positive, negative, and zero work based on the angle between <span class="text-blue-400">force</span> and <span class="text-blue-400">displacement</span>.
+            </p>
+            <p class="text-gray-200 leading-relaxed mb-4">
+                We then delved into <span class="text-blue-400">energy</span>, the capacity to do <span class="text-blue-400">work</span>, focusing on its mechanical forms: <span class="text-blue-400">kinetic energy</span> ($KE=\frac{1}{2}mv^2$) as the energy of motion, and <span class="text-blue-400">gravitational potential energy</span> ($PE=mgh$) and <span class="text-blue-400">elastic potential energy</span> ($PE=\frac{1}{2}kx^2$) as stored energy due to position or configuration. The powerful <span class="text-blue-400 font-semibold">work-energy theorem</span> ($W_{net} = \Delta KE$) provided a crucial link between <span class="text-blue-400">work</span> and changes in motion. We also investigated <span class="text-blue-400">power</span> ($P=W/t$), the rate at which <span class="text-blue-400">work</span> is done or <span class="text-blue-400">energy</span> is transferred, highlighting its importance in efficiency.
+            </p>
+            <p class="text-gray-200 leading-relaxed">
+                Finally, we explored the cornerstone <span class="text-blue-400 font-semibold">principle of conservation of mechanical energy</span> ($KE_i + PE_i = KE_f + PE_f$), emphasizing its application when only <span class="text-blue-400">conservative forces</span> are involved, and how it simplifies complex problems by focusing on initial and final states. The real-world applications of these concepts are vast and integral to our understanding of the physical universe, from designing advanced machinery to comprehending natural phenomena. Keep building your <span class="text-blue-400">physics</span> knowledge and exploring with <span class="text-blue-400 font-bold">Whizmath</span>!
+            </p>
+        </section>
+
+        <!-- Footer for a clean finish -->
+        <footer class="text-center text-gray-500 text-sm mt-12 py-6 border-t border-gray-800">
+            &copy; 2025 Whizmath. All rights reserved.
+        </footer>
 
     </div>
-
-    <script>
-        // Three.js Animated Background (reused from previous lessons)
-        const canvas = document.getElementById('three-canvas');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-
-        camera.position.z = 5;
-
-        const particleCount = 1000;
-        const particles = new THREE.BufferGeometry();
-        const positions = new Float32Array(particleCount * 3);
-
-        for (let i = 0; i < particleCount * 3; i += 3) {
-            positions[i] = (Math.random() - 0.5) * 200;
-            positions[i + 1] = (Math.random() - 0.5) * 200;
-            positions[i + 2] = (Math.random() - 0.5) * 200;
-        }
-
-        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-        const particleMaterial = new THREE.PointsMaterial({
-            color: 0x63b3ed,
-            size: 0.1,
-            blending: THREE.AdditiveBlending,
-            transparent: true,
-            opacity: 0.7
-        });
-
-        const particleSystem = new THREE.Points(particles, particleMaterial);
-        scene.add(particleSystem);
-
-        const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
-        scene.add(ambientLight);
-
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(0, 1, 0);
-        scene.add(directionalLight);
-
-        const animate = () => {
-            requestAnimationFrame(animate);
-
-            particleSystem.rotation.x += 0.0005;
-            particleSystem.rotation.y += 0.001;
-
-            for (let i = 0; i < particleCount; i++) {
-                const i3 = i * 3;
-                positions[i3 + 2] += 0.05;
-
-                if (positions[i3 + 2] > camera.position.z + 10) {
-                    positions[i3 + 2] = camera.position.z - 200;
-                }
-            }
-            particles.attributes.position.needsUpdate = true;
-
-            renderer.render(scene, camera);
-        };
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        window.onload = function() {
-            animate();
-        };
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
 </body>
 </html>
