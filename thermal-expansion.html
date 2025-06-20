@@ -3,65 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thermal Expansion - Whizmath</title>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
-     crossorigin="anonymous"></script>
+    <title>Thermal Expansion: Linear, Area, Volume | Whizmath</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Quantify linear (ΔL=αL₀ΔT), area (ΔA=2αA₀ΔT), and volume (ΔV=βV₀ΔT) expansion of solids and liquids due to temperature changes with Whizmath. Understand applications in engineering, bimetallic strips, thermal stress, and everyday phenomena like bursting pipes.">
+    <meta name="keywords" content="Thermal Expansion, Linear Expansion, Coefficient of Linear Expansion, Alpha, ΔL=αL0ΔT, Area Expansion, Coefficient of Area Expansion, ΔA=2αA0ΔT, Volume Expansion, Coefficient of Volume Expansion, Beta, ΔV=βV0ΔT, Solids, Liquids, Temperature Change, Engineering Applications, Everyday Phenomena, Bimetallic Strips, Thermostats, Expansion Joints, Thermal Stress, Anomalous Expansion of Water, Physics Tutorial, Thermodynamics, Material Science, Whizmath">
+    <link rel="canonical" href="https://www.whizmath.com/thermal-expansion">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom styles for the Three.js canvas */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body {
-            margin: 0;
-            overflow-x: hidden; /* Prevent horizontal scrolling */
-            font-family: 'Inter', sans-serif; /* Recommended font */
-            background-color: #0d1117; /* Dark background */
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
         }
-        #three-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1; /* Send to background */
-        }
-        /* Style for the main content container to allow Three.js to show through */
-        .content-container {
-            position: relative;
-            z-index: 1; /* Keep content above canvas */
-            background-color: rgba(13, 17, 23, 0.9); /* Slightly transparent dark background */
-            min-height: 100vh; /* Ensure it covers the whole screen */
-            padding-bottom: 80px; /* Space for potential scroll bar or footer */
-        }
-
-        /* Scrollbar styling */
+        /* Custom scrollbar for better aesthetics */
         ::-webkit-scrollbar {
-            width: 12px;
+            width: 8px;
+            height: 8px; /* For horizontal scrollbars */
         }
         ::-webkit-scrollbar-track {
-            background: #1a202c; /* Darker track */
+            background: #2d3748; /* Darker gray for track */
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb {
-            background: #4a5568; /* Grey thumb */
+            background: #4A90E2; /* Blue for thumb */
             border-radius: 10px;
-            border: 3px solid #1a202c; /* Padding around thumb */
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #6b7280; /* Lighter on hover */
+            background: #3A7BBF; /* Darker blue on hover */
         }
-
-        /* MathJax configuration */
-        .mjx-chtml {
-            color: #d1d5db !important; /* Ensure MathJax equations are light gray */
+        /* Style for the back button SVG icon */
+        .back-button-svg {
+            fill: currentColor;
         }
-        .mjx-chtml .MJXc-display {
-            overflow-x: auto; /* Allow horizontal scrolling for wide equations */
-            padding-bottom: 5px; /* Prevent cutoff for subscripts */
+        /* Responsive font sizes */
+        h1 {
+            font-size: 2.5rem; /* Default for mobile */
+        }
+        @media (min-width: 640px) { /* sm breakpoint */
+            h1 {
+                font-size: 3rem;
+            }
+        }
+        @media (min-width: 1024px) { /* lg breakpoint */
+            h1 {
+                font-size: 3.75rem; /* text-6xl */
+            }
+        }
+        h2 {
+            font-size: 2rem; /* Default for mobile */
+        }
+        @media (min-width: 640px) { /* sm breakpoint */
+            h2 {
+                font-size: 2.5rem;
+            }
+        }
+        h3 {
+            font-size: 1.5rem; /* Default for mobile */
+        }
+        @media (min-width: 640px) { /* sm breakpoint */
+            h3 {
+                font-size: 1.875rem;
+            }
         }
     </style>
-    <!-- MathJax Script -->
+
+    <!-- MathJax Configuration -->
     <script type="text/javascript" id="MathJax-script" async
-        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
     </script>
     <script>
         // Optional: Configure MathJax to process dollar signs for inline math
@@ -75,675 +85,359 @@
         };
     </script>
 </head>
-<body>
-    <!-- Three.js Canvas -->
-    <canvas id="three-canvas"></canvas>
+<body class="bg-black text-white min-h-screen">
+    <!-- Back Button -->
+    <button class="fixed top-4 left-4 p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg z-50 flex items-center justify-center transition-all duration-300 ease-in-out transform hover:scale-105"
+            onclick="window.location.href='physics.html'"
+            aria-label="Go back to Physics page">
+        <svg class="back-button-svg w-6 h-6" viewBox="0 0 24 24">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+        </svg>
+    </button>
 
     <!-- Main Content Container -->
-    <div class="content-container text-gray-200">
-        <!-- Back Button -->
-        <a href="physics.html" class="fixed top-6 left-6 z-20 p-3 bg-indigo-700 hover:bg-indigo-600 text-white rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-        </a>
-
-        <header class="py-16 text-center relative z-10">
-            <h1 class="text-6xl font-extrabold text-white leading-tight tracking-wider bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 shadow-text">
-                <span class="block animate-fade-in-down">Thermal Expansion</span>
+    <div class="container mx-auto p-4 sm:p-8 max-w-screen-xl relative z-10">
+        <header class="text-center mb-12 mt-12">
+            <h1 class="text-blue-400 font-extrabold leading-tight tracking-tight mb-4">
+                Whizmath
             </h1>
-            <p class="mt-4 text-xl text-gray-300 max-w-3xl mx-auto animate-fade-in">
-                Understanding How Materials Respond to Temperature Changes
+            <h1 class="text-white font-extrabold leading-tight tracking-tight mb-4">
+                Thermal Expansion: Quantifying Size Changes with Temperature
+            </h1>
+            <p class="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto">
+                Exploring how temperature influences the dimensions of solids and liquids, and its critical implications.
             </p>
         </header>
 
-        <main class="max-w-6xl mx-auto px-8 py-12 space-y-16">
+        <!-- Introduction Section -->
+        <section class="mb-16">
+            <h2 class="text-blue-400 font-semibold mb-6">Introduction: The Invisible Stretch and Shrink</h2>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Imagine a scorching summer day and a chilling winter night. The world around us, from railway tracks to towering bridges and the liquid in a thermometer, subtly changes its size in response to these temperature fluctuations. This phenomenon, known as <strong class="text-blue-300">thermal expansion</strong>, is a fundamental property of matter: most substances tend to expand when heated and contract when cooled. While often imperceptible in our daily observations, understanding and quantifying thermal expansion is crucial for countless engineering applications, scientific instruments, and even common household items.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                At a microscopic level, thermal expansion is a direct consequence of the increased kinetic energy of atoms and molecules as temperature rises. These particles vibrate with greater amplitude, pushing each other further apart and leading to an overall increase in the material's dimensions. Conversely, as temperature drops, vibrations diminish, and particles draw closer, causing contraction.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed">
+                In this comprehensive lesson, we will delve deep into the principles of thermal expansion. We will quantify this effect for solids in one, two, and three dimensions, introducing the coefficients of linear, area, and volume expansion. We will then extend our analysis to liquids, discussing their characteristic volume expansion and the peculiar, yet vital, anomalous behavior of water. Finally, we will explore the wide-ranging applications and critical considerations of thermal expansion in engineering design, everyday phenomena, and potential problems like thermal stress. Prepare to appreciate how temperature subtly, yet powerfully, reshapes the world around us.
+            </p>
+        </section>
 
-            <!-- Introduction Section -->
-            <section class="bg-gray-800 bg-opacity-70 rounded-2xl p-10 shadow-xl border border-gray-700 transition duration-300 ease-in-out hover:shadow-2xl">
-                <h2 class="text-4xl font-bold text-blue-400 mb-6 border-b-2 border-blue-500 pb-3">Introduction to Thermal Expansion</h2>
-                <p class="text-lg leading-relaxed mb-6">
-                    Welcome to this in-depth exploration of <span class="font-bold text-blue-400">Thermal Expansion</span>, a fundamental phenomenon in physics and engineering that impacts countless aspects of our daily lives and technological advancements. On <span class="font-semibold text-white">Whizmath</span>, we aim to demystify complex concepts, and thermal expansion is a perfect example of how microscopic interactions manifest into macroscopic, observable changes.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    Have you ever noticed how railway tracks have small gaps between them? Or why a tight metal jar lid becomes easier to open after running hot water over it? These are all everyday examples of thermal expansion at play. Simply put, most materials tend to <span class="font-semibold text-blue-400">expand</span> when heated and <span class="font-semibold text-blue-400">contract</span> when cooled. While this might seem straightforward, the underlying principles and their precise quantification are crucial for everything from designing bridges and buildings to manufacturing precision instruments and even understanding natural phenomena.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    In this comprehensive lesson, we will delve into the <span class="font-semibold text-blue-400">microscopic basis</span> of thermal expansion, explaining why atoms and molecules behave this way. We will then meticulously quantify the different types of expansion: <span class="font-semibold text-blue-400">linear expansion</span> (for length), <span class="font-semibold text-blue-400">area expansion</span> (for surfaces), and <span class="font-semibold text-blue-400">volume expansion</span> (for three-dimensional objects and liquids). We will introduce and define the key coefficients of thermal expansion ($\alpha$ and $\beta$), and show how they interrelate. Furthermore, we'll examine the fascinating <span class="font-semibold text-blue-400">anomalous expansion of water</span>, a unique property vital for life on Earth.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    Beyond the theory, we will explore the extensive <span class="font-semibold text-blue-400">applications of thermal expansion in engineering</span>, from bimetallic strips in thermostats to the design of large structures. We will also discuss the practical implications and <span class="font-semibold text-blue-400">everyday phenomena</span> where thermal expansion is evident. This lesson is designed to equip you with a solid understanding of thermal expansion, empowering you to appreciate its significance in both the natural and engineered worlds. Let's begin this enlightening journey!
-                </p>
-            </section>
+        <!-- Section 1: Understanding Thermal Expansion -->
+        <section class="mb-16">
+            <h2 class="text-blue-400 font-semibold mb-6">1. Understanding Thermal Expansion: The Microscopic Basis</h2>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                At its core, thermal expansion is a manifestation of the increased average kinetic energy of the particles (atoms or molecules) within a substance as its temperature rises.
+            </p>
 
-            <!-- Section 1: Microscopic Basis of Thermal Expansion -->
-            <section class="bg-gray-800 bg-opacity-70 rounded-2xl p-10 shadow-xl border border-gray-700 transition duration-300 ease-in-out hover:shadow-2xl">
-                <h2 class="text-4xl font-bold text-blue-400 mb-6 border-b-2 border-blue-500 pb-3">Microscopic Basis of Thermal Expansion</h2>
-                <p class="text-lg leading-relaxed mb-6">
-                    To truly understand why materials expand when heated, we need to look beyond the macroscopic observation and delve into the <span class="font-semibold text-white">atomic and molecular realm</span>. At this level, thermal expansion is a direct consequence of the increased <span class="font-semibold text-blue-400">vibrational energy</span> of the constituent particles (atoms or molecules) within a material.
-                </p>
+            <h3 class="text-white font-medium mb-4">1.1. Microscopic Origin</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                In solids, atoms are arranged in a lattice and vibrate about equilibrium positions. These vibrations are not perfectly symmetrical. As temperature increases, the amplitude of these vibrations increases. Due to the asymmetric nature of the interatomic potential energy curve (which is steeper on the compression side than on the expansion side), the average equilibrium position of the atoms shifts slightly further apart. This increased average separation between atoms on a macroscopic scale translates to an overall expansion of the material.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                In liquids, particles are less constrained but still experience intermolecular forces. As temperature increases, their kinetic energy increases, leading to more vigorous movement and a greater average separation between molecules, hence leading to volume expansion.
+            </p>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Atoms and Interatomic Forces</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    In solids, atoms are arranged in a fixed crystal lattice or a more disordered amorphous structure. In liquids, particles are close together but can move past each other. In both cases, these particles are not static; they are in constant, random motion, primarily <span class="font-bold text-blue-300">vibrating</span> about their equilibrium positions.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    The atoms are held together by <span class="font-bold text-blue-300">interatomic forces</span>, which can be visualized using a potential energy curve. This curve describes the potential energy between two atoms as a function of their separation distance.
-                    <ul class="list-disc list-inside space-y-3 pl-5 text-lg leading-relaxed mb-6">
-                        <li>The curve typically has a minimum at a certain interatomic distance, representing the <span class="font-bold text-blue-300">equilibrium separation</span> where the attractive and repulsive forces balance. This corresponds to the lowest potential energy and the most stable bond length at absolute zero temperature.</li>
-                        <li>For small displacements from this equilibrium, the potential energy curve is roughly parabolic (symmetrical). If it were perfectly parabolic, heating would increase the amplitude of vibration but not the average separation.</li>
-                    </ul>
-                </p>
+            <h3 class="text-white font-medium mb-4">1.2. Factors Affecting Thermal Expansion</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                The extent of thermal expansion depends on:
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li><strong class="text-blue-300">Material Type:</strong> Different materials have different strengths of interatomic/intermolecular bonds and different potential energy curves, leading to varying degrees of expansion. For instance, metals generally expand more than ceramics for the same temperature change.</li>
+                <li><strong class="text-blue-300">Temperature Change:</strong> The greater the change in temperature ($\Delta T$), the greater the change in dimension.</li>
+                <li><strong class="text-blue-300">Original Dimensions:</strong> A longer rod will expand more than a shorter rod of the same material for the same temperature change.</li>
+            </ul>
+        </section>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Anharmonicity of Interatomic Potential Energy</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    The key to thermal expansion lies in the <span class="font-bold text-blue-400">asymmetry (anharmonicity)</span> of the interatomic potential energy curve. While the curve is approximately parabolic near the minimum, it becomes asymmetric at larger displacements:
-                    <ul class="list-disc list-inside space-y-3 pl-5 text-lg leading-relaxed mb-6">
-                        <li>On the repulsive side (when atoms get too close), the curve rises very steeply, indicating strong repulsive forces.</li>
-                        <li>On the attractive side (when atoms move further apart), the curve rises more gradually, indicating weaker attractive forces that fall off slowly.</li>
-                    </ul>
-                    This asymmetry means that as atoms vibrate with higher energy, they spend proportionally more time at slightly larger separation distances than at slightly smaller ones.
-                </p>
+        <!-- Section 2: Linear Expansion of Solids -->
+        <section class="mb-16">
+            <h2 class="text-blue-400 font-semibold mb-6">2. Linear Expansion: The One-Dimensional Stretch</h2>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                <strong class="text-blue-300">Linear expansion</strong> describes the change in length of a solid material due to a change in temperature. It is the simplest form of thermal expansion to analyze.
+            </p>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Temperature and Vibrational Amplitude</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    <ul class="list-disc list-inside space-y-3 pl-5 text-lg leading-relaxed mb-6">
-                        <li>When a material is <span class="font-bold text-blue-300">heated</span>, the atoms absorb thermal energy. This absorbed energy increases their <span class="font-bold text-blue-300">kinetic energy</span>, leading to more vigorous vibrations. The <span class="font-semibold text-blue-400">amplitude of their oscillations</span> about their equilibrium positions increases.</li>
-                        <li>Due to the anharmonic nature of the potential energy curve, as the vibrational amplitude increases, the average position of the vibrating atom shifts slightly towards a larger interatomic separation. The atoms effectively move further apart from each other, on average.</li>
-                    </ul>
+            <h3 class="text-white font-medium mb-4">2.1. Formula for Linear Expansion ($\Delta L = \alpha L_0 \Delta T$)</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                The change in length ($\Delta L$) of a material is directly proportional to its original length ($L_0$) and the change in temperature ($\Delta T$).
+            </p>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 overflow-x-auto">
+                <p class="text-blue-300 text-lg font-mono">
+                    $$\Delta L = \alpha L_0 \Delta T$$
                 </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    Imagine a ball rolling in an asymmetric valley. If you give it more energy, it rolls higher up the sides. Because one side (the attractive side) is less steep, the ball will spend more time on that side, meaning its average position shifts towards that side. Similarly, with atoms, as their vibrational energy increases with temperature, their average separation increases.
+            </div>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Where:
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li>$\Delta L = L - L_0$ is the change in length.</li>
+                <li>$L_0$ is the original (initial) length of the material.</li>
+                <li>$\Delta T = T - T_0$ is the change in temperature (final temperature minus initial temperature). Note that a change of $1^\circ \text{C}$ is equivalent to $1 \text{ K}$, so $\Delta T$ can be in Celsius or Kelvin.</li>
+                <li>$\alpha$ (alpha) is the <strong class="text-blue-300">coefficient of linear expansion</strong>. This is a material-specific constant that quantifies how much a material expands or contracts per degree Celsius or Kelvin change in temperature. Its unit is per degree Celsius ($/^\circ \text{C}$) or per Kelvin ($/K$).</li>
+            </ul>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                The new length ($L$) after expansion can be written as:
+            </p>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 overflow-x-auto">
+                <p class="text-blue-300 text-lg font-mono">
+                    $$L = L_0 (1 + \alpha \Delta T)$$
                 </p>
+            </div>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">From Microscopic to Macroscopic</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    This increase in the average interatomic distance, though tiny for any single pair of atoms, is cumulative across the vast number of atoms in a macroscopic material. When multiplied by billions of atoms along a given dimension, these minute increases in interatomic spacing result in a measurable <span class="font-bold text-blue-400">macroscopic expansion</span> of the material's dimensions (length, area, and volume).
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    Conversely, when a material is <span class="font-bold text-blue-300">cooled</span>, the vibrational energy of the atoms decreases. Their amplitudes of oscillation diminish, and their average separation distance decreases, leading to <span class="font-bold text-blue-400">thermal contraction</span>.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    This detailed microscopic explanation provides a robust foundation for the empirical laws of thermal expansion, which we will now quantify.
-                </p>
-            </section>
+            <h3 class="text-white font-medium mb-4">2.2. Typical Values of $\alpha$</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Values of $\alpha$ vary widely for different materials. For common metals, $\alpha$ is typically in the order of $10^{-6} /^\circ \text{C}$.
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li>Steel: $\approx 11 \times 10^{-6} /^\circ \text{C}$</li>
+                <li>Aluminum: $\approx 23 \times 10^{-6} /^\circ \text{C}$</li>
+                <li>Concrete: $\approx 12 \times 10^{-6} /^\circ \text{C}$</li>
+                <li>Glass (Pyrex): $\approx 3 \times 10^{-6} /^\circ \text{C}$</li>
+            </ul>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                The small magnitude of $\alpha$ values indicates that for everyday temperature changes, the dimensional changes are usually very small, but they become critical for large structures or precise instruments.
+            </p>
+        </section>
 
-            <!-- Section 2: Linear Thermal Expansion -->
-            <section class="bg-gray-800 bg-opacity-70 rounded-2xl p-10 shadow-xl border border-gray-700 transition duration-300 ease-in-out hover:shadow-2xl">
-                <h2 class="text-4xl font-bold text-blue-400 mb-6 border-b-2 border-blue-500 pb-3">Linear Thermal Expansion</h2>
-                <p class="text-lg leading-relaxed mb-6">
-                    <span class="font-bold text-blue-400">Linear thermal expansion</span> describes the change in length of a one-dimensional solid object (like a rod, wire, or beam) when its temperature changes. This is the simplest form of thermal expansion to quantify and understand.
-                </p>
+        <!-- Section 3: Area Expansion of Solids -->
+        <section class="mb-16">
+            <h2 class="text-blue-400 font-semibold mb-6">3. Area Expansion: The Two-Dimensional Stretch</h2>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                When a solid material expands, its length changes in all dimensions. Therefore, its surface area also changes. <strong class="text-blue-300">Area expansion</strong> (or superficial expansion) describes the change in the surface area of a material due to a change in temperature.
+            </p>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Quantifying Linear Expansion</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    For a given material, the change in length ($\Delta L$) is directly proportional to the original length ($L_0$) and the change in temperature ($\Delta T$). This relationship is expressed by the formula:
-                    $$ \Delta L = \alpha L_0 \Delta T $$
-                    Where:
-                    <ul class="list-disc list-inside space-y-2 pl-5 text-lg leading-relaxed mb-4">
-                        <li>$\Delta L$: The change in length (final length - initial length). If $\Delta T$ is positive, $\Delta L$ is positive (expansion). If $\Delta T$ is negative, $\Delta L$ is negative (contraction).</li>
-                        <li>$L_0$: The original length of the object at the initial temperature.</li>
-                        <li>$\Delta T$: The change in temperature (final temperature - initial temperature), typically measured in degrees Celsius ($^\circ C$) or Kelvin (K). Since it's a *change* in temperature, the numerical value is the same in Celsius and Kelvin ($1^\circ C$ change is equal to $1 \text{ K}$ change).</li>
-                        <li>$\alpha$ (alpha): The <span class="font-bold text-blue-400">coefficient of linear thermal expansion</span>. This is a material-specific property that indicates how much a material expands or contracts per unit length per degree of temperature change.</li>
-                    </ul>
+            <h3 class="text-white font-medium mb-4">3.1. Formula for Area Expansion ($\Delta A = 2\alpha A_0 \Delta T$)</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                The change in area ($\Delta A$) of a material is proportional to its original area ($A_0$) and the change in temperature ($\Delta T$).
+            </p>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 overflow-x-auto">
+                <p class="text-blue-300 text-lg font-mono">
+                    $$\Delta A = \beta_{area} A_0 \Delta T$$
                 </p>
+            </div>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Where $\beta_{area}$ is the coefficient of area expansion. For isotropic materials (materials that expand uniformly in all directions), the coefficient of area expansion is approximately twice the coefficient of linear expansion:
+            </p>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 overflow-x-auto">
+                <p class="text-blue-300 text-lg font-mono">
+                    $$\beta_{area} \approx 2\alpha$$
+                </p>
+            </div>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                So, the formula for area expansion can be written as:
+            </p>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 overflow-x-auto">
+                <p class="text-blue-300 text-lg font-mono">
+                    $$\Delta A \approx 2\alpha A_0 \Delta T$$
+                </p>
+            </div>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                The new area ($A$) after expansion can be written as:
+            </p>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 overflow-x-auto">
+                <p class="text-blue-300 text-lg font-mono">
+                    $$A = A_0 (1 + 2\alpha \Delta T)$$
+                </p>
+            </div>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Coefficient of Linear Thermal Expansion ($\alpha$)</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    The coefficient $\alpha$ is a crucial characteristic of a material.
-                    <ul class="list-disc list-inside space-y-3 pl-5 text-lg leading-relaxed mb-6">
-                        <li><span class="font-bold text-blue-300">Units:</span> The units of $\alpha$ are inverse temperature, typically per degree Celsius ($/^\circ C$ or $^\circ C^{-1}$) or per Kelvin ($/K$ or $K^{-1}$). This is because $\frac{\Delta L}{L_0}$ is dimensionless, so $\alpha$ must have units that cancel out $\Delta T$.</li>
-                        <li><span class="font-bold text-blue-300">Typical Values:</span> For most common solids, $\alpha$ ranges from about $1 \times 10^{-6} /^\circ C$ to $50 \times 10^{-6} /^\circ C$.
-                            <table class="min-w-full bg-gray-700 rounded-lg shadow-md mt-4 text-left">
-                                <thead class="bg-gray-600">
-                                    <tr>
-                                        <th class="py-3 px-4 text-sm font-semibold text-blue-200 uppercase tracking-wider rounded-tl-lg">Material</th>
-                                        <th class="py-3 px-4 text-sm font-semibold text-blue-200 uppercase tracking-wider rounded-tr-lg">Approximate $\alpha$ ($/^\circ C \times 10^{-6}$)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td class="py-2 px-4 border-b border-gray-600">Quartz (fused silica)</td><td class="py-2 px-4 border-b border-gray-600">0.5</td></tr>
-                                    <tr><td class="py-2 px-4 border-b border-gray-600">Invar (Nickel-Iron Alloy)</td><td class="py-2 px-4 border-b border-gray-600">1.2</td></tr>
-                                    <tr><td class="py-2 px-4 border-b border-gray-600">Glass (Pyrex)</td><td class="py-2 px-4 border-b border-gray-600">3.2</td></tr>
-                                    <tr><td class="py-2 px-4 border-b border-gray-600">Steel</td><td class="py-2 px-4 border-b border-gray-600">11-13</td></tr>
-                                    <tr><td class="py-2 px-4 border-b border-gray-600">Concrete</td><td class="py-2 px-4 border-b border-gray-600">12</td></tr>
-                                    <tr><td class="py-2 px-4 border-b border-gray-600">Copper</td><td class="py-2 px-4 border-b border-gray-600">17</td></tr>
-                                    <tr><td class="py-2 px-4 border-b border-gray-600">Brass</td><td class="py-2 px-4 border-b border-gray-600">19</td></tr>
-                                    <tr><td class="py-2 px-4 border-b border-gray-600">Aluminum</td><td class="py-2 px-4 border-b border-gray-600">23</td></tr>
-                                    <tr><td class="py-2 px-4">Lead</td><td class="py-2 px-4">29</td></tr>
-                                </tbody>
-                            </table>
-                        </li>
-                        <li><span class="font-bold text-blue-300">Temperature Dependence:</span> For most materials, $\alpha$ is approximately constant over a significant temperature range. However, for very large temperature changes or near phase transitions, $\alpha$ can vary. For engineering applications, average values are often used.</li>
-                    </ul>
-                </p>
+            <h3 class="text-white font-medium mb-4">3.2. Simple Derivation for $\beta_{area} \approx 2\alpha$</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Consider a square plate of original side length $L_0$ and original area $A_0 = L_0^2$. When its temperature changes by $\Delta T$, its new side length becomes $L = L_0 (1 + \alpha \Delta T)$. The new area $A$ will be:
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                $A = L^2 = [L_0 (1 + \alpha \Delta T)]^2 = L_0^2 (1 + \alpha \Delta T)^2 = A_0 (1 + 2\alpha \Delta T + (\alpha \Delta T)^2)$.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Since $\alpha \Delta T$ is typically a very small number (e.g., $10^{-6} \times 10 = 10^{-5}$), the term $(\alpha \Delta T)^2$ is even smaller (e.g., $10^{-10}$) and can be neglected.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Thus, $A \approx A_0 (1 + 2\alpha \Delta T)$, which implies $\Delta A = A - A_0 \approx A_0 (2\alpha \Delta T)$, confirming $\beta_{area} \approx 2\alpha$.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                This also means that holes or openings in a material expand or contract in the same way as the surrounding material. For example, if you heat a metal washer, the hole in the middle also gets larger.
+            </p>
+        </section>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Final Length Calculation</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    The final length ($L$) of an object after a temperature change can be calculated as:
-                    $$ L = L_0 + \Delta L $$
-                    Substituting the formula for $\Delta L$:
-                    $$ L = L_0 + \alpha L_0 \Delta T $$
-                    $$ L = L_0 (1 + \alpha \Delta T) $$
-                </p>
+        <!-- Section 4: Volume Expansion of Solids and Liquids -->
+        <section class="mb-16">
+            <h2 class="text-blue-400 font-semibold mb-6">4. Volume Expansion: The Three-Dimensional Change</h2>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                <strong class="text-blue-300">Volume expansion</strong> (or cubical expansion) describes the change in the total volume of a substance due to a change in temperature. This applies to solids, liquids, and gases. For solids, it is a three-dimensional extension of linear expansion. For liquids and gases, volume expansion is the primary form of thermal expansion.
+            </p>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Examples and Applications of Linear Expansion</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    Linear expansion has significant practical implications:
-                    <ul class="list-disc list-inside space-y-3 pl-5 text-lg leading-relaxed mb-6">
-                        <li><span class="font-bold text-blue-300">Railway Tracks:</span> Gaps, known as <span class="font-semibold text-blue-400">expansion joints</span>, are left between sections of railway tracks to allow for expansion in hot weather. Without these gaps, the tracks would buckle and warp, leading to derailments.</li>
-                        <li><span class="font-bold text-blue-300">Bridges and Roads:</span> Similar to railway tracks, large bridges and concrete roads incorporate expansion joints to accommodate changes in length due to temperature fluctuations. This prevents cracking and structural damage.</li>
-                        <li><span class="font-bold text-blue-300">Thermometers:</span> Liquid-in-glass thermometers work on the principle of linear (or rather, volume) thermal expansion. The liquid (mercury or alcohol) expands and contracts more significantly than the glass tube, causing the liquid column to rise and fall with temperature.</li>
-                        <li><span class="font-bold text-blue-300">Metal Rivets:</span> In construction, hot metal rivets are sometimes used. When cooled, they contract, creating a very tight and strong joint that pulls the plates together.</li>
-                        <li><span class="font-bold text-blue-300">Overhead Power Lines:</span> Electrical power lines sag more in summer than in winter. This is because the metal cables expand in the heat of summer, increasing their length and causing them to droop. Engineers must account for this when installing lines to prevent them from snapping in winter (due to excessive tension from contraction) or touching the ground in summer.</li>
-                        <li><span class="font-bold text-blue-300">Thermostats and Bimetallic Strips:</span> A bimetallic strip consists of two different metals (e.g., brass and steel) bonded together. Since they have different coefficients of linear expansion, when heated, one metal expands more than the other, causing the strip to bend. This bending motion is used to open or close electrical circuits in thermostats, fire alarms, and other temperature-sensitive devices.</li>
-                    </ul>
+            <h3 class="text-white font-medium mb-4">4.1. Formula for Volume Expansion ($\Delta V = \beta V_0 \Delta T$)</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                The change in volume ($\Delta V$) of a material is proportional to its original volume ($V_0$) and the change in temperature ($\Delta T$).
+            </p>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 overflow-x-auto">
+                <p class="text-blue-300 text-lg font-mono">
+                    $$\Delta V = \beta V_0 \Delta T$$
                 </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    Understanding linear thermal expansion is fundamental for civil, mechanical, and materials engineers to ensure the safety, durability, and functionality of structures and devices that operate across varying temperature ranges.
+            </div>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Where:
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li>$\Delta V = V - V_0$ is the change in volume.</li>
+                <li>$V_0$ is the original (initial) volume of the material.</li>
+                <li>$\Delta T = T - T_0$ is the change in temperature.</li>
+                <li>$\beta$ (beta) is the <strong class="text-blue-300">coefficient of volume expansion</strong>. This is a material-specific constant. Its unit is per degree Celsius ($/^\circ \text{C}$) or per Kelvin ($/K$).</li>
+            </ul>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                The new volume ($V$) after expansion can be written as:
+            </p>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 overflow-x-auto">
+                <p class="text-blue-300 text-lg font-mono">
+                    $$V = V_0 (1 + \beta \Delta T)$$
                 </p>
-            </section>
+            </div>
 
-            <!-- Section 3: Area Thermal Expansion -->
-            <section class="bg-gray-800 bg-opacity-70 rounded-2xl p-10 shadow-xl border border-gray-700 transition duration-300 ease-in-out hover:shadow-2xl">
-                <h2 class="text-4xl font-bold text-blue-400 mb-6 border-b-2 border-blue-500 pb-3">Area Thermal Expansion</h2>
-                <p class="text-lg leading-relaxed mb-6">
-                    While linear thermal expansion deals with changes in one dimension, <span class="font-bold text-blue-400">area thermal expansion</span> (also known as superficial expansion) describes the change in the surface area of a two-dimensional solid object due to a change in temperature.
+            <h3 class="text-white font-medium mb-4">4.2. Relation for Solids: $\beta \approx 3\alpha$</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                For isotropic solid materials, the coefficient of volume expansion is approximately three times the coefficient of linear expansion:
+            </p>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 overflow-x-auto">
+                <p class="text-blue-300 text-lg font-mono">
+                    $$\beta \approx 3\alpha$$
                 </p>
+            </div>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                This can be derived similarly to area expansion by considering a cube of side $L_0$ and volume $V_0 = L_0^3$. Its new volume $V = L^3 = [L_0 (1 + \alpha \Delta T)]^3 = V_0 (1 + 3\alpha \Delta T + 3(\alpha \Delta T)^2 + (\alpha \Delta T)^3)$. Neglecting the higher-order terms (since $\alpha \Delta T$ is small) yields $\Delta V \approx V_0 (3\alpha \Delta T)$.
+            </p>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Quantifying Area Expansion</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    Consider a rectangular plate with original length $L_0$ and original width $W_0$ at an initial temperature. Its original area is $A_0 = L_0 W_0$.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    When the temperature changes by $\Delta T$, both the length and the width will expand (or contract) according to the linear expansion formula:
-                    $$ L = L_0 (1 + \alpha \Delta T) $$
-                    $$ W = W_0 (1 + \alpha \Delta T) $$
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    The new area ($A$) will be:
-                    $$ A = L \times W = [L_0 (1 + \alpha \Delta T)] \times [W_0 (1 + \alpha \Delta T)] $$
-                    $$ A = L_0 W_0 (1 + \alpha \Delta T)^2 $$
-                    $$ A = A_0 (1 + 2\alpha \Delta T + (\alpha \Delta T)^2) $$
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    Since $\alpha$ is typically a very small number (on the order of $10^{-6}$), and $\Delta T$ is often not excessively large, the term $(\alpha \Delta T)^2$ is extremely small (e.g., $(10^{-6} \times 100)^2 = (10^{-4})^2 = 10^{-8}$) and can be safely neglected for most practical purposes.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    Therefore, the approximate final area is:
-                    $$ A \approx A_0 (1 + 2\alpha \Delta T) $$
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    The change in area ($\Delta A$) is then:
-                    $$ \Delta A = A - A_0 = A_0 (1 + 2\alpha \Delta T) - A_0 $$
-                    $$ \Delta A = A_0 (2\alpha \Delta T) $$
-                    $$ \Delta A = (2\alpha) A_0 \Delta T $$
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    This formula is often written using a new coefficient, $\alpha_A$ (or $\gamma$), the <span class="font-bold text-blue-400">coefficient of area thermal expansion</span>:
-                    $$ \Delta A = \alpha_A A_0 \Delta T $$
-                    Where, for isotropic materials (materials that expand uniformly in all directions), we find that:
-                    $$ \alpha_A \approx 2\alpha $$
-                </p>
-                <p class="text-lg leading-relaxed mb-6 text-center text-xl font-bold text-blue-400">
-                    So, the formula for area expansion is approximately:
-                    $$ \Delta A = 2\alpha A_0 \Delta T $$
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    This means that the area expands approximately twice as much as the linear dimension for the same temperature change.
-                </p>
+            <h3 class="text-white font-medium mb-4">4.3. Volume Expansion of Liquids</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Liquids do not have a fixed shape, so only their volume expansion is relevant. Liquids generally expand significantly more than solids for the same temperature change. For example, the $\beta$ for mercury is about $180 \times 10^{-6} /^\circ \text{C}$, much higher than most solids. This property is utilized in liquid-in-glass thermometers.
+            </p>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Examples and Applications of Area Expansion</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    Area expansion is important in various scenarios:
-                    <ul class="list-disc list-inside space-y-3 pl-5 text-lg leading-relaxed mb-6">
-                        <li><span class="font-bold text-blue-300">Metal Plates and Sheets:</span> In manufacturing or construction, changes in the dimensions of large metal sheets due to temperature can be significant. For instance, in roofing, corrugated metal sheets are used to allow for expansion and contraction without warping.</li>
-                        <li><span class="font-bold text-blue-300">Holes in Plates:</span> An interesting aspect of area expansion is that a hole in a heated plate also expands, just as if it were filled with the same material. This is because the material surrounding the hole expands, pushing the boundaries of the hole outwards. This principle is used in applications like shrink-fitting (e.g., heating a metal ring to fit it over a slightly larger shaft, then allowing it to cool and grip tightly).</li>
-                        <li><span class="font-bold text-blue-300">Glassware:</span> When hot liquids are poured into cold glass, the inner surface expands rapidly while the outer surface remains cold. If the expansion is too uneven, the glass can crack due to thermal stress. Pyrex (borosilicate glass) is designed to have a very low coefficient of thermal expansion, making it resistant to thermal shock.</li>
-                    </ul>
-                </p>
-            </section>
+            <h3 class="text-white font-medium mb-4">4.4. Anomalous Expansion of Water</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Water exhibits a peculiar and critically important behavior known as <strong class="text-blue-300">anomalous expansion</strong>. Unlike most substances, which contract continuously as they cool, water contracts until it reaches its maximum density at <strong class="text-blue-300">$4^\circ \text{C}$</strong>. As it cools further from $4^\circ \text{C}$ to $0^\circ \text{C}$, it expands instead of contracting. When it freezes into ice at $0^\circ \text{C}$, it expands even more significantly (about 9%).
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li><strong class="text-blue-300">Biological Importance:</strong> This anomalous expansion is vital for aquatic life. In winter, as a lake cools, the densest water ($4^\circ \text{C}$) sinks to the bottom. Water colder than $4^\circ \text{C}$ (and ice) is less dense and floats on top, insulating the warmer water below. This prevents entire bodies of water from freezing solid, allowing aquatic organisms to survive.</li>
+                <li><strong class="text-blue-300">Practical Implications:</strong> This expansion upon freezing is why water pipes can burst in cold weather and why roads are damaged by repeated freeze-thaw cycles.</li>
+            </ul>
+        </section>
 
-            <!-- Section 4: Volume Thermal Expansion -->
-            <section class="bg-gray-800 bg-opacity-70 rounded-2xl p-10 shadow-xl border border-gray-700 transition duration-300 ease-in-out hover:shadow-2xl">
-                <h2 class="text-4xl font-bold text-blue-400 mb-6 border-b-2 border-blue-500 pb-3">Volume Thermal Expansion</h2>
-                <p class="text-lg leading-relaxed mb-6">
-                    <span class="font-bold text-blue-400">Volume thermal expansion</span> (also known as cubical expansion) is the most general form of thermal expansion, describing the change in the three-dimensional volume of a substance – whether solid, liquid, or gas – due to a change in temperature.
-                </p>
+        <!-- Section 5: Applications in Engineering and Everyday Phenomena -->
+        <section class="mb-16">
+            <h2 class="text-blue-400 font-semibold mb-6">5. Applications in Engineering and Everyday Phenomena</h2>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                The understanding of thermal expansion is indispensable across a vast array of engineering disciplines and explains many common observations.
+            </p>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Quantifying Volume Expansion (Solids)</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    Similar to linear and area expansion, the change in volume ($\Delta V$) for a solid is directly proportional to its original volume ($V_0$) and the change in temperature ($\Delta T$).
-                    Consider a cubical solid with original side length $L_0$. Its original volume is $V_0 = L_0^3$.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    When the temperature changes by $\Delta T$, each side expands according to linear expansion:
-                    $$ L = L_0 (1 + \alpha \Delta T) $$
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    The new volume ($V$) will be:
-                    $$ V = L^3 = [L_0 (1 + \alpha \Delta T)]^3 $$
-                    $$ V = L_0^3 (1 + \alpha \Delta T)^3 $$
-                    $$ V = V_0 (1 + 3\alpha \Delta T + 3(\alpha \Delta T)^2 + (\alpha \Delta T)^3) $$
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    Again, since $\alpha \Delta T$ is typically very small, terms involving $(\alpha \Delta T)^2$ and $(\alpha \Delta T)^3$ are negligible. So, the approximate final volume is:
-                    $$ V \approx V_0 (1 + 3\alpha \Delta T) $$
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    The change in volume ($\Delta V$) is then:
-                    $$ \Delta V = V - V_0 = V_0 (1 + 3\alpha \Delta T) - V_0 $$
-                    $$ \Delta V = V_0 (3\alpha \Delta T) $$
-                    $$ \Delta V = (3\alpha) V_0 \Delta T $$
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    This formula is generally expressed using the <span class="font-bold text-blue-400">coefficient of volume thermal expansion ($\beta$)</span>:
-                    $$ \Delta V = \beta V_0 \Delta T $$
-                    Where, for isotropic solids:
-                    $$ \beta \approx 3\alpha $$
-                </p>
-                <p class="text-lg leading-relaxed mb-6 text-center text-xl font-bold text-blue-400">
-                    So, the formula for volume expansion is approximately:
-                    $$ \Delta V = 3\alpha V_0 \Delta T $$
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    The units of $\beta$ are also per degree Celsius ($/^\circ C$) or per Kelvin ($/K$).
-                </p>
+            <h3 class="text-white font-medium mb-4">5.1. Expansion Joints</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Large structures like <strong class="text-blue-300">bridges, railway tracks, and concrete pavements</strong> must incorporate <strong class="text-blue-300">expansion joints</strong> (or gaps) to allow for thermal expansion and contraction. Without these gaps, temperature changes would induce enormous stresses that could buckle or crack the structure.
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li>Bridges have interlocking fingers or sliding plates to accommodate movement.</li>
+                <li>Railway tracks have small gaps between segments.</li>
+                <li>Concrete sidewalks and roads have intentional cuts.</li>
+            </ul>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Volume Expansion of Liquids</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    Liquids, unlike solids, do not have fixed shapes and thus do not undergo linear or area expansion in a meaningful way; only their volume changes significantly with temperature. Liquids generally expand much more than solids for the same temperature change. Therefore, liquids have their own distinct coefficient of volume thermal expansion, $\beta_{\text{liquid}}$, which is typically much larger than $\beta$ for solids.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    The formula for liquid volume expansion is the same:
-                    $$ \Delta V = \beta_{\text{liquid}} V_0 \Delta T $$
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    <table class="min-w-full bg-gray-700 rounded-lg shadow-md mt-4 text-left">
-                        <thead class="bg-gray-600">
-                            <tr>
-                                <th class="py-3 px-4 text-sm font-semibold text-blue-200 uppercase tracking-wider rounded-tl-lg">Liquid</th>
-                                <th class="py-3 px-4 text-sm font-semibold text-blue-200 uppercase tracking-wider rounded-tr-lg">Approximate $\beta$ ($/^\circ C \times 10^{-6}$)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td class="py-2 px-4 border-b border-gray-600">Mercury</td><td class="py-2 px-4 border-b border-gray-600">180</td></tr>
-                            <tr><td class="py-2 px-4 border-b border-gray-600">Ethanol</td><td class="py-2 px-4 border-b border-gray-600">750</td></tr>
-                            <tr><td class="py-2 px-4 border-b border-gray-600">Glycerin</td><td class="py-2 px-4 border-b border-gray-600">485</td></tr>
-                            <tr><td class="py-2 px-4">Gasoline</td><td class="py-2 px-4">950</td></tr>
-                        </tbody>
-                    </table>
-                </p>
+            <h3 class="text-white font-medium mb-4">5.2. Bimetallic Strips and Thermostats</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                A <strong class="text-blue-300">bimetallic strip</strong> is made of two different metals bonded together, each with a different coefficient of linear expansion. When heated, the metal with the higher $\alpha$ expands more than the other, causing the strip to bend. When cooled, it bends in the opposite direction.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                This bending action is used in many applications:
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li><strong class="text-blue-300">Thermostats:</strong> The bending of the strip can open or close an electrical circuit, turning heating or cooling systems on or off.</li>
+                <li><strong class="text-blue-300">Automatic Circuit Breakers:</strong> Overcurrent heats a bimetallic strip, causing it to bend and trip the circuit.</li>
+                <li><strong class="text-blue-300">Thermometers:</strong> Some older thermometers use the bending of a bimetallic coil to indicate temperature.</li>
+            </ul>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Anomalous Expansion of Water</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    Water exhibits a unique and crucial property known as <span class="font-bold text-blue-400">anomalous expansion</span>. Unlike most substances, which contract continuously as they cool, water contracts as its temperature drops from $100^\circ C$ down to $4^\circ C$, but then it begins to <span class="font-semibold text-blue-400">expand</span> as it cools further from $4^\circ C$ to $0^\circ C$. As a result, water has its maximum density at $4^\circ C$.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    <ul class="list-disc list-inside space-y-3 pl-5 text-lg leading-relaxed mb-6">
-                        <li>From $100^\circ C$ to $4^\circ C$, water behaves normally, contracting as temperature decreases.</li>
-                        <li>At $4^\circ C$, water reaches its maximum density (and minimum volume).</li>
-                        <li>From $4^\circ C$ to $0^\circ C$, water expands as it cools further.</li>
-                        <li>When water freezes into ice at $0^\circ C$, it undergoes a significant expansion (about 9% increase in volume), which is why ice floats.</li>
-                    </ul>
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    <span class="font-bold text-blue-300">Significance of Anomalous Expansion:</span> This peculiar behavior of water is incredibly important for aquatic life and the environment:
-                    <ul class="list-circle list-inside ml-5 text-lg leading-relaxed">
-                        <li>In winter, as the surface of a lake cools, the densest water ($4^\circ C$) sinks to the bottom. Water colder than $4^\circ C$ (e.g., $3^\circ C, 2^\circ C, 1^\circ C$) is less dense and stays near the surface.</li>
-                        <li>When the surface water reaches $0^\circ C$, it freezes, forming a layer of ice on top. This ice layer acts as an insulator, protecting the denser, warmer water ($4^\circ C$) at the bottom from freezing.</li>
-                        <li>This allows aquatic organisms to survive the winter in the unfrozen water beneath the ice. Without this anomalous expansion, lakes and oceans would freeze solid from the bottom up, making most aquatic life impossible.</li>
-                    </ul>
-                </p>
+            <h3 class="text-white font-medium mb-4">5.3. Fitting and Shrink-Fitting</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Thermal expansion is used in manufacturing processes to create tight fits. For example, a metal ring can be heated to expand it, slipped over a shaft, and then allowed to cool. As it cools, it contracts, forming a very strong, tight fit (this is called <strong class="text-blue-300">shrink-fitting</strong>). This technique is used for fitting metal tires onto locomotive wheels or components in heavy machinery.
+            </p>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Applications of Volume Expansion</h3>
-                <ul class="list-disc list-inside space-y-3 pl-5 text-lg leading-relaxed mb-6">
-                    <li><span class="font-bold text-blue-300">Fluid Thermometers:</span> As mentioned, these rely on the relatively large volume expansion of liquids like mercury or alcohol.</li>
-                    <li><span class="font-bold text-blue-300">Pipelines for Hot Fluids:</span> Pipelines carrying hot oil or steam require expansion loops or bellows to accommodate the significant volume expansion of the pipe material.</li>
-                    <li><span class="font-bold text-blue-300">Hydraulic Systems:</span> Changes in temperature can affect the volume of hydraulic fluids, which can impact the precision and performance of hydraulic systems.</li>
-                    <li><span class="font-bold text-blue-300">Storage Tanks:</span> Large tanks storing liquids (e.g., fuel tanks) must be designed to accommodate the volume expansion of the liquid during temperature fluctuations to prevent rupture or overflow.</li>
-                </ul>
-            </section>
+            <h3 class="text-white font-medium mb-4">5.4. Other Everyday Examples</h3>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li><strong class="text-blue-300">Thermometers:</strong> Liquid-in-glass thermometers rely on the volume expansion of a liquid (like mercury or alcohol) to indicate temperature.</li>
+                <li><strong class="text-blue-300">Hot Water Tanks:</strong> Expansion tanks are often installed in hot water heating systems to accommodate the volume expansion of water as it heats up, preventing excessive pressure buildup.</li>
+                <li><strong class="text-blue-300">Dental Fillings:</strong> Dentists use materials for fillings that have coefficients of thermal expansion similar to that of tooth enamel to prevent cracking or loosening due to temperature changes from food and drinks.</li>
+                <li><strong class="text-blue-300">Power Lines:</strong> Electrical power lines sag more in summer and are tauter in winter due to thermal expansion and contraction. They must be installed with sufficient slack to prevent snapping in cold weather.</li>
+            </ul>
+        </section>
 
-            <!-- Section 5: Thermal Stress -->
-            <section class="bg-gray-800 bg-opacity-70 rounded-2xl p-10 shadow-xl border border-gray-700 transition duration-300 ease-in-out hover:shadow-2xl">
-                <h2 class="text-4xl font-bold text-blue-400 mb-6 border-b-2 border-blue-500 pb-3">Thermal Stress</h2>
-                <p class="text-lg leading-relaxed mb-6">
-                    While allowing for thermal expansion is crucial, there are situations where materials are constrained and cannot freely expand or contract. When this happens, internal forces develop within the material, leading to <span class="font-bold text-blue-400">thermal stress</span>. Thermal stress can be very significant and, if not accounted for, can lead to material deformation, cracking, or even catastrophic failure.
-                </p>
+        <!-- Section 6: Thermal Stress: When Expansion is Constrained -->
+        <section class="mb-16">
+            <h2 class="text-blue-400 font-semibold mb-6">6. Thermal Stress: The Consequences of Constraint</h2>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                While allowing for thermal expansion is critical, sometimes materials are constrained, preventing them from expanding or contracting freely. When this happens, significant internal forces, known as <strong class="text-blue-300">thermal stress</strong>, are generated within the material.
+            </p>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Origin of Thermal Stress</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    Thermal stress arises when a material attempts to change its dimensions due to temperature variation, but this change is prevented by external constraints or by the material's own geometry (e.g., uneven heating).
-                    <ul class="list-disc list-inside space-y-3 pl-5 text-lg leading-relaxed mb-6">
-                        <li><span class="font-bold text-blue-300">Heating a Constrained Material:</span> If a rod is rigidly fixed at both ends and its temperature increases, it tries to expand. Since it cannot, the supports exert compressive forces on the rod, leading to compressive stress within the material.</li>
-                        <li><span class="font-bold text-blue-300">Cooling a Constrained Material:</span> If the same rod cools down, it tries to contract. The supports prevent this, resulting in tensile forces and tensile stress within the material.</li>
-                    </ul>
+            <h3 class="text-white font-medium mb-4">6.1. Origin of Thermal Stress</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                If a material is heated but prevented from expanding, it effectively undergoes a compressive strain. If cooled but prevented from contracting, it undergoes a tensile strain. This strain, coupled with the material's elastic properties (Young's Modulus), leads to stress.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                The thermal strain ($\epsilon_{thermal}$) that *would* occur if free to expand is:
+            </p>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 overflow-x-auto">
+                <p class="text-blue-300 text-lg font-mono">
+                    $$\epsilon_{thermal} = \alpha \Delta T$$
                 </p>
+            </div>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                If this expansion is completely prevented, an equal and opposite mechanical strain is induced. The resulting thermal stress ($\sigma_{thermal}$) is then given by Hooke's Law for elastic materials:
+            </p>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 overflow-x-auto">
+                <p class="text-blue-300 text-lg font-mono">
+                    $$\sigma_{thermal} = Y \epsilon_{thermal} = Y \alpha \Delta T$$
+                </p>
+            </div>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Where $Y$ is Young's Modulus (a measure of material stiffness).
+            </p>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Quantifying Thermal Stress</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    We can quantify thermal stress by considering what would happen if the material were allowed to expand freely and then compressed back to its original length (or vice versa for contraction).
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    The change in length due to thermal expansion is $\Delta L = \alpha L_0 \Delta T$.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    The strain ($\epsilon$) caused by this prevented expansion is:
-                    $$ \epsilon = \frac{\Delta L}{L_0} = \frac{\alpha L_0 \Delta T}{L_0} = \alpha \Delta T $$
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    According to Hooke's Law for elastic materials, stress ($\sigma$) is proportional to strain ($\epsilon$) through the Young's Modulus ($E$), also known as the modulus of elasticity:
-                    $$ \sigma = E \epsilon $$
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    Substituting the thermal strain:
-                    $$ \sigma = E \alpha \Delta T $$
-                </p>
-                <p class="text-lg leading-relaxed mb-6 text-center text-xl font-bold text-blue-400">
-                    This formula represents the thermal stress developed in a material when its thermal expansion/contraction is completely prevented.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    Where:
-                    <ul class="list-disc list-inside space-y-2 pl-5 text-lg leading-relaxed mb-4">
-                        <li>$\sigma$: Thermal stress (units: Pascals, Pa, or pounds per square inch, psi).</li>
-                        <li>$E$: Young's Modulus of the material (units: Pa or psi), a measure of its stiffness.</li>
-                        <li>$\alpha$: Coefficient of linear thermal expansion.</li>
-                        <li>$\Delta T$: Change in temperature.</li>
-                    </ul>
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    It's important to note that if this thermal stress exceeds the material's yield strength (the point at which it begins to deform permanently) or ultimate tensile strength (the point at which it breaks), the material will suffer damage or failure.
-                </p>
+            <h3 class="text-white font-medium mb-4">6.2. Consequences of Thermal Stress</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                If the thermal stress exceeds the material's yield strength (or ultimate tensile/compressive strength), it can lead to:
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li><strong class="text-blue-300">Permanent Deformation:</strong> The material yields and deforms plastically.</li>
+                <li><strong class="text-blue-300">Fracture/Cracking:</strong> Brittle materials, like glass or concrete, can crack or shatter under significant thermal stress. This is common when very hot liquids are poured into cold glass.</li>
+                <li><strong class="text-blue-300">Fatigue:</strong> Repeated cycles of heating and cooling can lead to material fatigue and eventual failure.</li>
+            </ul>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Engineers must meticulously consider thermal stress in the design of components that experience large temperature variations, such as engine parts, pipelines carrying hot fluids, and structural elements exposed to outdoor environments. This often involves selecting materials with appropriate thermal expansion properties or designing structures with features that allow for controlled movement.
+            </p>
+        </section>
 
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Examples and Consequences of Thermal Stress</h3>
-                <ul class="list-disc list-inside space-y-3 pl-5 text-lg leading-relaxed mb-6">
-                    <li><span class="font-bold text-blue-300">Cracking of Glassware/Ceramics:</span> Pouring hot water into a cold glass can cause it to crack. The inner surface expands rapidly while the outer surface remains cold and rigid. This differential expansion creates significant tensile stress on the outer surface (or compressive stress on the inner surface), exceeding the material's strength.</li>
-                    <li><span class="font-bold text-blue-300">Thermal Shock:</span> This phenomenon occurs when a material experiences a rapid temperature change, leading to large internal stresses and potential fracture. Materials with low thermal expansion coefficients (like fused silica/quartz) and high thermal conductivity are more resistant to thermal shock.</li>
-                    <li><span class="font-bold text-blue-300">Concrete and Masonry:</span> Large concrete slabs or brick walls can crack if not properly designed with expansion joints to relieve thermal stress caused by daily and seasonal temperature fluctuations.</li>
-                    <li><span class="font-bold text-blue-300">Engine Parts:</span> Components in engines (e.g., cylinder heads, pistons) experience large temperature gradients during operation. Engineers must select materials with appropriate thermal expansion properties and design parts to minimize thermal stress and prevent fatigue or cracking.</li>
-                    <li><span class="font-bold text-blue-300">Dental Fillings:</span> Dental fillings must have a coefficient of thermal expansion similar to that of tooth enamel to prevent thermal stress during eating hot or cold foods. Mismatched expansion can lead to discomfort, cracking of the filling or tooth, and eventual failure.</li>
-                </ul>
-                <p class="text-lg leading-relaxed mb-6">
-                    Understanding and mitigating thermal stress is a critical aspect of engineering design across many disciplines, from civil infrastructure to microelectronics.
-                </p>
-            </section>
+        <!-- Conclusion Section -->
+        <section class="mb-16">
+            <h2 class="text-blue-400 font-semibold mb-6">Conclusion: Mastering the Dynamics of Temperature-Induced Changes</h2>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Our comprehensive study of <strong class="text-blue-300">thermal expansion</strong> has revealed its fundamental role in the behavior of matter. We've understood its microscopic origins in increased atomic vibrations and quantified its effects in three dimensions: <strong class="text-blue-300">linear expansion ($\Delta L = \alpha L_0 \Delta T$)</strong>, <strong class="text-blue-300">area expansion ($\Delta A = 2\alpha A_0 \Delta T$)</strong>, and <strong class="text-blue-300">volume expansion ($\Delta V = \beta V_0 \Delta T$)</strong>. We established the relationships between these coefficients for solids ($\beta \approx 3\alpha$ and $\beta_{area} \approx 2\alpha$) and explored the distinct characteristics of volume expansion in liquids, particularly the crucial <strong class="text-blue-300">anomalous expansion of water</strong>.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                The practical implications of thermal expansion are vast and critical for engineering. From the deliberate design of <strong class="text-blue-300">expansion joints</strong> in bridges and roads to the clever operation of <strong class="text-blue-300">bimetallic strips</strong> in thermostats, and the strategic use of <strong class="text-blue-300">shrink-fitting</strong> in manufacturing, understanding these principles is indispensable. Conversely, neglecting thermal expansion can lead to detrimental <strong class="text-blue-300">thermal stress</strong>, causing materials to deform or fracture.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed">
+                At Whizmath, we hope this comprehensive lesson has deepened your appreciation for how temperature subtly, yet powerfully, influences the physical dimensions of objects. This knowledge is not only foundational to physics but also vital for anyone engaged in design, construction, or simply observing the fascinating thermal world around them. Keep exploring, keep questioning, and continue to master the dynamic interplay between heat and matter!
+            </p>
+        </section>
 
-            <!-- Section 6: Applications in Engineering -->
-            <section class="bg-gray-800 bg-opacity-70 rounded-2xl p-10 shadow-xl border border-gray-700 transition duration-300 ease-in-out hover:shadow-2xl">
-                <h2 class="text-4xl font-bold text-blue-400 mb-6 border-b-2 border-blue-500 pb-3">Applications of Thermal Expansion in Engineering</h2>
-                <p class="text-lg leading-relaxed mb-6">
-                    Thermal expansion is not merely a phenomenon to be accounted for; it is also a principle that is ingeniously utilized in various engineering applications. Designers and engineers leverage the predictable expansion and contraction of materials to create functional devices, ensure structural integrity, and achieve precision.
-                </p>
-
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Expansion Joints in Structures</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    This is perhaps one of the most common and visible applications of understanding thermal expansion.
-                    <ul class="list-disc list-inside space-y-3 pl-5 text-lg leading-relaxed mb-6">
-                        <li><span class="font-bold text-blue-300">Bridges:</span> Large bridges are designed with expansion joints at intervals along their deck. These joints, often visible as interlocking metal plates or flexible rubber sections, allow the bridge deck to expand and contract freely with daily and seasonal temperature changes, preventing the buildup of immense thermal stresses that could otherwise damage the structure.</li>
-                        <li><span class="font-bold text-blue-300">Railway Tracks:</span> As discussed, small gaps are intentionally left between steel rails. Without these gaps, the rails would buckle under compressive stress on hot days, leading to dangerous track deformation.</li>
-                        <li><span class="font-bold text-blue-300">Concrete Pavements and Buildings:</span> Concrete slabs in roads, sidewalks, and even large buildings are divided into sections with expansion joints. These joints prevent cracking and spalling due to thermal expansion and contraction.</li>
-                        <li><span class="font-bold text-blue-300">Pipelines:</span> Long pipelines carrying hot fluids (e.g., steam, oil) incorporate expansion loops, bends, or bellows. These flexible sections allow the pipe to expand and contract without overstressing the pipe material or its supports.</li>
-                    </ul>
-                </p>
-
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Bimetallic Strips and Thermostats</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    A <span class="font-bold text-blue-400">bimetallic strip</span> is a clever device that directly exploits the difference in linear thermal expansion coefficients of two bonded metals.
-                    <ul class="list-disc list-inside space-y-3 pl-5 text-lg leading-relaxed mb-6">
-                        <li>Typically, two different metals (e.g., brass and steel) are riveted or welded together along their entire length.</li>
-                        <li>When heated, the metal with the higher coefficient of thermal expansion expands more than the other. This differential expansion forces the strip to bend, with the more expansive metal on the outside of the curve.</li>
-                        <li>When cooled, the reverse happens, and the strip bends in the opposite direction.</li>
-                    </ul>
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    <span class="font-bold text-blue-300">Applications:</span>
-                    <ul class="list-circle list-inside ml-5 text-lg leading-relaxed">
-                        <li><span class="font-bold">Thermostats:</span> In old-style mechanical thermostats, the bending of a bimetallic strip makes or breaks an electrical contact, turning heating or cooling systems on or off when a set temperature is reached.</li>
-                        <li><span class="font-bold">Fire Alarms:</span> Some simple fire alarms use bimetallic strips. When a fire increases the ambient temperature, the strip bends and completes a circuit, activating the alarm.</li>
-                        <li><span class="font-bold">Automotive Flashers:</span> Older car turn signal flashers used a bimetallic strip to repeatedly open and close a circuit, causing the lights to flash.</li>
-                        <li><span class="font-bold">Automatic Circuit Breakers:</span> Some circuit breakers use bimetallic strips that bend and trip a switch when excessive current flow causes overheating.</li>
-                    </ul>
-                </p>
-
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Shrink Fitting</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    Shrink fitting (or interference fitting) is a manufacturing technique that uses thermal expansion to create extremely tight and strong mechanical joints without the need for fasteners or welding.
-                    <ul class="list-disc list-inside space-y-3 pl-5 text-lg leading-relaxed mb-6">
-                        <li>An outer component (e.g., a metal ring, a gear) is heated, causing it to expand.</li>
-                        <li>The expanded outer component is then slid over an inner component (e.g., a shaft, a hub).</li>
-                        <li>As the outer component cools, it contracts and grips the inner component with tremendous force, forming a powerful, permanent joint.</li>
-                        <li>Conversely, "press fitting" uses cooling (e.g., with liquid nitrogen) to shrink an inner component, allowing it to be inserted into a hole, and then it expands as it warms up to room temperature.</li>
-                    </ul>
-                    This method is commonly used for attaching gears to shafts, railway car wheels to axles, and cylinder liners in engine blocks.
-                </p>
-
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Precision Instruments and Components</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    In applications requiring high precision, thermal expansion can be a significant challenge or an enabling factor.
-                    <ul class="list-disc list-inside space-y-3 pl-5 text-lg leading-relaxed mb-6">
-                        <li><span class="font-bold text-blue-300">Clocks and Watches:</span> Early pendulum clocks were susceptible to inaccuracies because the length of the pendulum (and thus its period) changed with temperature. Compensated pendulums (e.g., mercury-filled or gridiron pendulums) were developed to mitigate this effect. Modern watches use alloys like Invar, which has a very low coefficient of thermal expansion, to maintain accuracy over temperature changes.</li>
-                        <li><span class="font-bold text-blue-300">Telescopes and Optical Instruments:</span> Lenses and mirrors in high-precision optical systems must maintain their precise geometry across temperature ranges. Materials with very low thermal expansion, such as fused silica, are often used, or designs incorporate expansion-compensating mechanisms.</li>
-                        <li><span class="font-bold text-blue-300">Dental Materials:</span> As noted earlier, dental fillings and crowns must have thermal expansion properties similar to tooth enamel to prevent stress and failure when consuming hot or cold foods.</li>
-                        <li><span class="font-bold text-blue-300">Semiconductor Manufacturing:</span> The extreme precision required in fabricating integrated circuits means that even tiny thermal expansions can cause defects. Manufacturing environments are often rigorously temperature-controlled.</li>
-                    </ul>
-                </p>
-
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Temperature Measurement (Thermometers)</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    While a simple application, it's fundamental. Liquid-in-glass thermometers rely on the greater volume expansion of the liquid (mercury or alcohol) compared to the glass bulb and capillary tube. As the liquid expands, it rises up the narrow capillary, indicating the temperature.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    These examples illustrate that thermal expansion, while sometimes a problem to be mitigated, is also a powerful tool in the engineer's toolkit, enabling the design and construction of reliable and precise technologies.
-                </p>
-            </section>
-
-            <!-- Section 7: Everyday Phenomena of Thermal Expansion -->
-            <section class="bg-gray-800 bg-opacity-70 rounded-2xl p-10 shadow-xl border border-gray-700 transition duration-300 ease-in-out hover:shadow-2xl">
-                <h2 class="text-4xl font-bold text-blue-400 mb-6 border-b-2 border-blue-500 pb-3">Everyday Phenomena of Thermal Expansion</h2>
-                <p class="text-lg leading-relaxed mb-6">
-                    Thermal expansion isn't just a concept confined to scientific labs or engineering blueprints; it's a constant, often subtle, force at play in our everyday lives. Recognizing these phenomena helps us appreciate the pervasive influence of temperature on the physical world around us.
-                </p>
-
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Stuck Jar Lids</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    A common kitchen conundrum! If a metal jar lid is too tight to open, running it under hot water often solves the problem.
-                    <ul class="list-disc list-inside space-y-2 pl-5 text-lg leading-relaxed mb-4">
-                        <li>The metal lid has a higher coefficient of thermal expansion than the glass jar.</li>
-                        <li>When hot water is applied, the metal lid heats up and expands more rapidly and significantly than the glass jar.</li>
-                        <li>This slight expansion of the lid breaks the tight seal and allows it to be twisted open easily.</li>
-                    </ul>
-                </p>
-
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Cracked Glasses and Ceramics</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    As discussed in the thermal stress section, pouring very hot liquid (like boiling water) into a cold, thick glass or ceramic mug can cause it to crack.
-                    <ul class="list-disc list-inside space-y-2 pl-5 text-lg leading-relaxed mb-4">
-                        <li>The inner surface of the glass comes into immediate contact with the hot liquid and heats up rapidly, attempting to expand.</li>
-                        <li>The outer surface, however, remains relatively cool and rigid.</li>
-                        <li>This creates a significant temperature difference and resulting <span class="font-semibold text-blue-400">thermal stress</span> between the expanding inner layer and the constrained outer layer, which the brittle material cannot withstand, leading to a crack.</li>
-                        <li>Thin glasses or those made of borosilicate (Pyrex) are more resistant because they either allow for more uniform heating or have a much lower coefficient of expansion.</li>
-                    </ul>
-                </p>
-
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Sagging Power Lines</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    Look up at telephone or electrical power lines on a hot summer day versus a cold winter day.
-                    <ul class="list-disc list-inside space-y-2 pl-5 text-lg leading-relaxed mb-4">
-                        <li>In summer, the metal wires expand due to higher temperatures, increasing their length and causing them to sag visibly between poles.</li>
-                        <li>In winter, they contract, becoming tauter.</li>
-                        <li>Engineers deliberately leave some slack when installing these lines to prevent them from snapping in cold weather (due to excessive tension from contraction) or breaking poles in hot weather (due to too much sag).</li>
-                    </ul>
-                </p>
-
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Thermostat Clicking</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    In older mechanical thermostats, you might hear a faint "click" as the heating or cooling system turns on or off. This click is often the sound of a bimetallic strip bending sufficiently to make or break an electrical contact, a direct result of its thermal expansion.
-                </p>
-
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Concrete Driveways and Sidewalks</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    Walk along a concrete sidewalk or driveway and you'll notice it's not one continuous slab but divided into many smaller squares or rectangles.
-                    <ul class="list-disc list-inside space-y-2 pl-5 text-lg leading-relaxed mb-4">
-                        <li>These divisions are essentially <span class="font-semibold text-blue-400">control joints</span> or <span class="font-semibold text-blue-400">expansion joints</span>.</li>
-                        <li>They allow each smaller concrete section to expand and contract independently with temperature changes.</li>
-                        <li>Without these joints, the immense forces generated by thermal expansion and contraction would cause uncontrolled, unsightly cracks throughout the entire slab.</li>
-                    </ul>
-                </p>
-
-                <h3 class="text-3xl font-semibold text-blue-400 mb-4">Density Changes of Liquids</h3>
-                <p class="text-lg leading-relaxed mb-6">
-                    The volume expansion of liquids affects their density. Since mass remains constant, when volume increases, density decreases.
-                    <ul class="list-disc list-inside space-y-2 pl-5 text-lg leading-relaxed mb-4">
-                        <li>This is why hot air rises (it's less dense) and why convection currents occur in liquids and gases.</li>
-                        <li>In very large fuel tanks or during fuel delivery, temperature variations must be accounted for when measuring fuel volume and mass, as the volume changes significantly with temperature.</li>
-                    </ul>
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    These examples highlight that thermal expansion is a ubiquitous phenomenon, constantly shaping the world around us and influencing the design and behavior of countless objects and systems we interact with daily.
-                </p>
-            </section>
-
-            <!-- Conclusion Section -->
-            <section class="bg-gray-800 bg-opacity-70 rounded-2xl p-10 shadow-xl border border-gray-700 transition duration-300 ease-in-out hover:shadow-2xl">
-                <h2 class="text-4xl font-bold text-blue-400 mb-6 border-b-2 border-blue-500 pb-3">Conclusion: The Ubiquity and Importance of Thermal Expansion</h2>
-                <p class="text-lg leading-relaxed mb-6">
-                    Our journey through the principles of <span class="font-bold text-blue-400">Thermal Expansion</span> on <span class="font-semibold text-white">Whizmath</span> has revealed a fundamental aspect of how matter behaves under varying thermal conditions. We've explored the intricate <span class="font-semibold text-blue-400">microscopic dance of atoms</span> that drives this phenomenon, transitioning from the sub-atomic realm to its macroscopic manifestations.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    We've meticulously quantified the changes in <span class="font-bold text-blue-400">length ($\Delta L=\alpha L_0\Delta T$), area ($\Delta A=2\alpha A_0\Delta T$), and volume ($\Delta V=\beta V_0\Delta T$)</span>, understanding the roles of the coefficients of thermal expansion and their relationships. The unique <span class="font-semibold text-blue-400">anomalous expansion of water</span> stood out as a critical natural phenomenon enabling aquatic life.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    Furthermore, we've delved into the significant practical implications, from the potentially destructive forces of <span class="font-bold text-blue-400">thermal stress</span> to the ingenious ways engineers leverage thermal expansion in critical applications like <span class="font-semibold text-blue-400">expansion joints in infrastructure</span>, the functionality of <span class="font-semibold text-blue-400">bimetallic strips in thermostats</span>, and the precision of <span class="font-semibold text-blue-400">shrink fitting</span>. Our exploration also touched upon the numerous <span class="font-semibold text-blue-400">everyday occurrences</span> that demonstrate thermal expansion, from struggling with a tight jar lid to observing sagging power lines.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    The phenomenon of thermal expansion, while often subtle, plays a crucial role in ensuring the safety, stability, and functionality of countless structures, devices, and natural systems. Its understanding is indispensable for physicists, engineers, and anyone seeking a deeper appreciation of the physical world.
-                </p>
-                <p class="text-lg leading-relaxed">
-                    We hope this comprehensive lesson has clarified the principles of thermal expansion and its far-reaching consequences. Continue your exploration of physics and mathematics with <span class="font-semibold text-white">Whizmath</span>!
-                </p>
-            </section>
-
-        </main>
+        <!-- Footer -->
+        <footer class="text-center text-gray-500 text-sm mt-16 pb-8">
+            <p>&copy; 2025 Whizmath. All rights reserved. Designed with passion for physics and mathematics.</p>
+        </footer>
     </div>
 
-    <!-- JavaScript for Three.js Background Animation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Three.js setup for animated background
-        let scene, camera, renderer, particles, particleCount;
-
-        function initThreeJS() {
-            // Scene
-            scene = new THREE.Scene();
-
-            // Camera
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 100;
-
-            // Renderer
-            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), antialias: true, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio); // For sharper rendering on high-DPI screens
-            renderer.setClearColor(0x000000, 0); // Transparent background for the canvas
-
-            // Particles (representing gas molecules)
-            particleCount = 500;
-            const geometry = new THREE.BufferGeometry();
-            const positions = new Float32Array(particleCount * 3);
-            const velocities = new Float32Array(particleCount * 3);
-            const colors = new Float32Array(particleCount * 3); // For particle colors
-
-            const pMaterial = new THREE.PointsMaterial({
-                size: 0.5,
-                vertexColors: true, // Use colors from the geometry
-                transparent: true,
-                opacity: 0.8,
-                blending: THREE.AdditiveBlending // For subtle glow effect
+        // Smooth scrolling for anchor links (if any were added, though not explicitly requested)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
             });
-
-            for (let i = 0; i < particleCount; i++) {
-                // Positions: Randomly distribute particles within a cube
-                positions[i * 3] = (Math.random() * 2 - 1) * 200; // x
-                positions[i * 3 + 1] = (Math.random() * 2 - 1) * 200; // y
-                positions[i * 3 + 2] = (Math.random() * 2 - 1) * 200; // z
-
-                // Velocities: Random initial velocities
-                velocities[i * 3] = (Math.random() * 2 - 1) * 0.1; // vx
-                velocities[i * 3 + 1] = (Math.random() * 2 - 1) * 0.1; // vy
-                velocities[i * 3 + 2] = (Math.random() * 2 - 1) * 0.1; // vz
-
-                // Colors: Subtle blue/purple hues
-                colors[i * 3] = Math.random() * 0.2 + 0.1; // R (low)
-                colors[i * 3 + 1] = Math.random() * 0.4 + 0.2; // G (medium)
-                colors[i * 3 + 2] = Math.random() * 0.6 + 0.4; // B (high)
-            }
-
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-            particles = new THREE.Points(geometry, pMaterial);
-            scene.add(particles);
-
-            // Add a subtle light source
-            const ambientLight = new THREE.AmbientLight(0x404040); // Soft white light
-            scene.add(ambientLight);
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-            directionalLight.position.set(0, 1, 0);
-            scene.add(directionalLight);
-        }
-
-        function animateThreeJS() {
-            requestAnimationFrame(animateThreeJS);
-
-            const positions = particles.geometry.attributes.position.array;
-            const velocities = particles.geometry.userData.velocities || new Float32Array(particleCount * 3);
-            particles.geometry.userData.velocities = velocities; // Store velocities in userData
-
-            const bounds = 150; // Cube boundary for particles
-
-            for (let i = 0; i < particleCount; i++) {
-                // Update position
-                positions[i * 3] += velocities[i * 3];
-                positions[i * 3 + 1] += velocities[i * 3 + 1];
-                positions[i * 3 + 2] += velocities[i * 3 + 2];
-
-                // Boundary collision (simple reflection)
-                if (positions[i * 3] > bounds || positions[i * 3] < -bounds) {
-                    velocities[i * 3] *= -1;
-                    positions[i * 3] = Math.max(-bounds, Math.min(bounds, positions[i * 3])); // Clamp to bounds
-                }
-                if (positions[i * 3 + 1] > bounds || positions[i * 3 + 1] < -bounds) {
-                    velocities[i * 3 + 1] *= -1;
-                    positions[i * 3 + 1] = Math.max(-bounds, Math.min(bounds, positions[i * 3 + 1]));
-                }
-                if (positions[i * 3 + 2] > bounds || positions[i * 3 + 2] < -bounds) {
-                    velocities[i * 3 + 2] *= -1;
-                    positions[i * 3 + 2] = Math.max(-bounds, Math.min(bounds, positions[i * 3 + 2]));
-                }
-            }
-
-            particles.geometry.attributes.position.needsUpdate = true; // Tell Three.js positions have changed
-
-            // Rotate particles for visual effect
-            particles.rotation.y += 0.0005;
-            particles.rotation.x += 0.0002;
-
-            renderer.render(scene, camera);
-        }
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        // Initialize Three.js when the window loads
-        window.onload = function() {
-            initThreeJS();
-            animateThreeJS(); // Start the animation loop
-            window.addEventListener('resize', onWindowResize, false);
-        };
+        });
     </script>
 </body>
 </html>
