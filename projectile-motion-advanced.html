@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projectile Motion & Orbital Mechanics - Whizmath</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Projectile Motion: Beyond the Idealized Path - Whizmath</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
-     crossorigin="anonymous"></script>
-    <!-- MathJax script for rendering LaTeX equations -->
+    <!-- MathJax Configuration -->
     <script type="text/javascript" id="MathJax-script" async
-                      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
     </script>
     <script>
         // Optional: Configure MathJax to process dollar signs for inline math
@@ -26,539 +25,502 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #000; /* Black background */
-            color: #E0E0E0; /* Light gray text for contrast */
-            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #000000; /* Black background */
+            color: #ffffff; /* White text */
         }
-        /* Custom styles for modern feel */
-        .container-padding {
-            padding: 2rem; /* Consistent padding */
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px; /* For horizontal scrollbars */
         }
-        @media (min-width: 768px) {
-            .container-padding {
-                padding: 4rem;
-            }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 10px;
         }
-        .section-card {
-            background-color: #1A1A1A; /* Darker grey for cards */
-            border-radius: 1.5rem; /* More rounded corners */
-            padding: 2.5rem;
-            margin-bottom: 2.5rem;
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.1); /* Subtle cyan glow */
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6; /* Blue-500 for thumb */
+            border-radius: 10px;
         }
-        .section-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.2);
-        }
-        .text-gradient {
-            background: linear-gradient(90deg, #00C9FF, #92FE9D);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .back-button {
-            /* Blue gradient */
-            background: linear-gradient(135deg, #4CAF50, #2196F3); /* Greenish-blue to blue */
-            color: #1A1A1A;
-            padding: 0.75rem 1.5rem;
-            border-radius: 9999px; /* Pill shape */
-            font-weight: 700;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4); /* Blue shadow */
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .back-button:hover {
-            transform: translateY(-3px) scale(1.02);
-            background: linear-gradient(135deg, #2196F3, #4CAF50); /* Invert gradient on hover */
-            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.6); /* Stronger blue shadow */
-        }
-        h1, h2, h3, h4 {
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-        }
-        h1 {
-            font-size: 3.5rem;
-            line-height: 1.2;
-            letter-spacing: -0.05em;
-        }
-        h2 {
-            font-size: 2.5rem;
-            line-height: 1.3;
-        }
-        h3 {
-            font-size: 1.75rem;
-            line-height: 1.4;
-            color: #00C9FF; /* Cyan for subheadings */
-        }
-        p {
-            margin-bottom: 1.25rem;
-        }
-        ul {
-            list-style-type: disc;
-            margin-left: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        ol {
-            list-style-type: decimal;
-            margin-left: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        strong {
-            color: #92FE9D; /* Greenish yellow for emphasis */
-        }
-        .key-term {
-            color: #00C9FF;
-            font-weight: 600;
-        }
-        code {
-            background-color: #2D2D2D;
-            padding: 0.2em 0.4em;
-            border-radius: 0.3em;
-            font-family: 'Fira Code', monospace; /* A nice monospace font */
-            font-size: 0.9em;
-        }
-        pre {
-            background-color: #2D2D2D;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            overflow-x: auto;
-            margin-bottom: 1.5rem;
-        }
-        /* Scroll to top button */
-        #scrollToTopBtn {
-            display: none; /* Hidden by default */
-            position: fixed; /* Fixed/sticky position */
-            bottom: 20px; /* Place the button at the bottom of the page */
-            right: 30px; /* Place the button 30px from the right */
-            z-index: 99; /* Make sure it does not overlap */
-            border: none; /* Remove borders */
-            outline: none; /* Remove outline */
-            background-color: #00C9FF; /* Blue background */
-            color: white; /* White text */
-            cursor: pointer; /* Add a mouse pointer on hover */
-            padding: 15px; /* Some padding */
-            border-radius: 50%; /* Rounded corners */
-            font-size: 18px; /* Increase font size */
-            box-shadow: 0 5px 15px rgba(0, 201, 255, 0.4);
-            transition: all 0.3s ease;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2563eb; /* Blue-600 on hover */
         }
 
-        #scrollToTopBtn:hover {
-            background-color: #92FE9D; /* Darker blue on hover */
-            box-shadow: 0 8px 20px rgba(146, 254, 157, 0.6);
-            transform: translateY(-3px);
+        /* Specific styling for scrollable content, especially tables and equations */
+        .overflow-x-scrollable {
+            overflow-x: auto; /* Enable horizontal scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: #3b82f6 #1a1a1a; /* Firefox */
         }
     </style>
 </head>
-<body class="bg-black text-gray-200 antialiased">
-    <div class="relative min-h-screen pb-20">
-        <!-- Back Button -->
-        <a href="physics.html" class="back-button absolute top-8 left-8 z-10">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Back to Physics
-        </a>
+<body class="bg-black text-white">
+    <!-- Back Button -->
+    <a href="physics.html" class="fixed top-4 left-4 p-3 bg-gray-800 hover:bg-gray-700 text-white rounded-full shadow-lg z-20 transition-all duration-300 ease-in-out transform hover:scale-105" aria-label="Go back to Physics page">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+    </a>
 
+    <div class="relative min-h-screen flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
         <!-- Main Content Area -->
-        <main class="max-w-6xl mx-auto container-padding">
-            <header class="text-center mb-16 pt-20">
-                <h1 class="text-gradient font-extrabold text-5xl md:text-6xl lg:text-7xl leading-tight mb-4 animate-fade-in-down">
-                    Projectile Motion & Orbital Mechanics: From Earthly Paths to Cosmic Trajectories
+        <main class="max-w-4xl mx-auto space-y-12 pb-24 relative z-10">
+            <!-- Header Section -->
+            <header class="text-center mb-16 mt-16 sm:mt-24">
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-blue-400 leading-tight tracking-tight mb-4 animate-fade-in-down">
+                    Projectile Motion: Beyond the Idealized Path
                 </h1>
-                <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto animate-fade-in-up">
-                    Unveiling the Physics of Flight, Orbits, and Spacecraft Journeys on Whizmath.
+                <p class="text-xl sm:text-2xl text-gray-300 animate-fade-in-up">
+                    Exploring Real-World Scenarios and Cosmic Trajectories
                 </p>
-                <div class="mt-8 flex justify-center space-x-4">
-                    <span class="px-4 py-2 bg-gray-800 text-gray-400 rounded-full text-sm shadow-lg">#ProjectileMotion</span>
-                    <span class="px-4 py-2 bg-gray-800 text-gray-400 rounded-full text-sm shadow-lg">#OrbitalMechanics</span>
-                    <span class="px-4 py-2 bg-gray-800 text-gray-400 rounded-full text-sm shadow-lg">#KeplersLaws</span>
-                    <span class="px-4 py-2 bg-gray-800 text-gray-400 rounded-full text-sm shadow-lg">#SpacecraftTrajectories</span>
-                    <span class="px-4 py-2 bg-gray-800 text-gray-400 rounded-full text-sm shadow-lg">#ConicSections</span>
-                    <span class="px-4 py-2 bg-gray-800 text-gray-400 rounded-full text-sm shadow-lg">#AirResistance</span>
-                </div>
+                <div class="mt-8 h-1 w-24 bg-blue-500 mx-auto rounded-full animate-grow-width"></div>
             </header>
 
-            <!-- Introduction Section -->
-            <section class="section-card animate-fade-in">
-                <h2 class="text-gradient mb-6">1. The Art of Flight: Introduction to Advanced Projectile Motion</h2>
-                <p>
-                    Welcome to this profound exploration of <strong>Projectile Motion and Orbital Mechanics</strong>, a field that seamlessly connects the everyday arc of a thrown ball to the majestic orbits of planets and the intricate journeys of spacecraft. At <strong class="text-gradient">Whizmath</strong>, we're dedicated to making complex physical phenomena clear and captivating. While introductory physics often simplifies projectile motion to ideal scenarios, this lesson will delve into more realistic and challenging conditions, including varying gravitational fields and sophisticated models of air resistance. We will then journey beyond Earth's atmosphere to unravel the elegance of orbital mechanics, from Kepler's foundational laws to the precise conic sections that define spacecraft trajectories.
+            <!-- Section 1: Introduction to Advanced Projectile Motion -->
+            <section class="bg-gray-900 rounded-lg p-8 shadow-2xl animate-fade-in-left">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-blue-400">
+                    1. Introduction: From Simple Parabolas to Complex Paths
+                </h2>
+                <p class="mb-4 text-lg leading-relaxed">
+                    At its most basic, <span class="font-semibold text-blue-300">projectile motion</span> describes the path of an object launched into the air, moving under the sole influence of gravity. In introductory physics, this often simplifies to a perfect parabolic trajectory, assuming a uniform gravitational field and no air resistance. However, in the real world and in complex applications like ballistics, sports, or spaceflight, these idealizations are insufficient.
                 </p>
-                <p>
-                    Understanding these advanced concepts is not just an academic exercise; it's essential for fields like aerospace engineering, astrophysics, sports science, and even military applications. Prepare to gain a deeper appreciation for the forces that shape paths both on and off our planet.
+                <p class="mb-4 text-lg leading-relaxed">
+                    Advanced projectile motion delves into more realistic and intricate scenarios. It considers the significant impact of <span class="font-semibold text-blue-300">air resistance</span> (drag), which drastically alters trajectories and introduces a dependence on velocity. It also accounts for <span class="font-semibold text-blue-300">non-uniform gravitational fields</span>, especially when considering very high altitudes or interplanetary travel, where Earth's gravity is no longer constant or the gravitational pull of multiple celestial bodies becomes relevant.
                 </p>
-
-                <h3 class="text-cyan-400 mb-4">1.1 Revisiting Basic Projectile Motion: The Ideal Case</h3>
-                <p>
-                    In its simplest form, projectile motion describes the path of an object launched into the air, subject only to the force of gravity. This idealized scenario assumes:
+                <p class="mb-4 text-lg leading-relaxed">
+                    Furthermore, at scales beyond mere throwing, projectile motion seamlessly transitions into <span class="font-semibold text-blue-300">orbital mechanics</span>, the physics governing the motion of satellites, planets, and spacecraft. This field moves from simple parabolas to elliptical, parabolic, and hyperbolic trajectories, described by Kepler's Laws and conic sections. Understanding these advanced concepts is crucial for designing rockets, navigating space probes, predicting atmospheric re-entry, and even analyzing the flight of a golf ball or a bullet with greater accuracy. This lesson will elevate your understanding of projectile motion, from the complexities of Earth-bound paths to the elegant dances of celestial bodies.
                 </p>
-                <ul>
-                    <li>Constant gravitational acceleration ($\mathbf{g}$), acting vertically downwards.</li>
-                    <li>Negligible air resistance (drag).</li>
-                    <li>A flat Earth (no curvature).</li>
-                </ul>
-                <p>
-                    Under these assumptions, the horizontal motion is uniform (constant velocity), and the vertical motion is uniformly accelerated. The trajectory is a parabola, and its range, maximum height, and time of flight can be easily calculated.
-                </p>
-                <p>
-                    Equations for ideal projectile motion:
-                    $$ x(t) = (v_0 \cos\theta_0) t $$
-                    $$ y(t) = (v_0 \sin\theta_0) t - \frac{1}{2}gt^2 $$
-                    Where $v_0$ is the initial speed, $\theta_0$ is the launch angle, and $g$ is the acceleration due to gravity (approximately $9.81 \, m/s^2$).
-                </p>
-                <p>
-                    While a good starting point, these idealizations break down for higher speeds, longer distances, or when precision is required. This necessitates moving to more advanced models.
+                <p class="text-lg leading-relaxed">
+                    The journey from elementary projectile motion to advanced orbital mechanics highlights how physics adapts and extends its principles to describe an increasingly complex and fascinating reality.
                 </p>
             </section>
 
-            <!-- Advanced Projectile Motion Section -->
-            <section class="section-card animate-fade-in delay-200">
-                <h2 class="text-gradient mb-6">2. Advanced Projectile Motion: Beyond the Parabola</h2>
-                <p>
-                    When dealing with projectiles moving at high speeds, over vast distances, or within specific environments, the simplifying assumptions of basic projectile motion become inadequate. Here, we delve into scenarios where these idealizations are relaxed, introducing the complexities of non-uniform gravity and realistic air resistance.
+            <!-- Section 2: Projectile Motion with Air Resistance (Drag) -->
+            <section class="bg-gray-900 rounded-lg p-8 shadow-2xl animate-fade-in-right">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-blue-400">
+                    2. Projectile Motion with Air Resistance (Drag)
+                </h2>
+                <p class="mb-4 text-lg leading-relaxed">
+                    In reality, any object moving through a fluid (like air or water) experiences a resistive force known as <span class="font-semibold text-blue-300">drag</span>. This force always opposes the direction of motion and depends on various factors, including the object's speed, shape, size, and the properties of the fluid. Incorporating air resistance makes the equations of motion non-linear and often requires numerical methods for solving.
                 </p>
 
-                <h3 class="text-cyan-400 mb-4">2.1 Non-Uniform Gravitational Fields: The Inverse Square Law</h3>
-                <p>
-                    The assumption of a constant gravitational acceleration ($\mathbf{g}$) is valid only for projectiles that remain relatively close to the Earth's surface (where the change in altitude is small compared to Earth's radius). For long-range projectiles (like intercontinental ballistic missiles) or objects launched to high altitudes (like rockets or satellites), the variation of gravity with distance must be considered.
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    2.1. Models of Air Resistance
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The drag force ($F_D$) can be modeled in different ways depending on the object's speed and the fluid's properties, particularly the Reynolds number.
                 </p>
-                <p>
-                    Newton's Law of Universal Gravitation states that the gravitational force between two point masses $M$ and $m$ is:
-                    <div class="flex justify-center my-6">
-                        <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
-                            $$ F_g = G \frac{Mm}{r^2} $$
+                <ul class="list-disc pl-8 mb-4 text-lg leading-relaxed space-y-2">
+                    <li><span class="font-semibold text-blue-300">Linear Drag ($F_D \propto v$):</span> For very low speeds (e.g., small particles in viscous fluids), the drag force is approximately proportional to the velocity ($F_D = -bv$, where $b$ is a constant). This is common for Stokes' drag.</li>
+                    <li><span class="font-semibold text-blue-300">Quadratic Drag ($F_D \propto v^2$):</span> For most macroscopic objects moving through air at typical speeds (and especially at high speeds where turbulence occurs), the drag force is approximately proportional to the square of the velocity.
+                        <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mt-2">
+                            <p class="text-lg text-white font-mono text-center">
+                                $$\mathbf{F}_D = -\frac{1}{2} C_D \rho A v^2 \hat{\mathbf{v}}$$
+                            </p>
                         </div>
-                    </div>
-                    Where:
-                    <ul>
-                        <li>$G$ is the gravitational constant ($6.674 \times 10^{-11} \, N \cdot m^2/kg^2$).</li>
-                        <li>$M$ is the mass of the central body (e.g., Earth).</li>
-                        <li>$m$ is the mass of the projectile.</li>
-                        <li>$r$ is the distance between the centers of the two masses.</li>
-                    </ul>
-                </p>
-                <p>
-                    The acceleration due to gravity, $g(r)$, is thus:
-                    <div class="flex justify-center my-6">
-                        <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
-                            $$ g(r) = G \frac{M}{r^2} $$
-                        </div>
-                    </div>
-                    As the projectile moves further from the Earth's center, $r$ increases, and $g(r)$ decreases. This means the downward acceleration is not constant but weakens with altitude. The trajectory, therefore, deviates from a perfect parabola, becoming flatter at higher altitudes.
-                </p>
-                <p>
-                    Solving projectile motion problems with varying gravity typically requires numerical methods or advanced analytical techniques, especially when considering the Earth's rotation (Coriolis effect) for very long ranges.
-                </p>
-
-                <h3 class="text-cyan-400 mb-4">2.2 Advanced Air Resistance Models: The Unseen Force</h3>
-                <p>
-                    Air resistance (or drag) is a ubiquitous force that opposes the motion of an object through a fluid (like air or water). Ignoring it is a significant oversimplification for many real-world scenarios. The nature of air resistance depends on several factors:
-                </p>
-                <ul>
-                    <li><strong>Velocity of the object:</strong> The faster the object, the greater the drag.</li>
-                    <li><strong>Shape and size of the object:</strong> Aerodynamic shapes experience less drag. Larger cross-sectional areas generally experience more drag.</li>
-                    <li><strong>Properties of the fluid:</strong> Density and viscosity of the air.</li>
-                </ul>
-                <p>
-                    Unlike gravity, air resistance is a non-conservative force and usually depends on velocity, making the equations of motion non-linear and difficult to solve analytically.
-                </p>
-
-                <h4>2.2.1 Linear Drag Model</h4>
-                <p>
-                    For objects moving at very low speeds (e.g., small particles in viscous fluids), the drag force can be approximated as proportional to the velocity:
-                    <div class="flex justify-center my-6">
-                        <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
-                            $$ \mathbf{F}_D = -b\mathbf{v} $$
-                        </div>
-                    </div>
-                    Where $b$ is a constant that depends on the fluid's viscosity and the object's geometry.
-                </p>
-                <p>
-                    The equations of motion become:
-                    $$ m\ddot{x} = -b\dot{x} $$
-                    $$ m\ddot{y} = -mg - b\dot{y} $$
-                    These can be solved analytically, showing an exponential decay in horizontal velocity and a terminal velocity in the vertical direction.
-                </p>
-
-                <h4>2.2.2 Quadratic Drag Model</h4>
-                <p>
-                    For most common macroscopic objects moving through air at moderate to high speeds (e.g., a baseball, a bullet, a car), the drag force is more accurately modeled as proportional to the square of the velocity:
-                    <div class="flex justify-center my-6">
-                        <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
-                            $$ \mathbf{F}_D = -\frac{1}{2} C \rho A v^2 \hat{\mathbf{v}} = -k v^2 \hat{\mathbf{v}} $$
-                        </div>
-                    </div>
-                    Where:
-                    <ul>
-                        <li>$C$ is the dimensionless drag coefficient (depends on shape).</li>
-                        <li>$\rho$ is the density of the fluid (air).</li>
-                        <li>$A$ is the cross-sectional area of the object perpendicular to its motion.</li>
-                        <li>$v$ is the speed of the object.</li>
-                        <li>$\hat{\mathbf{v}}$ is the unit vector in the direction of velocity.</li>
-                        <li>$k = \frac{1}{2}C\rho A$ is a constant for a given object in a given fluid.</li>
-                    </ul>
-                </p>
-                <p>
-                    The equations of motion are:
-                    $$ m\ddot{x} = -k \dot{x} \sqrt{\dot{x}^2 + \dot{y}^2} $$
-                    $$ m\ddot{y} = -mg - k \dot{y} \sqrt{\dot{x}^2 + \dot{y}^2} $$
-                    These non-linear equations are generally difficult to solve analytically and often require numerical integration (e.g., using Euler's method, Runge-Kutta methods). The trajectory is no longer a perfect parabola; the range is reduced, the peak height is lower, and the descent is steeper than the ascent.
-                </p>
-
-                <h4>2.2.3 Factors Beyond Simple Models</h4>
-                <p>
-                    Even quadratic drag is a simplification. Real-world air resistance can also be influenced by:
-                </p>
-                <ul>
-                    <li><strong>Altitude variation of air density:</strong> Air becomes thinner at higher altitudes, reducing drag.</li>
-                    <li><strong>Spin of the projectile (Magnus effect):</strong> A spinning object experiences a force perpendicular to its motion and spin axis, affecting its trajectory (e.g., curveball in baseball).</li>
-                    <li><strong>Turbulence and Reynolds number:</strong> The transition from laminar to turbulent flow significantly changes the drag coefficient.</li>
-                </ul>
-                <p>
-                    Analyzing such complex projectile motion requires sophisticated computational fluid dynamics (CFD) models and extensive experimental data.
-                </p>
-            </section>
-
-            <!-- Orbital Mechanics Section -->
-            <section class="section-card animate-fade-in delay-400">
-                <h2 class="text-gradient mb-6">3. Orbital Mechanics: The Dance of Celestial Bodies</h2>
-                <p>
-                    Stepping away from projectiles constrained by Earth's surface, <strong>orbital mechanics</strong> (or astrodynamics) studies the motion of objects under the influence of gravity in space. This field is fundamental to understanding planetary motion, satellite trajectories, and space mission design. At its core lies a deep connection to Newton's Law of Universal Gravitation and the empirical observations codified by Johannes Kepler.
-                </p>
-
-                <h3 class="text-cyan-400 mb-4">3.1 Kepler's Laws of Planetary Motion: Empirical Foundations</h3>
-                <p>
-                    Before Newton formulated his law of gravitation, Johannes Kepler, building on the meticulous astronomical observations of Tycho Brahe, empirically deduced three laws describing planetary motion around the Sun. These laws, published in the early 17th century, revolutionized astronomy.
-                </p>
-
-                <h4>3.1.1 Kepler's First Law (Law of Ellipses)</h4>
-                <p>
-                    "The orbit of every planet is an ellipse with the Sun at one of the two foci."
-                </p>
-                <ul>
-                    <li>Prior to Kepler, orbits were assumed to be perfect circles (Ptolemy, Copernicus). Kepler demonstrated that they are ellipses.</li>
-                    <li>An **ellipse** is a closed curve for which the sum of the distances from any point on the curve to two fixed points (foci) is constant.</li>
-                    <li>The Sun (or the primary body in any two-body system) is located at one of the foci, not the center, of the ellipse.</li>
-                    <li>The **semi-major axis ($a$)** is half of the longest diameter of the ellipse. The **semi-minor axis ($b$)** is half of the shortest diameter.</li>
-                    <li>**Eccentricity ($e$):** A measure of how "stretched out" an ellipse is. $e = \frac{c}{a}$, where $c$ is the distance from the center to a focus.
-                        <ul>
-                            <li>$e = 0$: a perfect circle.</li>
-                            <li>$0 < e < 1$: an ellipse.</li>
-                            <li>$e = 1$: a parabola (open trajectory).</li>
-                            <li>$e > 1$: a hyperbola (open trajectory).</li>
+                        Where:
+                        <ul class="list-circle pl-6 mt-1">
+                            <li>$C_D$: Drag coefficient (dimensionless, depends on shape).</li>
+                            <li>$\rho$: Density of the fluid (e.g., air).</li>
+                            <li>$A$: Reference area (cross-sectional area perpendicular to motion).</li>
+                            <li>$v$: Magnitude of velocity.</li>
+                            <li>$\hat{\mathbf{v}}$: Unit vector in the direction of velocity.</li>
                         </ul>
-                    </li>
-                    <li>**Periapsis/Apoapsis:** The point in an orbit closest to the central body is the periapsis (e.g., perihelion for Sun, perigee for Earth). The farthest point is the apoapsis (e.g., aphelion for Sun, apogee for Earth).</li>
+                        This quadratic drag model is most relevant for bullets, cannonballs, and sporting projectiles.</li>
                 </ul>
 
-                <h4>3.1.2 Kepler's Second Law (Law of Equal Areas)</h4>
-                <p>
-                    "A line segment joining a planet and the Sun sweeps out equal areas during equal intervals of time."
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    2.2. Equations of Motion with Drag (Quadratic Example)
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    With quadratic drag, Newton's second law for a projectile becomes:
                 </p>
-                <ul>
-                    <li>This law implies that a planet moves faster when it is closer to the Sun (near perihelion) and slower when it is farther away (near aphelion).</li>
-                    <li>This is a direct consequence of the **conservation of angular momentum**. Since gravity acts along the line connecting the planet and the Sun (no torque), the angular momentum of the planet about the Sun remains constant.</li>
-                    <li>Mathematically, the areal velocity ($\frac{dA}{dt}$) is constant:
-                        $$ \frac{dA}{dt} = \frac{1}{2} r^2 \dot{\theta} = \text{constant} $$
-                        Where $r$ is the distance from the Sun and $\dot{\theta}$ is the angular speed. Since angular momentum $L = m r^2 \dot{\theta}$, this translates to $L/(2m) = \text{constant}$.
-                    </li>
-                </ul>
-
-                <h4>3.1.3 Kepler's Third Law (Law of Periods)</h4>
-                <p>
-                    "The square of the orbital period ($T$) of a planet is directly proportional to the cube of the semi-major axis ($a$) of its orbit."
-                </p>
-                <div class="flex justify-center my-6">
-                    <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
-                        $$ T^2 \propto a^3 $$
-                    </div>
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$m \frac{d\mathbf{v}}{dt} = m\mathbf{g} - \frac{1}{2} C_D \rho A v^2 \hat{\mathbf{v}}$$
+                    </p>
                 </div>
-                <p>
-                    Or, more precisely:
-                    <div class="flex justify-center my-6">
-                        <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
-                            $$ T^2 = \left(\frac{4\pi^2}{GM}\right) a^3 $$
-                        </div>
-                    </div>
-                    Where $M$ is the mass of the central body (e.g., the Sun).
-                </p>
-                <ul>
-                    <li>This law shows that the orbital period depends only on the semi-major axis and the mass of the central body, not on the mass of the orbiting object (as long as $m \ll M$).</li>
-                    <li>It allows astronomers to calculate the distances of planets from their periods, or vice versa.</li>
-                    <li>Newton's Law of Universal Gravitation provided the theoretical foundation for these empirical laws, showing that they are a direct consequence of the inverse-square nature of gravity.</li>
-                </ul>
-
-                <h3 class="text-cyan-400 mb-4">3.2 The Two-Body Problem: Conic Sections</h3>
-                <p>
-                    The motion of two isolated bodies interacting only through their mutual gravitational attraction is known as the **two-body problem**. This is a fundamental problem in classical mechanics and orbital mechanics. When solved, it reveals that the relative trajectory of one body with respect to the other (fixed at the origin) is always a **conic section**.
-                </p>
-                <ul>
-                    <li><strong>Circle ($e=0$):</strong> A special case of an ellipse where the two foci coincide. Constant speed, constant distance.</li>
-                    <li><strong>Ellipse ($0 < e < 1$):</strong> Closed, bound orbit. Planets around stars, most satellites around Earth.</li>
-                    <li><strong>Parabola ($e=1$):</strong> Open, unbound trajectory. The lowest speed at which an object can escape the gravitational pull of a central body.</li>
-                    <li><strong>Hyperbola ($e>1$):</strong> Open, unbound trajectory. Higher speed escape. Comets making a single pass by the Sun, or interplanetary spacecraft.</li>
-                </ul>
-                <p>
-                    The type of conic section depends on the total mechanical energy ($E$) of the orbiting object:
-                    <ul>
-                        <li>$E < 0$: Elliptical orbit (bound system).</li>
-                        <li>$E = 0$: Parabolic trajectory (just enough energy to escape).</li>
-                        <li>$E > 0$: Hyperbolic trajectory (more than enough energy to escape).</li>
-                    </ul>
-                </p>
-                <p>
-                    The total energy of an orbiting body is given by:
-                    <div class="flex justify-center my-6">
-                        <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
-                            $$ E = \frac{1}{2}mv^2 - G\frac{Mm}{r} $$
-                        </div>
-                    </div>
-                    For elliptical orbits, energy is also related to the semi-major axis:
-                    <div class="flex justify-center my-6">
-                        <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
-                            $$ E = -G\frac{Mm}{2a} $$
-                        </div>
-                    </div>
-                    This implies that a larger semi-major axis (larger orbit) corresponds to less negative (higher) total energy.
+                <p class="mb-4 text-lg leading-relaxed">
+                    This vector equation can be separated into components. The drag force's dependence on $v^2$ and its direction always opposing $\mathbf{v}$ makes these differential equations challenging to solve analytically. Numerical methods (e.g., Runge-Kutta methods) are often employed to compute trajectories.
                 </p>
 
-                <h3 class="text-cyan-400 mb-4">3.3 Escape Velocity: Breaking Free</h3>
-                <p>
-                    The <strong>escape velocity ($v_e$)</strong> is the minimum speed an object needs to have to break free from the gravitational pull of a massive body, without any further propulsion, to reach an infinite distance with zero kinetic energy.
-                </p>
-                <p>
-                    It is derived by setting the total mechanical energy to zero (for a parabolic trajectory):
-                    $$ E = \frac{1}{2}mv_e^2 - G\frac{Mm}{R} = 0 $$
-                    Solving for $v_e$:
-                    <div class="flex justify-center my-6">
-                        <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
-                            $$ v_e = \sqrt{\frac{2GM}{R}} $$
-                        </div>
-                    </div>
-                    Where $R$ is the initial distance from the center of the massive body. For Earth, at its surface, $v_e \approx 11.2 \, km/s$.
-                </p>
-                <p>
-                    It's important to distinguish escape velocity from orbital velocity. Orbital velocity is the speed needed to maintain a stable orbit at a given altitude, whereas escape velocity is the speed needed to break free entirely.
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    2.3. Effects of Air Resistance on Trajectory
+                </h3>
+                <ul class="list-disc pl-8 mb-4 text-lg leading-relaxed space-y-2">
+                    <li><span class="font-semibold text-blue-300">Reduced Range:</span> The maximum range is significantly reduced compared to the no-drag case.</li>
+                    <li><span class="font-semibold text-blue-300">Asymmetric Trajectory:</span> The path is no longer a perfect parabola. The descending portion is steeper and shorter than the ascending portion because the drag force is always present and reduces both horizontal and vertical velocity components.</li>
+                    <li><span class="font-semibold text-blue-300">Terminal Velocity:</span> For vertical motion, an object eventually reaches a constant <span class="font-semibold text-blue-300">terminal velocity</span> where the drag force balances the gravitational force. This is why raindrops and skydivers don't continuously accelerate.</li>
+                    <li><span class="font-semibold text-blue-300">Optimum Launch Angle:</span> The optimum launch angle for maximum range is typically less than $45^\circ$ when air resistance is significant.</li>
+                </ul>
+                <p class="text-lg leading-relaxed">
+                    Advanced air resistance models may also account for factors like the Magnus effect (spin-induced lift or deflection), altitude-dependent air density, and projectile shape changes.
                 </p>
             </section>
 
-            <!-- Physics of Spacecraft Trajectories Section -->
-            <section class="section-card animate-fade-in delay-600">
-                <h2 class="text-gradient mb-6">4. Physics of Spacecraft Trajectories: Navigating the Cosmos</h2>
-                <p>
-                    The principles of orbital mechanics are directly applied in the complex and precise art of designing and executing space missions. From launching satellites into Earth orbit to sending probes to distant planets, understanding spacecraft trajectories is paramount.
+            <!-- Section 3: Projectile Motion in Non-Uniform Gravitational Fields -->
+            <section class="bg-gray-900 rounded-lg p-8 shadow-2xl animate-fade-in-left">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-blue-400">
+                    3. Projectile Motion in Non-Uniform Gravitational Fields
+                </h2>
+                <p class="mb-4 text-lg leading-relaxed">
+                    In introductory projectile motion, the acceleration due to gravity ($g$) is assumed to be constant (approx. $9.8 \text{ m/s}^2$) and directed straight down. This is a valid approximation for short ranges near Earth's surface. However, for projectiles launched to very high altitudes (e.g., rockets, ICBMs) or for objects moving in space, the gravitational field is no longer uniform.
                 </p>
 
-                <h3 class="text-cyan-400 mb-4">4.1 Orbital Elements: Defining an Orbit</h3>
-                <p>
-                    To precisely define an orbit in space, a set of six independent parameters, known as the **orbital elements**, are used. These elements specify the size, shape, orientation, and timing of an orbit. The most common set is the Keplerian elements:
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    3.1. Inverse-Square Law of Gravity
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    For objects far from Earth's surface, the gravitational acceleration must be treated as a force that depends on the distance from the center of the Earth and is always directed towards the center of the Earth. The gravitational force between two point masses $m_1$ and $m_2$ separated by a distance $r$ is given by Newton's Law of Universal Gravitation:
                 </p>
-                <ol>
-                    <li><strong>Semi-major axis ($a$):</strong> Defines the size of the orbit. For ellipses, it's half the longest diameter. For parabolas/hyperbolas, it's infinite/negative.</li>
-                    <li><strong>Eccentricity ($e$):</strong> Defines the shape of the orbit (circular, elliptical, parabolic, hyperbolic).</li>
-                    <li><strong>Inclination ($i$):</strong> The angle between the orbital plane and a reference plane (e.g., Earth's equator for Earth orbits, or the ecliptic plane for solar orbits).</li>
-                    <li><strong>Longitude of the Ascending Node ($\Omega$):</strong> The angle from a reference direction (e.g., Vernal Equinox) to the ascending node (where the orbit crosses the reference plane from south to north). Defines the orientation of the orbital plane.</li>
-                    <li><strong>Argument of Periapsis ($\omega$):</strong> The angle from the ascending node to the periapsis (closest point to central body). Defines the orientation of the ellipse within its plane.</li>
-                    <li><strong>True Anomaly ($\nu$):</strong> The angle from the periapsis to the current position of the spacecraft along its orbit. Defines the spacecraft's position at a given time.</li>
-                </ol>
-                <p>
-                    These elements allow engineers to predict the future position of a spacecraft and plan maneuvers.
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$\mathbf{F}_g = -G \frac{m_1 m_2}{r^2} \hat{\mathbf{r}}$$
+                    </p>
+                </div>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Where $G$ is the gravitational constant ($6.674 \times 10^{-11} \text{ N}\cdot\text{m}^2/\text{kg}^2$), and $\hat{\mathbf{r}}$ is a unit vector pointing from $m_1$ to $m_2$. For an object $m$ near Earth (mass $M_E$), $r$ is the distance from the center of the Earth to the object.
+                </p>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The acceleration due to gravity, $g(r)$, is therefore no longer constant:
+                </p>
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$g(r) = G \frac{M_E}{r^2}$$
+                    </p>
+                </div>
+                <p class="mb-4 text-lg leading-relaxed">
+                    As an object moves further from Earth, $r$ increases, and $g(r)$ decreases. This means the gravitational force is no longer a constant downward vector but a central force directed towards the center of the gravitating body.
                 </p>
 
-                <h3 class="text-cyan-400 mb-4">4.2 Types of Earth Orbits</h3>
-                <p>
-                    Satellites are placed into various types of orbits around Earth, each serving specific purposes:
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    3.2. Equations of Motion in a Central Gravitational Field
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The differential equations of motion for a projectile in a central, inverse-square gravitational field are best formulated in terms of polar coordinates (for 2D motion in a plane) or spherical coordinates (for 3D motion). The resulting trajectories are no longer parabolas but sections of conic sections (ellipses, parabolas, hyperbolas), which we'll discuss next.
                 </p>
-                <ul>
-                    <li><strong>Low Earth Orbit (LEO):</strong> Altitudes typically $160 - 2,000 \, km$. Used by the ISS, Hubble Space Telescope, and many remote sensing satellites. Short orbital periods (approx. 90 minutes). High drag requires frequent reboosts.</li>
-                    <li><strong>Medium Earth Orbit (MEO):</strong> Altitudes roughly $2,000 - 35,786 \, km$. Used by navigation satellites (GPS, GLONASS, Galileo) and some communications satellites. Orbital periods are a few hours.</li>
-                    <li><strong>Geosynchronous Earth Orbit (GEO):</strong> Altitude of $35,786 \, km$ above the equator. Orbital period is 23 hours, 56 minutes, 4 seconds (one sidereal day), matching Earth's rotation. A special case is the **Geostationary Earth Orbit**, where the satellite appears stationary in the sky from the ground. Critical for telecommunications, broadcasting, and weather satellites.</li>
-                    <li><strong>Polar Orbit:</strong> An orbit with an inclination of around $90^\circ$, passing over or near the Earth's poles. Allows satellites to cover the entire Earth's surface over several orbits as the Earth rotates beneath them. Used for Earth observation, weather, and reconnaissance.</li>
-                    <li><strong>Sun-synchronous Orbit (SSO):</strong> A type of polar orbit where the satellite passes over any given point on the Earth's surface at the same local mean solar time. This consistency in lighting conditions is ideal for remote sensing and imaging satellites.</li>
-                </ul>
+                <p class="mb-4 text-lg leading-relaxed">
+                    For example, in a two-dimensional polar coordinate system ($r, \theta$), the equations derived from Newton's second law are:
+                </p>
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$\ddot{r} - r\dot{\theta}^2 = -\frac{GM_E}{r^2}$$
+                        $$\frac{d}{dt}(r^2 \dot{\theta}) = 0$$
+                    </p>
+                </div>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The second equation implies conservation of angular momentum, which is a key characteristic of motion under central forces. These equations typically require numerical solutions unless simplified for specific cases (e.g., circular orbits).
+                </p>
 
-                <h3 class="text-cyan-400 mb-4">4.3 Orbital Maneuvers: Changing Course in Space</h3>
-                <p>
-                    Spacecraft rarely stay in a single orbit throughout their mission. Orbital maneuvers are precise changes in a spacecraft's velocity (delta-v, $\Delta V$) to alter its trajectory or orbit. These are achieved by firing thrusters.
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    3.3. Multi-Body Gravitational Fields
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    For space missions involving travel between planets or within complex star systems, the gravitational influence of multiple celestial bodies must be considered. This leads to the <span class="font-semibold text-blue-300">n-body problem</span>, which has no general analytical solution and requires extensive numerical simulations. Spacecraft trajectories are designed using approximations like the <span class="font-semibold text-blue-300">patched conic approximation</span>, where different phases of the trajectory are approximated as two-body (conic) problems dominated by a single central body.
                 </p>
-                <ul>
-                    <li><strong>Hohmann Transfer Orbit:</strong> The most fuel-efficient way to move between two circular, coplanar orbits. It involves two impulses: one to enter an elliptical transfer orbit, and another to circularize the orbit at the target altitude. Widely used for interplanetary missions (e.g., Earth to Mars).</li>
-                    <li><strong>Rendezvous and Docking:</strong> Precise maneuvers to bring two spacecraft together, often used for resupplying space stations or assembling larger structures.</li>
-                    <li><strong>Gravity Assist (Slingshot Effect):</strong> Using the gravitational pull and relative motion of a planet to change a spacecraft's speed and/or direction, often without expending fuel. This technique is crucial for outer solar system missions (e.g., Voyager, Cassini).</li>
-                    <li><strong>Aerobraking/Aerocapture:</strong> Using a planet's atmosphere to slow down a spacecraft, reducing the need for propellant. Aerobraking involves multiple shallow passes through the atmosphere to gradually reduce speed and lower the orbit. Aerocapture is a single, deeper pass for direct orbital insertion.</li>
-                </ul>
+                <p class="text-lg leading-relaxed">
+                    Understanding the non-uniform nature of gravity is the gateway to orbital mechanics and interplanetary travel, where objects no longer simply "fall" but engage in complex gravitational dances.
+                </p>
+            </section>
 
-                <h3 class="text-cyan-400 mb-4">4.4 Interplanetary Trajectories and Lagrange Points</h3>
-                <p>
-                    For missions traveling between planets, the problem becomes a **restricted three-body problem** (or N-body problem for multiple significant gravitational influences). While complex, it can often be approximated as a series of two-body problems (patched conic approximation).
+            <!-- Section 4: Introduction to Orbital Mechanics (Kepler's Laws) -->
+            <section class="bg-gray-900 rounded-lg p-8 shadow-2xl animate-fade-in-right">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-blue-400">
+                    4. Introduction to Orbital Mechanics: Kepler's Laws
+                </h2>
+                <p class="mb-4 text-lg leading-relaxed">
+                    When a projectile's initial velocity is high enough that it doesn't fall back to Earth but continuously "falls around" it, it enters an orbit. <span class="font-semibold text-blue-300">Orbital mechanics</span>, a sub-discipline of celestial mechanics, describes the motion of celestial bodies and artificial satellites under the influence of gravity. The foundations of orbital mechanics were laid by Johannes Kepler in the early 17th century, long before Newton provided the underlying theory of universal gravitation.
                 </p>
-                <ul>
-                    <li><strong>Sphere of Influence (SOI):</strong> A region around a celestial body where its gravitational pull is dominant over that of other bodies. Interplanetary trajectories involve a spacecraft moving from the SOI of one body to another.</li>
-                    <li><strong>Lagrange Points (L-points):</strong> Five specific points in a two-body gravitational system (e.g., Sun-Earth) where a small object can theoretically remain in a stable or semi-stable equilibrium relative to the two large bodies. These points are prime locations for space telescopes (e.g., JWST at Sun-Earth L2), space stations, or fuel depots due to their reduced fuel requirements for station-keeping.
-                        <ul>
-                            <li>L1, L2, L3 are unstable (require minor station-keeping).</li>
-                            <li>L4, L5 are stable (objects tend to stay there).</li>
-                        </ul>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    4.1. Kepler's Laws of Planetary Motion
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Based on meticulous astronomical observations by Tycho Brahe, Kepler formulated three empirical laws describing the motion of planets around the Sun:
+                </p>
+                <ul class="list-disc pl-8 mb-4 text-lg leading-relaxed space-y-2">
+                    <li><span class="font-semibold text-blue-300">Kepler's First Law (Law of Orbits):</span> The orbit of every planet is an ellipse with the Sun at one of the two foci. This corrected the long-held belief in perfectly circular orbits.</li>
+                    <li><span class="font-semibold text-blue-300">Kepler's Second Law (Law of Areas):</span> A line joining a planet and the Sun sweeps out equal areas during equal intervals of time. This implies that planets move faster when they are closer to the Sun and slower when they are farther away, reflecting the conservation of angular momentum.
+                        <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mt-2">
+                            <p class="text-lg text-white font-mono text-center">
+                                $$\frac{dA}{dt} = \text{constant}$$
+                            </p>
+                        </div>
                     </li>
+                    <li><span class="font-semibold text-blue-300">Kepler's Third Law (Law of Periods):</span> The square of the orbital period ($T$) of a planet is directly proportional to the cube of the semi-major axis ($a$) of its orbit.
+                        <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mt-2">
+                            <p class="text-lg text-white font-mono text-center">
+                                $$\frac{T^2}{a^3} = \text{constant}$$
+                            </p>
+                        </div>
+                        For orbits around the Sun, the constant is the same for all planets. Newton later derived this constant from his law of universal gravitation: $\frac{T^2}{a^3} = \frac{4\pi^2}{GM_{\text{Sun}}}$. More generally, for any two-body system, the constant is $\frac{4\pi^2}{G(M_1+M_2)}$.</li>
                 </ul>
-                <p>
-                    The study of these complex trajectories combines principles of classical mechanics with advanced numerical simulation techniques, accounting for perturbations from other planets, solar radiation pressure, and non-spherical gravitational fields.
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    4.2. Gravitational Potential Energy
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    In a non-uniform gravitational field, the gravitational potential energy ($U_g$) of a mass $m$ due to a larger mass $M$ at a distance $r$ is:
+                </p>
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$U_g = -\frac{GMm}{r}$$
+                    </p>
+                </div>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The negative sign indicates that the force is attractive and that potential energy is zero at infinite separation. This potential energy, combined with kinetic energy, defines the total mechanical energy of an orbiting body.
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    4.3. Escape Velocity
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The <span class="font-semibold text-blue-300">escape velocity</span> ($v_{esc}$) is the minimum speed an object needs to completely break free from the gravitational pull of a massive body, without further propulsion. It's derived by setting the total mechanical energy (kinetic + potential) to zero:
+                </p>
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$v_{esc} = \sqrt{\frac{2GM}{R}}$$
+                    </p>
+                </div>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Where $M$ is the mass of the gravitating body and $R$ is the distance from its center. For Earth, at the surface, $v_{esc} \approx 11.2 \text{ km/s}$.
+                </p>
+                <p class="text-lg leading-relaxed">
+                    Kepler's Laws, later explained by Newton's Universal Law of Gravitation, provide the bedrock for understanding the beautiful and predictable dance of celestial objects.
+                </p>
+            </section>
+
+            <!-- Section 5: Conic Sections in Orbital Mechanics -->
+            <section class="bg-gray-900 rounded-lg p-8 shadow-2xl animate-fade-in-left">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-blue-400">
+                    5. Conic Sections in Orbital Mechanics
+                </h2>
+                <p class="mb-4 text-lg leading-relaxed">
+                    In a two-body system where a smaller mass orbits a much larger central mass under the influence of the inverse-square gravitational force, the trajectory of the smaller mass forms one of the <span class="font-semibold text-blue-300">conic sections</span>. The type of orbit depends on the total mechanical energy ($E = K + U_g$) of the orbiting object.
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    5.1. Elliptical Orbits ($E < 0$)
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    If the total mechanical energy of the orbiting object is negative ($E < 0$), the orbit is an <span class="font-semibold text-blue-300">ellipse</span>. This represents a bound orbit where the object is gravitationally captured and repeatedly orbits the central body. All planets and most satellites (including Earth's Moon and artificial satellites) are in elliptical (or nearly circular, a special case of ellipse) orbits.
+                </p>
+                <ul class="list-disc pl-8 mb-4 text-lg leading-relaxed space-y-2">
+                    <li><span class="font-semibold text-blue-300">Circular Orbit:</span> A special case of an ellipse where the eccentricity is zero ($e=0$).</li>
+                    <li><span class="font-semibold text-blue-300">Semi-major Axis ($a$):</span> Determines the size of the ellipse. The period of the orbit is given by Kepler's Third Law.</li>
+                    <li><span class="font-semibold text-blue-300">Eccentricity ($e$):</span> Describes the "flatness" of the ellipse. For an ellipse, $0 \le e < 1$.</li>
+                </ul>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    5.2. Parabolic Trajectories ($E = 0$)
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    If the total mechanical energy is exactly zero ($E=0$), the trajectory is a <span class="font-semibold text-blue-300">parabola</span>. This represents the boundary case between bound and unbound orbits. An object following a parabolic path will escape the gravitational pull of the central body, but its speed will continuously approach zero as it moves infinitely far away. Objects launched exactly at escape velocity will follow a parabolic trajectory.
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    5.3. Hyperbolic Trajectories ($E > 0$)
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    If the total mechanical energy is positive ($E > 0$), the trajectory is a <span class="font-semibold text-blue-300">hyperbola</span>. This represents an unbound orbit where the object approaches the central body, is deflected by its gravity, and then escapes, retaining a positive velocity even at infinite distance. Interstellar objects passing through our solar system (like 'Oumuamua or Borisov) would follow hyperbolic trajectories relative to the Sun. Similarly, deep-space probes often use hyperbolic trajectories to escape Earth's gravity or perform planetary flybys.
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    5.4. Relationship Between Energy and Conic Sections
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The type of conic section is directly determined by the specific mechanical energy ($E/m$) of the orbiting body relative to the central body:
+                </p>
+                <ul class="list-disc pl-8 mb-4 text-lg leading-relaxed space-y-2">
+                    <li>$E < 0 \implies$ Elliptical (including circular) orbit</li>
+                    <li>$E = 0 \implies$ Parabolic trajectory</li>
+                    <li>$E > 0 \implies$ Hyperbolic trajectory</li>
+                </ul>
+                <p class="mb-4 text-lg leading-relaxed">
+                    These conic sections provide a complete description of any two-body gravitational interaction in classical mechanics, from the flight of an intercontinental ballistic missile to the path of a comet around the Sun.
+                </p>
+            </section>
+
+            <!-- Section 6: Spacecraft Trajectories and Maneuvers -->
+            <section class="bg-gray-900 rounded-lg p-8 shadow-2xl animate-fade-in-right">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-blue-400">
+                    6. Spacecraft Trajectories and Maneuvers
+                </h2>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Applying the principles of orbital mechanics to the practical design of space missions involves sophisticated calculations and strategic maneuvers.
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    6.1. Hohmann Transfer Orbits
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The <span class="font-semibold text-blue-300">Hohmann transfer orbit</span> is the most fuel-efficient way to move between two circular coplanar orbits around a central body (e.g., moving a satellite from Low Earth Orbit to Geostationary Orbit, or sending a probe from Earth to Mars). It involves two engine burns:
+                </p>
+                <ul class="list-disc pl-8 mb-4 text-lg leading-relaxed space-y-2">
+                    <li><span class="font-semibold text-blue-300">Burn 1:</span> A prograde (forward) burn at the initial orbit's periapsis (closest point to central body) increases the spacecraft's velocity, placing it onto an elliptical transfer orbit.</li>
+                    <li><span class="font-semibold text-blue-300">Burn 2:</span> A second prograde burn at the transfer orbit's apoapsis (farthest point) circularizes the orbit at the target radius.</li>
+                </ul>
+                <p class="mb-4 text-lg leading-relaxed">
+                    While fuel-efficient, Hohmann transfers can be time-consuming, especially for interplanetary travel, taking months or years.
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    6.2. Gravity Assists (Slingshot Effect)
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    A <span class="font-semibold text-blue-300">gravity assist</span> (or slingshot maneuver) is a technique used by spacecraft to gain or lose speed and/or change direction by flying close to a planet or other massive celestial body. The spacecraft interacts gravitationally with the moving planet, exchanging momentum and kinetic energy.
+                </p>
+                <p class="mb-4 text-lg leading-relaxed">
+                    For example, to speed up, a spacecraft approaches a planet from behind (relative to the planet's orbital motion), "stealing" a small amount of the planet's orbital momentum and flinging the spacecraft forward with increased velocity. This maneuver allows missions to distant planets (like Voyager or Cassini) to reach their destinations much faster and with less fuel than direct burns.
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    6.3. Delta-v ($\Delta v$) and Propellant
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Space mission design heavily relies on the concept of <span class="font-semibold text-blue-300">delta-v</span> ($\Delta v$), which represents the change in velocity required to perform a maneuver. It is a measure of the "effort" needed for a spacecraft to move from one orbit to another, independent of the spacecraft's mass. The amount of propellant needed for a given $\Delta v$ is determined by the Tsiolkovsky rocket equation. Mission planners create "delta-v budgets" to ensure enough fuel is available for all planned maneuvers.
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    6.4. Atmospheric Re-entry
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Returning a spacecraft to Earth involves a complex interaction between gravitational forces and atmospheric drag. Spacecraft entering the atmosphere must dissipate enormous amounts of kinetic energy, typically converting it into heat. This requires careful design of heat shields and precise trajectory control to avoid burning up or bouncing off the atmosphere. Atmospheric re-entry is essentially controlled, high-speed projectile motion where air resistance becomes the dominant force.
+                </p>
+                <p class="text-lg leading-relaxed">
+                    The intricate dance of spacecraft through the solar system is a testament to the power of orbital mechanics, allowing us to explore our cosmic neighborhood with precision and efficiency.
+                </p>
+            </section>
+
+            <!-- Section 7: Future Directions and Advanced Concepts -->
+            <section class="bg-gray-900 rounded-lg p-8 shadow-2xl animate-fade-in-left">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-blue-400">
+                    7. Future Directions and Advanced Concepts
+                </h2>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The field of projectile motion and orbital mechanics continues to evolve, driven by the demands of more ambitious space missions and increasingly precise real-world applications.
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    7.1. Low-Thrust Propulsion and Optimal Control
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Traditional chemical rockets provide high thrust for short durations. Future missions increasingly utilize <span class="font-semibold text-blue-300">low-thrust propulsion</span> systems (e.g., ion thrusters), which provide continuous, but very small, thrust over long periods. Designing trajectories for these systems requires advanced optimal control theory and numerical methods to minimize fuel consumption or travel time.
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    7.2. Interplanetary Transport Network (ITN)
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    A fascinating concept derived from advanced celestial mechanics is the <span class="font-semibold text-blue-300">Interplanetary Transport Network (ITN)</span>. This network describes a set of gravitationally determined pathways through the solar system that require very little fuel. These pathways often involve traversing "gravitational saddles" or "Lagrange points" where the gravitational forces of multiple bodies balance out, allowing for very fuel-efficient but potentially long-duration journeys.
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    7.3. Space Debris Mitigation
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The increasing amount of <span class="font-semibold text-blue-300">space debris</span> in Earth orbit poses a significant threat to active satellites and future missions. Advanced projectile motion and orbital mechanics are crucial for tracking this debris, predicting collision probabilities, and developing strategies for active debris removal or avoidance maneuvers.
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    7.4. Astrodynamics and Machine Learning
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The complexity of solving the equations of motion for multi-body systems, especially with perturbations from non-uniform gravity (e.g., Earth's oblateness), solar radiation pressure, and atmospheric drag, increasingly benefits from <span class="font-semibold text-blue-300">machine learning</span> and artificial intelligence. AI can optimize trajectories, predict system behavior, and even autonomously manage spacecraft maneuvers.
+                </p>
+                <p class="text-lg leading-relaxed">
+                    From calculating the perfect shot in sports to charting a course to distant worlds, the principles of projectile motion and orbital mechanics are continuously refined and applied, pushing the boundaries of human exploration and technological prowess.
                 </p>
             </section>
 
             <!-- Conclusion Section -->
-            <section class="section-card animate-fade-in delay-800">
-                <h2 class="text-gradient mb-6">5. The Cosmic Dance: Conclusion and Future Prospects</h2>
-                <p>
-                    Our journey through <strong>Projectile Motion and Orbital Mechanics</strong> has taken us from the familiar arcs we observe on Earth to the grand, elliptical paths of celestial bodies and the precisely engineered trajectories of humanity's emissaries to space. We've moved beyond the idealizations of basic physics to confront the real-world complexities of varying gravity and air resistance, appreciating how these factors profoundly alter the flight of earthly projectiles.
+            <section class="bg-gray-900 rounded-lg p-8 shadow-2xl animate-fade-in-right">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-blue-400">
+                    Conclusion: Mastering Motion, On Earth and Beyond
+                </h2>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Our journey through projectile motion has taken us far beyond the simple parabolic arcs of introductory physics. We've explored the complex, non-linear effects of air resistance, understanding how it reshapes trajectories, reduces range, and leads to phenomena like terminal velocity. We've also ascended to altitudes where Earth's gravitational field is no longer uniform, requiring a shift to the inverse-square law and revealing that trajectories in such fields are conic sections.
                 </p>
-                <p>
-                    We embraced the elegant simplicity and profound predictive power of <strong>Kepler's Laws</strong>, understanding how these empirical rules, later explained by Newton's universal law of gravitation, define the ballet of planets and moons. The concept of <strong>conic sections</strong> emerged as a universal descriptor for all two-body gravitational trajectories, from bound ellipses to unbound hyperbolas.
+                <p class="mb-4 text-lg leading-relaxed">
+                    This led us naturally into the realm of orbital mechanics, grounded in Kepler's elegant laws of planetary motion, which precisely describe bound (elliptical) and unbound (parabolic, hyperbolic) paths. The concepts of escape velocity and gravitational potential energy became key to understanding whether an object will orbit or escape. Finally, we saw how these fundamental principles are meticulously applied in the design of spacecraft trajectories, from fuel-efficient Hohmann transfers and velocity-boosting gravity assists to the critical engineering challenges of atmospheric re-entry and the future of low-thrust propulsion.
                 </p>
-                <p>
-                    Finally, we explored the fascinating realm of <strong>spacecraft trajectories</strong>, delving into the precise language of orbital elements, the strategic planning of orbital maneuvers (like the indispensable Hohmann transfer), and the gravitational subtleties of Lagrange points. This understanding underpins every space mission, from communication satellites to deep-space probes venturing into the interstellar void.
-                </p>
-                <p>
-                    The principles of projectile and orbital mechanics are not static. They are continually refined as we push the boundaries of space exploration, developing more fuel-efficient propulsion systems, designing missions to distant cosmic destinations, and even contemplating interstellar travel. The mathematical and physical frameworks you've encountered today are the very tools that make these ambitious dreams tangible.
-                </p>
-                <p>
-                    We hope this extensive lesson on <strong class="text-gradient">Projectile Motion and Orbital Mechanics</strong> has equipped you with a deeper understanding and a renewed sense of wonder for the mechanics that govern everything from a baseball's curve to a probe's journey to Jupiter. Keep your curiosity alive and continue to explore the intricate mathematics of the universe with <strong class="text-gradient">Whizmath</strong>!
-                </p>
-                <p class="text-center mt-12 text-gray-500 text-sm">
-                    This lesson was meticulously crafted to provide a deep and clear understanding of projectile motion and orbital mechanics. For further inquiries or specific examples, feel free to explore more topics on Whizmath.
+                <p class="text-lg leading-relaxed">
+                    Projectile motion, in its advanced forms, is a testament to the power of physics to model and predict complex phenomena, enabling humanity to not only master motion on Earth but also to navigate the vastness of space. It remains a dynamic field, continually evolving with new computational tools and ambitious exploration goals, pushing the boundaries of what is possible.
                 </p>
             </section>
         </main>
-
-        <!-- Scroll to top button -->
-        <button id="scrollToTopBtn" title="Go to top">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-        </button>
     </div>
 
+    <!-- JavaScript for Animations (simple fade-in effects) -->
     <script>
-        // Scroll to top button functionality
-        let scrollToTopBtn = document.getElementById("scrollToTopBtn");
+        // Simple Intersection Observer for fade-in animations
+        const sections = document.querySelectorAll('section');
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1 // Trigger when 10% of the section is visible
+        };
 
-        // When the user scrolls down 20px from the top of the document, show the button
-        window.onscroll = function() {scrollFunction()};
-
-        function scrollFunction() {
-            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                scrollToTopBtn.style.display = "block";
-            } else {
-                scrollToTopBtn.style.display = "none";
-            }
-        }
-
-        // When the user clicks on the button, scroll to the top of the document
-        scrollToTopBtn.addEventListener("click", function() {
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    // Stop observing once visible to prevent re-triggering
+                    observer.unobserve(entry.target);
+                }
             });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
         });
+
+        // Add CSS for animation classes dynamically or in a style block
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes fadeInDown {
+                from { opacity: 0; transform: translateY(-20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes fadeInLeft {
+                opacity: 0;
+                transform: translateX(-20px);
+                transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            }
+            @keyframes fadeInRight {
+                opacity: 0;
+                transform: translateX(20px);
+                transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            }
+            .animate-fade-in-down {
+                animation: fadeInDown 1s ease-out forwards;
+                opacity: 0; /* Start hidden */
+            }
+            .animate-fade-in-up {
+                animation: fadeInUp 1s ease-out forwards;
+                opacity: 0; /* Start hidden */
+                animation-delay: 0.2s; /* Slight delay */
+            }
+            .animate-fade-in-left.is-visible,
+            .animate-fade-in-right.is-visible {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            .animate-grow-width {
+                animation: growWidth 1s ease-out forwards;
+            }
+            @keyframes growWidth {
+                from { width: 0; }
+                to { width: 6rem; } /* width-24 in Tailwind */
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
