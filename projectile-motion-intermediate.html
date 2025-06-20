@@ -3,14 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A comprehensive lesson on projectile motion for Whizmath. Explore the kinematics of objects in flight, analyze the effects of air resistance on trajectory, understand motion on inclined planes, and learn to optimize initial conditions for maximum range or height. Involves concepts of coupled differential equations. Keywords: Projectile Motion, Trajectory, Air Resistance, Drag Force, Inclined Plane, Maximum Range, Maximum Height, Initial Velocity, Angle of Projection, Kinematics, Dynamics, Differential Equations, Whizmath, Physics, STEM Education.">
-    <meta name="keywords" content="Projectile Motion, Trajectory, Air Resistance, Drag Force, Terminal Velocity, Inclined Plane, Maximum Range, Maximum Height, Initial Velocity, Angle of Projection, Kinematics, Dynamics, Coupled Differential Equations, Parabolic Trajectory, Non-Ideal Projectile, Whizmath, Physics, STEM Education, Free Fall, Gravity, Vector Components, Analytical Solution, Numerical Solution">
-    <title>Whizmath: Projectile Motion - Advanced Trajectories</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
-     crossorigin="anonymous"></script>
+    <title>Projectile Motion: Advanced Analysis | Whizmath</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Dive into advanced projectile motion analysis with Whizmath. Explore effects of air resistance (drag), trajectories on inclined planes, and optimization for maximum range or height, involving coupled differential equations.">
+    <meta name="keywords" content="Projectile Motion, Advanced Projectile Motion, Air Resistance, Drag Force, Linear Drag, Quadratic Drag, Terminal Velocity, Inclined Plane, Projectile on Inclined Plane, Maximum Range, Maximum Height, Trajectory, Coupled Differential Equations, Kinematics, Dynamics, Gravitational Force, Whizmath, Physics Tutorial, Classical Mechanics, Motion Analysis">
+    <link rel="canonical" href="https://www.whizmath.com/projectile-motion">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px; /* For horizontal scrollbars */
+        }
+        ::-webkit-scrollbar-track {
+            background: #2d3748; /* Darker gray for track */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4A90E2; /* Blue for thumb */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3A7BBF; /* Darker blue on hover */
+        }
+        /* Style for the back button SVG icon */
+        .back-button-svg {
+            fill: currentColor;
+        }
+        /* Responsive font sizes */
+        h1 {
+            font-size: 2.5rem; /* Default for mobile */
+        }
+        @media (min-width: 640px) { /* sm breakpoint */
+            h1 {
+                font-size: 3rem;
+            }
+        }
+        @media (min-width: 1024px) { /* lg breakpoint */
+            h1 {
+                font-size: 3.75rem; /* text-6xl */
+            }
+        }
+        h2 {
+            font-size: 2rem; /* Default for mobile */
+        }
+        @media (min-width: 640px) { /* sm breakpoint */
+            h2 {
+                font-size: 2.5rem;
+            }
+        }
+        h3 {
+            font-size: 1.5rem; /* Default for mobile */
+        }
+        @media (min-width: 640px) { /* sm breakpoint */
+            h3 {
+                font-size: 1.875rem;
+            }
+        }
+    </style>
+
+    <!-- MathJax Configuration -->
+    <script type="text/javascript" id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
     <script>
         // Optional: Configure MathJax to process dollar signs for inline math
         MathJax = {
@@ -22,802 +84,330 @@
             }
         };
     </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden; /* Prevent horizontal scroll due to Three.js */
-            background-color: #0d1117; /* Dark background for the page */
-            color: #e6edf3; /* Light text color */
-        }
-        #three-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.2; /* Subtle background */
-        }
-        .content-section {
-            background-color: rgba(17, 24, 39, 0.85); /* Slightly lighter dark for content areas */
-            backdrop-filter: blur(5px);
-            border-radius: 1.5rem; /* Rounded corners for sections */
-            padding: 2.5rem; /* More padding */
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3); /* Deeper shadow */
-        }
-        .section-title {
-            color: #6366f1; /* Vibrant purple for titles */
-            font-size: 2.5rem; /* Larger titles */
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        .subsection-title {
-            color: #818cf8; /* Lighter purple for subsections */
-            font-size: 2rem;
-            font-weight: 600;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid #4f46e5;
-            padding-bottom: 0.5rem;
-        }
-        .concept-title {
-            color: #a78bfa; /* Even lighter purple for concepts */
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-top: 1.5rem;
-            margin-bottom: 0.75rem;
-        }
-        .equation {
-            background-color: rgba(31, 41, 55, 0.9);
-            padding: 1.25rem;
-            border-radius: 0.75rem;
-            margin: 1.5rem 0;
-            text-align: center;
-            font-size: 1.25rem;
-            color: #cbd5e1;
-            overflow-x: auto; /* Allow horizontal scroll for long equations */
-        }
-        .equation .MathJax {
-            display: inline-block !important; /* Ensure MathJax renders centered */
-        }
-        .example-box {
-            background-color: rgba(236, 72, 153, 0.1); /* Pinkish background for examples */
-            border-left: 5px solid #ec4899; /* Pink border */
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            margin: 1.5rem 0;
-        }
-        .glossary-term {
-            color: #38b2ac; /* Teal for glossary terms */
-            font-weight: 600;
-        }
-        .back-button {
-            position: fixed;
-            top: 2rem;
-            left: 2rem;
-            background-color: #6366f1;
-            color: white;
-            padding: 0.75rem 1rem;
-            border-radius: 9999px; /* Fully rounded */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            text-decoration: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
-            z-index: 100;
-        }
-        .back-button:hover {
-            background-color: #4f46e5;
-            transform: scale(1.05);
-        }
-        /* Custom scrollbar for a sleek look */
-        ::-webkit-scrollbar {
-            width: 12px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1f2937;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #6366f1;
-            border-radius: 10px;
-            border: 3px solid #1f2937;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #4f46e5;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .section-title {
-                font-size: 2rem;
-            }
-            .subsection-title {
-                font-size: 1.75rem;
-            }
-            .concept-title {
-                font-size: 1.25rem;
-            }
-            .content-section {
-                padding: 1.5rem;
-            }
-            .back-button {
-                top: 1rem;
-                left: 1rem;
-                padding: 0.6rem 0.8rem;
-                font-size: 1rem;
-            }
-        }
-    </style>
 </head>
-<body>
-    <!-- Three.js Animated Background Canvas -->
-    <canvas id="three-bg"></canvas>
-
+<body class="bg-black text-white min-h-screen">
     <!-- Back Button -->
-    <a href="physics.html" class="back-button">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    <button class="fixed top-4 left-4 p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg z-50 flex items-center justify-center transition-all duration-300 ease-in-out transform hover:scale-105"
+            onclick="window.location.href='physics.html'"
+            aria-label="Go back to Physics page">
+        <svg class="back-button-svg w-6 h-6" viewBox="0 0 24 24">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
         </svg>
-    </a>
+    </button>
 
-    <div class="relative z-10 min-h-screen flex flex-col items-center py-10 px-4 md:px-8 lg:px-16">
-        <!-- Hero Section -->
-        <header class="text-center mb-12 py-8 px-6 rounded-3xl bg-gradient-to-br from-indigo-800 to-purple-900 shadow-2xl w-full max-w-4xl">
-            <h1 class="text-5xl md:text-6xl font-extrabold text-white leading-tight mb-4 tracking-wider">
-                <span class="text-indigo-300">Whizmath</span><br>
-                Projectile Motion: Advanced Trajectories
+    <!-- Main Content Container -->
+    <div class="container mx-auto p-4 sm:p-8 max-w-screen-xl relative z-10">
+        <header class="text-center mb-12 mt-12">
+            <h1 class="text-blue-400 font-extrabold leading-tight tracking-tight mb-4">
+                Whizmath
             </h1>
-            <p class="text-xl md:text-2xl text-indigo-200 font-light max-w-3xl mx-auto">
-                Discover the physics of objects in flight. Explore trajectories with and without air resistance, analyze motion on inclined planes, and learn to optimize for maximum range or height.
+            <h1 class="text-white font-extrabold leading-tight tracking-tight mb-4">
+                Projectile Motion: Advanced Trajectories and Real-World Considerations
+            </h1>
+            <p class="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto">
+                Beyond ideal paths: exploring the complexities of projectile motion with air resistance, inclined planes, and optimizing flight.
             </p>
         </header>
 
-        <!-- Main Content Container -->
-        <main class="w-full max-w-4xl">
+        <!-- Introduction Section -->
+        <section class="mb-16">
+            <h2 class="text-blue-400 font-semibold mb-6">Introduction: The Flight Path Unveiled</h2>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Projectile motion is one of the foundational topics in classical mechanics, describing the path of an object launched into the air under the influence of gravity. In introductory physics, we often simplify this phenomenon by neglecting air resistance and assuming a constant gravitational acceleration, leading to predictable parabolic trajectories. This ideal model provides a crucial starting point for understanding concepts like range, maximum height, and time of flight.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                However, the real world is rarely ideal. Factors such as air resistance (drag) significantly alter a projectile's path, and scenarios like launching from or landing on an inclined surface introduce new complexities. Furthermore, sports, engineering, and military applications often require optimizing projectile motion for specific outcomes, like achieving the maximum possible range or height under various initial conditions.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed">
+                In this advanced lesson on projectile motion, we will move beyond the ideal parabola. We'll rigorously analyze the impact of air resistance, which often necessitates solving coupled differential equations. We'll explore projectile motion over inclined planes, adding a new dimension to our analysis. Finally, we'll delve into optimizing trajectories by varying initial launch parameters, gaining insights crucial for fields ranging from ballistics to sports science. Prepare to deepen your understanding of how objects truly move through the air.
+            </p>
+        </section>
 
-            <!-- Section: Introduction to Projectile Motion -->
-            <section class="content-section">
-                <h2 class="section-title">1. Introduction to Projectile Motion</h2>
-                <p class="mb-6 leading-relaxed text-lg">
-                    <span class="glossary-term">Projectile motion</span> is a fundamental concept in classical mechanics that describes the motion of an object thrown or projected into the air, subject only to the force of gravity (and, in advanced analysis, air resistance). From a football kicked across a field to a rocket launching into orbit, understanding projectile motion is essential for predicting and controlling the path of objects in our everyday world and beyond.
-                </p>
-                <p class="mb-6 leading-relaxed text-lg">
-                    In its simplest form, projectile motion assumes an idealized scenario where the only significant force acting on the object is gravity. This simplification allows for straightforward analytical solutions, yielding the familiar parabolic trajectory. However, real-world projectiles are also affected by other forces, most notably air resistance, which significantly alters their paths. This lesson will explore both the idealized case and the more complex realities, including projectile motion over inclined surfaces and the optimization of trajectories.
-                </p>
-                <h3 class="subsection-title">1.1 What is a Projectile?</h3>
-                <p class="mb-4 leading-relaxed">
-                    A <span class="glossary-term">projectile</span> is any object that is given an initial velocity and then follows a path determined by gravity and any other external forces (like air resistance). Crucially, a projectile is *not* a self-propelled object (like a rocket whose engines are still firing). Once the initial impetus is given, the projectile is "in flight."
-                </p>
-                <p class="mb-6 leading-relaxed">
-                    Key characteristics of projectile motion:
-                </p>
-                <ul class="list-disc list-inside ml-6 mb-6 leading-relaxed">
-                    <li>The path followed by a projectile is called its <span class="glossary-term">trajectory</span>.</li>
-                    <li>Assuming no air resistance, the horizontal motion is at a constant velocity (zero horizontal acceleration).</li>
-                    <li>The vertical motion is subject to constant downward acceleration due to gravity ($g \approx 9.8\, \text{m/s}^2$).</li>
-                </ul>
+        <!-- Section 1: Review of Ideal Projectile Motion -->
+        <section class="mb-16">
+            <h2 class="text-blue-400 font-semibold mb-6">1. Review of Ideal Projectile Motion</h2>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Before delving into complexities, let's briefly recap the foundational model of projectile motion, which assumes:
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li>Negligible air resistance.</li>
+                <li>Constant gravitational acceleration ($g$) acting only vertically downwards.</li>
+                <li>The Earth's curvature is negligible over the trajectory.</li>
+            </ul>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Under these assumptions, the horizontal motion is uniform (constant velocity), and the vertical motion is uniformly accelerated (due to gravity).
+            </p>
 
-                <h3 class="subsection-title">1.2 Independence of Horizontal and Vertical Motion</h3>
-                <p class="mb-4 leading-relaxed">
-                    A key insight into solving projectile motion problems is recognizing the <span class="glossary-term">independence of horizontal and vertical motion</span>. This means we can analyze the horizontal and vertical components of motion separately using kinematic equations. The only common link between the two components is time.
-                </p>
-                <p class="mb-6 leading-relaxed">
-                    Consider an initial velocity $\vec{v}_0$ at an angle $\theta$ above the horizontal. We can decompose it into:
-                </p>
-                <ul class="list-disc list-inside ml-6 mb-6 leading-relaxed">
-                    <li>Horizontal initial velocity: $v_{0x} = v_0 \cos\theta$</li>
-                    <li>Vertical initial velocity: $v_{0y} = v_0 \sin\theta$</li>
-                </ul>
-                <p class="mb-6 leading-relaxed italic text-gray-400">
-                    This introductory section could be expanded with more examples of projectiles, historical context on Galileo's contributions to projectile motion analysis, and a deeper dive into vector decomposition for different initial angles.
-                </p>
-            </section>
+            <h3 class="text-white font-medium mb-4">1.1. Kinematic Equations (Ideal Case)</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Let initial velocity be $v_0$ at an angle $\theta_0$ with the horizontal.
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li><strong class="text-blue-300">Initial Velocity Components:</strong>
+                    $$v_{0x} = v_0 \cos\theta_0$$
+                    $$v_{0y} = v_0 \sin\theta_0$$
+                </li>
+                <li><strong class="text-blue-300">Horizontal Position and Velocity:</strong>
+                    $$x(t) = v_{0x} t = (v_0 \cos\theta_0) t$$
+                    $$v_x(t) = v_{0x} = v_0 \cos\theta_0$$
+                </li>
+                <li><strong class="text-blue-300">Vertical Position and Velocity:</strong>
+                    $$y(t) = v_{0y} t - \frac{1}{2}gt^2 = (v_0 \sin\theta_0) t - \frac{1}{2}gt^2$$
+                    $$v_y(t) = v_{0y} - gt = v_0 \sin\theta_0 - gt$$
+                </li>
+            </ul>
 
-            <!-- Section: Kinematics of Projectile Motion (Ideal Case) -->
-            <section class="content-section">
-                <h2 class="section-title">2. Kinematics of Projectile Motion (Ideal Case: No Air Resistance)</h2>
-                <p class="mb-6 leading-relaxed text-lg">
-                    In the idealized model of projectile motion, we make several simplifying assumptions:
-                </p>
-                <ul class="list-disc list-inside ml-6 mb-6 leading-relaxed">
-                    <li>Air resistance is negligible.</li>
-                    <li>The acceleration due to gravity ($g$) is constant in magnitude and direction throughout the motion.</li>
-                    <li>The Earth's curvature and rotation are negligible.</li>
-                </ul>
-                <p class="mb-6 leading-relaxed">
-                    Under these assumptions, the trajectory of a projectile is a perfect parabola.
-                </p>
+            <h3 class="text-white font-medium mb-4">1.2. Key Parameters (Ideal Case)</h3>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li><strong class="text-blue-300">Time of Flight ($T_f$):</strong> Time until the projectile returns to its initial height ($y=0$).
+                    $$T_f = \frac{2v_0 \sin\theta_0}{g}$$
+                </li>
+                <li><strong class="text-blue-300">Maximum Height ($H_{max}$):</strong> Vertical displacement at the peak of the trajectory ($v_y = 0$).
+                    $$H_{max} = \frac{(v_0 \sin\theta_0)^2}{2g}$$
+                </li>
+                <li><strong class="text-blue-300">Range ($R$):</strong> Horizontal distance covered when returning to initial height.
+                    $$R = \frac{v_0^2 \sin(2\theta_0)}{g}$$
+                </li>
+            </ul>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                For a given initial speed $v_0$, the maximum range occurs at $\theta_0 = 45^\circ$. This ideal model, while simplified, forms the bedrock upon which more complex analyses are built.
+            </p>
+        </section>
 
-                <h3 class="subsection-title">2.1 Equations of Motion</h3>
-                <p class="mb-4 leading-relaxed">
-                    Using constant acceleration kinematic equations for horizontal and vertical components:
-                </p>
-                <h4 class="concept-title">Horizontal Motion (x-direction):</h4>
-                <p class="mb-4 leading-relaxed">
-                    Since there's no horizontal acceleration ($a_x = 0$), the horizontal velocity is constant.
-                </p>
-                <div class="equation">
-                    $$v_x(t) = v_{0x} = v_0 \cos\theta$$
-                    $$x(t) = x_0 + v_{0x} t$$
-                </div>
-                <p class="mb-6 leading-relaxed">
-                    (Assuming $x_0 = 0$ for simplicity, $x(t) = (v_0 \cos\theta)t$).
-                </p>
+        <!-- Section 2: The Effects of Air Resistance (Drag) on Trajectory -->
+        <section class="mb-16">
+            <h2 class="text-blue-400 font-semibold mb-6">2. The Effects of Air Resistance (Drag) on Trajectory</h2>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                In reality, air resistance, or <strong class="text-blue-300">drag force</strong>, is almost always present and significantly affects the trajectory of projectiles, especially at higher speeds or for lighter objects. Drag always opposes the direction of motion, and its magnitude depends on the object's speed, shape, and the fluid's properties.
+            </p>
 
-                <h4 class="concept-title">Vertical Motion (y-direction):</h4>
-                <p class="mb-4 leading-relaxed">
-                    Subject to constant acceleration due to gravity ($a_y = -g$, taking upward as positive).
-                </p>
-                <div class="equation">
-                    $$v_y(t) = v_{0y} - gt = v_0 \sin\theta - gt$$
-                    $$y(t) = y_0 + v_{0y} t - \frac{1}{2} gt^2$$
-                </div>
-                <p class="mb-6 leading-relaxed">
-                    (Assuming $y_0 = 0$ for simplicity, $y(t) = (v_0 \sin\theta)t - \frac{1}{2} gt^2$).
-                </p>
+            <h3 class="text-white font-medium mb-4">2.1. Forms of Drag Force</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Drag force ($F_D$) typically takes one of two forms:
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li><strong class="text-blue-300">Linear Drag (Stokes' Law):</strong> For small objects moving at low speeds in viscous fluids (e.g., dust particles, oil droplets):
+                    $$\vec{F}_D = -b\vec{v}$$
+                    Where $b$ is a constant that depends on fluid viscosity and object size (e.g., for a sphere, $b = 6\pi\eta r$). The negative sign indicates it opposes motion.
+                </li>
+                <li><strong class="text-blue-300">Quadratic Drag (Turbulent Flow):</strong> For most macroscopic objects moving at typical speeds through air (e.g., baseballs, bullets, cars):
+                    $$\vec{F}_D = -\frac{1}{2} C \rho A v^2 \hat{v}$$
+                    Where $C$ is the drag coefficient, $\rho$ is the fluid density, $A$ is the cross-sectional area, $v$ is the speed, and $\hat{v}$ is the unit vector in the direction of velocity. The drag force is proportional to the square of the speed. This form is more common for real-world projectiles.
+                </li>
+            </ul>
 
-                <h3 class="subsection-title">2.2 Key Parameters of Ideal Projectile Motion</h3>
-                <h4 class="concept-title">2.2.1 Time of Flight ($T$)</h4>
-                <p class="mb-4 leading-relaxed">
-                    The total time the projectile spends in the air. For a projectile launched from and landing at the same height ($y_0 = y = 0$):
+            <h3 class="text-white font-medium mb-4">2.2. Equations of Motion with Drag (Coupled Differential Equations)</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                When air resistance is included, Newton's second law becomes more complex. The drag force components depend on the instantaneous velocity components, leading to <strong class="text-blue-300">coupled differential equations</strong> that are often challenging or impossible to solve analytically.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Consider quadratic drag. The net force components are:
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li><strong class="text-blue-300">Horizontal:</strong> $F_x = -F_D \cos\phi = -(\frac{1}{2} C \rho A v^2) \frac{v_x}{v} = -kv v_x$</li>
+                <li><strong class="text-blue-300">Vertical:</strong> $F_y = -mg - F_D \sin\phi = -mg - (\frac{1}{2} C \rho A v^2) \frac{v_y}{v} = -mg - kv v_y$</li>
+            </ul>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Where $k = \frac{1}{2} C \rho A$, and $v = \sqrt{v_x^2 + v_y^2}$. Newton's Second Law then gives:
+            </p>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 overflow-x-auto">
+                <p class="text-blue-300 text-lg font-mono">
+                    $$m\frac{dv_x}{dt} = -k \sqrt{v_x^2 + v_y^2} v_x$$
+                    $$m\frac{dv_y}{dt} = -mg - k \sqrt{v_x^2 + v_y^2} v_y$$
                 </p>
-                <div class="equation">
-                    $$T = \frac{2v_0 \sin\theta}{g}$$
-                </div>
+            </div>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                These are coupled because $v_x$ depends on $v_y$ (via $v$) and vice-versa. Solving these usually requires numerical methods (e.g., Euler's method, Runge-Kutta methods), often implemented in computational software.
+            </p>
 
-                <h4 class="concept-title">2.2.2 Maximum Height ($H_{max}$)</h4>
-                <p class="mb-4 leading-relaxed">
-                    The highest point reached by the projectile, where its vertical velocity $v_y = 0$.
-                </p>
-                <div class="equation">
-                    $$H_{max} = \frac{(v_0 \sin\theta)^2}{2g}$$
-                </div>
+            <h3 class="text-white font-medium mb-4">2.3. Impact of Drag on Trajectory</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                The presence of drag leads to significant deviations from the ideal parabolic path:
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li><strong class="text-blue-300">Reduced Range and Height:</strong> The maximum range and height are substantially smaller than predicted by the ideal model.</li>
+                <li><strong class="text-blue-300">Asymmetric Trajectory:</strong> The trajectory is no longer symmetric. The descent path is steeper and shorter than the ascent path. The maximum height is shifted horizontally, and the time to reach maximum height is generally less than the time to fall from maximum height back to the launch elevation.</li>
+                <li><strong class="text-blue-300">Terminal Velocity:</strong> If the object falls long enough, it will eventually reach a constant speed called terminal velocity, where the drag force balances the gravitational force.</li>
+            </ul>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Understanding these effects is critical for accurate modeling in fields like ballistics, sports analytics, and atmospheric science.
+            </p>
+        </section>
 
-                <h4 class="concept-title">2.2.3 Horizontal Range ($R$)</h4>
-                <p class="mb-4 leading-relaxed">
-                    The total horizontal distance traveled when the projectile returns to its initial vertical level ($y=y_0$).
-                </p>
-                <div class="equation">
-                    $$R = v_{0x} T = \frac{v_0^2 \sin(2\theta)}{g}$$
-                </div>
-                <p class="mb-6 leading-relaxed">
-                    This formula for range clearly shows that for a given initial speed $v_0$, the maximum range occurs when $\sin(2\theta)$ is maximum, which is when $2\theta = 90^\circ$, or $\theta = 45^\circ$.
-                </p>
-                <div class="example-box">
-                    <p class="font-bold mb-2">Example 1: Football Kick</p>
-                    <p>A football is kicked with an initial velocity of $20\, \text{m/s}$ at an angle of $30^\circ$ above the horizontal.</p>
-                    <p>Given: $v_0 = 20\, \text{m/s}$, $\theta = 30^\circ$, $g = 9.8\, \text{m/s}^2$.</p>
-                    <p>a) Calculate the time of flight:</p>
-                    <p>$T = \frac{2(20\, \text{m/s}) \sin(30^\circ)}{9.8\, \text{m/s}^2} = \frac{2(20)(0.5)}{9.8} \approx 2.04\, \text{s}$</p>
-                    <p>b) Calculate the maximum height:</p>
-                    <p>$H_{max} = \frac{(20\, \text{m/s} \cdot \sin(30^\circ))^2}{2(9.8\, \text{m/s}^2)} = \frac{(20 \cdot 0.5)^2}{19.6} = \frac{10^2}{19.6} = \frac{100}{19.6} \approx 5.10\, \text{m}$</p>
-                    <p>c) Calculate the horizontal range:</p>
-                    <p>$R = \frac{(20\, \text{m/s})^2 \sin(2 \cdot 30^\circ)}{9.8\, \text{m/s}^2} = \frac{400 \sin(60^\circ)}{9.8} = \frac{400 \cdot 0.866}{9.8} \approx 35.3\, \text{m}$</p>
-                </div>
+        <!-- Section 3: Projectile Motion on Inclined Planes -->
+        <section class="mb-16">
+            <h2 class="text-blue-400 font-semibold mb-6">3. Projectile Motion on Inclined Planes</h2>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Analyzing projectile motion when the launch point or landing point (or both) are on an inclined plane introduces a new layer of geometric complexity. The key is to carefully set up the coordinate system and define the displacement for the landing condition.
+            </p>
 
-                <p class="mb-6 leading-relaxed text-lg italic text-gray-400">
-                    This section could be significantly expanded with more examples, including launches from cliffs, targets at different heights, and cases where only components of initial velocity are given. Discussions on how to derive the parabolic equation of trajectory ($y$ as a function of $x$) would also be valuable.
-                </p>
-            </section>
+            <h3 class="text-white font-medium mb-4">3.1. Setting Up the Coordinate System</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                There are two common approaches to setting up the coordinate system:
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li><strong class="text-blue-300">Horizontal-Vertical (Standard) Coordinates:</strong> Keep the x-axis horizontal and the y-axis vertical. This simplifies the gravitational acceleration ($\vec{g} = -g\hat{j}$). The initial velocity components are $v_{0x} = v_0 \cos\theta_0$ and $v_{0y} = v_0 \sin\theta_0$. The challenge then lies in defining the landing condition. If the incline makes an angle $\alpha$ with the horizontal, then the landing point $(x_f, y_f)$ must satisfy $y_f = x_f \tan\alpha$.</li>
+                <li><strong class="text-blue-300">Inclined Coordinates:</strong> Align the x-axis along the incline and the y-axis perpendicular to it. This simplifies the landing condition (e.g., $y_f = 0$ in the new system). However, gravitational acceleration must now be resolved into components:
+                    $$g_x = -g \sin\alpha$$
+                    $$g_y = -g \cos\alpha$$
+                    The initial velocity components also need to be resolved relative to the new axes. This method can sometimes simplify the equations of motion but might complicate initial velocity resolution.
+                </li>
+            </ul>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                The standard horizontal-vertical coordinate system is often preferred due to the constant nature of gravitational acceleration components.
+            </p>
 
-            <!-- Section: Advanced Analysis: The Effect of Air Resistance -->
-            <section class="content-section">
-                <h2 class="section-title">3. Advanced Analysis: The Effect of Air Resistance</h2>
-                <p class="mb-6 leading-relaxed text-lg">
-                    In the real world, the idealized parabolic trajectory is rarely observed precisely because of <span class="glossary-term">air resistance</span> (also known as drag). Air resistance is a force that opposes the motion of an object through the air. It significantly alters the projectile's trajectory, reducing its range and maximum height, and making the descent steeper than the ascent.
-                </p>
-                <h3 class="subsection-title">3.1 Understanding Air Resistance (Drag Force)</h3>
-                <p class="mb-4 leading-relaxed">
-                    The drag force arises from two primary mechanisms:
-                </p>
-                <ul class="list-disc list-inside ml-6 mb-6 leading-relaxed">
-                    <li><span class="glossary-term">Form Drag:</span> Due to pressure differences created by the object pushing through and displacing the fluid.</li>
-                    <li><span class="glossary-term">Skin Friction:</span> Due to the viscosity of the fluid interacting with the object's surface.</li>
-                </ul>
-                <p class="mb-4 leading-relaxed">
-                    The magnitude of the drag force ($F_D$) depends on several factors:
-                </p>
-                <ul class="list-disc list-inside ml-6 mb-6 leading-relaxed">
-                    <li>The object's speed ($v$).</li>
-                    <li>The object's shape and size (captured by the <span class="glossary-term">drag coefficient, $C$</span>, and <span class="glossary-term">cross-sectional area, $A$</span>).</li>
-                    <li>The fluid's properties (density, $\rho$).</li>
-                </ul>
-                <p class="mb-4 leading-relaxed">
-                    Two common models for drag force are:
-                </p>
-                <ul class="list-disc list-inside ml-6 mb-6 leading-relaxed">
-                    <li><span class="glossary-term">Linear Drag ($F_D = -bv$):</span> Applicable for small, slow-moving objects in viscous fluids (e.g., dust particles, very slow projectiles). $b$ is a constant related to fluid viscosity and object size.</li>
-                    <li><span class="glossary-term">Quadratic Drag ($F_D = -\frac{1}{2} C \rho A v^2$):</span> Applicable for larger, faster-moving objects in air or water (e.g., cannonballs, golf balls, cars). This is the more common model for typical projectiles.</li>
-                </ul>
-                <p class="mb-6 leading-relaxed">
-                    The direction of the drag force is always opposite to the direction of the object's velocity vector. This is a crucial difference from gravity, which always acts vertically downward.
-                </p>
+            <h3 class="text-white font-medium mb-4">3.2. Equations of Motion on an Inclined Plane (Ideal Case)</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Let the projectile be launched from the origin $(0,0)$ with initial speed $v_0$ at an angle $\theta$ (relative to the horizontal). The inclined plane makes an angle $\alpha$ with the horizontal. We are looking for the point $(x_f, y_f)$ where the projectile lands on the incline.
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li><strong class="text-blue-300">Kinematic Equations:</strong>
+                    $$x(t) = (v_0 \cos\theta) t$$
+                    $$y(t) = (v_0 \sin\theta) t - \frac{1}{2}gt^2$$
+                </li>
+                <li><strong class="text-blue-300">Landing Condition:</strong> The projectile lands when $y(t) = x(t) \tan\alpha$. Substitute the kinematic equations into this condition:
+                    $$(v_0 \sin\theta) t - \frac{1}{2}gt^2 = (v_0 \cos\theta) t \tan\alpha$$
+                    This equation can be solved for the time of flight $T_f$ to the inclined plane. Once $T_f$ is found, substitute it back into $x(t)$ to find the range along the horizontal.
+                </li>
+            </ul>
 
-                <h3 class="subsection-title">3.2 The Impact of Air Resistance on Trajectory</h3>
-                <p class="mb-4 leading-relaxed">
-                    When air resistance is significant, the projectile's motion becomes asymmetric:
+            <h3 class="text-white font-medium mb-4">3.3. Max Range on an Inclined Plane</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                The angle for maximum range on an inclined plane is not $45^\circ$. It depends on the angle of inclination $\alpha$.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                For a projectile launched with speed $v_0$ from the base of an inclined plane of angle $\alpha$, the angle $\theta_{max}$ (relative to the horizontal) for maximum range *up* the incline is:
+            </p>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 overflow-x-auto">
+                <p class="text-blue-300 text-lg font-mono">
+                    $$\theta_{max} = \frac{\pi}{4} + \frac{\alpha}{2} = 45^\circ + \frac{\alpha}{2}$$
                 </p>
-                <ul class="list-disc list-inside ml-6 mb-6 leading-relaxed">
-                    <li><span class="glossary-term">Reduced Range:</span> The projectile travels a shorter horizontal distance.</li>
-                    <li><span class="glossary-term">Reduced Maximum Height:</span> The projectile does not reach as high.</li>
-                    <li><span class="glossary-term">Asymmetric Trajectory:</span> The descending portion of the path is steeper and shorter than the ascending portion. The time to reach maximum height is generally less than the time to fall from maximum height back to the original level.</li>
-                    <li>The horizontal velocity is no longer constant; it continuously decreases due to the horizontal component of drag.</li>
-                    <li>The vertical motion is influenced by both gravity and the vertical component of drag, making the net vertical acceleration non-constant.</li>
-                </ul>
+            </div>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                If the projectile is launched *down* an incline (angle $-\alpha$), the angle for maximum range is:
+            </p>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 overflow-x-auto">
+                <p class="text-blue-300 text-lg font-mono">
+                    $$\theta_{max} = \frac{\pi}{4} - \frac{\alpha}{2} = 45^\circ - \frac{\alpha}{2}$$
+                </p>
+            </div>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Deriving these involves finding the range as a function of launch angle and then maximizing it using calculus ($\frac{dR}{d\theta} = 0$). This demonstrates how the optimal launch angle shifts away from $45^\circ$ when the landing surface is not horizontal.
+            </p>
+        </section>
 
-                <h3 class="subsection-title">3.3 Coupled Differential Equations for Projectile Motion with Air Resistance</h3>
-                <p class="mb-4 leading-relaxed">
-                    Due to the velocity-dependent nature of air resistance and its changing direction, the equations of motion for projectile motion with drag are no longer simple constant-acceleration equations. Instead, they become a system of <span class="glossary-term">coupled differential equations</span>.
-                </p>
-                <p class="mb-4 leading-relaxed">
-                    Using Newton's Second Law ($\vec{F}_{net} = m\vec{a}$), and considering the forces in x and y components:
-                </p>
-                <p class="mb-4 leading-relaxed">
-                    Let's assume quadratic drag: $\vec{F}_D = -kv\vec{v}$, where $k = \frac{1}{2} C \rho A$. (The vector $\vec{v}$ ensures the drag force is always opposite to velocity, and $v$ is its magnitude).
-                </p>
-                <h4 class="concept-title">Equations for Quadratic Drag:</h4>
-                <p class="mb-4 leading-relaxed">
-                    Horizontal component ($x$-direction):
-                </p>
-                <div class="equation">
-                    $$m \frac{dv_x}{dt} = -kv v_x$$
-                </div>
-                <p class="mb-4 leading-relaxed">
-                    Vertical component ($y$-direction):
-                </p>
-                <div class="equation">
-                    $$m \frac{dv_y}{dt} = -mg - kv v_y$$
-                </div>
-                <p class="mb-6 leading-relaxed">
-                    Here, $v = \sqrt{v_x^2 + v_y^2}$. Notice that the equation for $v_x$ depends on $v_y$ (through $v$), and the equation for $v_y$ depends on $v_x$ (through $v$). This interdependency is why they are "coupled." These equations are non-linear and typically do not have simple analytical solutions.
-                </p>
+        <!-- Section 4: Varying Initial Conditions for Maximum Range or Height -->
+        <section class="mb-16">
+            <h2 class="text-blue-400 font-semibold mb-6">4. Varying Initial Conditions for Maximum Range or Height</h2>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                In many practical applications, the goal is to achieve specific outcomes for projectile motion, such as maximizing the range, maximizing the height, or hitting a particular target. This involves carefully choosing the initial launch angle and speed, considering various constraints.
+            </p>
 
-                <h3 class="subsection-title">3.4 Analytical vs. Numerical Solutions</h3>
-                <p class="mb-4 leading-relaxed">
-                    For linear drag, analytical solutions are possible, involving exponential terms. However, for the more realistic quadratic drag, analytical solutions are generally not feasible. Therefore, we resort to <span class="glossary-term">numerical methods</span> to approximate the trajectory.
-                </p>
-                <ul class="list-disc list-inside ml-6 mb-6 leading-relaxed">
-                    <li><span class="glossary-term">Numerical Methods:</span> Techniques like Euler's method or Runge-Kutta methods break the motion into small time steps. In each step, forces and accelerations are calculated, and then velocities and positions are updated based on these values. Repeating this process iteratively allows for a step-by-step approximation of the entire trajectory.</li>
-                </ul>
-                <p class="mb-6 leading-relaxed">
-                    The use of numerical methods is crucial in fields like ballistics, sports science, and aerospace engineering, where accurate trajectory prediction is vital.
-                </p>
+            <h3 class="text-white font-medium mb-4">4.1. Maximum Range on Horizontal Ground (Ideal)</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                As seen in the review, for a fixed initial speed $v_0$ and level ground, the maximum range $R = \frac{v_0^2 \sin(2\theta_0)}{g}$ occurs when $\sin(2\theta_0)$ is maximum, i.e., $\sin(2\theta_0) = 1$, which implies $2\theta_0 = 90^\circ$, so $\theta_0 = 45^\circ$.
+            </p>
 
-                <p class="mb-6 leading-relaxed text-lg italic text-gray-400">
-                    This section is ripe for expansion with visual comparisons of parabolic vs. realistic trajectories, detailed derivations for linear drag, and a conceptual walkthrough of Euler's method for solving the differential equations (without coding it directly in this lesson). Examples comparing range/height with and without air resistance would be highly illustrative.
-                </p>
-            </section>
+            <h3 class="text-white font-medium mb-4">4.2. Maximum Height (Ideal)</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                The maximum height $H_{max} = \frac{(v_0 \sin\theta_0)^2}{2g}$ is maximized when $\sin\theta_0$ is maximum, i.e., $\sin\theta_0 = 1$, which implies $\theta_0 = 90^\circ$. This corresponds to throwing the object straight up. In this case, the range is zero.
+            </p>
 
-            <!-- Section: Projectile Motion on Inclined Planes -->
-            <section class="content-section">
-                <h2 class="section-title">4. Projectile Motion on Inclined Planes</h2>
-                <p class="mb-6 leading-relaxed text-lg">
-                    Analyzing projectile motion on an inclined plane introduces an additional layer of complexity but also reveals interesting behaviors. This scenario is common in sports (e.g., throwing a ball up or down a hill) and engineering (e.g., objects launched from ramps).
-                </p>
+            <h3 class="text-white font-medium mb-4">4.3. Trade-offs between Range and Height</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                It's clear there's a trade-off: to maximize range, you launch at $45^\circ$; to maximize height, you launch at $90^\circ$. Real-world scenarios often require balancing these objectives or hitting a target that is neither at maximum range nor maximum height.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                For a given initial speed, there are typically two launch angles that can achieve a specific range (less than maximum range) – one angle below $45^\circ$ and one angle above $45^\circ$ (e.g., $30^\circ$ and $60^\circ$ for the same range). The higher angle results in a longer time of flight and a higher trajectory.
+            </p>
 
-                <h3 class="subsection-title">4.1 Setting Up the Coordinate System</h3>
-                <p class="mb-4 leading-relaxed">
-                    When dealing with inclined planes, it is often advantageous to rotate the coordinate system so that the x-axis is parallel to the incline and the y-axis is perpendicular to it. This simplifies the analysis of the normal force and friction (if present), but it complicates the gravitational force.
-                </p>
-                <ul class="list-disc list-inside ml-6 mb-6 leading-relaxed">
-                    <li>Let the incline make an angle $\phi$ (phi) with the horizontal.</li>
-                    <li>The initial velocity $\vec{v}_0$ is launched at an angle $\theta$ *relative to the incline*.</li>
-                    <li>Gravity ($mg$) still acts vertically downwards. When resolved into components parallel and perpendicular to the incline:
-                        <ul>
-                            <li>Component parallel to incline: $mg \sin\phi$ (down the incline)</li>
-                            <li>Component perpendicular to incline: $mg \cos\phi$ (into the incline)</li>
-                        </ul>
-                    </li>
-                </ul>
+            <h3 class="text-white font-medium mb-4">4.4. Optimization with Air Resistance (Numerical Approach)</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                When air resistance is significant, the optimal launch angle for maximum range is generally *less* than $45^\circ$. The precise angle depends on the object's properties (mass, size, shape) and the air density.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Since analytical solutions for trajectories with air resistance are rare, finding the optimal launch angle typically involves:
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li><strong class="text-blue-300">Numerical Simulation:</strong> Using computational methods to simulate the trajectory for various launch angles and then identifying the angle that yields the maximum range.</li>
+                <li><strong class="text-blue-300">Optimization Algorithms:</strong> Employing numerical optimization techniques to find the angle that maximizes the range function (derived from the numerical solutions of the differential equations).</li>
+            </ul>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                For example, a baseball hit at $45^\circ$ will travel less far than one hit at, say, $35^\circ$ or $40^\circ$ because the higher trajectory keeps it in the air longer, exposing it to more cumulative drag. The optimal angle for a baseball is closer to $30^\circ-35^\circ$ depending on initial speed.
+            </p>
+        </section>
 
-                <h3 class="subsection-title">4.2 Equations of Motion on an Incline (Ideal Case)</h3>
-                <p class="mb-4 leading-relaxed">
-                    Consider launching a projectile *up* an incline. The initial velocity $\vec{v}_0$ makes an angle $\alpha$ with the horizontal ground, and the incline itself makes an angle $\phi$ with the horizontal. It is usually easier to use the horizontal-vertical coordinate system ($x-y$ coordinates) for the projectile's motion, and then define the landing point based on the incline's equation.
-                </p>
-                <p class="mb-4 leading-relaxed">
-                    The general position equations (assuming launch from origin):
-                </p>
-                <div class="equation">
-                    $$x(t) = (v_0 \cos\alpha)t$$
-                    $$y(t) = (v_0 \sin\alpha)t - \frac{1}{2} gt^2$$
-                </div>
-                <p class="mb-6 leading-relaxed">
-                    The equation of the inclined plane (if it passes through the origin) is $y = (\tan\phi)x$. To find where the projectile lands on the incline, you set $y(t) = (\tan\phi)x(t)$ and solve for $t$.
-                </p>
+        <!-- Section 5: Solving Coupled Differential Equations -->
+        <section class="mb-16">
+            <h2 class="text-blue-400 font-semibold mb-6">5. Solving Coupled Differential Equations</h2>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                As highlighted throughout this lesson, the inclusion of forces like quadratic air resistance often transforms the simple kinematic equations into <strong class="text-blue-300">coupled differential equations</strong>. These equations are "coupled" because the rate of change of one variable (e.g., $v_x$) depends on another variable (e.g., $v_y$) and vice-versa, making them non-separable.
+            </p>
 
-                <h4 class="concept-title">Time of Flight ($T_{incline}$) on an Incline:</h4>
-                <p class="mb-4 leading-relaxed">
-                    By substituting the position equations into $y(t) = (\tan\phi)x(t)$ (for ascent) or $y(t) = -(\tan\phi)x(t)$ (for descent):
+            <h3 class="text-white font-medium mb-4">5.1. The Nature of the Challenge</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                For the ideal case, we can easily integrate $\frac{dv_x}{dt} = 0$ and $\frac{dv_y}{dt} = -g$ separately. With drag, the equations become:
+            </p>
+            <div class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 overflow-x-auto">
+                <p class="text-blue-300 text-lg font-mono">
+                    $$\frac{dv_x}{dt} = -\frac{k}{m} v v_x$$
+                    $$\frac{dv_y}{dt} = -g - \frac{k}{m} v v_y$$
                 </p>
-                <div class="equation">
-                    $$ (v_0 \sin\alpha)t - \frac{1}{2} gt^2 = (\tan\phi) (v_0 \cos\alpha)t $$
-                </div>
-                <p class="mb-6 leading-relaxed">
-                    Solving for $t$ (excluding $t=0$):
-                </p>
-                <div class="equation">
-                    $$T_{incline} = \frac{2v_0}{g} \frac{\sin(\alpha - \phi)}{\cos\phi} \quad \text{(for launching up the incline)}$$
-                    $$T_{incline} = \frac{2v_0}{g} \frac{\sin(\alpha + \phi)}{\cos\phi} \quad \text{(for launching down the incline)}$$
-                </div>
-                <p class="mb-6 leading-relaxed">
-                    Note: The angles $\alpha$ and $\phi$ are measured from the horizontal. For launching *down* the incline, the final $y$ will be negative, and the equation of the line representing the incline becomes $y = -(\tan\phi)x$.
-                </p>
+            </div>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                where $v = \sqrt{v_x^2 + v_y^2}$. The dependence of the drag force on $v$ (which involves both $v_x$ and $v_y$) means these equations cannot be solved independently by direct integration.
+            </p>
 
-                <h4 class="concept-title">Range ($R_{incline}$) on an Incline:</h4>
-                <p class="mb-4 leading-relaxed">
-                    Once $T_{incline}$ is found, the range along the incline can be found by substituting $T_{incline}$ back into $x(t)$ and then calculating the distance along the incline ($D = \sqrt{x^2 + y^2}$). A common approach is to find the horizontal range $X = x(T_{incline})$ and then $R_{incline} = X/\cos\phi$.
-                </p>
-                <div class="equation">
-                    $$R_{incline} = \frac{v_0^2}{g \cos^2\phi} [ \sin(2\alpha - \phi) - \sin\phi ] \quad \text{(general formula)}$$
-                </div>
-                <p class="mb-6 leading-relaxed">
-                    This formula is for range along the incline from the origin to the point it lands on the incline, for a projectile launched at angle $\alpha$ from the horizontal from the origin, where the incline is at angle $\phi$ to the horizontal.
-                </p>
-                <div class="example-box">
-                    <p class="font-bold mb-2">Example 7: Projectile up an Incline</p>
-                    <p>A projectile is launched with speed $v_0 = 15\, \text{m/s}$ at an angle of $\alpha = 60^\circ$ from the horizontal. It lands on an incline of angle $\phi = 30^\circ$ from the horizontal, passing through the launch point.</p>
-                    <p>Using the time of flight formula for launching up the incline:</p>
-                    <p>$T_{incline} = \frac{2(15\, \text{m/s})}{9.8\, \text{m/s}^2} \frac{\sin(60^\circ - 30^\circ)}{\cos(30^\circ)}$</p>
-                    <p>$T_{incline} = \frac{30}{9.8} \frac{\sin(30^\circ)}{\cos(30^\circ)} = 3.06 \frac{0.5}{0.866} \approx 1.77\, \text{s}$</p>
-                    <p>Now, find the horizontal distance $X = (v_0 \cos\alpha)T_{incline} = (15 \cos 60^\circ)(1.77) = (15 \cdot 0.5)(1.77) = 7.5 \cdot 1.77 \approx 13.28\, \text{m}$</p>
-                    <p>The range along the incline is $R_{incline} = X / \cos\phi = 13.28 / \cos 30^\circ = 13.28 / 0.866 \approx 15.33\, \text{m}$.</p>
-                </div>
+            <h3 class="text-white font-medium mb-4">5.2. Numerical Methods</h3>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                The standard approach to solving such systems is through <strong class="text-blue-300">numerical methods</strong>. These methods approximate the continuous change of variables over small time steps. Common techniques include:
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mb-4 ml-4">
+                <li><strong class="text-blue-300">Euler's Method:</strong> A simple, first-order method. Given an initial state $(x_0, y_0, v_{x0}, v_{y0})$ at $t_0$, we can approximate the state at $t_0 + \Delta t$:
+                    $$v_x(t + \Delta t) \approx v_x(t) + \frac{dv_x}{dt}\Delta t$$
+                    $$v_y(t + \Delta t) \approx v_y(t) + \frac{dv_y}{dt}\Delta t$$
+                    And then update positions:
+                    $$x(t + \Delta t) \approx x(t) + v_x(t)\Delta t$$
+                    $$y(t + \Delta t) \approx y(t) + v_y(t)\Delta t$$
+                    Repeating this process iteratively allows us to trace the trajectory. Smaller $\Delta t$ values lead to greater accuracy but more computation.
+                </li>
+                <li><strong class="text-blue-300">Runge-Kutta Methods (RK4):</strong> More sophisticated and accurate methods that use weighted averages of slopes over the interval to make better approximations. RK4 is a very common and robust method for solving systems of ordinary differential equations.</li>
+            </ul>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                These numerical solutions are the backbone of modern projectile simulation software used in fields like sports science, military ballistics, and animation. They allow for accurate prediction of trajectories even when complex, non-linear forces are at play.
+            </p>
+        </section>
 
-                <p class="mb-6 leading-relaxed text-lg italic text-gray-400">
-                    This section should contain more diagrams showing the coordinate system choices and vector decomposition. It could also cover scenarios where air resistance is present on an incline (leading to numerical solutions again) and the advantages/disadvantages of different coordinate system choices.
-                </p>
-            </section>
+        <!-- Conclusion Section -->
+        <section class="mb-16">
+            <h2 class="text-blue-400 font-semibold mb-6">Conclusion: Mastering the Art of Projectile Prediction</h2>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Our advanced exploration of projectile motion has taken us beyond the simple parabolic paths often encountered in introductory physics. By incorporating real-world complexities such as <strong class="text-blue-300">air resistance (drag)</strong>, we've seen how forces proportional to velocity or velocity-squared drastically alter trajectories, leading to reduced ranges, lower maximum heights, and asymmetric flight paths. The necessity of solving <strong class="text-blue-300">coupled differential equations</strong> underscores the power of numerical methods in practical physics.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed mb-4">
+                Furthermore, the analysis of <strong class="text-blue-300">projectile motion on inclined planes</strong> demonstrates how adapting our coordinate systems and boundary conditions allows for the accurate prediction of landing points and flight times on non-horizontal surfaces. We also delved into the strategic aspect of <strong class="text-blue-300">varying initial conditions</strong> to optimize for maximum range or height, highlighting how the optimal launch angle deviates from $45^\circ$ in the presence of drag or inclined terrains.
+            </p>
+            <p class="text-gray-300 text-base md:text-lg leading-relaxed">
+                The ability to analyze projectile motion with these advanced considerations is invaluable across numerous disciplines—from designing sports equipment and predicting the flight of a thrown ball, to calculating ballistic trajectories and understanding atmospheric phenomena. At Whizmath, we hope this comprehensive lesson has equipped you with a deeper appreciation for the intricacies of motion and the robust mathematical tools required to model the physical world accurately. Keep practicing, keep questioning, and continue to master the fascinating art of projectile prediction!
+            </p>
+        </section>
 
-            <!-- Section: Optimizing Projectile Trajectories -->
-            <section class="content-section">
-                <h2 class="section-title">5. Optimizing Projectile Trajectories</h2>
-                <p class="mb-6 leading-relaxed text-lg">
-                    In many applications, the goal is not just to predict a projectile's path but to optimize it for a specific outcome, such as achieving maximum range or maximum height. This involves choosing the ideal initial launch angle for a given initial speed.
-                </p>
-
-                <h3 class="subsection-title">5.1 Maximum Range on Horizontal Ground (No Air Resistance)</h3>
-                <p class="mb-4 leading-relaxed">
-                    From the range formula $R = \frac{v_0^2 \sin(2\theta)}{g}$, it is clear that for a fixed initial speed $v_0$ and gravitational acceleration $g$, the range $R$ is maximized when $\sin(2\theta)$ is at its maximum value, which is $1$.
-                </p>
-                <p class="mb-6 leading-relaxed">
-                    This occurs when $2\theta = 90^\circ$, meaning:
-                </p>
-                <div class="equation">
-                    $$\theta_{max\_range} = 45^\circ$$
-                </div>
-                <p class="mb-6 leading-relaxed">
-                    So, to achieve the maximum horizontal distance on level ground, a projectile should be launched at an angle of $45^\circ$.
-                </p>
-
-                <h3 class="subsection-title">5.2 Maximum Height on Horizontal Ground (No Air Resistance)</h3>
-                <p class="mb-4 leading-relaxed">
-                    From the maximum height formula $H_{max} = \frac{(v_0 \sin\theta)^2}{2g}$, the height $H_{max}$ is maximized when $\sin\theta$ is at its maximum value, which is $1$.
-                </p>
-                <p class="mb-6 leading-relaxed">
-                    This occurs when $\theta = 90^\circ$, meaning:
-                </p>
-                <div class="equation">
-                    $$\theta_{max\_height} = 90^\circ$$
-                </div>
-                <p class="mb-6 leading-relaxed">
-                    Launching an object straight upwards ($90^\circ$) will give it its maximum possible height, but its horizontal range will be zero.
-                </p>
-
-                <h3 class="subsection-title">5.3 Optimization with Air Resistance and on Inclined Planes</h3>
-                <p class="mb-4 leading-relaxed">
-                    When air resistance is present, the optimal launch angle for maximum range is no longer $45^\circ$. Due to the non-linear nature of drag, the optimal angle generally decreases as initial speed increases and as the object becomes more susceptible to drag. For typical projectiles, the optimal angle is usually slightly less than $45^\circ$ (e.g., around $35^\circ - 40^\circ$ for a golf ball). Finding this optimal angle analytically is very complex; it often requires numerical optimization.
-                </p>
-                <p class="mb-6 leading-relaxed">
-                    Similarly, for projectile motion on inclined planes, the optimal launch angle (relative to the horizontal) for maximum range depends on the angle of the incline itself. The optimal angle for maximum range up an incline is generally found to be at an angle of $45^\circ + \phi/2$ relative to the horizontal, where $\phi$ is the incline angle. For down an incline, it is $45^\circ - \phi/2$. However, this is for the *ideal* case without air resistance.
-                </p>
-
-                <p class="mb-6 leading-relaxed text-lg italic text-gray-400">
-                    This section could be significantly expanded with graphs showing optimal angles under various drag conditions, practical examples from sports (e.g., how shot putters optimize their launch), and a deeper mathematical dive into the optimization process (e.g., taking derivatives to find maxima).
-                </p>
-            </section>
-
-            <!-- Section: Solving Coupled Differential Equations (Conceptual & Numerical Approach) -->
-            <section class="content-section">
-                <h2 class="section-title">6. Solving Coupled Differential Equations: A Numerical Necessity</h2>
-                <p class="mb-6 leading-relaxed text-lg">
-                    As discussed in Section 3, when air resistance (especially quadratic drag) is factored into projectile motion, the equations describing the horizontal and vertical components of acceleration become interdependent, or "coupled." This means you can't solve for $v_x$ without knowing $v_y$, and vice-versa, because the total speed $v = \sqrt{v_x^2 + v_y^2}$ influences the drag force on both components.
-                </p>
-
-                <h3 class="subsection-title">6.1 The Challenge of Non-Linearity</h3>
-                <p class="mb-4 leading-relaxed">
-                    The presence of the $v$ term (which itself is dependent on $v_x$ and $v_y$) makes the differential equations non-linear. This non-linearity is what prevents simple analytical (closed-form) solutions, unlike the constant-acceleration case.
-                </p>
-                <div class="equation">
-                    $$ \frac{d^2x}{dt^2} = -\frac{k}{m} \sqrt{\left(\frac{dx}{dt}\right)^2 + \left(\frac{dy}{dt}\right)^2} \frac{dx}{dt} $$
-                    $$ \frac{d^2y}{dt^2} = -g - \frac{k}{m} \sqrt{\left(\frac{dx}{dt}\right)^2 + \left(\frac{dy}{dt}\right)^2} \frac{dy}{dt} $$
-                </div>
-                <p class="mb-6 leading-relaxed">
-                    These are second-order coupled differential equations. To solve them, we convert them into a system of first-order equations, typically focusing on velocity and position:
-                    $$ \frac{dx}{dt} = v_x $$
-                    $$ \frac{dy}{dt} = v_y $$
-                    $$ \frac{dv_x}{dt} = -\frac{k}{m} v v_x $$
-                    $$ \frac{dv_y}{dt} = -g - \frac{k}{m} v v_y $$
-                </p>
-
-                <h3 class="subsection-title">6.2 Introduction to Numerical Methods</h3>
-                <p class="mb-4 leading-relaxed">
-                    Since analytical solutions are generally not available, we turn to numerical methods. These methods approximate the solution by iteratively calculating the state of the system over small time steps ($\Delta t$).
-                </p>
-                <h4 class="concept-title">6.2.1 Euler's Method (Simplest Approach)</h4>
-                <p class="mb-4 leading-relaxed">
-                    Euler's method is the simplest numerical integration technique. It assumes that the acceleration is constant over a small time interval $\Delta t$.
-                </p>
-                <p class="mb-6 leading-relaxed">
-                    For each time step $t \to t + \Delta t$:
-                </p>
-                <ul class="list-disc list-inside ml-6 mb-6 leading-relaxed">
-                    <li>Calculate current accelerations: $a_x(t) = -\frac{k}{m} v(t) v_x(t)$, $a_y(t) = -g - \frac{k}{m} v(t) v_y(t)$</li>
-                    <li>Update velocities: $v_x(t+\Delta t) = v_x(t) + a_x(t)\Delta t$, $v_y(t+\Delta t) = v_y(t) + a_y(t)\Delta t$</li>
-                    <li>Update positions: $x(t+\Delta t) = x(t) + v_x(t)\Delta t$, $y(t+\Delta t) = y(t) + v_y(t)\Delta t$</li>
-                </ul>
-                <p class="mb-6 leading-relaxed">
-                    While simple, Euler's method can accumulate errors quickly. Smaller $\Delta t$ values lead to greater accuracy but more computation.
-                </p>
-
-                <h4 class="concept-title">6.2.2 Runge-Kutta Methods (More Accurate)</h4>
-                <p class="mb-4 leading-relaxed">
-                    More sophisticated methods like the <span class="glossary-term">Runge-Kutta (RK) methods</span> (e.g., RK4) provide much better accuracy for a given step size by evaluating the derivatives (accelerations) at multiple points within the interval $\Delta t$ and taking a weighted average. This significantly reduces truncation errors and provides a more reliable trajectory.
-                </p>
-                <p class="mb-6 leading-relaxed">
-                    Solving these equations is the core of computational fluid dynamics and ballistics simulations, allowing for highly accurate predictions of real-world projectile paths.
-                </p>
-
-                <p class="mb-6 leading-relaxed text-lg italic text-gray-400">
-                    This section is critical for reaching the target length and depth. It should include flowcharts or pseudocode for the numerical algorithms (Euler, RK4). A conceptual discussion on the trade-offs between accuracy and computational cost, and the use of programming languages (like Python or MATLAB) for numerical solutions, would be highly relevant. Visualizations of how numerical solutions converge to the actual path as step size decreases would also be valuable.
-                </p>
-            </section>
-
-            <!-- Section: Applications and Advanced Concepts -->
-            <section class="content-section">
-                <h2 class="section-title">7. Applications and Advanced Concepts in Projectile Motion</h2>
-                <p class="mb-6 leading-relaxed text-lg">
-                    Projectile motion, far from being a purely academic exercise, finds extensive application in various scientific, engineering, and recreational fields.
-                </p>
-
-                <h3 class="subsection-title">7.1 Sports and Athletics</h3>
-                <p class="mb-4 leading-relaxed">
-                    Many sports involve projectile motion:
-                </p>
-                <ul class="list-disc list-inside ml-6 mb-6 leading-relaxed">
-                    <li><span class="glossary-term">Basketball:</span> The arc of a shot.</li>
-                    <li><span class="glossary-term">Golf:</span> Maximizing distance and accuracy, where backspin and dimples significantly affect drag and lift.</li>
-                    <li><span class="glossary-term">Baseball/Softball:</span> Pitching velocity, bat swing mechanics, and fly ball trajectories.</li>
-                    <li><span class="glossary-term">Javelin Throw/Shot Put:</span> Optimizing launch angle and initial velocity.</li>
-                </ul>
-                <p class="mb-6 leading-relaxed">
-                    In sports, factors like spin (Magnus effect), wind, and air density become crucial for precise predictions.
-                </p>
-
-                <h3 class="subsection-title">7.2 Ballistics and Military Applications</h3>
-                <p class="mb-4 leading-relaxed">
-                    <span class="glossary-term">Ballistics</span> is the science of projectile motion, especially bullets and missiles. Accurate ballistic calculations are vital for:
-                </p>
-                <ul class="list-disc list-inside ml-6 mb-6 leading-relaxed">
-                    <li>Artillery aiming.</li>
-                    <li>Sniper marksmanship.</li>
-                    <li>Missile guidance systems.</li>
-                </ul>
-                <p class="mb-6 leading-relaxed">
-                    These applications heavily rely on numerical solutions to coupled differential equations, considering complex atmospheric conditions, Coriolis effect (for very long ranges), and spin.
-                </p>
-
-                <h3 class="subsection-title">7.3 Space Exploration and Orbital Mechanics</h3>
-                <p class="mb-4 leading-relaxed">
-                    While objects in stable orbit are not strictly projectiles (as gravity is the only significant force and they are continuously "falling around" the Earth), the initial launch phase of rockets involves projectile motion. Understanding how to achieve the necessary escape velocity or orbital velocity from a projectile trajectory is fundamental. Orbital mechanics then describes the motion of celestial bodies and spacecraft under gravitational influence.
-                </p>
-
-                <h3 class="subsection-title">7.4 Design and Engineering</h3>
-                <p class="mb-6 leading-relaxed">
-                    Engineers use projectile motion principles in designing:
-                </p>
-                <ul class="list-disc list-inside ml-6 mb-6 leading-relaxed">
-                    <li>Water cannons and fire hoses.</li>
-                    <li>Fountains and irrigation systems.</li>
-                    <li>Roller coasters and amusement rides (though often combined with other forces).</li>
-                    <li>Aerodynamic shapes for vehicles and sporting equipment to minimize drag.</li>
-                </ul>
-
-                <h3 class="subsection-title">7.5 Limitations and Further Considerations</h3>
-                <p class="mb-4 leading-relaxed">
-                    Even with air resistance, our models are still simplifications. Further complexities include:
-                </p>
-                <ul class="list-disc list-inside ml-6 mb-6 leading-relaxed">
-                    <li><span class="glossary-term">Magnus Effect:</span> The force exerted on a spinning object moving through a fluid (e.g., curveball in baseball, backspin on a golf ball). This creates a lift or spin-induced force perpendicular to the direction of motion.</li>
-                    <li><span class="glossary-term">Wind:</span> External forces from moving air masses.</li>
-                    <li><span class="glossary-term">Altitude Variations:</span> Changes in air density with altitude.</li>
-                    <li><span class="glossary-term">Variable Gravity:</span> For extremely long ranges, the change in gravity's magnitude and direction over the trajectory.</li>
-                </ul>
-
-                <p class="mb-6 leading-relaxed text-lg italic text-gray-400">
-                    This section is an excellent candidate for significant expansion. Each application (sports, ballistics, aerospace) could be explored in much greater detail with specific real-world examples, diagrams, and mini-case studies. You could also dedicate subsections to advanced topics like the Magnus effect (with its own mathematical model), wind analysis, and more about the numerical methods used in these practical scenarios.
-                </p>
-            </section>
-
-            <!-- Conclusion -->
-            <section class="content-section text-center">
-                <h2 class="section-title">Conclusion</h2>
-                <p class="mb-6 leading-relaxed text-lg">
-                    Projectile motion, from its idealized parabolic form to its complex reality under the influence of air resistance and inclined surfaces, is a captivating and immensely practical area of physics. Understanding how objects move through the air, influenced by gravity and drag, is crucial for numerous applications, from sports analytics to aerospace engineering.
-                </p>
-                <p class="mb-6 leading-relaxed text-lg">
-                    By grasping the independence of motion components, the non-linear nature introduced by air resistance, and the strategies for optimizing trajectories, you gain powerful tools for analyzing and predicting the flight of any object. Keep experimenting, keep observing, and continue your journey to master the science of motion with Whizmath!
-                </p>
-                <a href="physics.html" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-300 transform hover:scale-105 mt-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6 mr-3">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                    Back to Physics Topics
-                </a>
-            </section>
-
-        </main>
+        <!-- Footer -->
+        <footer class="text-center text-gray-500 text-sm mt-16 pb-8">
+            <p>&copy; 2025 Whizmath. All rights reserved. Designed with passion for physics and mathematics.</p>
+        </footer>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Three.js Animated Background
-            const canvas = document.getElementById('three-bg');
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio); // Improve clarity on high-res screens
-
-            camera.position.z = 5;
-
-            // Create particles
-            const particleCount = 2000;
-            const particles = new THREE.BufferGeometry();
-            const positions = new Float32Array(particleCount * 3);
-            const velocities = new Float32Array(particleCount * 3); // For particle movement
-
-            for (let i = 0; i < particleCount * 3; i += 3) {
-                positions[i] = (Math.random() - 0.5) * 20; // x
-                positions[i + 1] = (Math.random() - 0.5) * 20; // y
-                positions[i + 2] = (Math.random() - 0.5) * 20; // z
-
-                velocities[i] = (Math.random() - 0.5) * 0.005; // vx
-                velocities[i + 1] = (Math.random() - 0.5) * 0.005; // vy
-                velocities[i + 2] = (Math.random() - 0.5) * 0.005; // vz
-            }
-
-            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            particles.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
-
-            const particleMaterial = new THREE.PointsMaterial({
-                color: 0x6366f1, // Tailwind indigo-500
-                size: 0.05,
-                blending: THREE.AdditiveBlending,
-                transparent: true,
-                opacity: 0.8
+        // Smooth scrolling for anchor links (if any were added, though not explicitly requested)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
             });
-
-            const particleMesh = new THREE.Points(particles, particleMaterial);
-            scene.add(particleMesh);
-
-            // Lines connecting nearby particles (optional, adds complexity)
-            const lineMaterial = new THREE.LineBasicMaterial({
-                color: 0x818cf8, // Tailwind indigo-400
-                transparent: true,
-                opacity: 0.1,
-                linewidth: 1
-            });
-
-            const lineGeometry = new THREE.BufferGeometry();
-            const linePositions = new Float32Array(particleCount * particleCount * 3); // Max possible lines
-            let lineIndex = 0;
-            const maxDistance = 1.5; // Max distance for lines
-
-            // This part can be performance intensive for many particles,
-            // so keeping maxDistance small helps.
-            for (let i = 0; i < particleCount; i++) {
-                for (let j = i + 1; j < particleCount; j++) {
-                    const iX = positions[i * 3];
-                    const iY = positions[i * 3 + 1];
-                    const iZ = positions[i * 3 + 2];
-                    const jX = positions[j * 3];
-                    const jY = positions[j * 3 + 1];
-                    const jZ = positions[j * 3 + 2];
-
-                    const distance = Math.sqrt(
-                        (iX - jX) ** 2 +
-                        (iY - jY) ** 2 +
-                        (iZ - jZ) ** 2
-                    );
-
-                    if (distance < maxDistance) {
-                        linePositions[lineIndex++] = iX;
-                        linePositions[lineIndex++] = iY;
-                        linePositions[lineIndex++] = iZ;
-
-                        linePositions[lineIndex++] = jX;
-                        linePositions[lineIndex++] = jY;
-                        linePositions[lineIndex++] = jZ;
-                    }
-                }
-            }
-
-            lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions.slice(0, lineIndex), 3));
-            const lineMesh = new THREE.LineSegments(lineGeometry, lineMaterial);
-            scene.add(lineMesh);
-
-
-            // Animation loop
-            function animate() {
-                requestAnimationFrame(animate);
-
-                // Update particle positions
-                const positions = particleMesh.geometry.attributes.position.array;
-                const velocities = particleMesh.geometry.attributes.velocity.array;
-
-                for (let i = 0; i < particleCount * 3; i += 3) {
-                    positions[i] += velocities[i];
-                    positions[i + 1] += velocities[i + 1];
-                    positions[i + 2] += velocities[i + 2];
-
-                    // Wrap particles around
-                    if (positions[i] > 10 || positions[i] < -10) velocities[i] *= -1;
-                    if (positions[i + 1] > 10 || positions[i + 1] < -10) velocities[i + 1] *= -1;
-                    if (positions[i + 2] > 10 || positions[i + 2] < -10) velocities[i + 2] *= -1;
-                }
-                particleMesh.geometry.attributes.position.needsUpdate = true;
-
-                // Update line positions (recalculate, could be optimized)
-                lineIndex = 0;
-                const currentPositions = particleMesh.geometry.attributes.position.array;
-                for (let i = 0; i < particleCount; i++) {
-                    for (let j = i + 1; j < particleCount; j++) {
-                        const iX = currentPositions[i * 3];
-                        const iY = currentPositions[i * 3 + 1];
-                        const iZ = currentPositions[i * 3 + 2];
-                        const jX = currentPositions[j * 3];
-                        const jY = currentPositions[j * 3 + 1];
-                        const jZ = currentPositions[j * 3 + 2];
-
-                        const distance = Math.sqrt(
-                            (iX - jX) ** 2 +
-                            (iY - jY) ** 2 +
-                            (iZ - jZ) ** 2
-                        );
-
-                        if (distance < maxDistance) {
-                            linePositions[lineIndex++] = iX;
-                            linePositions[lineIndex++] = iY;
-                            linePositions[lineIndex++] = iZ;
-
-                            linePositions[lineIndex++] = jX;
-                            linePositions[lineIndex++] = jY;
-                            linePositions[lineIndex++] = jZ;
-                        }
-                    }
-                }
-                lineMesh.geometry.setAttribute('position', new THREE.BufferAttribute(linePositions.slice(0, lineIndex), 3));
-                lineMesh.geometry.attributes.position.needsUpdate = true;
-
-
-                renderer.render(scene, camera);
-            }
-
-            // Handle window resizing
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
-
-            animate(); // Start the animation loop
         });
     </script>
 </body>
