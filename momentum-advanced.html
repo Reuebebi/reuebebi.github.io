@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Momentum - Whizmath</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Momentum: The Quantity of Motion and Its Conservation - Whizmath</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8470165109508371"
-     crossorigin="anonymous"></script>
-    <!-- MathJax script for rendering LaTeX equations -->
+    <!-- MathJax Configuration -->
     <script type="text/javascript" id="MathJax-script" async
-                      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
     </script>
     <script>
         // Optional: Configure MathJax to process dollar signs for inline math
@@ -26,481 +25,532 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #000; /* Black background */
-            color: #E0E0E0; /* Light gray text for contrast */
-            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #000000; /* Black background */
+            color: #ffffff; /* White text */
         }
-        /* Custom styles for modern feel */
-        .container-padding {
-            padding: 2rem; /* Consistent padding */
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px; /* For horizontal scrollbars */
         }
-        @media (min-width: 768px) {
-            .container-padding {
-                padding: 4rem;
-            }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 10px;
         }
-        .section-card {
-            background-color: #1A1A1A; /* Darker grey for cards */
-            border-radius: 1.5rem; /* More rounded corners */
-            padding: 2.5rem;
-            margin-bottom: 2.5rem;
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.1); /* Subtle cyan glow */
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6; /* Blue-500 for thumb */
+            border-radius: 10px;
         }
-        .section-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.2);
-        }
-        .text-gradient {
-            background: linear-gradient(90deg, #00C9FF, #92FE9D);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .back-button {
-            /* Blue gradient */
-            background: linear-gradient(135deg, #4CAF50, #2196F3); /* Greenish-blue to blue */
-            color: #1A1A1A;
-            padding: 0.75rem 1.5rem;
-            border-radius: 9999px; /* Pill shape */
-            font-weight: 700;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4); /* Blue shadow */
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .back-button:hover {
-            transform: translateY(-3px) scale(1.02);
-            background: linear-gradient(135deg, #2196F3, #4CAF50); /* Invert gradient on hover */
-            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.6); /* Stronger blue shadow */
-        }
-        h1, h2, h3, h4 {
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-        }
-        h1 {
-            font-size: 3.5rem;
-            line-height: 1.2;
-            letter-spacing: -0.05em;
-        }
-        h2 {
-            font-size: 2.5rem;
-            line-height: 1.3;
-        }
-        h3 {
-            font-size: 1.75rem;
-            line-height: 1.4;
-            color: #00C9FF; /* Cyan for subheadings */
-        }
-        p {
-            margin-bottom: 1.25rem;
-        }
-        ul {
-            list-style-type: disc;
-            margin-left: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        ol {
-            list-style-type: decimal;
-            margin-left: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        strong {
-            color: #92FE9D; /* Greenish yellow for emphasis */
-        }
-        .key-term {
-            color: #00C9FF;
-            font-weight: 600;
-        }
-        code {
-            background-color: #2D2D2D;
-            padding: 0.2em 0.4em;
-            border-radius: 0.3em;
-            font-family: 'Fira Code', monospace; /* A nice monospace font */
-            font-size: 0.9em;
-        }
-        pre {
-            background-color: #2D2D2D;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            overflow-x: auto;
-            margin-bottom: 1.5rem;
-        }
-        /* Scroll to top button */
-        #scrollToTopBtn {
-            display: none; /* Hidden by default */
-            position: fixed; /* Fixed/sticky position */
-            bottom: 20px; /* Place the button at the bottom of the page */
-            right: 30px; /* Place the button 30px from the right */
-            z-index: 99; /* Make sure it does not overlap */
-            border: none; /* Remove borders */
-            outline: none; /* Remove outline */
-            background-color: #00C9FF; /* Blue background */
-            color: white; /* White text */
-            cursor: pointer; /* Add a mouse pointer on hover */
-            padding: 15px; /* Some padding */
-            border-radius: 50%; /* Rounded corners */
-            font-size: 18px; /* Increase font size */
-            box-shadow: 0 5px 15px rgba(0, 201, 255, 0.4);
-            transition: all 0.3s ease;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2563eb; /* Blue-600 on hover */
         }
 
-        #scrollToTopBtn:hover {
-            background-color: #92FE9D; /* Darker blue on hover */
-            box-shadow: 0 8px 20px rgba(146, 254, 157, 0.6);
-            transform: translateY(-3px);
+        /* Specific styling for scrollable content, especially tables and equations */
+        .overflow-x-scrollable {
+            overflow-x: auto; /* Enable horizontal scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: #3b82f6 #1a1a1a; /* Firefox */
         }
     </style>
 </head>
-<body class="bg-black text-gray-200 antialiased">
-    <div class="relative min-h-screen pb-20">
-        <!-- Back Button -->
-        <a href="physics.html" class="back-button absolute top-8 left-8 z-10">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Back to Physics
-        </a>
+<body class="bg-black text-white">
+    <!-- Back Button -->
+    <a href="physics.html" class="fixed top-4 left-4 p-3 bg-gray-800 hover:bg-gray-700 text-white rounded-full shadow-lg z-20 transition-all duration-300 ease-in-out transform hover:scale-105" aria-label="Go back to Physics page">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+    </a>
 
+    <div class="relative min-h-screen flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
         <!-- Main Content Area -->
-        <main class="max-w-6xl mx-auto container-padding">
-            <header class="text-center mb-16 pt-20">
-                <h1 class="text-gradient font-extrabold text-5xl md:text-6xl lg:text-7xl leading-tight mb-4 animate-fade-in-down">
-                    Advanced Momentum: Relativistic Dynamics, Continuous Systems & Scattering
+        <main class="max-w-4xl mx-auto space-y-12 pb-24 relative z-10">
+            <!-- Header Section -->
+            <header class="text-center mb-16 mt-16 sm:mt-24">
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-blue-400 leading-tight tracking-tight mb-4 animate-fade-in-down">
+                    Momentum: The Universal Quantity of Motion
                 </h1>
-                <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto animate-fade-in-up">
-                    A Deeper Dive into the Conservation Law that Governs Interactions from Subatomic Particles to Rocket Engines on Whizmath.
+                <p class="text-xl sm:text-2xl text-gray-300 animate-fade-in-up">
+                    From Classical Collisions to Relativistic Dynamics and Field Theory
                 </p>
-                <div class="mt-8 flex justify-center space-x-4">
-                    <span class="px-4 py-2 bg-gray-800 text-gray-400 rounded-full text-sm shadow-lg">#Momentum</span>
-                    <span class="px-4 py-2 bg-gray-800 text-gray-400 rounded-full text-sm shadow-lg">#RelativisticMomentum</span>
-                    <span class="px-4 py-2 bg-gray-800 text-gray-400 rounded-full text-sm shadow-lg">#ConservationOfMomentum</span>
-                    <span class="px-4 py-2 bg-gray-800 text-gray-400 rounded-full text-sm shadow-lg">#FluidDynamics</span>
-                    <span class="px-4 py-2 bg-gray-800 text-gray-400 rounded-full text-sm shadow-lg">#RocketPropulsion</span>
-                    <span class="px-4 py-2 bg-gray-800 text-gray-400 rounded-full text-sm shadow-lg">#CollisionTheory</span>
-                    <span class="px-4 py-2 bg-gray-800 text-gray-400 rounded-full text-sm shadow-lg">#ScatteringProcesses</span>
-                </div>
+                <div class="mt-8 h-1 w-24 bg-blue-500 mx-auto rounded-full animate-grow-width"></div>
             </header>
 
-            <!-- Introduction Section -->
-            <section class="section-card animate-fade-in">
-                <h2 class="text-gradient mb-6">1. The Enduring Principle: Introduction to Advanced Momentum</h2>
-                <p>
-                    Welcome to an advanced exploration of <strong>Momentum</strong>, one of the most fundamental and universally conserved quantities in physics. At <strong class="text-gradient">Whizmath</strong>, we aim to unravel complex concepts, and while introductory physics introduces momentum as simply mass times velocity, its true depth extends far beyond this classical definition. This comprehensive lesson will take you on a journey through the intricacies of momentum, from its counter-intuitive behavior at relativistic speeds to its continuous manifestation in fluid flows and rocket propulsion, culminating in its critical role in advanced collision and scattering processes.
+            <!-- Section 1: Introduction to Momentum -->
+            <section class="bg-gray-900 rounded-lg p-8 shadow-2xl animate-fade-in-left">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-blue-400">
+                    1. Introduction: Quantifying Motion's Inertia
+                </h2>
+                <p class="mb-4 text-lg leading-relaxed">
+                    In physics, <span class="font-semibold text-blue-300">momentum</span> is a fundamental vector quantity that describes an object's quantity of motion. Intuitively, a massive object moving quickly has more "oomph" than a light object moving slowly. This "oomph" is precisely what momentum captures. Its conservation is one of the most powerful and widely applicable principles in physics, holding true from macroscopic collisions to the interactions of subatomic particles.
                 </p>
-                <p>
-                    The conservation of momentum is a bedrock principle, arising directly from the homogeneity of space (Noether's Theorem, which you might recall from our Advanced Classical Mechanics lesson). It dictates that in an isolated system, the total momentum remains constant. This principle holds true across all scales, from the collision of billiard balls to the interactions of subatomic particles and the dynamics of galaxies. Understanding its advanced nuances is crucial for fields ranging from particle physics and astrophysics to aerospace engineering and fluid dynamics.
+                <p class="mb-4 text-lg leading-relaxed">
+                    The concept of momentum was implicitly present in Newton's laws of motion, particularly in his second law, where force is defined as the rate of change of momentum. However, its true universal significance, especially its conservation in isolated systems, became evident with the development of classical mechanics and its later extension to relativistic and quantum realms.
                 </p>
-
-                <h3 class="text-cyan-400 mb-4">1.1 Revisiting Classical Momentum: The Foundation</h3>
-                <p>
-                    In classical mechanics, the linear momentum ($\mathbf{p}$) of a particle is defined as the product of its mass ($m$) and its velocity ($\mathbf{v}$):
-                    <div class="flex justify-center my-6">
-                        <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
-                            $$ \mathbf{p} = m\mathbf{v} $$
-                        </div>
-                    </div>
-                    Newton's Second Law can be rephrased in terms of momentum:
-                    $$ \mathbf{F}_{net} = \frac{d\mathbf{p}}{dt} $$
-                    This means that the net force acting on an object is equal to the rate of change of its momentum.
+                <p class="mb-4 text-lg leading-relaxed">
+                    This lesson will move beyond a basic introduction to momentum, delving into advanced aspects. We will explore how the definition of momentum changes at relativistic speeds, where Einstein's Special Relativity introduces the Lorentz factor. We'll then consider how momentum applies to continuous systems, such as rocket propulsion and fluid dynamics. Furthermore, we will delve into advanced collision theory, including elastic, inelastic, and partially elastic interactions, and examine the principles of scattering processes that are crucial for probing the structure of matter. From billiards to particle accelerators and the motion of galaxies, the conservation of momentum is a guiding principle that illuminates the dynamics of the universe.
                 </p>
-                <p>
-                    The **Principle of Conservation of Linear Momentum** states that if the net external force acting on a system of particles is zero, then the total linear momentum of the system remains constant:
-                    $$ \sum \mathbf{F}_{ext} = 0 \implies \frac{d\mathbf{P}_{total}}{dt} = 0 \implies \mathbf{P}_{total} = \text{constant} $$
-                    Where $\mathbf{P}_{total} = \sum \mathbf{p}_i$. This principle is incredibly powerful for analyzing collisions and explosions, where internal forces are significant but external forces might be negligible.
-                </p>
-                <p>
-                    While simple, this classical definition breaks down at very high speeds, necessitating a relativistic treatment.
+                <p class="text-lg leading-relaxed">
+                    Momentum is not merely a quantity; it represents a fundamental symmetry in nature related to the homogeneity of space (Noether's theorem), stating that the laws of physics are the same everywhere.
                 </p>
             </section>
 
-            <!-- Relativistic Momentum and Energy Section -->
-            <section class="section-card animate-fade-in delay-200">
-                <h2 class="text-gradient mb-6">2. Relativistic Momentum and Energy: When Speed Approaches Light</h2>
-                <p>
-                    Albert Einstein's Special Theory of Relativity, introduced in 1905, revolutionized our understanding of space, time, mass, and energy. One of its profound consequences is that the classical definitions of momentum and kinetic energy are no longer valid when an object's speed approaches the speed of light ($c \approx 3 \times 10^8 \, m/s$). At these extreme velocities, the effects of time dilation and length contraction alter how we perceive mass and motion, requiring a new relativistic formulation for momentum and energy.
+            <!-- Section 2: Classical Momentum and Conservation -->
+            <section class="bg-gray-900 rounded-lg p-8 shadow-2xl animate-fade-in-right">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-blue-400">
+                    2. Classical Momentum and Its Conservation
+                </h2>
+                <p class="mb-4 text-lg leading-relaxed">
+                    In classical (Newtonian) mechanics, the <span class="font-semibold text-blue-300">linear momentum</span> ($\mathbf{p}$) of a single particle is defined as the product of its mass ($m$) and its velocity ($\mathbf{v}$):
+                </p>
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$\mathbf{p} = m\mathbf{v}$$
+                    </p>
+                </div>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Momentum is a vector quantity, meaning it has both magnitude and direction, and its units are kilogram-meters per second (kg·m/s).
                 </p>
 
-                <h3 class="text-cyan-400 mb-4">2.1 The Relativistic Factor ($\gamma$)</h3>
-                <p>
-                    Central to relativistic mechanics is the <strong>Lorentz factor ($\gamma$)</strong>, a dimensionless quantity that quantifies the relativistic effects:
-                    <div class="flex justify-center my-6">
-                        <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
-                            $$ \gamma = \frac{1}{\sqrt{1 - \frac{v^2}{c^2}}} $$
-                        </div>
-                    </div>
-                    Where $v$ is the object's speed and $c$ is the speed of light in a vacuum.
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    2.1. Newton's Second Law in Terms of Momentum
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Newton's Second Law can be stated more generally in terms of momentum: The net external force ($\mathbf{F}_{\text{net}}$) acting on an object is equal to the time rate of change of its momentum:
                 </p>
-                <ul>
-                    <li>If $v \ll c$, then $v^2/c^2 \approx 0$, and $\gamma \approx 1$. In this limit, relativistic equations reduce to classical ones.</li>
-                    <li>As $v \to c$, then $v^2/c^2 \to 1$, and $\gamma \to \infty$. This implies that truly reaching the speed of light for any object with non-zero rest mass would require infinite energy.</li>
-                </ul>
-
-                <h3 class="text-cyan-400 mb-4">2.2 Relativistic Momentum ($\mathbf{p} = \gamma m \mathbf{v}$)</h3>
-                <p>
-                    To ensure that the principle of conservation of momentum holds true in all inertial frames of reference, the classical definition of momentum must be modified. The <strong>relativistic momentum</strong> of a particle is given by:
-                    <div class="flex justify-center my-6">
-                        <div class="bg-gray-900 p-6 rounded-lg shadow-md text-3xl font-bold text-green-400">
-                            $$ \mathbf{p} = \gamma m_0 \mathbf{v} $$
-                        </div>
-                    </div>
-                    Where $m_0$ is the <strong>rest mass</strong> (or invariant mass) of the particle – its mass when measured at rest.
-                </p>
-                <p>
-                    Notice that as $v$ increases, $\gamma$ increases, meaning the momentum of the particle increases more rapidly than linearly with velocity. It approaches infinity as $v$ approaches $c$. This implies that an infinite force would be required to accelerate a particle with rest mass $m_0 > 0$ to the speed of light.
-                </p>
-                <p>
-                    Sometimes, relativistic momentum is written in terms of a "relativistic mass" $m = \gamma m_0$, so $\mathbf{p} = m\mathbf{v}$. However, modern physics prefers to keep mass as an invariant property (rest mass $m_0$) and treat $\gamma$ as part of the momentum and energy equations.
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$\mathbf{F}_{\text{net}} = \frac{d\mathbf{p}}{dt}$$
+                    </p>
+                </div>
+                <p class="mb-4 text-lg leading-relaxed">
+                    If mass is constant, this reduces to $\mathbf{F}_{\text{net}} = m\frac{d\mathbf{v}}{dt} = m\mathbf{a}$. However, the momentum formulation is more general, as it applies even when mass changes (e.g., rocket propulsion, which we'll discuss later).
                 </p>
 
-                <h3 class="text-cyan-400 mb-4">2.3 Relativistic Energy: The Mass-Energy Equivalence</h3>
-                <p>
-                    Perhaps the most famous result of special relativity is the equivalence of mass and energy. The total relativistic energy ($E$) of a particle is:
-                    <div class="flex justify-center my-6">
-                        <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
-                            $$ E = \gamma m_0 c^2 $$
-                        </div>
-                    </div>
-                    This equation implies that even a particle at rest possesses an enormous amount of energy, its <strong>rest energy</strong> ($E_0$):
-                    $$ E_0 = m_0 c^2 $$
-                    This is the origin of the energy released in nuclear reactions, where a small amount of mass is converted into a huge amount of energy.
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    2.2. Impulse-Momentum Theorem
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Integrating Newton's Second Law over a time interval $\Delta t = t_f - t_i$ gives the <span class="font-semibold text-blue-300">Impulse-Momentum Theorem</span>:
                 </p>
-                <p>
-                    The <strong>relativistic kinetic energy ($K$)</strong> is the difference between the total relativistic energy and the rest energy:
-                    $$ K = E - E_0 = \gamma m_0 c^2 - m_0 c^2 = m_0 c^2 (\gamma - 1) $$
-                    For $v \ll c$, this expression reduces to the classical kinetic energy $K \approx \frac{1}{2}m_0 v^2$.
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$\mathbf{J} = \int_{t_i}^{t_f} \mathbf{F}_{\text{net}} dt = \Delta \mathbf{p} = \mathbf{p}_f - \mathbf{p}_i$$
+                    </p>
+                </div>
+                <p class="mb-4 text-lg leading-relaxed">
+                    <span class="font-semibold text-blue-300">Impulse ($\mathbf{J}$)</span> is the change in momentum of an object. This theorem is particularly useful in analyzing collisions where forces act for a short duration.
                 </p>
 
-                <h3 class="text-cyan-400 mb-4">2.4 The Momentum-Energy Relation: The Relativistic Pythagorean Theorem</h3>
-                <p>
-                    A fundamental relationship connects the total relativistic energy, relativistic momentum, and rest mass of a particle. This equation is often called the "relativistic Pythagorean theorem" due to its mathematical form:
-                    <div class="flex justify-center my-6">
-                        <div class="bg-gray-900 p-6 rounded-lg shadow-md text-3xl font-bold text-green-400">
-                            $$ E^2 = (pc)^2 + (m_0 c^2)^2 $$
-                        </div>
-                    </div>
-                    Where $p$ is the magnitude of the relativistic momentum ($\mathbf{p}$).
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    2.3. Conservation of Linear Momentum
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The most powerful aspect of momentum is its conservation. For an <span class="font-semibold text-blue-300">isolated system</span> (a system on which no net external force acts), the total linear momentum remains constant:
                 </p>
-                <p>
-                    This equation is extremely powerful:
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$\sum \mathbf{p}_{\text{initial}} = \sum \mathbf{p}_{\text{final}}$$
+                        $$\text{If } \mathbf{F}_{\text{net, ext}} = 0 \Rightarrow \frac{d\mathbf{P}_{\text{total}}}{dt} = 0 \Rightarrow \mathbf{P}_{\text{total}} = \text{constant}$$
+                    </p>
+                </div>
+                <p class="mb-4 text-lg leading-relaxed">
+                    This principle is applicable to all types of interactions within the system, including collisions, explosions, and decays, regardless of the internal forces involved. It is a direct consequence of the spatial homogeneity of the universe (Noether's Theorem states that conservation of momentum arises from translational invariance).
                 </p>
-                <ul>
-                    <li>If a particle is at rest ($p=0$), then $E^2 = (m_0 c^2)^2 \implies E = m_0 c^2$, which is its rest energy.</li>
-                    <li>For a massless particle (e.g., a photon, $m_0 = 0$), then $E^2 = (pc)^2 \implies E = pc$. This shows that massless particles always travel at the speed of light and carry energy proportional to their momentum.</li>
-                    <li>It elegantly unifies mass, energy, and momentum into a single framework, revealing their deep interdependence.</li>
-                </ul>
-                <p>
-                    These relativistic definitions are crucial in particle accelerators, nuclear physics, and astrophysics, where particles routinely move at speeds close to that of light.
+                <p class="text-lg leading-relaxed">
+                    In systems where external forces are present, but their effects are negligible during a very short interaction (like a collision), momentum is approximately conserved. For example, in a car crash, external forces like friction are usually much smaller than the immense internal forces of the collision.
                 </p>
             </section>
 
-            <!-- Momentum in Continuous Systems Section -->
-            <section class="section-card animate-fade-in delay-400">
-                <h2 class="text-gradient mb-6">3. Momentum in Continuous Systems: From Rockets to Fluids</h2>
-                <p>
-                    While the concept of momentum is intuitive for discrete particles, it extends seamlessly to continuous systems, such as fluids and propulsive devices. Understanding momentum transfer in these systems is vital for designing rocket engines, analyzing fluid flow in pipes, and predicting atmospheric phenomena.
+            <!-- Section 3: Relativistic Momentum and Energy -->
+            <section class="bg-gray-900 rounded-lg p-8 shadow-2xl animate-fade-in-left">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-blue-400">
+                    3. Relativistic Momentum and Energy: Beyond Newtonian Limits
+                </h2>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Classical momentum ($\mathbf{p} = m\mathbf{v}$) is only valid at speeds much less than the speed of light ($c$). At relativistic speeds (a significant fraction of $c$), Einstein's Special Theory of Relativity necessitates a modification to the definition of momentum and energy to ensure that the laws of physics, including conservation of momentum, hold true in all inertial frames.
                 </p>
 
-                <h3 class="text-cyan-400 mb-4">3.1 Momentum and Rocket Propulsion: Action and Reaction</h3>
-                <p>
-                    Rocket propulsion is a classic example of the application of the conservation of momentum in a continuous system with varying mass. A rocket works by expelling high-velocity exhaust gases in one direction, and by Newton's Third Law (action-reaction), the rocket experiences a thrust force in the opposite direction.
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    3.1. Relativistic Momentum ($\mathbf{p}$)
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The <span class="font-semibold text-blue-300">relativistic momentum</span> ($\mathbf{p}$) of a particle with rest mass $m_0$ and velocity $\mathbf{v}$ is given by:
                 </p>
-                <p>
-                    The basic principle of rocket propulsion can be derived from the conservation of momentum for a system consisting of the rocket and its expelled fuel. Consider a rocket with mass $M$ moving with velocity $\mathbf{v}$. In a small time interval $dt$, a mass $dm$ of fuel is ejected with an exhaust velocity $\mathbf{v}_e$ (relative to the rocket). The rocket's mass decreases to $M - dm$, and its velocity changes to $\mathbf{v} + d\mathbf{v}$.
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$\mathbf{p} = \gamma m_0 \mathbf{v}$$
+                    </p>
+                </div>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Where $\gamma$ is the <span class="font-semibold text-blue-300">Lorentz factor</span>:
                 </p>
-                <p>
-                    Applying conservation of momentum:
-                    $$ M\mathbf{v} = (M - dm)(\mathbf{v} + d\mathbf{v}) + dm(\mathbf{v} - \mathbf{v}_e) $$
-                    (Note: $\mathbf{v} - \mathbf{v}_e$ is the absolute velocity of the exhaust, assuming $\mathbf{v}_e$ is opposite to $\mathbf{v}$.)
-                    Expanding and simplifying, neglecting second-order terms ($dm \cdot d\mathbf{v}$), we get:
-                    $$ M d\mathbf{v} = \mathbf{v}_e dm $$
-                    The force exerted on the rocket (thrust) is $F_{thrust} = M \frac{d\mathbf{v}}{dt} = \mathbf{v}_e \frac{dm}{dt}$.
-                </p>
-                <p>
-                    This leads to the **Tsiolkovsky rocket equation**, which relates the change in velocity of a rocket ($\Delta v$) to its effective exhaust velocity ($v_e$) and the ratio of its initial mass ($M_0$) to its final mass ($M_f$):
-                    <div class="flex justify-center my-6">
-                        <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
-                            $$ \Delta v = v_e \ln \left(\frac{M_0}{M_f}\right) $$
-                        </div>
-                    </div>
-                    This equation is fundamental to rocketry, showing that a high exhaust velocity and a large mass ratio (meaning most of the rocket's initial mass is propellant) are crucial for achieving high velocities in space.
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$\gamma = \frac{1}{\sqrt{1 - \frac{v^2}{c^2}}}$$
+                    </p>
+                </div>
+                <p class="mb-4 text-lg leading-relaxed">
+                    As $v \rightarrow 0$, $\gamma \rightarrow 1$, and $\mathbf{p} \rightarrow m_0 \mathbf{v}$, recovering the classical definition. As $v \rightarrow c$, $\gamma \rightarrow \infty$, implying that an infinite amount of momentum (and energy) would be required to accelerate a massive object to the speed of light, making it impossible.
                 </p>
 
-                <h3 class="text-cyan-400 mb-4">3.2 Momentum in Fluid Flow: Navier-Stokes Equations (Conceptual)</h3>
-                <p>
-                    In **fluid dynamics**, momentum is distributed throughout a continuous medium. The study of fluid motion involves applying conservation laws (mass, momentum, and energy) to an infinitesimally small fluid element. The conservation of momentum for a fluid is expressed by the **Navier-Stokes equations**.
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    3.2. Relativistic Energy ($E$)
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The total <span class="font-semibold text-blue-300">relativistic energy</span> ($E$) of a particle is given by:
                 </p>
-                <p>
-                    These are a set of non-linear partial differential equations that describe the motion of viscous fluid substances. They represent Newton's Second Law applied to fluid motion, with terms for:
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$E = \gamma m_0 c^2$$
+                    </p>
+                </div>
+                <p class="mb-4 text-lg leading-relaxed">
+                    This total energy includes both the particle's kinetic energy and its rest energy. When $v=0$, $\gamma=1$, and we get the famous <span class="font-semibold text-blue-300">rest energy</span> $E_0 = m_0 c^2$, which states that mass itself is a form of energy. The relativistic kinetic energy is $K = E - m_0 c^2 = (\gamma - 1)m_0 c^2$.
                 </p>
-                <ul>
-                    <li>Inertial forces (rate of change of momentum).</li>
-                    <li>Pressure forces.</li>
-                    <li>Viscous forces (internal friction within the fluid).</li>
-                    <li>External body forces (like gravity).</li>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    3.3. Relativistic Energy-Momentum Relation
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    A fundamental relationship exists between a particle's total relativistic energy $E$, its relativistic momentum $p$, and its rest mass $m_0$:
+                </p>
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$E^2 = (pc)^2 + (m_0 c^2)^2$$
+                    </p>
+                </div>
+                <p class="mb-4 text-lg leading-relaxed">
+                    This equation is incredibly powerful.
+                </p>
+                <ul class="list-disc pl-8 mb-4 text-lg leading-relaxed space-y-2">
+                    <li><span class="font-semibold text-blue-300">For Massive Particles ($m_0 \neq 0$):</span> This equation correctly describes the relationship between energy and momentum as speed approaches $c$.</li>
+                    <li><span class="font-semibold text-blue-300">For Massless Particles ($m_0 = 0$):</span> The equation simplifies to $E = pc$. This is profoundly important for photons (particles of light), which have no rest mass but carry both energy and momentum, always traveling at speed $c$.</li>
                 </ul>
-                <p>
-                    In their general form, the Navier-Stokes equations are:
-                    <div class="flex justify-center my-6">
-                        <div class="bg-gray-900 p-6 rounded-lg shadow-md text-2xl font-semibold text-green-400">
-                            $$ \rho \left( \frac{\partial \mathbf{v}}{\partial t} + (\mathbf{v} \cdot \nabla)\mathbf{v} \right) = -\nabla p + \mu \nabla^2 \mathbf{v} + \mathbf{f} $$
-                        </div>
-                    </div>
+                <p class="text-lg leading-relaxed">
+                    Conservation of relativistic momentum and energy are fundamental principles used in particle physics to analyze high-energy collisions and decay processes, such as those in particle accelerators.
+                </p>
+            </section>
+
+            <!-- Section 4: Momentum in Continuous Systems -->
+            <section class="bg-gray-900 rounded-lg p-8 shadow-2xl animate-fade-in-right">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-blue-400">
+                    4. Momentum in Continuous Systems
+                </h2>
+                <p class="mb-4 text-lg leading-relaxed">
+                    While momentum is often introduced in the context of discrete particles or rigid bodies, its principles extend seamlessly to continuous systems, where mass is distributed over a volume or fluid. Understanding momentum in these systems is crucial for fields like fluid dynamics and rocket science.
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    4.1. Momentum of a Fluid
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    In fluid dynamics, we consider the momentum of a small volume element of fluid. For a fluid with density $\rho_{fluid}(\mathbf{r}, t)$ and velocity $\mathbf{v}(\mathbf{r}, t)$, the momentum density (momentum per unit volume) is $\rho_{fluid}\mathbf{v}$. The total momentum of the fluid within a volume $V$ is given by an integral:
+                </p>
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$\mathbf{P}_{\text{fluid}} = \int_V \rho_{fluid}(\mathbf{r}, t) \mathbf{v}(\mathbf{r}, t) dV$$
+                    </p>
+                </div>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The <span class="font-semibold text-blue-300">Navier-Stokes equations</span>, which govern fluid flow, are essentially a statement of momentum conservation applied to a continuum fluid, accounting for pressure gradients, viscous forces, and external forces.
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    4.2. Rocket Propulsion
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Rocket propulsion is a classic example of momentum conservation in a system with changing mass. A rocket expels high-velocity exhaust gases, and in accordance with Newton's third law and momentum conservation, the rocket gains momentum in the opposite direction.
+                </p>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The <span class="font-semibold text-blue-300">Tsiolkovsky rocket equation</span> describes the change in velocity of a rocket, based on the principle of momentum conservation:
+                </p>
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$\Delta v = v_e \ln\left(\frac{m_0}{m_f}\right)$$
+                    </p>
+                </div>
+                <p class="mb-4 text-lg leading-relaxed">
                     Where:
-                    <ul>
-                        <li>$\rho$ is the fluid density.</li>
-                        <li>$\mathbf{v}$ is the fluid velocity vector.</li>
-                        <li>$p$ is the pressure.</li>
-                        <li>$\mu$ is the dynamic viscosity.</li>
-                        <li>$\mathbf{f}$ represents body forces per unit volume.</li>
-                    </ul>
                 </p>
-                <p>
-                    Solving these equations is notoriously difficult, and for most real-world scenarios (like turbulent flow), numerical methods (Computational Fluid Dynamics - CFD) are used. However, they form the bedrock for understanding phenomena like airflow over wings, water flow in rivers, and weather patterns.
+                <ul class="list-disc pl-8 mb-4 text-lg leading-relaxed space-y-2">
+                    <li>$\Delta v$: Change in velocity of the rocket.</li>
+                    <li>$v_e$: Exhaust velocity (relative to the rocket).</li>
+                    <li>$m_0$: Initial total mass of the rocket (fuel + payload).</li>
+                    <li>$m_f$: Final total mass of the rocket (after fuel is expended).</li>
+                    <li>$\ln$: Natural logarithm.</li>
+                </ul>
+                <p class="mb-4 text-lg leading-relaxed">
+                    This equation highlights that a high exhaust velocity and a large mass ratio ($m_0/m_f$) are crucial for achieving significant velocity changes. The thrust of the rocket is derived from the rate of change of momentum of the exhaust gases.
                 </p>
 
-                <h3 class="text-cyan-400 mb-4">3.3 Momentum Flux and Control Volumes</h3>
-                <p>
-                    In continuous systems, particularly in fluid mechanics, we often talk about **momentum flux** – the rate at which momentum is transferred across a surface. This is a vector quantity.
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    4.3. Pressure and Momentum Transfer
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Pressure in fluids and gases is fundamentally related to the transfer of momentum. The pressure exerted by a gas on the walls of a container, for example, arises from the average force exerted by countless molecules colliding with the walls and transferring momentum. In a more general sense, pressure can be viewed as the flux of momentum.
                 </p>
-                <p>
-                    To analyze problems involving fluid flow, engineers often use the concept of a **control volume** – an imaginary region in space through which fluid flows. By applying the Reynolds Transport Theorem, the principle of conservation of momentum can be expressed for a control volume as:
-                    $$ \sum \mathbf{F} = \frac{\partial}{\partial t} \int_{CV} \mathbf{v} \rho \, dV + \int_{CS} \mathbf{v} \rho (\mathbf{v} \cdot d\mathbf{A}) $$
-                    Where:
-                    <ul>
-                        <li>$\sum \mathbf{F}$ is the sum of all external forces acting on the control volume.</li>
-                        <li>The first term on the right is the rate of change of momentum within the control volume.</li>
-                        <li>The second term is the net rate of momentum outflow across the control surface ($CS$).</li>
-                    </ul>
-                    This formulation is essential for analyzing thrust from jet engines, forces on submerged objects, and hydraulic systems.
+                <p class="text-lg leading-relaxed">
+                    Understanding momentum in continuous systems is essential for engineering applications, from designing efficient aircraft and rockets to predicting weather patterns and modeling astrophysical phenomena like stellar winds.
                 </p>
             </section>
 
-            <!-- Advanced Collision Theory and Scattering Processes Section -->
-            <section class="section-card animate-fade-in delay-600">
-                <h2 class="text-gradient mb-6">4. Advanced Collision Theory and Scattering Processes: Unraveling Interactions</h2>
-                <p>
-                    Collisions are fundamental interactions where objects exchange momentum and energy. While introductory physics categorizes collisions as elastic or inelastic, advanced collision theory delves into more complex scenarios, especially in the realm of particle physics and nuclear physics, where interactions are governed by forces far beyond simple contact. <strong>Scattering processes</strong> are a specific type of collision where particles interact and deflect from their original paths.
+            <!-- Section 5: Advanced Collision Theory -->
+            <section class="bg-gray-900 rounded-lg p-8 shadow-2xl animate-fade-in-left">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-blue-400">
+                    5. Advanced Collision Theory
+                </h2>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Collisions are interactions where objects exert forces on each other for a relatively short duration. While momentum is always conserved in an isolated system during any collision, kinetic energy may or may not be conserved, leading to different types of collisions.
                 </p>
 
-                <h3 class="text-cyan-400 mb-4">4.1 Revisiting Collisions: Elastic vs. Inelastic</h3>
-                <p>
-                    Recall the basic types of collisions:
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    5.1. Elastic Collisions
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    In an <span class="font-semibold text-blue-300">elastic collision</span>, both total linear momentum and total kinetic energy are conserved. This means that no kinetic energy is lost to heat, sound, or deformation.
                 </p>
-                <ul>
-                    <li><strong>Elastic Collisions:</strong> Both kinetic energy and momentum are conserved. Idealized interactions, often a good approximation for macroscopic objects like billiard balls.
-                        $$ \sum (\mathbf{p}_{initial}) = \sum (\mathbf{p}_{final}) $$
-                        $$ \sum (K_{initial}) = \sum (K_{final}) $$
-                    </li>
-                    <li><strong>Inelastic Collisions:</strong> Momentum is conserved, but kinetic energy is *not* conserved. Some kinetic energy is transformed into other forms (heat, sound, deformation).
-                        $$ \sum (\mathbf{p}_{initial}) = \sum (\mathbf{p}_{final}) $$
-                        $$ \sum (K_{initial}) \ne \sum (K_{final}) $$
-                        A **perfectly inelastic collision** is one where the colliding objects stick together after the collision.
-                    </li>
+                <ul class="list-disc pl-8 mb-4 text-lg leading-relaxed space-y-2">
+                    <li><span class="font-semibold text-blue-300">Momentum Conservation:</span> $\mathbf{p}_{1i} + \mathbf{p}_{2i} = \mathbf{p}_{1f} + \mathbf{p}_{2f}$</li>
+                    <li><span class="font-semibold text-blue-300">Kinetic Energy Conservation:</span> $\frac{1}{2}m_1 v_{1i}^2 + \frac{1}{2}m_2 v_{2i}^2 = \frac{1}{2}m_1 v_{1f}^2 + \frac{1}{2}m_2 v_{2f}^2$</li>
+                </ul>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Perfectly elastic collisions are rare in macroscopic systems (e.g., billiard balls or superballs approximate them), but they are common at the atomic and subatomic levels (e.g., collisions between elementary particles).
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    5.2. Inelastic Collisions
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    In an <span class="font-semibold text-blue-300">inelastic collision</span>, total linear momentum is conserved, but total kinetic energy is *not* conserved. Some kinetic energy is converted into other forms of energy, such as heat, sound, or deformation energy (e.g., if objects stick together or deform).
+                </p>
+                <ul class="list-disc pl-8 mb-4 text-lg leading-relaxed space-y-2">
+                    <li><span class="font-semibold text-blue-300">Momentum Conservation:</span> $\mathbf{p}_{1i} + \mathbf{p}_{2i} = \mathbf{p}_{1f} + \mathbf{p}_{2f}$</li>
+                    <li><span class="font-semibold text-blue-300">Kinetic Energy (Not Conserved):</span> $\frac{1}{2}m_1 v_{1i}^2 + \frac{1}{2}m_2 v_{2i}^2 \neq \frac{1}{2}m_1 v_{1f}^2 + \frac{1}{2}m_2 v_{2f}^2$</li>
+                </ul>
+                <p class="mb-4 text-lg leading-relaxed">
+                    A <span class="font-semibold text-blue-300">perfectly inelastic collision</span> is an extreme case where the colliding objects stick together after the collision, moving as a single combined mass. The maximum possible kinetic energy is lost in this type of collision (consistent with momentum conservation).
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    5.3. Coefficient of Restitution ($e$)
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    To quantify the degree of elasticity in a collision, the <span class="font-semibold text-blue-300">coefficient of restitution</span> ($e$) is used. It is defined as the ratio of the relative speed of separation after collision to the relative speed of approach before collision (for one-dimensional collisions):
+                </p>
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$e = \frac{|v_{2f} - v_{1f}|}{|v_{1i} - v_{2i}|}$$
+                    </p>
+                </div>
+                <ul class="list-disc pl-8 mb-4 text-lg leading-relaxed space-y-2">
+                    <li><span class="font-semibold text-blue-300">$e=1$:</span> Perfectly elastic collision (kinetic energy conserved).</li>
+                    <li><span class="font-semibold text-blue-300">$e=0$:</span> Perfectly inelastic collision (objects stick together).</li>
+                    <li><span class="font-semibold text-blue-300">$0 < e < 1$:</span> Partially inelastic collision (some kinetic energy is lost).</li>
                 </ul>
 
-                <h3 class="text-cyan-400 mb-4">4.2 Center of Mass Frame (CM Frame) vs. Laboratory Frame (Lab Frame)</h3>
-                <p>
-                    When analyzing collisions, especially in particle physics, it is often advantageous to switch reference frames.
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    5.4. Collisions in Multiple Dimensions
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    In two or three dimensions, momentum conservation must be applied to each component (x, y, z) independently. For example, in a 2D collision:
                 </p>
-                <ul>
-                    <li><strong>Laboratory Frame (Lab Frame):</strong> This is the frame in which the experiment is performed, usually with one particle initially at rest (the target). Calculations can be complex due to the motion of all particles.</li>
-                    <li><strong>Center of Mass Frame (CM Frame):</strong> This is an inertial frame of reference in which the total linear momentum of the system is zero.
-                        $$ \mathbf{P}_{CM} = \sum \mathbf{p}_i = 0 $$
-                        In the CM frame, the total momentum remains zero throughout the collision. This simplifies calculations significantly because particles approach the center of mass, interact, and then recede from it. All particles involved in the collision have non-zero momentum components both before and after the collision, but their vector sum is zero.
-                    </li>
+                <ul class="list-disc pl-8 mb-4 text-lg leading-relaxed space-y-2">
+                    <li>$\sum p_{ix} = \sum p_{fx}$</li>
+                    <li>$\sum p_{iy} = \sum p_{fy}$</li>
                 </ul>
-                <p>
-                    Transforming between the Lab Frame and CM Frame often involves Lorentz transformations for relativistic collisions. The CM frame is particularly useful for determining the maximum available energy for creating new particles in particle accelerators.
+                <p class="text-lg leading-relaxed">
+                    Analyzing collisions is crucial in many fields, from automotive safety (crash tests) to astrophysics (galaxy mergers) and particle physics (detecting new particles).
+                </p>
+            </section>
+
+            <!-- Section 6: Scattering Processes -->
+            <section class="bg-gray-900 rounded-lg p-8 shadow-2xl animate-fade-in-right">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-blue-400">
+                    6. Scattering Processes: Probing the Unseen
+                </h2>
+                <p class="mb-4 text-lg leading-relaxed">
+                    <span class="font-semibold text-blue-300">Scattering</span> is a type of collision where particles (e.g., electrons, photons, neutrons) interact with a target (e.g., an atom, nucleus, or another particle) and change their direction and/or energy. It's a fundamental tool in physics to probe the internal structure of matter, characterize forces, and study elementary particles.
                 </p>
 
-                <h3 class="text-cyan-400 mb-4">4.3 Scattering Processes: The Language of Particle Physics</h3>
-                <p>
-                    <strong>Scattering</strong> is a broad term describing the deflection of particles (or waves) as a result of interaction with other particles or with a force field. It's the primary experimental tool in particle and nuclear physics for probing the internal structure of matter and the fundamental forces.
-                </p>
-                <ul>
-                    <li><strong>Rutherford Scattering:</strong> A classic example where alpha particles are scattered by atomic nuclei. Its analysis led to the discovery of the atomic nucleus, demonstrating that atoms have a small, dense, positively charged core. The **differential scattering cross-section** ($\frac{d\sigma}{d\Omega}$) is a key quantity, representing the probability of scattering into a particular solid angle.</li>
-                    <li><strong>Compton Scattering:</strong> The inelastic scattering of a photon by a charged particle (typically an electron). The photon loses some energy, and its wavelength increases. This phenomenon provided crucial evidence for the particle nature of light.</li>
-                    <li><strong>Deep Inelastic Scattering:</strong> Used to probe the internal structure of protons and neutrons, revealing their quark-gluon substructure. High-energy electrons are scattered off nucleons.</li>
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    6.1. Elastic vs. Inelastic Scattering
+                </h3>
+                <ul class="list-disc pl-8 mb-4 text-lg leading-relaxed space-y-2">
+                    <li><span class="font-semibold text-blue-300">Elastic Scattering:</span> The total kinetic energy of the incoming and outgoing particles is conserved. The internal states of the colliding particles remain unchanged. Example: Rutherford scattering (alpha particles off atomic nuclei).</li>
+                    <li><span class="font-semibold text-blue-300">Inelastic Scattering:</span> Kinetic energy is not conserved; some energy is transferred to the internal degrees of freedom of the target or projectile, exciting them to higher energy states or causing them to break apart. Example: Deep inelastic scattering, where high-energy electrons are used to probe the quark-gluon structure of protons and neutrons.</li>
                 </ul>
-                <p>
-                    The outcome of a scattering process is described by the **scattering cross-section ($\sigma$)**, which quantifies the effective area that an incident particle "sees" for a particular interaction to occur. A larger cross-section means a higher probability of interaction.
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    6.2. Scattering Cross-Section ($\sigma$)
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The probability of a scattering event occurring is quantified by the <span class="font-semibold text-blue-300">scattering cross-section</span> ($\sigma$). Conceptually, it represents an effective area that the target presents to the incoming particles. A larger cross-section means a higher probability of interaction. Its unit is typically barns ($1 \text{ barn} = 10^{-28} \text{ m}^2$).
+                </p>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The <span class="font-semibold text-blue-300">differential cross-section</span> $\frac{d\sigma}{d\Omega}$ describes the probability of scattering into a particular solid angle $d\Omega$. It's a crucial quantity measured in scattering experiments, as it provides detailed information about the interaction potential and the structure of the scatterer.
+                </p>
+                <div class="overflow-x-scrollable bg-gray-800 p-4 rounded-md mb-6">
+                    <p class="text-lg text-white font-mono text-center">
+                        $$\frac{d\sigma}{d\Omega} = \frac{\text{Number of particles scattered into } d\Omega \text{ per unit time}}{\text{Incident flux} \times d\Omega}$$
+                    </p>
+                </div>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The total cross-section is the integral of the differential cross-section over all solid angles: $\sigma = \int \frac{d\sigma}{d\Omega} d\Omega$.
                 </p>
 
-                <h3 class="text-cyan-400 mb-4">4.4 Relativistic Collisions and Particle Creation</h3>
-                <p>
-                    In high-energy physics, collisions are almost always relativistic. The conservation of **four-momentum** (a relativistic vector combining energy and momentum) is a central principle.
-                    $$ P^\mu = (E/c, \mathbf{p}) $$
-                    In particle accelerators, collisions at relativistic speeds can create new particles. The available energy for particle creation is determined by the total energy in the center of mass frame. For example, in a head-on collision of two identical particles with energy $E_{beam}$:
-                    $$ E_{CM}^2 = (E_1 + E_2)^2 - (p_1 c + p_2 c)^2 $$
-                    If $p_1 = -p_2$ (head-on collision, zero net momentum), then $E_{CM} = E_1 + E_2 = 2E_{beam}$. This shows that head-on collisions maximize the available energy for creating new particles.
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    6.3. Types of Scattering (Specific Examples)
+                </h3>
+                <ul class="list-disc pl-8 mb-4 text-lg leading-relaxed space-y-2">
+                    <li><span class="font-semibold text-blue-300">Rutherford Scattering:</span> Classical elastic scattering of charged particles (e.g., alpha particles) off atomic nuclei, used to discover the atomic nucleus.</li>
+                    <li><span class="font-semibold text-blue-300">Compton Scattering:</span> Inelastic scattering of photons off charged particles (typically electrons), resulting in a decrease in the photon's energy (increase in wavelength). This provided early evidence for the particle nature of light.</li>
+                    <li><span class="font-semibold text-blue-300">Raman Scattering:</span> Inelastic scattering of photons by molecules, where the photons gain or lose energy corresponding to vibrational or rotational energy levels of the molecules. Used in spectroscopy for material analysis.</li>
+                    <li><span class="font-semibold text-blue-300">Bragg Scattering (Diffraction):</span> Elastic scattering of X-rays or neutrons off crystal lattices, used to determine crystal structures.</li>
+                    <li><span class="font-semibold text-blue-300">Neutron Scattering:</span> Powerful tool for studying the structure and dynamics of materials, as neutrons can probe magnetic structures and light elements due to their spin and lack of charge.</li>
+                </ul>
+                <p class="text-lg leading-relaxed">
+                    Scattering experiments, whether involving classical objects or subatomic particles, provide invaluable data for testing theoretical models and unraveling the fundamental constituents and forces of nature.
                 </p>
-                <p>
-                    This is why modern particle accelerators like the Large Hadron Collider (LHC) collide beams of particles head-on, providing enough energy to create exotic, high-mass particles, probing the fundamental laws of nature.
+            </section>
+
+            <!-- Section 7: Applications and Beyond -->
+            <section class="bg-gray-900 rounded-lg p-8 shadow-2xl animate-fade-in-left">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-blue-400">
+                    7. Applications and Beyond
+                </h2>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The principles of momentum and its conservation are not only fundamental to theoretical physics but also find widespread applications across science, engineering, and everyday life.
                 </p>
 
-                <h3 class="text-cyan-400 mb-4">4.5 Quantum Scattering and the Feynman Diagram</h3>
-                <p>
-                    At the quantum level, scattering processes are described by quantum mechanics and quantum field theory. Particles don't just collide like billiard balls; they exchange mediator particles (like photons for electromagnetic interactions, or gluons for strong interactions).
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    7.1. Engineering and Technology
+                </h3>
+                <ul class="list-disc pl-8 mb-4 text-lg leading-relaxed space-y-2">
+                    <li><span class="font-semibold text-blue-300">Vehicle Safety:</span> Design of crumple zones, airbags, and seatbelts in cars relies heavily on understanding impulse and momentum transfer during collisions to minimize injury.</li>
+                    <li><span class="font-semibold text-blue-300">Sports:</span> Analysis of swings in golf, tennis, or baseball, impacts in boxing, and various athletic maneuvers.</li>
+                    <li><span class="font-semibold text-blue-300">Jet Engines and Turbines:</span> Operate on the principle of expelling fluid (air or combustion products) to generate thrust through momentum transfer.</li>
+                    <li><span class="font-semibold text-blue-300">Hydroelectric Power:</span> Water turbines extract momentum from flowing water to generate electricity.</li>
+                </ul>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    7.2. Astrophysics and Cosmology
+                </h3>
+                <ul class="list-disc pl-8 mb-4 text-lg leading-relaxed space-y-2">
+                    <li><span class="font-semibold text-blue-300">Stellar Dynamics:</span> The orbital motion of stars in galaxies and the dynamics of galaxy clusters are governed by conservation of momentum and angular momentum.</li>
+                    <li><span class="font-semibold text-blue-300">Supernovae and Black Hole Formation:</span> The enormous outward momentum of an explosion and the inward momentum of gravitational collapse are key to these cosmic events.</li>
+                    <li><span class="font-semibold text-blue-300">Cosmic Rays:</span> High-energy particles from space, their momentum provides clues about their origin and propagation.</li>
+                </ul>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    7.3. Quantum Mechanics and Quantum Field Theory
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    In quantum mechanics, momentum is represented by an operator ($\hat{p} = -i\hbar\nabla$), and its eigenvalues represent the possible measurable values. The uncertainty principle links the uncertainty in momentum to the uncertainty in position.
                 </p>
-                <p>
-                    **Feynman diagrams** are pictorial representations of these quantum interactions, illustrating the particles involved, their momenta, and the mediating particles exchanged. Each line and vertex in a Feynman diagram corresponds to specific mathematical terms in the calculation of scattering amplitudes and cross-sections. While they are a tool for calculation, they offer a powerful visualization of how momentum and energy are exchanged at the most fundamental levels of reality.
+                <p class="mb-4 text-lg leading-relaxed">
+                    In quantum field theory, momentum is carried by particles which are quanta of fields, and momentum conservation is a strict rule in all particle interactions, visualized through Feynman diagrams. Energy and momentum are combined into a four-vector in relativistic quantum field theories.
+                </p>
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-blue-300 mt-8">
+                    7.4. Beyond Classical Physics
+                </h3>
+                <p class="mb-4 text-lg leading-relaxed">
+                    The concept of momentum extends beyond physical particles. Electromagnetic fields, for instance, carry momentum (as described by the Poynting vector, $\mathbf{S}$), exerting radiation pressure. In General Relativity, the stress-energy tensor describes the distribution of energy and momentum in spacetime.
+                </p>
+                <p class="text-lg leading-relaxed">
+                    Momentum, therefore, is not just a simple product of mass and velocity; it is a profound and ubiquitous concept that plays a central role in describing the dynamics of the universe at all scales, from the smallest subatomic interactions to the largest cosmic phenomena.
                 </p>
             </section>
 
             <!-- Conclusion Section -->
-            <section class="section-card animate-fade-in delay-800">
-                <h2 class="text-gradient mb-6">5. The Universal Law: Conclusion and Frontiers of Momentum</h2>
-                <p>
-                    Our journey through the advanced realms of <strong>Momentum</strong> has underscored its remarkable versatility and fundamental importance across disparate domains of physics. We've moved beyond the everyday understanding of momentum to grapple with its profound implications.
+            <section class="bg-gray-900 rounded-lg p-8 shadow-2xl animate-fade-in-left">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-blue-400">
+                    Conclusion: The Enduring Principle of Momentum
+                </h2>
+                <p class="mb-4 text-lg leading-relaxed">
+                    Momentum, at its core, quantifies the "quantity of motion" of an object or system. From its classical definition as the product of mass and velocity, it expands into a richer, more complex concept at relativistic speeds, where the Lorentz factor intertwines it with energy in the fundamental relation $E^2 = (pc)^2 + (m_0 c^2)^2$. This relativistic formulation is indispensable for understanding the dynamics of high-energy particles and the very nature of mass and massless entities like photons.
                 </p>
-                <p>
-                    We delved into <strong>relativistic momentum and energy</strong>, confronting the fascinating and counter-intuitive consequences of Special Relativity where speed approaches the speed of light. The **Lorentz factor ($\gamma$)** became our guide, revealing how momentum and total energy ($E = \gamma m_0 c^2$) diverge from classical expectations, culminating in the elegant and all-encompassing **momentum-energy relation ($E^2 = (pc)^2 + (m_0 c^2)^2$)**. This principle not only governs the behavior of high-speed particles but also explains the immense energy unleashed in nuclear processes and the very nature of massless particles.
+                <p class="mb-4 text-lg leading-relaxed">
+                    The principle of momentum conservation stands as a cornerstone of physics, holding true across diverse scenarios, from macroscopic collisions and explosions to the continuous flow of fluids and the propulsion of rockets. We've explored how different types of collisions (elastic and inelastic) manifest this conservation, and how scattering processes, characterized by their cross-sections, serve as powerful experimental probes into the subatomic world.
                 </p>
-                <p>
-                    Our exploration extended to <strong>momentum in continuous systems</strong>, showcasing its application in the engineering marvel of **rocket propulsion** (governed by the Tsiolkovsky equation) and the complex flows described by the **Navier-Stokes equations** in fluid dynamics. This demonstrated how the conservation of momentum is crucial for understanding systems with varying mass or distributed properties.
-                </p>
-                <p>
-                    Finally, we dissected <strong>advanced collision theory and scattering processes</strong>. We re-examined collisions through the lens of the **center of mass frame**, simplifying analysis and revealing deeper insights. The concept of **scattering cross-section** emerged as a powerful tool for probing the fundamental interactions of particles, leading us to appreciate the quantum nature of these processes, visually represented by **Feynman diagrams**.
-                </p>
-                <p>
-                    Momentum is more than just a quantity; it is a profound principle reflecting the symmetries of the universe. Its conservation is a cornerstone of our physical theories, enabling us to predict the outcomes of interactions from the everyday to the extreme, from engineering the next generation of spacecraft to unveiling the deepest secrets of matter at the Large Hadron Collider.
-                </p>
-                <p>
-                    We hope this extensive lesson on <strong class="text-gradient">Advanced Momentum</strong> has provided you with a robust and insightful understanding of this critical physical concept. Keep pushing the boundaries of your knowledge and continue to explore the intricate mathematics and physics of our universe with <strong class="text-gradient">Whizmath</strong>!
-                </p>
-                <p class="text-center mt-12 text-gray-500 text-sm">
-                    This lesson was meticulously crafted to provide a deep and clear understanding of advanced momentum concepts. For further inquiries or specific examples, feel free to explore more topics on Whizmath.
+                <p class="text-lg leading-relaxed">
+                    Beyond classical mechanics, momentum's influence extends to quantum phenomena, where it's represented by an operator and subject to the Uncertainty Principle, and into quantum field theory, where particles are excitations of fields carrying momentum. The pervasive nature of momentum, its rigorous mathematical description, and its unwavering conservation across all scales of observation make it one of the most powerful and enduring concepts in the entire edifice of physics.
                 </p>
             </section>
         </main>
-
-        <!-- Scroll to top button -->
-        <button id="scrollToTopBtn" title="Go to top">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-        </button>
     </div>
 
+    <!-- JavaScript for Animations (simple fade-in effects) -->
     <script>
-        // Scroll to top button functionality
-        let scrollToTopBtn = document.getElementById("scrollToTopBtn");
+        // Simple Intersection Observer for fade-in animations
+        const sections = document.querySelectorAll('section');
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1 // Trigger when 10% of the section is visible
+        };
 
-        // When the user scrolls down 20px from the top of the document, show the button
-        window.onscroll = function() {scrollFunction()};
-
-        function scrollFunction() {
-            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                scrollToTopBtn.style.display = "block";
-            } else {
-                scrollToTopBtn.style.display = "none";
-            }
-        }
-
-        // When the user clicks on the button, scroll to the top of the document
-        scrollToTopBtn.addEventListener("click", function() {
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    // Stop observing once visible to prevent re-triggering
+                    observer.unobserve(entry.target);
+                }
             });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
         });
+
+        // Add CSS for animation classes dynamically or in a style block
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes fadeInDown {
+                from { opacity: 0; transform: translateY(-20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes fadeInLeft {
+                opacity: 0;
+                transform: translateX(-20px);
+                transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            }
+            @keyframes fadeInRight {
+                opacity: 0;
+                transform: translateX(20px);
+                transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            }
+            .animate-fade-in-down {
+                animation: fadeInDown 1s ease-out forwards;
+                opacity: 0; /* Start hidden */
+            }
+            .animate-fade-in-up {
+                animation: fadeInUp 1s ease-out forwards;
+                opacity: 0; /* Start hidden */
+                animation-delay: 0.2s; /* Slight delay */
+            }
+            .animate-fade-in-left.is-visible,
+            .animate-fade-in-right.is-visible {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            .animate-grow-width {
+                animation: growWidth 1s ease-out forwards;
+            }
+            @keyframes growWidth {
+                from { width: 0; }
+                to { width: 6rem; } /* width-24 in Tailwind */
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
